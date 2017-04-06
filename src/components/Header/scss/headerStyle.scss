@@ -1,0 +1,13 @@
+
+.header {
+     :global{
+         .ant-menu-item{
+             color:#959595;
+             font-size:16px;
+        }
+
+        .ant-menu-item-selected{
+            color:#fff;
+        }
+     }
+}
