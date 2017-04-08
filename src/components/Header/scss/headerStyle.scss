@@ -1,13 +1,47 @@
+@import "../../style/base";
 
 .header {
-     :global{
-         .ant-menu-item{
-             color:#959595;
-             font-size:16px;
-        }
+  @extend .display_flex;
+  @extend .justifyContent_spaceBetween;
+  @extend .alignItems_center;
 
-        .ant-menu-item-selected{
-            color:#fff;
-        }
-     }
+  width: 100%;
+  height: 4rem;
+  padding: 0 3%;
+  border-bottom: 1px solid #e9e9e9;
+  background-color: #fff;
+
+  > div {
+    @extend .display_flex;
+    @extend .alignItems_center;
+
+    .logo {
+      width: 60px;
+      height: auto;
+    }
+    .search {
+      margin-left: 4rem;
+      padding: 0 2rem;
+      height: 1.6rem;
+      width: 20rem;
+      font-size: .8rem;
+      border: none;
+      border-left: 1px solid #ccc;
+      border-radius: 0;
+      &:focus {
+        outline: 0;
+      }
+    }
+  }
+
+  .menu {
+    font-size: .6rem;
+    border: none;
+
+    [role = menuitem] {
+      @extend .display_flex;
+      @extend .alignItems_center;
+      height: 4rem;
+    }
+  }
 }

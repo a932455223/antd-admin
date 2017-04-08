@@ -5,37 +5,62 @@
  * 时间： 17.3.2
  */
 import React from 'react';
-import {Router, Route, browserHistory, IndexRoute} from 'react-router';
+import {Router, Route, IndexRoute,IndexRedirect} from 'react-router';
 import {Provider} from 'react-redux';
-
-import configStores from '../redux/store'
-
-const store = configStores();
-
-const rootRoute = {
-  path: '/',
-  getComponent(nextState, cb) {
-    require.ensure([], (require) => {
-      cb(null, require('../components/Layout/Layout').default)
-    }, 'index')
-    // import('../components/Layout/Layout')
-    //   .then( module => {
-    //     cb(null,module.default);
-    //   })
-  },
-  childRoutes: [
-    // require('./book.route.js'),
-    // require('./test.route.js')
-  ]
-};
+import App from '../views/App/index'
 
 
 
+const route = (
+    <Route path='/'>
+        <IndexRedirect to='product/list'/>
+        <Route path='product' component={App} >
+            <Route path='list' getComponent={(location, cb)=>{
+                require.ensure([],() => {
+                      cb(null,require('../views/Product/index').default)
+                 },'productIndex')
+            }}/>
+            <Route path='recycle' getComponent={(location, cb)=>{
+                require.ensure([],() => {
+                      cb(null,require('../views/Product/recycle').default)
+                 },'productCreate')
+            }}/>
+            <Route path='tags' getComponent={(location, cb)=>{
+                require.ensure([],() => {
+                      cb(null,require('../views/Product/tags').default)
+                 },'productTags')
+            }}/>
+            <Route path='brand' getComponent={(location, cb)=>{
+                require.ensure([],() => {
+                      cb(null,require('../views/Product/brand').default)
+                 },'productBrand')
+            }}/>
+            <Route path='provider' getComponent={(location, cb)=>{
+                require.ensure([],() => {
+                      cb(null,require('../views/Product/provider').default)
+                 },'productProvider')
+            }}/>
+        </Route>
 
-const routes = (
-  <Provider store={store}>
-    <Router history={browserHistory} routes={rootRoute} />
-  </Provider>
-);
+        <Route path='branch' component={App}>
+            <Route path='staff' getComponent={(location, cb)=>{
+                require.ensure([],() => {
+                      cb(null,require('../views/Branch/staff').default)
+                 },'branchStaff')
+            }}/>
+            <Route path='organization' getComponent={(location, cb)=>{
+                require.ensure([],() => {
+                      cb(null,require('../views/Branch/organization').default)
+                 },'branchOrganization')
+            }}/>
+        </Route>
+        <Route path='login' getComponent={(location, cb)=>{
+            require.ensure([],() => {
+                  cb(null,require('../views/Login/login').default)
+             },'login')
+        }}/>
 
-export default rootRoute;
+    </Route>
+)
+
+export default route;

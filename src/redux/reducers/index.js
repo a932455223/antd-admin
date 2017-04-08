@@ -6,21 +6,12 @@
  */
 
 
-import {combineReducers} from 'redux';
-
-
-
-import layoutReducer from './layoutReducer.js';
-import bookList from './bookListReducer.js';
-// import menulist from './menulist.js';
-import work from './workReducer.js';
-
+import { combineReducers } from 'redux';
+import navPath from './navPathReducer'
+import auth from './authReducer'
 const reducers = combineReducers({
-  layout: layoutReducer,
-  bookList: bookList,
-  // menuList: menulist,
-  work: work
+    navPath:navPath,
+    auth:auth
 });
-
 
 export default reducers;

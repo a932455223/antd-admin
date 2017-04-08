@@ -5,7 +5,12 @@
 
 const routesPaths = {
   INDEX: '/',
-  BOOK: '/book',
+  dashbord:'/books/list',
+  movie:'/movies/list',
+  // ALL: '*',
+  // BOOK: '/book',
+  BOOKTAG: '/book/:id',
+  BOOKDETAILS: '/book/detail/:id',
   // CONTACT: '/contact',
   // WORK: '/work',
   // OURS: '/ours'

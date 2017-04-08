@@ -1,0 +1,22 @@
+.login-row {
+  height: 100%;
+  background-color: #eee;
+  .logo {
+    width: 128px;
+    height: 128px;
+    // background: url(../../assets/logo.svg) no-repeat;
+    background-size: 100%;
+    margin: 0 auto 50px;
+    span {
+      display: none;
+    }
+  }
+  .login-form {
+    padding: 60px;
+    background: #fff;
+    border-radius: 6px;
+    .btn-login {
+      width: 100%;
+    }
+  }
+}
