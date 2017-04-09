@@ -9,12 +9,15 @@ import {Router, Route, IndexRoute,IndexRedirect} from 'react-router';
 import {Provider} from 'react-redux';
 import App from '../views/App/index'
 
-
+const validate = function(next, replace, callback){
+    console.dir(next);
+    callback();
+}
 
 const route = (
     <Route path='/'>
         <IndexRedirect to='product/list'/>
-        <Route path='product' component={App} >
+        <Route path='product' onEnter={validate} component={App} >
             <Route path='list' getComponent={(location, cb)=>{
                 require.ensure([],() => {
                       cb(null,require('../views/Product/index').default)
@@ -40,9 +43,9 @@ const route = (
                       cb(null,require('../views/Product/provider').default)
                  },'productProvider')
             }}/>
-        </Route>
+            </Route>
 
-        <Route path='branch' component={App}>
+        <Route path='branch' onEnter={validate} component={App}>
             <Route path='staff' getComponent={(location, cb)=>{
                 require.ensure([],() => {
                       cb(null,require('../views/Branch/staff').default)
