@@ -9,18 +9,15 @@ import React,{Component} from 'react';
 import headerStyle from './scss/headerStyle.scss'
 import {connect} from 'react-redux';
 import { Link } from 'react-router';
-import {
-  Menu,
-  Icon
-} from 'antd';
+import { Menu , Icon, Layout} from 'antd';
+const { Header }  = Layout;
 const SubMenu = Menu.SubMenu;
 const Item = Menu.Item;
 const MenuItemGroup = Menu.ItemGroup;
 
 import { config } from '../../tools/config';
 
-
-class Header extends React.Component {
+class TopHeader extends React.Component {
   static contextTypes = {
     router: React.PropTypes.object.isRequired
   };
@@ -35,22 +32,19 @@ class Header extends React.Component {
     });
   }
 
+
+
   render() {
     const pathname = window.location.pathname; // 获取当前路由参数
     const path = pathname.split('/')[1];
 
     return (
-      <div className={headerStyle.header}>
-        <div>
-          <Link to='/'>
-            <img className={headerStyle.logo} src={config.logoSrc} />
-          </Link>
-
-          <input  className={headerStyle.search}
-                  placeholder="请输入搜索内容"/>
+      <Header className={headerStyle.header}>
+        <div className={headerStyle.logo}>
+            精准营销系统
         </div>
-
-        <Menu className={headerStyle.menu}
+        <Menu
+              className={headerStyle.menu}
               onClick={this.handleClick}
               selectedKeys={[path ? path : this.state.current]}
               mode="horizontal">
@@ -70,11 +64,11 @@ class Header extends React.Component {
             </Link>
           </Menu.Item>
         </Menu>
-      </div>
+      </Header>
     );
   }
 }
 
 
 
-export default Header ;
+export default TopHeader ;

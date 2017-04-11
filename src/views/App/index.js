@@ -8,21 +8,22 @@ import Header from '../../components/Header/Header';
 import styles from'./index.scss'
 import SiderBar from '../../components/SliderBar'
 import NavPath from '../../components/NavPath/NavPath'
+import './App.less'
+
  class App extends Component{
-     
     render(){
         return (
-            <Layout className={styles.layout}>
+            <Layout >
               <Header />
-              <Layout className={styles.main}>
+              <Layout>
                 <SiderBar/>
                 <Layout style={{ padding: '0 24px 24px' }}>
                     <NavPath/>
-                    <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
+                    <Content>
                         {this.props.children}
                     </Content>
-              </Layout>
-            </Layout>
+                </Layout>
+             </Layout>
             <Footer style={{ textAlign: 'center' }}>
               Antd demo ©2017 Created by Yeapoo Front-end
             </Footer>

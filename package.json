@@ -62,5 +62,5 @@
   "repository": "git@git.coding.net:simonDu/yeapoo-antd-demo1.git",
   "author": "yeapoo",
   "license": "MIT",
-  "theme":"./theme.light.js"
+  "theme": "./theme.light.js"
 }
