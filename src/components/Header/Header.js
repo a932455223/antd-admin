@@ -6,7 +6,7 @@
  */
 
 import React,{Component} from 'react';
-import headerStyle from './scss/headerStyle.scss'
+import  './scss/headerStyle.less'
 import {connect} from 'react-redux';
 import { Link } from 'react-router';
 import { Menu , Icon, Layout} from 'antd';
@@ -14,9 +14,6 @@ const { Header }  = Layout;
 const SubMenu = Menu.SubMenu;
 const Item = Menu.Item;
 const MenuItemGroup = Menu.ItemGroup;
-
-import { config } from '../../tools/config';
-
 class TopHeader extends React.Component {
   static contextTypes = {
     router: React.PropTypes.object.isRequired
@@ -32,19 +29,18 @@ class TopHeader extends React.Component {
     });
   }
 
-
-
   render() {
     const pathname = window.location.pathname; // 获取当前路由参数
     const path = pathname.split('/')[1];
-
     return (
-      <Header className={headerStyle.header}>
-        <div className={headerStyle.logo}>
+      <Header className="header">
+        <div className="logo">
+            <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1490261157755&di=3649d486b6244696b01d3c62a03f1949&imgtype=0&src=http%3A%2F%2Fis3.mzstatic.com%2Fimage%2Fthumb%2FPurple69%2Fv4%2F1b%2F90%2F15%2F1b901510-3952-a3fb-fd46-e8e7a454a7c2%2Fmzl.uunubwhw.png%2F0x0ss-85.jpg" />
             精准营销系统
+            <div className="version">v1.0</div>
         </div>
         <Menu
-              className={headerStyle.menu}
+              className="menu"
               onClick={this.handleClick}
               selectedKeys={[path ? path : this.state.current]}
               mode="horizontal">
