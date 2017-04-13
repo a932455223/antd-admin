@@ -2,6 +2,6 @@ import React,{ Component } from 'react'
 
 export default class Home extends Component{
     render(){
-        return <h2> product provider </h2>
+        return <h2> customer undistributed </h2>
     }
 }

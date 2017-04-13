@@ -5,6 +5,9 @@
     padding:0;
     display: flex;
     background:@purple;
+    .header-wrap{
+        display: flex;
+    }
     .logo{
         font-size:14px;
         height:100%;
@@ -13,8 +16,9 @@
         width:200px;
         color:@white;
         >img{
-            height:50%;
-            margin:0 13px 0 14px;
+            width:30px;
+            height:30px;
+            margin:0 5px 0 8px;
         }
         &:after{
             content:"|";
@@ -43,7 +47,8 @@
         > .ant-menu-item{
             border-bottom:none;
             > a{
-            color:@white;
+               font-size:16px;
+               color:@white;
           }
         }
     }

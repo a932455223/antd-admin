@@ -16,45 +16,55 @@ const validate = function(next, replace, callback){
 
 const route = (
     <Route path='/'>
-        <IndexRedirect to='product/list'/>
-        <Route path='product' onEnter={validate} component={App} >
-            <Route path='list' getComponent={(location, cb)=>{
+        <IndexRedirect to='customer/my'/>
+        <Route path='customer' onEnter={validate} component={App} >
+            <Route path='my' getComponent={(location, cb)=>{
                 require.ensure([],() => {
-                      cb(null,require('../views/Product/index').default)
-                 },'productIndex')
+                      cb(null,require('../views/Customer/MyCustomer').default)
+                 },'MyCustomer')
             }}/>
-            <Route path='recycle' getComponent={(location, cb)=>{
+            <Route path='focused' getComponent={(location, cb)=>{
                 require.ensure([],() => {
-                      cb(null,require('../views/Product/recycle').default)
-                 },'productCreate')
+                      cb(null,require('../views/Customer/Focused').default)
+                 },'Focused')
             }}/>
-            <Route path='tags' getComponent={(location, cb)=>{
+            <Route path='undistributed' getComponent={(location, cb)=>{
                 require.ensure([],() => {
-                      cb(null,require('../views/Product/tags').default)
-                 },'productTags')
+                      cb(null,require('../views/Customer/Undistributed').default)
+                 },'Undistributed')
             }}/>
-            <Route path='brand' getComponent={(location, cb)=>{
+            <Route path='subordinate' getComponent={(location, cb)=>{
                 require.ensure([],() => {
-                      cb(null,require('../views/Product/brand').default)
-                 },'productBrand')
+                      cb(null,require('../views/Customer/Subordinate').default)
+                 },'Subordinate')
             }}/>
-            <Route path='provider' getComponent={(location, cb)=>{
+            <Route path='participation' getComponent={(location, cb)=>{
                 require.ensure([],() => {
-                      cb(null,require('../views/Product/provider').default)
-                 },'productProvider')
+                      cb(null,require('../views/Customer/Participation').default)
+                 },'participation')
+            }}/>
+            <Route path='recentlyDistributed' getComponent={(location, cb)=>{
+                require.ensure([],() => {
+                      cb(null,require('../views/Customer/RecentlyDistributed').default)
+                 },'RecentlyDistributed')
+            }}/>
+            <Route path='all' getComponent={(location, cb)=>{
+                require.ensure([],() => {
+                      cb(null,require('../views/Customer/All').default)
+                 },'All')
             }}/>
             </Route>
 
-        <Route path='branch' onEnter={validate} component={App}>
-            <Route path='staff' getComponent={(location, cb)=>{
+        <Route path='system' onEnter={validate} component={App}>
+            <Route path='users' getComponent={(location, cb)=>{
                 require.ensure([],() => {
-                      cb(null,require('../views/Branch/staff').default)
-                 },'branchStaff')
+                      cb(null,require('../views/System/Users').default)
+                 },'users')
             }}/>
-            <Route path='organization' getComponent={(location, cb)=>{
+            <Route path='roles' getComponent={(location, cb)=>{
                 require.ensure([],() => {
-                      cb(null,require('../views/Branch/organization').default)
-                 },'branchOrganization')
+                      cb(null,require('../views/System/Roles').default)
+                 },'roles')
             }}/>
         </Route>
         <Route path='login' getComponent={(location, cb)=>{

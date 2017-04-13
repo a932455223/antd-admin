@@ -22,11 +22,11 @@ import './App.less'
                     <Content>
                         {this.props.children}
                     </Content>
+                    <Footer style={{ textAlign: 'center' }}>
+                      Antd demo ©2017 Created by Yeapoo Front-end
+                    </Footer>
                 </Layout>
              </Layout>
-            <Footer style={{ textAlign: 'center' }}>
-              Antd demo ©2017 Created by Yeapoo Front-end
-            </Footer>
         </Layout>
         )
     }

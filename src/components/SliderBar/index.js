@@ -7,13 +7,14 @@ import axios from 'axios';
 import updateNavPath from '../../redux/actions/navPathAction'
 const { SubMenu } =  Menu;
 const { Sider } = Layout;
+
 function info(msg,color='red'){
     console.log("%c"+msg,'color:'+color);
 }
 
 const urls = {
-    product:'/menus/product',
-    branch:'/menus/branch'
+    customer:'/menus/customer',
+    system:'/menus/system'
 }
 
 
@@ -87,6 +88,7 @@ class SliderBar extends Component{
         return (
             <Sider  width={200} style={{ background: '#fff' }}>
                 <Menu
+                  theme="dark"
                   mode="inline"
                   defaultOpenKeys={openKeys}
                   selectedKeys={this.state.selectKeys}

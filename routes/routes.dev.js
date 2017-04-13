@@ -10,7 +10,7 @@ module.exports = (app, mfs, file) => {
 
   console.log(urlArray);
   app.get([
-    '/','/login', '/product/*', '/branch/*'
+    '/','/login', '/customer/*', '/system/*'
   ], function(req, res, next) {
     devMiddleWare.waitUntilValid(function() {
       var html = mfs.readFileSync(file);
@@ -19,31 +19,41 @@ module.exports = (app, mfs, file) => {
     next();
   });
 
-  app.get('/menus/product', (req, res, next) => {
+  app.get('/menus/customer', (req, res, next) => {
     let data = [{
       id: 1,
-      name: '商品管理',
+      name: '客户资料',
       children: [
         {
           id: 10,
-          name: '商品库',
-          url:'/product/list'
+          name: '我的客户',
+          url:'/customer/my'
         }, {
           id: 11,
-          name: '回收站',
-          url:'/product/recycle'
+          name: '我关注的客户',
+          url:'/customer/focused'
         }, {
           id: 12,
-          name: '标签管理',
-          url:'/product/tags'
+          name: '公海客户',
+          url:'/customer/undistributed'
         }, {
           id: 13,
-          name: '供应商管理',
-          url:'/product/provider'
+          name: '我下属的客户',
+          url:'/customer/subordinate'
         }, {
           id: 14,
-          name: '品牌管理',
-          url:'/product/brand'
+          name: '我参与的客户',
+          url:'/customer/participation'
+      },
+      {
+        id: 15,
+        name: '新分配给我的客户',
+        url:'/customer/recentlyDistributed'
+        },
+        {
+          id: 16,
+          name: '我的全部客户',
+          url:'/customer/all'
         }
       ]
     }]
@@ -52,19 +62,19 @@ module.exports = (app, mfs, file) => {
   });
 
 
-  app.get('/menus/branch', (req, res, next) => {
+  app.get('/menus/system', (req, res, next) => {
     let data = [{
       id: 2,
-      name: '组织机构管理',
+      name: '用户和权限',
       children: [
         {
           id: 20,
-          name: '员工管理',
-          url:'/branch/staff'
+          name: '用户管理',
+          url:'/system/users'
         }, {
           id: 21,
-          name: '组织管理',
-          url:'/branch/organization'
+          name: '角色和权限管理',
+          url:'/system/roles'
         }
       ]
     }]
