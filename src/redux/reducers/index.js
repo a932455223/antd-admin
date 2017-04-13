@@ -7,11 +7,19 @@
 
 
 import { combineReducers } from 'redux';
-import navPath from './navPathReducer'
-import auth from './authReducer'
+import navPath from './navPathReducer';
+import auth from './authReducer';
+import * as commonReducer from './commonReducer';
+
+// 公共的 common reducers
+const common = combineReducers({
+  ...commonReducer
+})
+
 const reducers = combineReducers({
-    navPath:navPath,
-    auth:auth
+    navPath: navPath,
+    auth: auth,
+    common: common
 });
 
 export default reducers;

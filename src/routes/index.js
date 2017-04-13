@@ -7,7 +7,11 @@
 import React from 'react';
 import {Router, Route, IndexRoute,IndexRedirect} from 'react-router';
 import {Provider} from 'react-redux';
-import App from '../views/App/index'
+import App from '../views/App/index';
+import configStores from '../redux/store';
+
+const store = configStores();
+console.log(store.getState());
 
 const validate = function(next, replace, callback){
     console.dir(next);
