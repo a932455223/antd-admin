@@ -59,3 +59,28 @@ axios.get('/proxy/douban/book')；
         res.json(data)
       })
 ```
+
+## 使用
+在/mock/index.js 文件中添加规则
+```
+module.exports = {
+  // 不需要转发
+  '请求方式(大写 请求url': data,
+
+  // 需要转发
+  '请求方式 PROXY 请求url': proxy('需转发url')
+
+
+
+  'GET /api/user/list': Mock.mock({
+    'name|1-10': ['@name']
+  }),
+
+  'GET PROXY /proxy/douban/book': proxyDoubanApi('https://api.douban.com/v2/book/search'),
+
+  'POST /api/user/password': Mock.mock({
+    'password': /[a-z]{5,10}/
+  })
+};
+
+```

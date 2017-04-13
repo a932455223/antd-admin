@@ -10,7 +10,7 @@ module.exports = {
     'name|1-10': ['@name']
   }),
 
-  'GET PROXY /proxy/douban/book': proxyDoubanApi('https://api.douban.com/v2/book/search'),
+  'GET PROXY /proxy/douban/book': proxy('https://api.douban.com/v2/book/search'),
 
   'POST /api/user/password': Mock.mock({
     'password': /[a-z]{5,10}/
@@ -19,7 +19,7 @@ module.exports = {
 
 
 
-function proxyDoubanApi(baseurl,methodd = 'get') {
+function proxy(baseurl,methodd = 'get') {
   return function (option = null, method = methodd,url = baseurl) {
     return new Promise((resolve, rej) => {
       switch (method) {

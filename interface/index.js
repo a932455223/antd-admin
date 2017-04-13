@@ -37,7 +37,7 @@ module.exports = function (app) {
       console.log(req.query);
       console.log('proxy');
 
-      mock[url](req.body).then(data => {
+      mock[url](req.body,'post').then(data => {
         res.json(data)
       })
 
