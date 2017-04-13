@@ -22,3 +22,5 @@ module.exports = function (app, cb) {
 };
 
 console.log('路由已挂载');
+
+
