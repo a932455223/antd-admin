@@ -10,7 +10,7 @@ var express = require('express'),
   bodyParser = require('body-parser'),
   axios = require('axios'),
   cookieParser = require('cookie-parser'),
-  interfaceCF = require('./interface');
+  interfaceCF = require('./proxy/interface');
 
 colors.setTheme({
   silly: 'rainbow',
