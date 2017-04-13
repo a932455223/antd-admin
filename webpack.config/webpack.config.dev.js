@@ -24,11 +24,11 @@ developingConfig.plugins.push(
   new webpack.HotModuleReplacementPlugin(),
   new CaseSensitivePathsPlugin(),
   new WatchMissingNodeModulesPlugin(paths.appNodeModules)
-  ,
-  new webpack.DllReferencePlugin({
-    context: __dirname,
-    manifest: require('../static/dist/common-manifest.json')
-  })
+  // ,
+  // new webpack.DllReferencePlugin({
+  //   context: __dirname,
+  //   manifest: require('../static/dist/common-manifest.json')
+  // })
 );
 
 module.exports = developingConfig;
