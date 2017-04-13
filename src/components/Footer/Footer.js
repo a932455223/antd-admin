@@ -25,6 +25,8 @@ class Footer extends Component{
             <li><Link to="">广澳是啊</Link></li>
           </ul>
           <p>© 2005－2017 douban.com, all rights reserved 北京豆网科技有限公司 </p>
+
+
         </div>
       </div>
     )

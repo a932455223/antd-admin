@@ -9,7 +9,8 @@ var express = require('express'),
   colors = require('colors'),
   bodyParser = require('body-parser'),
   axios = require('axios'),
-  cookieParser = require('cookie-parser');
+  cookieParser = require('cookie-parser'),
+  interfaceCF = require('./interface');
 
 colors.setTheme({
   silly: 'rainbow',
@@ -75,9 +76,10 @@ if (isDeveloping) {
   //   res.sendFile(path.join(path.resolve('./static'),'/dist/index.html'));
   //   // next()
   // })
-
   routes(app);
 }
+
+interfaceCF(app);
 
 app.listen(port, (err, success) => {
   if (err) {
