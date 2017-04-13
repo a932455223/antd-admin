@@ -41,16 +41,3 @@ function proxyDoubanApi(baseurl,methodd = 'get') {
     })
   }
 }
-// ['frock','manClothing','womenShoes','manShoes','luggage','toiletry','snack','appliance','books','wine']
-
-// create TRIGGER update_src_url after insert ON frock for each row update frock set src=concat('/images/goods/frock/',id,'.jpg');
-
-// DELIMITER $
-// create trigger update_src_url after insert
-// on frock for each row
-// begin
-// declare c int;
-// set c = (select stuCount from class where classID=new.classID);
-// update class set stuCount = c + 1 where classID = new.classID;
-// end$
-// DELIMITER ;

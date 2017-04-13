@@ -24,10 +24,6 @@ module.exports = function (app) {
     }
   });
 
-  app.get('/limitList',(req,res) =>{
-    res.json(limitList);
-  });
-
   app.post('*', (req, res) => {
     console.log(req.url);
     let url = urlDispose(req.url.trim(), 'POST');
@@ -36,7 +32,6 @@ module.exports = function (app) {
 
 
       res.json(mock[url]);
-
 
     } else if (url.indexOf('PROXY') > 0) {
       console.log(req.query);
@@ -65,67 +60,3 @@ function urlDispose(url, method) {
 }
 
 
-const limitList = [{
-  title: '客户管理',
-  id: '0',
-  limitList: ['总行','支行','所有','自己'],
-  defaultLimit: '',
-  limit: '',
-  nodes: [
-    {
-      title: '客户列表',
-      id: '0-0',
-      limitList: ['总行','支行','所有','自己'],
-      defaultLimit: '',
-      limit: '',
-      nodes: [{
-        title: '信息查看',
-        id: '0-0-0',
-        limitList: ['总行','支行','所有','自己'],
-        defaultLimit: '',
-        limit: '',
-      },{
-        title: '客户建档',
-        id: '0-0-1',
-        limitList: ['总行','支行','所有','自己'],
-        defaultLimit: '',
-        limit: '',
-      },{
-        title: '删除客户',
-        id: '0-0-2',
-        limitList: ['总行','支行','所有','自己'],
-        defaultLimit: '',
-        limit: '',
-      }]
-    },
-    {
-      title: '公海客户',
-      id: '0-1',
-      limitList: ['总行','支行','所有','自己'],
-      defaultLimit: '',
-      limit: '',
-      nodes: []
-    },
-    {
-      title: '网格管理',
-      id: '0-2',
-      limitList: ['总行','支行','所有','自己'],
-      defaultLimit: '',
-      limit: '',
-      nodes: [{
-        title: '网格列表',
-        id: '0-2-0',
-        limitList: ['总行','支行','所有','自己'],
-        defaultLimit: '',
-        limit: '',
-        nodes: [{
-          title: '信息查看',
-          id: '0-2-0-0',
-          limitList: ['总行','支行','所有','自己'],
-          defaultLimit: '',
-          limit: ''
-        }]
-      }]
-    }
-  ]
-}];
