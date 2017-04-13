@@ -1,0 +1,6 @@
+[submodule "webpack.config"]
+	path = webpack.config
+	url = https://github.com/ju1234/webpack.config.git
+[submodule "proxy"]
+	path = proxy
+	url = https://github.com/ju1234/proxy.git
