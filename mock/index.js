@@ -10,6 +10,8 @@ module.exports = {
     'name|1-10': ['@name']
   }),
 
+  'POST /api/post/asd': 'asd',
+
   'GET PROXY /proxy/douban/book': proxy('https://api.douban.com/v2/book/search'),
 
   'POST /api/user/password': Mock.mock({
