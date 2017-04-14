@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Table, Pagination, Spin } from 'antd';
 import Dock from 'react-dock';
@@ -7,13 +7,18 @@ import axios from 'axios';
 import { showEditDock, hideEditDock } from '../../redux/actions/commonAction';
 
 class MyCustomer extends Component {
+  // const propTypes = {
+  //   editDock: PropTypes.object
+  // };
+
   state = {
     loading: true,
     popularMovies: {},
     page: 1,
     selectedRowKeys: [],
-    dockVisible: true,
-    editMyCustomerInfo: ''
+    dockVisible: false,
+    editMyCustomerInfo: '',
+    currentId: ''
   };
 
   /*
@@ -21,9 +26,6 @@ class MyCustomer extends Component {
   * 根据返回的状态，拿到相对应的数据
   */
   componentDidMount(){
-    const { dispatch } = this.props;
-    dispatch(showEditDock(false, ''));
-
     axios.get('/api/movies/popular').then((popularMovies) => {
       if(popularMovies.status === 200 && popularMovies.statusText === 'OK' && popularMovies.data) {
         // 将数据存入私有的 state中
@@ -40,6 +42,7 @@ class MyCustomer extends Component {
     if(item && item.title) {
       return {
         key: item.id,
+        id: item.id,
         clientName: item.title,
         clientCategory: item.subtype,
         riskPreference: item.rating.average,
@@ -65,12 +68,24 @@ class MyCustomer extends Component {
 
   // 点击某一栏，编辑客户信息
   rowClick = (info) => {
-    const { dispatch, editDock } = this.props;
-    dispatch(showEditDock(true, info.key));
+    const LoadSpin = () => {
+      return(
+        <div>
+          <Spin />
+        </div>
+      )
+    }
 
+    this.setState({
+      dockVisible: true
+    })
+    // const { dispatch, editDock } = this.props;
+    // dispatch(showEditDock(true, info.id));
+
+    // 判断被点击的 row和当前的 currentId是否相同，若不相同，则请求加载数据
     if(info.id !== this.state.currentId) {
       this.setState({
-        editMyCustomerInfo: Spin
+        editMyCustomerInfo: LoadSpin
       })
     }
 
@@ -81,10 +96,17 @@ class MyCustomer extends Component {
       setTimeout(() => {
         this.setState({
           editMyCustomerInfo: editMyCustomer,
-          currentId: info.key
+          currentId: info.id
         })
       }, 300)
     }, 'editDock');
+  }
+
+  // close Dock
+  closeDock = () => {
+    this.setState({
+      dockVisible: false
+    })
   }
 
   render(){
@@ -146,9 +168,17 @@ class MyCustomer extends Component {
       onChange: this.onSelectChange,
     };
 
+    // dock visible and row click crrentId
+    const dockProps = {
+      closeDock: this.closeDock,
+      visible: this.state.dockVisible,
+      currentId: this.state.currentId
+    }
+
     return (
       <div>
         <Table
+          style={{backgroundColor: '#fcfcfc'}}
           columns={columns}
           dataSource={dataSource}
           loading={this.state.loading}
@@ -173,19 +203,19 @@ class MyCustomer extends Component {
         />
 
         <Dock
-          isVisible={editDock.visible}
-          position='right' // 位置
-          dimMode='none' // 遮罩层
-          dockStyle={{'backgroundColor': '#f4f5f6',
-                      'padding': '20px 0px',
-                      'textAlign': 'center'}} // 背景
+          isVisible={this.state.dockVisible}
+          position="right" // 位置
+          dimMode="none" // 遮罩层
+          dockStyle={{backgroundColor: '#f4f5f6',
+                      padding: '20px 0px',
+                      textAlign: 'center'}} // 背景
           fluid={true}
           defaultSize={.5} // 初始 width/height
           duration={350} // 动画时间
           zIndex={1}
         >
         {this.state.editMyCustomerInfo &&
-          <this.state.editMyCustomerInfo />
+          <this.state.editMyCustomerInfo {...dockProps}/>
         }
         </Dock>
       </div>

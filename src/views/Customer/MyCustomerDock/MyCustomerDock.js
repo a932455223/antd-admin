@@ -5,7 +5,9 @@ import {
   Icon,
   Row,
   Col,
-  Spin
+  Spin,
+  Button,
+  notification
 } from 'antd';
 const TabPane = Tabs.TabPane;
 
@@ -15,9 +17,8 @@ import { hideEditDock } from '../../../redux/actions/commonAction';
 // import basicInfo  from './Pages/basicInfo';
 
 const LoadSpin = () => {
-  const basicData = 123;
   return(
-    <div {...basicData}>
+    <div>
       <Spin />
     </div>
   )
@@ -29,7 +30,7 @@ class MyCustomerDock extends Component {
     visible: '',
     currentId: '',
     activeTabs: '',
-    basicInfo: LoadSpin,
+    basicInfo: '',
     familyInfo: LoadSpin,
     jobInfo: LoadSpin,
     riskInfo: LoadSpin,
@@ -84,32 +85,78 @@ class MyCustomerDock extends Component {
 
   // 切换面板
   tabChange = (e) => {
-    const { editDock } = this.props;
     this.setState({
       activeTabs: e,
-      currentId: editDock.currentId
+      currentId: this.props.currentId
     })
 
     // 获取当前激活 TabPane的 key，对比是否为 basicInfo
     this.pageLoading(e);
   }
 
+  // show and hide notification
+  openNotification = () => {
+    if(this.state.fields && this.state.fields.notificate) {
+      // 每次显示，生成不同的key，重新渲染页面
+      const key = `open${Date.now()}`;
+
+      // 点击放弃编辑按钮，关闭Dock
+      const btnClick = () => {
+        notification.close(key);
+        // 点击确认不保存按钮后，关闭 Dock弹窗
+        this.props.closeDock();
+
+        // 关闭在点击 Dock后，重置 notificate: false
+        this.setState({
+          fields: {
+            username: {
+              value: 'ABC'
+            },
+            age: {
+              value: 12
+            },
+            notificate: false
+          },
+        })
+      };
+
+      // 放弃编辑按钮
+      const btn = (
+        <Button type="primary" size="small" onClick={btnClick}>
+          放弃编辑
+        </Button>
+      );
+
+      // 提示主体内容
+      notification.open({
+        message: '您已编辑了该页面，请点击保存',
+        description: '该页面的数据发生了变化，请点击保存按钮，保存修改，若不想保存，请点击放弃',
+        btn,
+        key,
+        // onClose,
+        placement: 'topRight'
+        // bottom: 50
+      });
+    } else {
+      // 点击确认不保存按钮后，关闭 Dock弹窗
+      this.props.closeDock();
+    }
+  }
+
   // 渲染 Tabs
   renderTabs = () => {
-    const { editDock } = this.props;
-    const basicInfo = {...editDock};
-
     return (
       <Tabs className={styles.tabs}
             // tabBarExtraContent={operations}
-            key={editDock.currentId}
-            defaultActiveKey={editDock.currentId === this.state.currentId ? this.state.activeTabs : 'basicInfo'}
+            key={this.props.currentId}
+            defaultActiveKey={this.props.currentId === this.state.currentId ? this.state.activeTabs : 'basicInfo'}
             // type="card"
             onChange={this.tabChange}
             >
         <TabPane tab="基本信息" key="basicInfo">
+          <LoadSpin />
           {this.state.basicInfo &&
-            <this.state.basicInfo {...basicInfo}/>
+            <this.state.basicInfo {...this.props}/>
           }
         </TabPane>
         <TabPane tab="家庭信息" key="familyInfo">
@@ -135,13 +182,13 @@ class MyCustomerDock extends Component {
   }
 
   render() {
-    const { editDock } = this.props;
-    // console.log(editDock);
+    const { visible, currentId } = this.props;
+    // console.log(this.props);
 
     return (
       <div>
         <div className={styles.header}>
-          <span>{editDock.currentId}</span>
+          <span>{this.props.currentId}</span>
 
           <Row className={styles.options}>
             <Col span={6}>
@@ -180,10 +227,11 @@ class MyCustomerDock extends Component {
   }
 }
 
-const mapStateToProps = (store) => {
-  return {
-    editDock: store.common.editDock.data
-  }
-}
+// const mapStateToProps = (store) => {
+//   return {
+//     editDock: store.common.editDock.data
+//   }
+// }
 
-export default connect(mapStateToProps)(MyCustomerDock);
+// export default connect(mapStateToProps)(MyCustomerDock);
+export default MyCustomerDock;
