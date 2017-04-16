@@ -19,7 +19,7 @@ const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-import styles from './basicInfo.scss';
+import styles from './indexStyle.scss';
 
 // 新增维护记录
 class AddNewRecordForm extends Component {

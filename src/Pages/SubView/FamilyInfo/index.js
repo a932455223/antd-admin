@@ -11,7 +11,7 @@ import {
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-import styles from './familyInfo.scss';
+import styles from './indexStyle.scss';
 
 
 const AddNew = () => (
