@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import {
   Tabs,
   Icon,
@@ -12,7 +12,7 @@ import {
 const TabPane = Tabs.TabPane;
 
 import styles from './myCustomerDockStyle.scss';
-import { hideEditDock } from '../../../redux/actions/commonAction';
+// import { hideEditDock } from '../../../redux/actions/commonAction';
 
 // import basicInfo  from './Pages/basicInfo';
 
@@ -30,7 +30,7 @@ class MyCustomerDock extends Component {
     visible: '',
     currentId: '',
     activeTabs: '',
-    basicInfo: '',
+    basicInfo: LoadSpin,
     familyInfo: LoadSpin,
     jobInfo: LoadSpin,
     riskInfo: LoadSpin,
@@ -45,15 +45,15 @@ class MyCustomerDock extends Component {
         this.setState({
           basicInfo: basicInfo
         })
-      }, 300)
+      }, 100)
     }, 'basicInfo');
   };
 
   // 点击遮罩层，隐藏 Dock
-  visibleChange = () => {
-    const { dispatch } = this.props;
-    dispatch(hideEditDock(false));
-  }
+  // visibleChange = () => {
+  //   const { dispatch } = this.props;
+  //   dispatch(hideEditDock(false));
+  // }
 
   // 获取当前激活 TabPane的 key，根据 key加载不同的 page view
   pageLoading = (key) => {
@@ -79,7 +79,7 @@ class MyCustomerDock extends Component {
               riskInfo: infoComponent
             })
         }
-      }, 300)
+      }, 100)
     }, 'FamilyInfo');
   }
 
@@ -154,10 +154,10 @@ class MyCustomerDock extends Component {
             onChange={this.tabChange}
             >
         <TabPane tab="基本信息" key="basicInfo">
-          <LoadSpin />
-          {this.state.basicInfo &&
+          {<LoadSpin />}
+          {/*this.state.basicInfo &&
             <this.state.basicInfo {...this.props}/>
-          }
+          */}
         </TabPane>
         <TabPane tab="家庭信息" key="familyInfo">
           {this.state.familyInfo &&

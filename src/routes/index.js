@@ -80,4 +80,23 @@ const route = (
     </Route>
 )
 
-export default route;
+const routeOne = (
+    <Route path='/'>
+        <IndexRedirect to='customer/my'/>
+        <Route path='customer' onEnter={validate} component={App} >
+            <Route path='my' getComponent={(location, cb)=>{
+                require.ensure([],() => {
+                      cb(null,require('../views/Customer/MyCustomer').default)
+                 },'MyCustomer')
+            }}/>
+
+        </Route>
+        <Route path='login' getComponent={(location, cb)=>{
+            require.ensure([],() => {
+                  cb(null,require('../views/Login/login').default)
+             },'login')
+        }}/>
+    </Route>
+)
+
+export default routeOne;
