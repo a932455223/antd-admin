@@ -99,4 +99,4 @@ const routeOne = (
     </Route>
 )
 
-export default routeOne;
+export default route;
