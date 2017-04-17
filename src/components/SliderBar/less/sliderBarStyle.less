@@ -1,13 +1,42 @@
-.mySiderMenu{
-    .ant-menu-item{
-        &:before{
+@import './../../../style/colors.less';
+@c-grey: #A9ACAF;
+@c-grey-darken: #1d2329;
+.mySiderMenu {
+    .ant-menu-item {
+        font-size: 1.2em;
+        a:before {
             content: " ";
-            // background-color: @orange;
+            display: inline-block;
+            position: absolute;
+            left: 2.3em;
+            width: 0.35em;
+            height: 0.35em;
+            background-color: @c-grey;
+            top: 0;
+            bottom: 0;
+            margin: auto 0;
+            border-radius: 2px;
+        }
+    }
+    .ant-menu-inline {
+        .ant-menu-item-selected {
+            background-color: @c-grey-darken;
         }
     }
     .ant-menu-item-selected {
-        &:before{
-            
+        background-color: @c-grey-darken;
+        a:before {
+            content: " ";
+            display: inline-block;
+            position: absolute;
+            left: 2.3em;
+            width: 0.35em;
+            height: 1em;
+            background-color: @c-orange;
+            top: 0;
+            bottom: 0;
+            margin: auto 0;
+            border-radius: 1px;
         }
     }
 }
