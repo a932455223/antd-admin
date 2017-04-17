@@ -1,6 +1,10 @@
 /**
- * Created by jufei on 2017/4/11.
+ * 文件说明： 模拟数据规则
+ * 详细描述：
+ * 创建者： JU
+ * 时间： 17.3.2
  */
+// impo
 
 var Mock = require('mockjs');
 var axios = require('axios');
@@ -12,7 +16,7 @@ module.exports = {
 
   'POST /api/post/asd': 'asd',
 
-  'GET PROXY /proxy/douban/book': proxy('https://api.douban.com/v2/book/search'),
+  'GET PROXY /proxy/douban/*': 'https://api.douban.com/v2/',
 
   'POST /api/user/password': Mock.mock({
     'password': /[a-z]{5,10}/
@@ -20,26 +24,6 @@ module.exports = {
 };
 
 
+// axios.get('https://api.douban.com/v2/book/search?tag=novel').then(res => {console.log(res.data)}).catch(err => console.log(err))
 
-function proxy(baseurl,methodd = 'get') {
-  return function (option = null, method = methodd,url = baseurl) {
-    return new Promise((resolve, rej) => {
-      switch (method) {
-        case 'get':
-        case 'GET':
-          axios.get(url, {
-            params: option
-          }).then(res => {
-            resolve(res.data)
-          });
-          break;
-        case 'post':
-        case 'POST':
-          axios.post(url, option).then(res => {
-            resolve(res.data)
-          });
-          break;
-      }
-    })
-  }
-}
+
