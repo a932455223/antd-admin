@@ -30,21 +30,37 @@ class CustomerSlider extends Component {
     visible: '',
     currentId: '',
     activeTabs: '',
+
     basicInfo: '',
     familyInfo: '',
     financeInfo: '',
     jobInfo: '',
     riskInfo: '',
+
+    fields: {
+      notificate: false
+    },
   };
 
   componentWillMount(){
-    // 异步加载 basicInfo
+    /*
+    * 首次加载，一次性将组件全部加载
+    * 异步加载 BasicInfo, FamilyInfo, JobInfo, FinanceInfo, RiskInfo
+    */
     require.ensure([],() => {
       let BasicInfo = require('../BasicInfo').default;
+      let FamilyInfo = require('../FamilyInfo').default;
+      let JobInfo = require('../JobInfo').default;
+      let FinanceInfo = require('../FinanceInfo').default;
+      let RiskInfo = require('../RiskInfo').default;
 
       setTimeout(() => {
         this.setState({
-          basicInfo: BasicInfo
+          basicInfo: BasicInfo,
+          familyInfo: FamilyInfo,
+          jobInfo: JobInfo,
+          riskInfo: RiskInfo,
+          financeInfo: FinanceInfo
         })
       }, 100)
     }, 'BasicInfo');
@@ -100,44 +116,50 @@ class CustomerSlider extends Component {
   }
 
   // 获取当前激活 TabPane的 key，根据 key加载不同的 page view
-  pageLoading = (key) => {
+  // pageLoading = (key) => {
     // var t = /^[a-z]/
     // const upperKey = key.replace(/^[a-z]/, function(l){return l.toUpperCase()})
     // console.log(upperKey);
 
     // 异步加载 basicInfo
-    require.ensure([],() => {
-      let FamilyInfo = require('../FamilyInfo').default;
-      let JobInfo = require('../JobInfo').default;
-      let FinanceInfo = require('../FinanceInfo').default;
-      let RiskInfo = require('../RiskInfo').default;
-
-      setTimeout(() => {
-        switch(key) {
-          // 当被点击的 TabPane的 key值为 familyInfo, 加载对应的异步组件
-          case 'familyInfo':
-            this.setState({
-              familyInfo: FamilyInfo
-            })
-
-          case 'jobInfo':
-            this.setState({
-              jobInfo: JobInfo
-            })
-
-          case 'RiskInfo':
-            this.setState({
-              riskInfo: RiskInfo
-            })
-
-          case 'financeInfo':
-            this.setState({
-              financeInfo: FinanceInfo
-            })
-        }
-      }, 100)
-    }, 'FamilyInfo');
-  }
+    // require.ensure([],() => {
+    //   let FamilyInfo = require('../FamilyInfo').default;
+    //   let JobInfo = require('../JobInfo').default;
+    //   let FinanceInfo = require('../FinanceInfo').default;
+    //   let RiskInfo = require('../RiskInfo').default;
+    //
+    //   setTimeout(() => {
+    //     this.setState({
+    //       familyInfo: FamilyInfo,
+    //       jobInfo: JobInfo,
+    //       riskInfo: RiskInfo,
+    //       financeInfo: FinanceInfo
+    //     })
+    //     switch(key) {
+    //       // 当被点击的 TabPane的 key值为 familyInfo, 加载对应的异步组件
+    //       case 'familyInfo':
+    //         this.setState({
+    //           familyInfo: FamilyInfo
+    //         })
+    //
+    //       case 'jobInfo':
+    //         this.setState({
+    //           jobInfo: JobInfo
+    //         })
+    //
+    //       case 'RiskInfo':
+    //         this.setState({
+    //           riskInfo: RiskInfo
+    //         })
+    //
+    //       case 'financeInfo':
+    //         this.setState({
+    //           financeInfo: FinanceInfo
+    //         })
+    //     }
+    //   }, 1000)
+    // }, 'FamilyInfo');
+  // }
 
   // 切换面板
   tabChange = (e) => {
@@ -147,7 +169,7 @@ class CustomerSlider extends Component {
     })
 
     // 获取当前激活 TabPane的 key，对比是否为 basicInfo
-    this.pageLoading(e);
+    // this.pageLoading(e);
   }
 
   // 渲染 Tabs
@@ -176,7 +198,9 @@ class CustomerSlider extends Component {
             }
           </TabPane>
           <TabPane tab="金融业务信息" key="financeInfo">
-            4
+            {this.state.financeInfo &&
+              <this.state.financeInfo />
+            }
           </TabPane>
           <TabPane tab="风险测试" key="riskInfo">
             {this.state.riskInfo &&

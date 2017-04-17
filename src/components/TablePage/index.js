@@ -53,7 +53,7 @@ class TablePage extends Component {
 
     // 异步加载 edit component
     require.ensure([],() => {
-      let editMyCustomer = require('../../Pages/SubView/CustomerSlider').default;
+      let editMyCustomer = require('../../Pages/Subview/CustomerSlider').default;
 
       setTimeout(() => {
         this.setState({

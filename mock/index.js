@@ -12,6 +12,8 @@ module.exports = {
 
   'POST /api/post/asd': 'asd',
 
+  'GET /api/movies/popular': Mock.mock(popularMovies),
+
   'GET PROXY /proxy/douban/book': proxy('https://api.douban.com/v2/book/search'),
 
   'POST /api/user/password': Mock.mock({
