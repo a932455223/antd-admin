@@ -1,59 +1,169 @@
-@purple:#5B66C4;
-@white:#fff;
+//阿里iconfont文件
+@import url('http://at.alicdn.com/t/font_x1fsh8jjkcf5stt9.css');
+@purple: #5a66c6;
+@white: #fff;
+@c-orange: #ffa102;
+@blue-dark: #3f51b5;
+@hover-time: 0.5s;
+@c-pink: #fe6168;
+@c-green: #41bf89;
+@c-blue: #3783fb;
+@c-blue-grey: #5f768f;
+@menu-list: c-pink,
+c-orange,
+c-green,
+c-blue,
+c-blue-grey;
+.loop(@counter) when (@counter >0) {
+    .loop((@counter - 1));
+    @color: extract(@menu-list,
+    @counter);
+    .@{color} {
+        color: @@color;
+    }
+}
 
-.header{
-    padding:0;
+.addMenu {
+    .ant-dropdown-menu-item {
+        .loop(length(@menu-list));
+        .iconfont {
+            display: inline-block;
+            width: 1.5em;
+            text-align: center;
+            margin-right: 0.5em;
+        }
+        &:hover {
+            .iconfont {
+                transition: color 0.1s linear;
+                color: @white;
+            }
+            background-color: @blue-dark;
+            &>a {
+                color: @white;
+            }
+        }
+    }
+}
+.msgMenu{
+    color:Red;
+    
+}
+.header {
+    padding: 0;
     display: flex;
-    background:@purple;
-    .header-wrap{
+    background: @purple;
+    .header-wrap {
+        width: 100%;
         display: flex;
     }
-    .logo{
-        font-size:14px;
-        height:100%;
+    .logo {
+        font-size: 14px;
+        height: 100%;
         display: flex;
         align-items: center;
-        width:200px;
-        color:@white;
-        >img{
-            width:30px;
-            height:30px;
-            margin:0 5px 0 8px;
+        width: 200px;
+        color: @white;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+        >img {
+            width: 30px;
+            height: 30px;
+            margin: 0 5px 0 8px;
         }
-        &:after{
-            content:"|";
-            color:#7983CF;
+        &:after {
+            content: "|";
+            color: #7983CF;
             font-size: 12px;
             align-self: flex-end;
         }
-        .version{
-            height:20px;
+        .version {
+            height: 20px;
             margin-left: 3px;
-            padding:0 4px;
+            padding: 0 4px;
             line-height: 20px;
-            font-size:12px;
+            font-size: 12px;
             background: #FEA429;
-            color:#fff;
-            border-radius:3px;
-            transform:scale(0.8);
+            color: #fff;
+            border-radius: 3px;
+            transform: scale(0.8);
         }
     }
-
-    .ant-menu-horizontal{
-        line-height: 64px;
-        background:@purple;
-        color:@white;
-        border-bottom:none;
-        > .ant-menu-item{
-            border-bottom:none;
-            > a{
-               font-size:16px;
-               color:@white;
-          }
+    .menu {
+        .iconfont,
+        .anticon {
+            padding: 0.8em;
+            font-size: 0.5em;
         }
-
-        > .ant-menu-item-selected{
-            background:#505BB1;
+    }
+    .right-menu {
+        color: @white;
+        position: relative;
+        flex-grow: 1;
+        justify-content: flex-end;
+        display: flex;
+        .msgDropdown {
+            .icon-msg {
+                font-size: 0.8em;
+                z-index: 1;
+                &:before {
+                    color: @white;
+                    position: absolute;
+                    font-size: 2.2em;
+                    z-index: 1;
+                }
+                span {
+                    line-height: 1em;
+                    top: -1.1em;
+                    background-color: @c-orange;
+                    border-radius: 1em;
+                    padding: 0.3em;
+                    display: inline-block;
+                    font-size: 0.8em;
+                    position: relative;
+                    z-index: 3;
+                    left: 0.7em;
+                }
+            }
+        }
+        >.ant-dropdown-link {
+            color: #fff;
+            padding: 0 1.9em;
+            transition: background-color @hover-time linear;
+            .msgDropdown {
+                padding: 0;
+            }
+            >.anticon-plus-circle-o {
+                font-size: 1.5em;
+            }
+            &:hover {
+                background-color: @blue-dark;
+            }
+        }
+        >.user-menu {
+            color: @white;
+            font-size: 1.3em;
+            padding-left: 1em;
+            >.anticon-down {
+                margin: 1em;
+            }
+        }
+    }
+    .ant-menu-horizontal {
+        line-height: 64px;
+        background: @purple;
+        color: @white;
+        border-bottom: none;
+        overflow: hidden;
+        >.ant-menu-item {
+            border-bottom: none;
+            >a {
+                font-size: 16px;
+                color: @white;
+            }
+        }
+        >.ant-menu-item-selected {
+            background: #505BB1;
         }
     }
 }

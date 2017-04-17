@@ -1,0 +1,150 @@
+@import url('http://at.alicdn.com/t/font_x1fsh8jjkcf5stt9.css');
+.addMenu .ant-dropdown-menu-item .c-pink {
+  color: #fe6168;
+}
+.addMenu .ant-dropdown-menu-item .c-orange {
+  color: #ffa102;
+}
+.addMenu .ant-dropdown-menu-item .c-green {
+  color: #41bf89;
+}
+.addMenu .ant-dropdown-menu-item .c-blue {
+  color: #3783fb;
+}
+.addMenu .ant-dropdown-menu-item .c-blue-grey {
+  color: #5f768f;
+}
+.addMenu .ant-dropdown-menu-item .iconfont {
+  display: inline-block;
+  width: 1.5em;
+  text-align: center;
+  margin-right: 0.5em;
+}
+.addMenu .ant-dropdown-menu-item:hover {
+  background-color: #3f51b5;
+}
+.addMenu .ant-dropdown-menu-item:hover .iconfont {
+  transition: color 0.1s linear;
+  color: #fff;
+}
+.addMenu .ant-dropdown-menu-item:hover > a {
+  color: #fff;
+}
+.msgMenu {
+  color: Red;
+}
+.header {
+  padding: 0;
+  display: flex;
+  background: #5a66c6;
+}
+.header .header-wrap {
+  width: 100%;
+  display: flex;
+}
+.header .logo {
+  font-size: 14px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  width: 200px;
+  color: #fff;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.header .logo > img {
+  width: 30px;
+  height: 30px;
+  margin: 0 5px 0 8px;
+}
+.header .logo:after {
+  content: "|";
+  color: #7983CF;
+  font-size: 12px;
+  align-self: flex-end;
+}
+.header .logo .version {
+  height: 20px;
+  margin-left: 3px;
+  padding: 0 4px;
+  line-height: 20px;
+  font-size: 12px;
+  background: #FEA429;
+  color: #fff;
+  border-radius: 3px;
+  transform: scale(0.8);
+}
+.header .menu .iconfont,
+.header .menu .anticon {
+  padding: 0.8em;
+  font-size: 0.5em;
+}
+.header .right-menu {
+  color: #fff;
+  position: relative;
+  flex-grow: 1;
+  justify-content: flex-end;
+  display: flex;
+}
+.header .right-menu .msgDropdown .icon-msg {
+  font-size: 0.8em;
+  z-index: 1;
+}
+.header .right-menu .msgDropdown .icon-msg:before {
+  color: #fff;
+  position: absolute;
+  font-size: 2.2em;
+  z-index: 1;
+}
+.header .right-menu .msgDropdown .icon-msg span {
+  line-height: 1em;
+  top: -1.1em;
+  background-color: #ffa102;
+  border-radius: 1em;
+  padding: 0.3em;
+  display: inline-block;
+  font-size: 0.8em;
+  position: relative;
+  z-index: 3;
+  left: 0.7em;
+}
+.header .right-menu > .ant-dropdown-link {
+  color: #fff;
+  padding: 0 1.9em;
+  transition: background-color 0.5s linear;
+}
+.header .right-menu > .ant-dropdown-link .msgDropdown {
+  padding: 0;
+}
+.header .right-menu > .ant-dropdown-link > .anticon-plus-circle-o {
+  font-size: 1.5em;
+}
+.header .right-menu > .ant-dropdown-link:hover {
+  background-color: #3f51b5;
+}
+.header .right-menu > .user-menu {
+  color: #fff;
+  font-size: 1.3em;
+  padding-left: 1em;
+}
+.header .right-menu > .user-menu > .anticon-down {
+  margin: 1em;
+}
+.header .ant-menu-horizontal {
+  line-height: 64px;
+  background: #5a66c6;
+  color: #fff;
+  border-bottom: none;
+  overflow: hidden;
+}
+.header .ant-menu-horizontal > .ant-menu-item {
+  border-bottom: none;
+}
+.header .ant-menu-horizontal > .ant-menu-item > a {
+  font-size: 16px;
+  color: #fff;
+}
+.header .ant-menu-horizontal > .ant-menu-item-selected {
+  background: #505BB1;
+}
