@@ -16,3 +16,4 @@ const store = configStores();
 
 // render(<Sider/>,document.getElementById('root'));
 render(<Root store= {store}/>,document.getElementById('root'));
+
