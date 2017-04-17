@@ -11,10 +11,8 @@ import App from '../Pages/App';
 import configStores from '../redux/store';
 
 const store = configStores();
-console.log(store.getState());
 
 const validate = function(next, replace, callback){
-    console.dir(next);
     callback();
 }
 

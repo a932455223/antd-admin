@@ -17,7 +17,6 @@ module.exports = {
   'GET /api/user/list': Mock.mock({
     'name|1-10': ['@name']
   }),
-
   'POST /api/post/asd': 'asd',
 
   'GET /api/movies/popular': Mock.mock(popularMovies),
