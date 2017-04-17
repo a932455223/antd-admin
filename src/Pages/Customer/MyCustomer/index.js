@@ -16,7 +16,8 @@ export default class MyCustomer extends Component {
   * 根据返回的状态，拿到相对应的数据
   */
   componentWillMount() {
-    axios.get('/api/movies/popular').then((popularMovies) => {
+    axios.get('/api/movies/popular')
+    .then((popularMovies) => {
       if(popularMovies.status === 200 && popularMovies.statusText === 'OK' && popularMovies.data) {
         // 将数据存入私有的 state中
         this.setState({
