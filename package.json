@@ -5,8 +5,8 @@
   "scripts": {
     "super": "export NODE_ENV=development&& supervisor -i /src -w server.js server.js",
     "dll": "webpack --config ./webpack.config/webpack.config.dll.js",
-    "start": "set NODE_ENV=development&& node server.js",
-    "set": "set NODE_ENV=development&& node server.js",
+    "start": "export NODE_ENV=development&& node server.js",
+    "wstart": "set NODE_ENV=development&& node server.js",
     "build": "export NODE_ENV=production&& webpack --config ./webpack.config/webpack.config.prod.js && node qiniu.config.js && node server.js "
   },
   "dependencies": {
