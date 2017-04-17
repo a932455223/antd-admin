@@ -10,6 +10,7 @@ var Mock = require('mockjs');
 var axios = require('axios');
 
 // myCustomer false data
+var popularColumns = require('./falseData/popularColumns');
 var popularMovies = require('./falseData/popularMovies');
 
 
@@ -42,6 +43,8 @@ module.exports = {
 
   'POST /api/post/asd': 'asd',
 
+  'GET /api/popular/columns': Mock.mock(popularColumns),
+  // popular movies data lists
   'GET /api/movies/popular': Mock.mock(popularMovies),
 
   'GET PROXY /proxy/douban/*': 'https://api.douban.com/v2/',
@@ -67,6 +70,7 @@ module.exports = {
       'remark': '这里是备注'
     }
   })
+
 
 
 };
