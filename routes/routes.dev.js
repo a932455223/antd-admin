@@ -8,7 +8,6 @@ module.exports = (app, mfs, file) => {
     urlArray.push(routesPath[key])
   }
 
-  console.log(urlArray);
   app.get([
     '/', '/login', '/customer/*', '/system/*'
   ], function(req, res, next) {
