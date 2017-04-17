@@ -31,7 +31,45 @@
   color: #fff;
 }
 .msgMenu {
-  color: Red;
+  border: 1px solid #f5eae2;
+  color: #999999;
+  background-color: #fff4ea;
+}
+.msgMenu .ant-dropdown-menu-item-active {
+  background-color: #fff4ea;
+}
+.msgMenu .ant-dropdown-menu-item {
+  cursor: default;
+}
+.msgMenu .ant-dropdown-menu-item .msg-num {
+  color: #ff891e;
+  font-weight: 700;
+  font-size: 1.3em;
+  padding-right: 0.3em;
+}
+.msgMenu .ant-dropdown-menu-item .msg-num + a {
+  text-indent: 1em;
+  display: inline-block;
+}
+.msgMenu .ant-dropdown-menu-item .msg-num + a:link {
+  color: #3783fb;
+  background-color: transparent;
+}
+.msgMenu .ant-dropdown-menu-item .msg-num + a:visited {
+  color: #3783fb;
+  background-color: transparent;
+}
+.msgMenu .ant-dropdown-menu-item .msg-num + a:hover {
+  color: #3783fb;
+  background-color: transparent;
+}
+.msgMenu .ant-dropdown-menu-item .msg-num + a:active {
+  background-color: transparent;
+  color: #3783fb;
+}
+.msgMenu .ant-dropdown-menu-item-selected {
+  background-color: #fff4ea;
+  color: #999999;
 }
 .header {
   padding: 0;
@@ -98,16 +136,16 @@
   z-index: 1;
 }
 .header .right-menu .msgDropdown .icon-msg span {
+  font-size: .8em;
   line-height: 1em;
-  top: -1.1em;
-  background-color: #ffa102;
-  border-radius: 1em;
-  padding: 0.3em;
-  display: inline-block;
-  font-size: 0.8em;
   position: relative;
   z-index: 3;
-  left: 0.7em;
+  top: -1.1em;
+  left: .7em;
+  display: inline-block;
+  padding: .3em;
+  border-radius: 1em;
+  background-color: #ffa102;
 }
 .header .right-menu > .ant-dropdown-link {
   color: #fff;
@@ -132,10 +170,10 @@
   margin: 1em;
 }
 .header .ant-menu-horizontal {
-  line-height: 64px;
   background: #5a66c6;
-  color: #fff;
   border-bottom: none;
+  color: #fff;
+  line-height: 64px;
   overflow: hidden;
 }
 .header .ant-menu-horizontal > .ant-menu-item {
@@ -145,6 +183,6 @@
   font-size: 16px;
   color: #fff;
 }
-.header .ant-menu-horizontal > .ant-menu-item-selected {
+.header .ant-menu-horizontal .ant-menu-item-selected {
   background: #505BB1;
 }
