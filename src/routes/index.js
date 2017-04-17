@@ -60,12 +60,12 @@ const route = (
         <Route path='system' onEnter={validate} component={App}>
             <Route path='users' getComponent={(location, cb)=>{
                 require.ensure([],() => {
-                      cb(null,require('../Pages/System/Users').default)
+                      cb(null,require('../Pages/System/Users/Users').default)
                  },'users')
             }}/>
             <Route path='roles' getComponent={(location, cb)=>{
                 require.ensure([],() => {
-                      cb(null,require('../Pages/System/Roles').default)
+                      cb(null,require('../Pages/System/Roles/Roles.js').default)
                  },'roles')
             }}/>
         </Route>

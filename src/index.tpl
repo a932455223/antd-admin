@@ -9,7 +9,6 @@
   <meta content="yes" name="apple-touch-fullscreen">
   <meta content="telephone=no,email=no" name="format-detection">
   <title>Title</title>
-  <script src="http://rap.yeapoo.cn/rap.plugin.js?projectId=1"></script>
 </head>
 <body>
   <div id="root"></div>

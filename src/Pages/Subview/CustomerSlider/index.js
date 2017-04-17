@@ -14,7 +14,7 @@ const TabPane = Tabs.TabPane;
 import styles from './indexStyle.scss';
 // import { hideEditDock } from '../../../redux/actions/commonAction';
 
-// import basicInfo  from './Pages/basicInfo';
+// import personalBasicInfo  from './Pages/personalBasicInfo';
 
 const LoadSpin = () => {
   return(
@@ -31,11 +31,19 @@ class CustomerSlider extends Component {
     currentId: '',
     activeTabs: '',
 
-    basicInfo: '',
-    familyInfo: '',
-    financeInfo: '',
-    jobInfo: '',
-    riskInfo: '',
+    personalClient: {
+      personalBasicInfo: '',
+      familyInfo: '',
+      financeInfo: '',
+      jobInfo: '',
+      riskInfo: '',
+    },
+
+    enterpriseClient: {
+      enterpriseBasicInfo: '',
+      keyPersonInfo: '',
+      offlineInfo: '',
+    },
 
     fields: {
       notificate: false
@@ -48,22 +56,34 @@ class CustomerSlider extends Component {
     * 异步加载 BasicInfo, FamilyInfo, JobInfo, FinanceInfo, RiskInfo
     */
     require.ensure([],() => {
-      let BasicInfo = require('../BasicInfo').default;
+      let PersonalBasicInfo = require('../PersonalBasicInfo').default;
       let FamilyInfo = require('../FamilyInfo').default;
       let JobInfo = require('../JobInfo').default;
       let FinanceInfo = require('../FinanceInfo').default;
       let RiskInfo = require('../RiskInfo').default;
 
+      let EnterpriseBasicInfo = require('../EnterpriseBasicInfo').default;
+      let KeyPersonInfo = require('../KeyPersonInfo').default;
+      let OfflineInfo = require('../OfflineInfo').default;
+
       setTimeout(() => {
         this.setState({
-          basicInfo: BasicInfo,
-          familyInfo: FamilyInfo,
-          jobInfo: JobInfo,
-          riskInfo: RiskInfo,
-          financeInfo: FinanceInfo
+          personalClient: {
+            personalBasicInfo: PersonalBasicInfo,
+            familyInfo: FamilyInfo,
+            jobInfo: JobInfo,
+            riskInfo: RiskInfo,
+            financeInfo: FinanceInfo
+          },
+
+          enterpriseClient: {
+            enterpriseBasicInfo: EnterpriseBasicInfo,
+            keyPersonInfo: KeyPersonInfo,
+            offlineInfo: OfflineInfo,
+          }
         })
       }, 100)
-    }, 'BasicInfo');
+    }, 'InfoTabs');
   };
 
   // show and hide notification
@@ -121,7 +141,7 @@ class CustomerSlider extends Component {
     // const upperKey = key.replace(/^[a-z]/, function(l){return l.toUpperCase()})
     // console.log(upperKey);
 
-    // 异步加载 basicInfo
+    // 异步加载 personalBasicInfo
     // require.ensure([],() => {
     //   let FamilyInfo = require('../FamilyInfo').default;
     //   let JobInfo = require('../JobInfo').default;
@@ -168,51 +188,92 @@ class CustomerSlider extends Component {
       currentId: this.props.currentId
     })
 
-    // 获取当前激活 TabPane的 key，对比是否为 basicInfo
+    // 获取当前激活 TabPane的 key，对比是否为 personalBasicInfo
     // this.pageLoading(e);
   }
 
-  // 渲染 Tabs
-    renderTabs = () => {
-      return (
-        <Tabs className={styles.tabs}
-              // tabBarExtraContent={operations}
-              key={this.props.currentId}
-              defaultActiveKey={this.props.currentId === this.state.currentId ? this.state.activeTabs : 'basicInfo'}
-              // type="card"
-              onChange={this.tabChange}
-              >
-          <TabPane tab="基本信息" key="basicInfo">
-            {this.state.basicInfo &&
-              <this.state.basicInfo {...this.props}/>
-            }
-          </TabPane>
-          <TabPane tab="家庭信息" key="familyInfo">
-            {this.state.familyInfo &&
-              <this.state.familyInfo />
-            }
-          </TabPane>
-          <TabPane tab="工作信息" key="jobInfo">
-            {this.state.jobInfo &&
-              <this.state.jobInfo />
-            }
-          </TabPane>
-          <TabPane tab="金融业务信息" key="financeInfo">
-            {this.state.financeInfo &&
-              <this.state.financeInfo />
-            }
-          </TabPane>
-          <TabPane tab="风险测试" key="riskInfo">
-            {this.state.riskInfo &&
-              <this.state.riskInfo />
-            }
-          </TabPane>
-        </Tabs>
-      )
+  // 个人用户的 Tabs
+  personalUserTabs = () => {
+    const { personalClient } = this.state;
+    const tabsProps = {
+      className: styles.tabs,
+      // tabBarExtraContent: operations,
+      key: this.props.currentId,
+      defaultActiveKey: this.props.currentId === this.state.currentId ? this.state.activeTabs : 'personalBasicInfo',
+      // type: "card",
+      onChange: this.tabChange
     }
 
+    return (
+      <Tabs {...tabsProps} >
+        <TabPane tab="基本信息" key="personalBasicInfo">
+          {personalClient && personalClient.personalBasicInfo &&
+            <personalClient.personalBasicInfo {...this.props}/>
+          }
+        </TabPane>
+        <TabPane tab="家庭信息" key="familyInfo">
+          {personalClient && personalClient.familyInfo &&
+            <personalClient.familyInfo />
+          }
+        </TabPane>
+        <TabPane tab="工作信息" key="jobInfo">
+          {personalClient && personalClient.jobInfo &&
+            <personalClient.jobInfo />
+          }
+        </TabPane>
+        <TabPane tab="金融业务信息" key="financeInfo">
+          {personalClient && personalClient.financeInfo &&
+            <personalClient.financeInfo />
+          }
+        </TabPane>
+        <TabPane tab="风险测试" key="riskInfo">
+          {personalClient && personalClient.riskInfo &&
+            <personalClient.riskInfo />
+          }
+        </TabPane>
+      </Tabs>
+    )
+  }
+
+  // 企业用户的 tabs
+  enterpriseUserTabs = () => {
+    const { enterpriseClient } = this.state;
+    const tabsProps = {
+      className: styles.tabs,
+      // tabBarExtraContent: operations,
+      key: this.props.currentId,
+      defaultActiveKey:
+        this.props.currentId === this.state.currentId
+        ?
+        this.state.activeTabs
+        :
+        'enterpriseBasicInfo',
+      onChange: this.tabChange,
+    }
+
+    return(
+      <Tabs {...tabsProps} >
+        <TabPane tab="基本信息" key="enterpriseBasicInfo">
+          {enterpriseClient.enterpriseBasicInfo &&
+            <enterpriseClient.enterpriseBasicInfo {...this.props}/>
+          }
+        </TabPane>
+        <TabPane tab="关键人信息" key="keyPersonInfo">
+          {enterpriseClient.keyPersonInfo &&
+            <enterpriseClient.keyPersonInfo {...this.props}/>
+          }
+        </TabPane>
+        <TabPane tab="线下业务" key="offlineInfo">
+          {enterpriseClient.offlineInfo &&
+            <enterpriseClient.offlineInfo {...this.props}/>
+          }
+        </TabPane>
+      </Tabs>
+    )
+  }
+
   render() {
-    const { visible, currentId } = this.props;
+    const { visible, currentId, clientType } = this.props;
 
     return(
       <div>
@@ -240,7 +301,12 @@ class CustomerSlider extends Component {
           </Row>
         </div>
 
-        {this.renderTabs()}
+        {clientType && clientType == 'movie'
+          ?
+          this.personalUserTabs()
+          :
+          this.enterpriseUserTabs()
+        }
       </div>
     )
   }
