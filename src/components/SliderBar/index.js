@@ -1,4 +1,5 @@
 import React,{ Component } from 'react';
+import './less/sliderBarStyle.less'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 import {Link} from 'react-router';
@@ -94,9 +95,10 @@ class SliderBar extends Component{
                   selectedKeys={this.state.selectKeys}
                   style={{ height: '100%' }}
                   key={openKeys[0]}
+                  className="mySiderMenu"
                 >
                  {items.map((item) => {
-                     return (<SubMenu  key={item.id.toString()} title={<span><Icon type="user" />{item.name}</span>}>
+                     return (<SubMenu  key={item.id.toString()} title={<span>{item.name}</span>}>
                         {item.children.map((subItem)=>(<Menu.Item key={subItem.id}><Link to={subItem.url}>{subItem.name}</Link></Menu.Item>))}
                      </SubMenu>)
                  })}

@@ -17,24 +17,24 @@ const MenuItemGroup = Menu.ItemGroup;
 const addMenu = (
   <Menu className="addMenu">
     <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+      <a target="_blank" rel="noopener noreferrer" href="javascript:void(0)">
         <i className="iconfont icon-date c-pink"></i>新增客户
     </a>
     </Menu.Item>
     <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+      <a target="_blank" rel="noopener noreferrer" href="javascript:void(0)">
         <i className="iconfont icon-call c-orange"></i>新增产品</a>
     </Menu.Item>
     <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+      <a target="_blank" rel="noopener noreferrer" href="javascript:void(0)">
         <i className="iconfont icon-customer c-green"></i>新增任务</a>
     </Menu.Item>
     <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+      <a target="_blank" rel="noopener noreferrer" href="javascript:void(0)">
         <i className="iconfont icon-bankcard c-blue"></i>新增银行卡</a>
     </Menu.Item>
     <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+      <a target="_blank" rel="noopener noreferrer" href="javascript:void(0)">
         <i className="iconfont icon-local c-blue-grey"></i>新增地址</a>
     </Menu.Item>
   </Menu>
@@ -42,13 +42,25 @@ const addMenu = (
 const msgMenu = (
   <Menu className="msgMenu">
     <Menu.Item key="0">
-      <a href="http://www.alipay.com/">1st menu item</a>
+      <span className="msg-num">32</span>条客户信息被创建,
+      <a href="javascript:void(0)">点击查看</a>
     </Menu.Item>
     <Menu.Item key="1">
-      <a href="http://www.taobao.com/">2nd menu item</a>
+      <span className="msg-num">2</span>条客户信息被创建,
+      <a href="javascript:void(0)">点击查看</a>
     </Menu.Item>
-    <Menu.Divider />
-    <Menu.Item key="3">3d menu item</Menu.Item>
+    <Menu.Item key="2">
+      <span className="msg-num">14</span>条客户信息被创建,
+      <a href="javascript:void(0)">点击查看</a>
+    </Menu.Item>
+    <Menu.Item key="3">
+      <span className="msg-num">3</span>条客户信息被创建,
+      <a href="javascript:void(0)">点击查看</a>
+    </Menu.Item>
+    <Menu.Item key="4">
+      <span className="msg-num">3</span>条客户信息被创建,
+      <a href="javascript:void(0)">点击查看</a>
+    </Menu.Item>
   </Menu>
 );
 class TopHeader extends React.Component {
@@ -75,9 +87,7 @@ class TopHeader extends React.Component {
             精准营销系统
             <div className="version">v1.0</div>
           </div>
-          <Menu className="menu" onClick={this.handleClick} selectedKeys={[path
-            ? path
-            : this.state.current]} mode="horizontal">
+          <Menu className="menu" onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
             <Menu.Item key="customer">
               <Link to='/customer/my'>
                 <i className="iconfont icon-customer"></i>客户管理
