@@ -40,7 +40,7 @@ class TablePage extends Component {
 
     this.setState({
       dockVisible: true
-    })
+    });
     // const { dispatch, editDock } = this.props;
     // dispatch(showEditDock(true, info.id));
 
@@ -62,14 +62,14 @@ class TablePage extends Component {
         })
       }, 300)
     }, 'CustomerSlider');
-  }
+  };
 
   // close Dock
   closeDock = () => {
     this.setState({
       dockVisible: false
     })
-  }
+  };
 
   render(){
     // table 的选择框

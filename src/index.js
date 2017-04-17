@@ -15,5 +15,6 @@ const store = configStores();
 // import Sider from './components/MenuList/MenuList'
 
 // render(<Sider/>,document.getElementById('root'));
+
 render(<Root store= {store}/>,document.getElementById('root'));
 

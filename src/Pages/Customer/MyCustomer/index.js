@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import axios from 'axios';
+import React, {Component} from "react";
+import axios from "axios";
 
-import TablePage from '../../../components/TablePage';
+import TablePage from "../../../components/TablePage";
 
 export default class MyCustomer extends Component {
   state = {
@@ -12,25 +12,25 @@ export default class MyCustomer extends Component {
   }
 
   /*
-  * 初始化加载的时候，调用接口获取返回的数据
-  * 根据返回的状态，拿到相对应的数据
-  */
+   * 初始化加载的时候，调用接口获取返回的数据
+   * 根据返回的状态，拿到相对应的数据
+   */
   componentWillMount() {
     axios.get('/api/movies/popular')
-    .then((popularMovies) => {
-      if(popularMovies.status === 200 && popularMovies.statusText === 'OK' && popularMovies.data) {
-        // 将数据存入私有的 state中
-        this.setState({
-          loading: false,
-          popularMovies: popularMovies.data[0]
-        })
-      }
-    })
+      .then((popularMovies) => {
+        if (popularMovies.status === 200 && popularMovies.statusText === 'OK' && popularMovies.data) {
+          // 将数据存入私有的 state中
+          this.setState({
+            loading: false,
+            popularMovies: popularMovies.data[0]
+          })
+        }
+      })
   }
 
   // 拿到传入的 movies数组，遍历筛选得到新的数组
   filterMoviesData = movies => movies.map((item, sort) => {
-    if(item && item.title) {
+    if (item && item.title) {
       return {
         key: item.id,
         id: item.id,
@@ -45,7 +45,7 @@ export default class MyCustomer extends Component {
   });
 
   render() {
-    const { popularMovies, page, loading } = this.state;
+    const {popularMovies, page, loading} = this.state;
 
     // 渲染 Table表格的表头数据
     const columns = [
@@ -61,7 +61,7 @@ export default class MyCustomer extends Component {
         key: 'clientCategory',
         width: '20%'
       },
-       {
+      {
         title: '电话',
         dataIndex: 'clientPhone',
         key: 'clientPhone',
@@ -89,10 +89,10 @@ export default class MyCustomer extends Component {
 
     // 渲染表单内部的数据
     const dataSource = popularMovies && popularMovies.subjects
-                       ?
-                       this.filterMoviesData(popularMovies.subjects)
-                       :
-                       [];
+      ?
+      this.filterMoviesData(popularMovies.subjects)
+      :
+      [];
 
     const myCustomerProps = {
       columns: columns,
