@@ -5,7 +5,7 @@ import {
 } from 'antd';
 const RadioGroup = Radio.Group;
 
-import styles from './riskInfo.scss';
+import styles from './indexStyle.scss';
 
 const options = [
   { label: '30 岁（含）以下', value: '10' },
