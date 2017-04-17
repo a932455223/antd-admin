@@ -7,7 +7,7 @@ module.exports = [
   {
     id: 2,
     name: '客户类别',
-    key: 'clientCategory'
+    key: 'clientType'
   },
   {
     id: 3,

@@ -46,7 +46,7 @@ export default class MyCustomer extends Component {
       case 'clientName':
         return 15;
 
-      case 'clientCategory':
+      case 'clientType':
         return 20;
 
       case 'clientPhone':
