@@ -18,7 +18,6 @@ module.exports = {
   'GET /api/user/list': Mock.mock({
     'name|1-10': ['@name']
   }),
-
   'GET /api/customs': Mock.mock({
     "code": 200,
     "data": {
