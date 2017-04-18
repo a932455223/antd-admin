@@ -69,12 +69,23 @@ const route = (
                  },'roles')
             }}/>
         </Route>
+        <Route path='organization' onEnter={validate} component={App}>
+            <Route path='staff' getComponent={(location, cb)=>{
+                require.ensure([],() => {
+                      cb(null,require('../Pages/Organization/Staff').default)
+                 },'staff')
+            }}/>
+            <Route path='branches' getComponent={(location, cb)=>{
+                require.ensure([],() => {
+                      cb(null,require('../Pages/Organization/Branches').default)
+                 },'branches')
+            }}/>
+        </Route>
         <Route path='login' getComponent={(location, cb)=>{
             require.ensure([],() => {
                   cb(null,require('../Pages/Login/login').default)
              },'login')
         }}/>
-
     </Route>
 )
 
