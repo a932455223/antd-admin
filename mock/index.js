@@ -18,7 +18,7 @@ module.exports = {
   'GET /api/user/list': Mock.mock({
     'name|1-10': ['@name']
   }),
-  'GET /api/customs': Mock.mock({
+  'GET /api/customers': Mock.mock({
     "code": 200,
     "data": {
       "customers|1-10": [{
@@ -29,7 +29,8 @@ module.exports = {
         "manager": /李小龙|张小花|陈二狗/,
         "name": "@name",
         "phone": /[0-9]{13}/,
-        "risk": /安全型|风险型/
+        "risk": /安全型|风险型/,
+        "attention|1": true
       }]
     },
     "pagination": {

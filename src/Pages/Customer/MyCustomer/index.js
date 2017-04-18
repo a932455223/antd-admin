@@ -11,7 +11,7 @@ export default class MyCustomer extends Component {
   state = {
     loading: true,
     columnsLists: [],
-    popularMovies: {},
+    customers: [],
     page: 1,
     type: 0
   }
@@ -32,13 +32,17 @@ export default class MyCustomer extends Component {
     })
 
     // 请求列表数据
-    axios.get('/api/movies/popular')
-    .then((data) => {
-      if(data.status === 200 && data.statusText === 'OK' && data.data) {
+    axios.get('/api/customers')
+    .then((json) => {
+      if(json.status === 200 &&
+        json.statusText === 'OK' &&
+        json.data &&
+        json.data.data &&
+        json.data.data.customers) {
         // 将数据存入私有的 state中
         this.setState({
           loading: false,
-          popularMovies: data.data[0]
+          customers: json.data.data.customers
         })
       }
     })
@@ -89,7 +93,7 @@ export default class MyCustomer extends Component {
           render: record => (
             <div className='attention'>
               <p>{record.subsidiaryOrgan}</p>
-              {record.focus && record.focus === true
+              {record.attention && record.attention === true
                 ?
                 <a href="#" onClick={this.customerFocus.bind(this, record.id)}>
                   <Icon type="heart" />关注
@@ -115,48 +119,43 @@ export default class MyCustomer extends Component {
   })
 
   // 拿到传入的 movies数组，遍历筛选得到新的数组
-  filterMoviesData = movies => movies.map((item, sort) => {
-    if(item && item.title) {
+  filterMoviesData = customers => customers.map((item, sort) => {
+    if(item && item.name) {
       return {
         key: item.id,
         id: item.id,
-        clientName: item.title,
-        clientType: item.subtype,
-        riskPreference: item.rating.average,
-        clientPhone: item.year,
-        customerManager: item.genres[0],
-        subsidiaryOrgan: item.original_title,
-        focus: true
+        clientName: item.name,
+        clientType: item.category,
+        riskPreference: item.risk,
+        clientPhone: item.phone,
+        customerManager: item.manager,
+        subsidiaryOrgan: item.department,
+        attention: item.attention
       }
     }
   });
 
   render() {
-    const { popularMovies, page, loading, columnsLists } = this.state;
+    const { customers, page, loading, columnsLists, editCustomer } = this.state;
 
     // 渲染 Table表格的表头数据
     const columns =  columnsLists && this.handleColumns(columnsLists);
 
     // 渲染表单内部的数据
-    const dataSource = popularMovies && popularMovies.subjects
-                       ?
-                       this.filterMoviesData(popularMovies.subjects)
-                       :
-                       [];
+    const dataSource = this.filterMoviesData(customers);
+    console.log(dataSource);
 
     const myCustomerProps = {
       columns: columns,
       dataSource: dataSource,
       page: page,
-      loading: loading
+      loading: loading,
+      editCustomer: editCustomer
     };
 
     return (
       <div>
-        <header>
-          <Button>新建客户</Button>
-          <Button>更多操作</Button>
-        </header>
+        <a href="#">筛选</a>
         <TablePage {...myCustomerProps}/>
       </div>
     )
