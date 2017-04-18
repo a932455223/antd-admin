@@ -7,9 +7,14 @@ import {
   Col,
   Spin,
   Button,
-  notification
+  notification,
+  Form,
+  Select,
+  Input
 } from 'antd';
 const TabPane = Tabs.TabPane;
+const FormItem = Form.Item;
+const Option = Select.Option;
 
 import styles from './indexStyle.scss';
 // import { hideEditDock } from '../../../redux/actions/commonAction';
@@ -23,6 +28,89 @@ const LoadSpin = () => {
     </div>
   )
 };
+
+class NewCustomer extends Component {
+  // 下拉框选择发生变化时
+  selectChange = (value) => {
+    // console.log(value);
+  }
+
+  inputChange = (e) => {
+    // const { getFieldValue } = this.props.form;
+    // console.log(getFieldValue('name'))
+    // console.log(e.target);
+  };
+
+  // 点击确认不保存按钮后，关闭 Dock弹窗
+  openNotification = () => {
+    this.props.closeDock();
+  }
+
+  // 点击确认按钮，跳转到新建客户页面
+
+  render() {
+    const { getFieldDecorator } = this.props.form;
+    const formItemLayout = {
+      labelCol: {span: 3},
+      wrapperCol: {span: 9}
+    };
+
+    return (
+      <div>
+        <Icon
+          className={styles.icon}
+          onClick={this.openNotification}
+          type="close"
+        />
+
+        <Form>
+          <Row>
+            <Col span={24}>
+              <FormItem wrapperCol={{span: 8}}>
+                {getFieldDecorator('clientType', {
+                  rules: [{
+                    required: true,
+                    // message: 'Please select the movie type!'
+                  }],
+                  onChange: this.selectChange
+                })(
+                  <Select placeholder="请选择客户类别">
+                    <Option value="personalClient">个人客户</Option>
+                    <Option value="enterpriseClient">企业客户</Option>
+                  </Select>
+                )}
+              </FormItem>
+            </Col>
+
+            <Col span={16}>
+              <FormItem wrapperCol={{span: 24}}>
+                {getFieldDecorator('clientName', {
+                  rules: [{
+                    required: true,
+                    // message: 'Please select the movie type!'
+                  }],
+                  onChange: this.inputChange
+                })(
+                  <Input />
+                )}
+              </FormItem>
+            </Col>
+
+            <Col span={8}>
+              <FormItem>
+                <Button type="primary" onClick={this.submitClient}>Submit</Button>
+              </FormItem>
+            </Col>
+          </Row>
+
+        </Form>
+
+      </div>
+    )
+  }
+}
+
+const AddNewCustomer = Form.create()(NewCustomer);
 
 // customer Slider component
 class CustomerSlider extends Component {
@@ -235,15 +323,6 @@ class CustomerSlider extends Component {
 
     return (
       <Tabs {...tabsProps} >
-        {/*tabLists && tabLists.map((item) => (
-              <TabPane tab={item.name} key={item.id}>
-                {personalClient && personalClient.personalBasicInfo &&
-                  <personalClient.personalBasicInfo {...this.props}/>
-                }
-              </TabPane>
-            )
-          )
-        */}
         <TabPane tab="基本信息" key="personalBasicInfo">
           {personalClient && personalClient.personalBasicInfo &&
             <personalClient.personalBasicInfo {...this.props}/>
@@ -310,8 +389,9 @@ class CustomerSlider extends Component {
     )
   }
 
-  render() {
-    const { visible, currentId, clientType } = this.props;
+  // edit customer
+  editCustomer = () => {
+    const { visible, currentId, clientType, editCustomer } = this.props;
 
     return(
       <div>
@@ -341,7 +421,7 @@ class CustomerSlider extends Component {
           </Row>
         </div>
 
-        {clientType && clientType == 'movie'
+        {clientType && clientType == '个人客户'
           ?
           this.personalUserTabs()
           :
@@ -350,8 +430,28 @@ class CustomerSlider extends Component {
       </div>
     )
   }
+
+  render() {
+    const { visible, currentId, clientType, editCustomer } = this.props;
+
+    const addNewCustomerProps = {
+      closeDock: this.props.closeDock
+    }
+
+    return(
+      <div>
+        {editCustomer && editCustomer === true
+          ?
+          this.editCustomer()
+          :
+          <AddNewCustomer {...addNewCustomerProps}/>
+        }
+      </div>
+    )
+  }
 }
 
+export default CustomerSlider;
 // const mapStateToProps = (store) => {
 //   return {
 //     editDock: store.common.editDock.data
@@ -359,4 +459,3 @@ class CustomerSlider extends Component {
 // }
 
 // export default connect(mapStateToProps)(CustomerSlider);
-export default CustomerSlider;

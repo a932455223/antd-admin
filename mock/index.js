@@ -18,7 +18,86 @@ module.exports = {
   'GET /api/user/list': Mock.mock({
     'name|1-10': ['@name']
   }),
-  'GET /api/customs': Mock.mock({
+
+  // 下拉菜单
+
+  // 客户资料 sliderBar  menu 下拉菜单
+  'GET /common/dropdown/list/customer': [
+    {
+      id: 1,
+      name: '客户资料',
+      children: [
+        {
+          id: 10,
+          name: '我的客户',
+          url: '/customer/my'
+        }, {
+          id: 11,
+          name: '我关注的客户',
+          url: '/customer/focused'
+        }, {
+          id: 12,
+          name: '公海客户',
+          url: '/customer/undistributed'
+        }, {
+          id: 13,
+          name: '我下属的客户',
+          url: '/customer/subordinate'
+        }, {
+          id: 14,
+          name: '我参与的客户',
+          url: '/customer/participation'
+        }, {
+          id: 15,
+          name: '新分配给我的客户',
+          url: '/customer/recentlyDistributed'
+        }, {
+          id: 16,
+          name: '我的全部客户',
+          url: '/customer/all'
+        }
+      ]
+    }
+  ],
+
+  'GET /common/dropdown/list/system': [
+    {
+      id: 2,
+      name: '用户和权限',
+      children: [
+        {
+          id: 20,
+          name: '用户管理',
+          url: '/system/users'
+        }, {
+          id: 21,
+          name: '角色和权限管理',
+          url: '/system/roles'
+        }
+      ]
+    }
+  ],
+
+  'GET /common/dropdown/list/organization': [
+    {
+      id: 3,
+      name: '组织机构管理',
+      children: [
+        {
+          id: 30,
+          name: '员工管理',
+          url: '/organization/staff'
+        }, {
+          id: 31,
+          name: '组织管理',
+          url: '/organization/branches'
+        }
+      ]
+    }
+  ],
+
+  // 用户列表
+  'GET /api/customers': Mock.mock({
     "code": 200,
     "data": {
       "customers|1-10": [{
@@ -29,7 +108,8 @@ module.exports = {
         "manager": /李小龙|张小花|陈二狗/,
         "name": "@name",
         "phone": /[0-9]{13}/,
-        "risk": /安全型|风险型/
+        "risk": /安全型|风险型/,
+        "attention|1": true
       }]
     },
     "pagination": {
@@ -40,7 +120,7 @@ module.exports = {
     "message": "this is some message"
   }),
 
-  'POST /api/post/asd': 'asd',
+
 
   'GET /api/popular/columns': Mock.mock(popularColumns),
   // popular movies data lists
@@ -52,6 +132,7 @@ module.exports = {
     'password': /[a-z]{5,10}/
   }),
 
+  // 角色列表 roles
   'GET /api/get/system/roles/list': Mock.mock({
     'list|1-100': [{
       'id|+1': 1,
@@ -60,6 +141,7 @@ module.exports = {
       'createTime': '2013-12-12',
     }]
   }),
+
 
   'GET /api/get/system/roles/users': Mock.mock({
     'user': {

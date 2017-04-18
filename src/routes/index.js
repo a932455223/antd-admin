@@ -87,7 +87,7 @@ const route = (
              },'login')
         }}/>
     </Route>
-)
+);
 
 const routeOne = (
     <Route path='/'>

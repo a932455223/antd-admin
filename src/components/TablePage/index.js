@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 // import { connect } from 'react-redux';
-import { Table, Pagination, Spin } from 'antd';
+import { Table, Pagination, Spin, Button } from 'antd';
 import Dock from 'react-dock';
 import './indexStyle.less';
 
@@ -14,7 +14,8 @@ class TablePage extends Component {
     dockVisible: false,
     CustomerSlider: '',
     currentId: '',
-    clientType: ''
+    clientType: '',
+    editCustomer: true
   };
 
   componentWillMount() {
@@ -55,9 +56,10 @@ class TablePage extends Component {
     }
 
     this.setState({
+      editCustomer: true,
       dockVisible: true,
       currentId: info.id,
-      clientType: info.clientCategory
+      clientType: info.clientType
     })
     // const { dispatch, editDock } = this.props;
     // dispatch(showEditDock(true, info.id));
@@ -89,9 +91,16 @@ class TablePage extends Component {
     })
   }
 
+  // add new customer
+  addNewCustomer = () => {
+    this.setState({
+      dockVisible: true,
+      editCustomer: false
+    })
+  }
+
   render(){
     const { columns, dataSource, loading, page } = this.props;
-
     // // table 的选择框
     // const rowSelection = {
     //   onChange: this.onSelectChange,
@@ -102,7 +111,8 @@ class TablePage extends Component {
       closeDock: this.closeDock,
       visible: this.state.dockVisible,
       currentId: this.state.currentId,
-      clientType: this.state.clientType
+      clientType: this.state.clientType,
+      editCustomer: this.state.editCustomer
     }
 
     // table props lists
@@ -155,6 +165,11 @@ class TablePage extends Component {
 
     return (
       <div>
+        <header>
+          <Button onClick={this.addNewCustomer}>新建客户</Button>
+          <Button>更多操作</Button>
+        </header>
+
         <Table {...tableProps} />
 
         <Pagination {...pageProps} />
