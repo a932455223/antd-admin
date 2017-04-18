@@ -8,6 +8,7 @@ import UserInfo from "./component/UserInfoCard";
 import LimitCard from "./component/LimitCard";
 //===============================================================
 import './less/rolesStyle.less';
+import API from '../../../../API';
 
 export default class SystemUsers extends Component {
 
@@ -23,7 +24,7 @@ export default class SystemUsers extends Component {
   };
 
   componentWillMount() {
-    axios.get('/api/get/system/roles/list')
+    axios.get(API.SYSTEM_ROLES_LIST)
       .then(res => {
         this.setState({
           table: {
