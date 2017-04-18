@@ -15,7 +15,8 @@ function info(msg,color='red'){
 
 const urls = {
     customer:'/menus/customer',
-    system:'/menus/system'
+    system:'/menus/system',
+    organization:'/menus/organization'
 }
 
 

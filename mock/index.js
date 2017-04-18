@@ -52,7 +52,7 @@ module.exports = {
     'password': /[a-z]{5,10}/
   }),
 
-  'GET /api/get/system/roles/users/list': Mock.mock({
+  'GET /api/get/system/roles/list': Mock.mock({
     'list|1-100': [{
       'id|+1': 1,
       'clientName': '@name',

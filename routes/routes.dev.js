@@ -9,7 +9,7 @@ module.exports = (app, mfs, file) => {
   }
 
   app.get([
-    '/', '/login', '/customer/*', '/system/*'
+    '/', '/login', '/customer/*', '/system/*','/organization/*'
   ], function (req, res, next) {
     devMiddleWare.waitUntilValid(function () {
       var html = mfs.readFileSync(file);
@@ -84,6 +84,30 @@ module.exports = (app, mfs, file) => {
     res.json(data);
     next();
   });
+
+
+  app.get('/menus/organization', (req, res, next) => {
+    let data = [
+      {
+        id: 3,
+        name: '组织机构管理',
+        children: [
+          {
+            id: 20,
+            name: '员工管理',
+            url: '/organization/staff'
+          }, {
+            id: 21,
+            name: '组织管理',
+            url: '/organization/branches'
+          }
+        ]
+      }
+    ]
+    res.json(data);
+    next();
+  });
+
 
   app.post('/users', (req, res, next) => {
     console.log(req.body);
