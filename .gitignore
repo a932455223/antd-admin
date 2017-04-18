@@ -6,3 +6,4 @@ npm-debug.log
 yarn.lock
 /.idea/
 .happypack
+src/routes/index.dev.js

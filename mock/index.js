@@ -15,14 +15,14 @@ var popularMovies = require('./falseData/popularMovies');
 
 
 module.exports = {
-  'GET /api/user/list': Mock.mock({
+  'GET /user/list': Mock.mock({
     'name|1-10': ['@name']
   }),
 
   // 下拉菜单
 
   // 客户资料 sliderBar  menu 下拉菜单
-  'GET /common/dropdown/list/customer': [
+  'GET /asd/common/dropdown/list/customer': [
     {
       id: 1,
       name: '客户资料',
@@ -60,7 +60,7 @@ module.exports = {
     }
   ],
 
-  'GET /common/dropdown/list/system': [
+  'GET /asd/common/dropdown/list/system': [
     {
       id: 2,
       name: '用户和权限',
@@ -78,7 +78,7 @@ module.exports = {
     }
   ],
 
-  'GET /common/dropdown/list/organization': [
+  'GET /asd/common/dropdown/list/organization': [
     {
       id: 3,
       name: '组织机构管理',
@@ -122,18 +122,13 @@ module.exports = {
 
 
 
-  'GET /api/popular/columns': Mock.mock(popularColumns),
+  'GET /asd/popular/columns': Mock.mock(popularColumns),
   // popular movies data lists
-  'GET /api/movies/popular': Mock.mock(popularMovies),
+  'GET /asd/movies/popular': Mock.mock(popularMovies),
 
-  'GET PROXY /proxy/douban/*': 'https://api.douban.com/v2/',
-
-  'POST /api/user/password': Mock.mock({
-    'password': /[a-z]{5,10}/
-  }),
 
   // 角色列表 roles
-  'GET /api/get/system/roles/list': Mock.mock({
+  'GET /asd/system/roles/list': Mock.mock({
     'list|1-100': [{
       'id|+1': 1,
       'clientName': '@name',
@@ -142,7 +137,7 @@ module.exports = {
     }]
   }),
 
-  'GET /privilege/customer': Mock.mock({
+  'GET /api/privilege/customer': Mock.mock({
     "code": 200,
     "data|1-10": [{
       "id|+1": 1,
@@ -155,7 +150,12 @@ module.exports = {
   }),
 
 
-  'GET /api/get/system/roles/users': Mock.mock({
+  // 'GET /customer/:id/base': Mock.mock({
+  //   a: 1
+  // }),
+
+
+  'GET /get/system/roles/users': Mock.mock({
     'user': {
       // 'id|1-100': 1,
       'clientName': '@name',

@@ -14,9 +14,9 @@ function info(msg, color = 'red') {
 }
 
 const urls = {
-    customer:'/common/dropdown/list/customer',
-    system:'/common/dropdown/list/system',
-    organization:'/common/dropdown/list/organization'
+    customer:'/asd/common/dropdown/list/customer',
+    system:'/asd/common/dropdown/list/system',
+    organization:'/asd/common/dropdown/list/organization'
 }
 
 
