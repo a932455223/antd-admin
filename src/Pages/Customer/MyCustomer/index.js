@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
+import {
+  Button,
+  Icon
+} from 'antd';
 import axios from 'axios';
 
 import TablePage from '../../../components/TablePage';
-
+import './less/myCustomerStyle.less'
 export default class MyCustomer extends Component {
   state = {
     loading: true,
     columnsLists: [],
-    popularMovies: {},
+    customers: [],
     page: 1,
     type: 0
   }
@@ -28,16 +32,28 @@ export default class MyCustomer extends Component {
     })
 
     // 请求列表数据
-    axios.get('/api/movies/popular')
-    .then((data) => {
-      if(data.status === 200 && data.statusText === 'OK' && data.data) {
+    axios.get('/api/customers')
+    .then((json) => {
+      console.log("=====",json);
+      if(json.status === 200 &&
+        json.statusText === 'OK' &&
+        json.data &&
+        json.data.data &&
+        json.data.data.customers) {
         // 将数据存入私有的 state中
         this.setState({
           loading: false,
-          popularMovies: data.data[0]
+          customers: json.data.data.customers
         })
       }
     })
+  }
+
+  // 关注客户／取消关注
+  customerFocus = (id, e) => {
+    e.stopPropagation(); // 阻止事件冒泡
+    // 拿到用户的 id，发送请求，取消关注／关注
+    console.log(id);
   }
 
   // 传入 columnsLists的 key, 返回不同的数字，定义 table columns的宽度
@@ -53,13 +69,13 @@ export default class MyCustomer extends Component {
         return 15;
 
       case 'riskPreference':
-        return 22;
+        return 20;
 
       case 'customerManager':
         return 15;
 
       case 'subsidiaryOrgan':
-        return 10;
+        return 15;
 
       default:
         return 15;
@@ -69,6 +85,31 @@ export default class MyCustomer extends Component {
   // 处理 columnsLists，生成新的 columns
   handleColumns = columnsLists => columnsLists.map((item) => {
     if(item && item.id) {
+      // 当 item.key === 'subsidiaryOrgan'时，render() 关注，取消关注
+      if(item.key && item.key === 'subsidiaryOrgan') {
+        return {
+          title: item.name,
+          key: item.key,
+          width: `${this.columnsWidth(item.key)}%`,
+          render: record => (
+            <div className='attention'>
+              <p>{record.subsidiaryOrgan}</p>
+              {record.attention && record.attention === true
+                ?
+                <a href="#" onClick={this.customerFocus.bind(this, record.id)}>
+                  <Icon type="heart" />关注
+                </a>
+                :
+                <a href="#" onClick={this.customerFocus.bind(this, record.id)}>
+                  <Icon type="heart-o" />取消关注
+                </a>
+              }
+
+            </div>
+          )
+        }
+      }
+
       return {
         title: item.name,
         dataIndex: item.key,
@@ -79,80 +120,45 @@ export default class MyCustomer extends Component {
   })
 
   // 拿到传入的 movies数组，遍历筛选得到新的数组
-  filterMoviesData = movies => movies.map((item, sort) => {
-    if(item && item.title) {
+  filterMoviesData = customers => customers.map((item, sort) => {
+    if(item && item.name) {
       return {
         key: item.id,
         id: item.id,
-        clientName: item.title,
-        clientCategory: item.subtype,
-        riskPreference: item.rating.average,
-        clientPhone: item.year,
-        customerManager: item.genres[0],
-        subsidiaryOrgan: item.original_title
+        clientName: item.name,
+        clientType: item.category,
+        riskPreference: item.risk,
+        clientPhone: item.phone,
+        customerManager: item.manager,
+        subsidiaryOrgan: item.department,
+        attention: item.attention
       }
     }
   });
 
   render() {
-    const { popularMovies, page, loading, columnsLists } = this.state;
+    const { customers, page, loading, columnsLists, editCustomer } = this.state;
 
     // 渲染 Table表格的表头数据
     const columns =  columnsLists && this.handleColumns(columnsLists);
 
-    // const columns = [
-    //   {
-    //     title: '客户名称',
-    //     dataIndex: 'clientName',
-    //     key: 'clientName',
-    //     width: '15%'
-    //   },
-    //   {
-    //     title: '客户类别',
-    //     dataIndex: 'clientCategory',
-    //     key: 'clientCategory',
-    //     width: '20%'
-    //   },
-    //    {
-    //     title: '电话',
-    //     dataIndex: 'clientPhone',
-    //     key: 'clientPhone',
-    //     width: '15%'
-    //   },
-    //   {
-    //     title: '风险偏好',
-    //     dataIndex: 'riskPreference',
-    //     key: 'riskPreference',
-    //     width: '22%'
-    //   },
-    //   {
-    //     title: '客户经理',
-    //     dataIndex: 'customerManager',
-    //     key: 'customerManager',
-    //     width: '15%'
-    //   },
-    //   {
-    //     title: '所属机构',
-    //     key: 'subsidiaryOrgan',
-    //     dataIndex: 'subsidiaryOrgan',
-    //     width: '10%'
-    //   }
-    // ];
-
     // 渲染表单内部的数据
-    const dataSource = popularMovies && popularMovies.subjects
-                       ?
-                       this.filterMoviesData(popularMovies.subjects)
-                       :
-                       [];
+    const dataSource = this.filterMoviesData(customers);
+    console.log(dataSource);
 
     const myCustomerProps = {
       columns: columns,
       dataSource: dataSource,
       page: page,
-      loading: loading
+      loading: loading,
+      editCustomer: editCustomer
     };
 
-    return <TablePage {...myCustomerProps}/>
+    return (
+      <div>
+        <a href="#">筛选</a>
+        <TablePage {...myCustomerProps}/>
+      </div>
+    )
   }
 }

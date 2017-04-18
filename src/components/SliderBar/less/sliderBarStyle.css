@@ -1,3 +1,59 @@
-.mySiderMenu .ant-menu-item:before {
+@import url('http://at.alicdn.com/t/font_x1fsh8jjkcf5stt9.css');
+@font-face {
+  font-family: 'iconfont';
+  /* project id 278144 */
+  src: url('//at.alicdn.com/t/font_x1fsh8jjkcf5stt9.eot');
+  src: url('//at.alicdn.com/t/font_x1fsh8jjkcf5stt9.eot?#iefix') format('embedded-opentype'), url('//at.alicdn.com/t/font_x1fsh8jjkcf5stt9.woff') format('woff'), url('//at.alicdn.com/t/font_x1fsh8jjkcf5stt9.ttf') format('truetype'), url('//at.alicdn.com/t/font_x1fsh8jjkcf5stt9.svg#iconfont') format('svg');
+}
+.mySiderMenu .ant-menu-submenu-title {
+  font-size: 1.4em;
+  height: 2.5em;
+  line-height: 3em;
+}
+.mySiderMenu .ant-menu-item {
+  font-size: 1.2em;
+}
+.mySiderMenu .ant-menu-item a:link {
+  text-decoration: none;
+}
+.mySiderMenu .ant-menu-item a:visited {
+  text-decoration: none;
+}
+.mySiderMenu .ant-menu-item a:hover {
+  text-decoration: none;
+}
+.mySiderMenu .ant-menu-item a:active {
+  text-decoration: none;
+}
+.mySiderMenu .ant-menu-item a:before {
   content: " ";
+  display: inline-block;
+  position: absolute;
+  left: 2.3em;
+  width: 0.35em;
+  height: 0.35em;
+  background-color: #A9ACAF;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  border-radius: 2px;
+}
+.mySiderMenu .ant-menu-inline .ant-menu-item-selected {
+  background-color: #1d2329;
+}
+.mySiderMenu .ant-menu-item-selected {
+  background-color: #1d2329;
+}
+.mySiderMenu .ant-menu-item-selected a:before {
+  content: " ";
+  display: inline-block;
+  position: absolute;
+  left: 2.3em;
+  width: 0.35em;
+  height: 1em;
+  background-color: #ffa102;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  border-radius: 1px;
 }
