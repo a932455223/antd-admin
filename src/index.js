@@ -9,11 +9,7 @@ import React from 'react';
 import {render} from  'react-dom';
 import Root from './containers/Root.dev';
 import configStores from './redux/store'
-
 const store = configStores();
 
-// import Sider from './components/MenuList/MenuList'
 
-// render(<Sider/>,document.getElementById('root'));
 render(<Root store= {store}/>,document.getElementById('root'));
-

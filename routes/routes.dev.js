@@ -10,13 +10,16 @@ module.exports = (app, mfs, file) => {
 
   app.get([
     '/', '/login', '/customer/*', '/system/*'
-  ], function(req, res, next) {
-    devMiddleWare.waitUntilValid(function() {
+  ], function (req, res, next) {
+    devMiddleWare.waitUntilValid(function () {
       var html = mfs.readFileSync(file);
       res.end(html)
     });
     next();
   });
+
+
+
 
   app.get('/menus/customer', (req, res, next) => {
     let data = [

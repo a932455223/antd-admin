@@ -1,0 +1,3 @@
+.mySiderMenu .ant-menu-item:before {
+  content: " ";
+}
