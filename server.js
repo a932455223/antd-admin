@@ -72,10 +72,6 @@ if (isDeveloping) {
 
   console.log("生产模式启动".info);
 
-  // app.get('/',(req,res,next) => {
-  //   res.sendFile(path.join(path.resolve('./static'),'/dist/index.html'));
-  //   // next()
-  // })
   routes(app);
 }
 
