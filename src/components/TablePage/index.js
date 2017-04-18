@@ -32,12 +32,6 @@ class TablePage extends Component {
     }, 'CustomerSlider');
   }
 
-  componentWillReceiveProps() {
-    this.setState({
-
-    })
-  }
-
   // 获取被选中的 row的 Id，打印当前的 Id
   onSelectChange = (selectedRowKeys) => {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -145,9 +139,9 @@ class TablePage extends Component {
 
     // page props lists
     const pageProps = {
-      defaultCurrent: pagination.index ? pagination.index : 1,
+      defaultCurrent: 1,
       total: pagination.count ? pagination.count : 0,
-      pageSize: pagination.size ? pagination.size : 10,
+      // pageSize: pagination.size ? pagination.size : 10,
       showSizeChanger: true,
       pageSizeOptions: [`${pagination.size}`],
       // onShowSizeChange: this.pageShowSizeChange,

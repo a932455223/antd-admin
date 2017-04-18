@@ -34,14 +34,13 @@ export default class MyCustomer extends Component {
     // 请求列表数据
     axios.get('/api/customers')
     .then((json) => {
-      console.log("=====",json);
       if(json.status === 200 && json.statusText === 'OK' && json.data) {
-        if(json.data.data && json.data.data.customers && json.data.pagination) {
+        if(json.data.data && json.data.data.customers && json.data.data.pagination) {
           // 将数据存入私有的 state中
           this.setState({
             loading: false,
             customers: json.data.data.customers,
-            pagination: json.data.pagination
+            pagination: json.data.data.pagination
           })
         }
       }
