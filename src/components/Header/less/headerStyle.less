@@ -1,6 +1,6 @@
 //阿里iconfont文件
-@import url('http://at.alicdn.com/t/font_x1fsh8jjkcf5stt9.css');
 @import './../../../style/colors.less';
+@import './../../../style/iconfont.less';
 @c-menu-list: c-pink,
 c-orange,
 c-green,
@@ -34,7 +34,7 @@ c-blue-grey;
     }
 }
 
-.addMenu {
+.addMenu,.userMenu,.moreMenu{
     .ant-dropdown-menu-item {
         .loop(length(@c-menu-list));
         .iconfont {
@@ -55,7 +55,9 @@ c-blue-grey;
         }
     }
 }
-
+.userMenu{
+    margin-left: 1em;
+}
 .msgMenu {
     @c-very-light-pink: #fff4ea;
     @c-grey: #999999;
@@ -183,6 +185,10 @@ c-blue-grey;
             color: @c-white;
             font-size: 1.3em;
             padding-left: 1em;
+            transition: background-color @hover-time linear;
+            &:hover{
+                background-color: @blue-dark;
+            }
             >.anticon-down {
                 margin: 1em;
             }

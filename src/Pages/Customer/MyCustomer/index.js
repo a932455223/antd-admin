@@ -6,7 +6,7 @@ import {
 import axios from 'axios';
 
 import TablePage from '../../../components/TablePage';
-
+import './less/myCustomerStyle.less'
 export default class MyCustomer extends Component {
   state = {
     loading: true,
@@ -34,6 +34,7 @@ export default class MyCustomer extends Component {
     // 请求列表数据
     axios.get('/api/customers')
     .then((json) => {
+      console.log("=====",json);
       if(json.status === 200 &&
         json.statusText === 'OK' &&
         json.data &&

@@ -1,0 +1,23 @@
+.ant-checkbox {
+    .ant-checkbox-inner {
+        width: 1.7em;
+        height: 1.7em;
+    }
+}
+
+.ant-checkbox {
+    .ant-checkbox-inner {
+        &:after {
+            left: 6px;
+            top: 1px;
+            width: 8px;
+            height: 13px;
+        }
+    }
+}
+.ant-checkbox-indeterminate .ant-checkbox-inner:after {
+    left: 4px;
+    top: 7px;
+    width: 11px;
+    height: 0px;
+}

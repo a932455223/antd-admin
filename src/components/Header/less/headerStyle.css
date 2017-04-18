@@ -1,34 +1,61 @@
-@import url('http://at.alicdn.com/t/font_x1fsh8jjkcf5stt9.css');
-.addMenu .ant-dropdown-menu-item .c-pink {
+@import url('http://at.alicdn.com/t/font_k7ctvmua9yhkt9.css');
+@font-face {
+  font-family: 'iconfont';
+  /* project id 278144 */
+  src: url('//at.alicdn.com/t/font_k7ctvmua9yhkt9.eot');
+  src: url('//at.alicdn.com/t/font_k7ctvmua9yhkt9.eot?#iefix') format('embedded-opentype'), url('//at.alicdn.com/t/font_k7ctvmua9yhkt9.woff') format('woff'), url('//at.alicdn.com/t/font_k7ctvmua9yhkt9.ttf') format('truetype'), url('//at.alicdn.com/t/font_k7ctvmua9yhkt9.svg#iconfont') format('svg');
+}
+.addMenu .ant-dropdown-menu-item .c-pink,
+.userMenu .ant-dropdown-menu-item .c-pink,
+.moreMenu .ant-dropdown-menu-item .c-pink {
   color: #fe6168;
 }
-.addMenu .ant-dropdown-menu-item .c-orange {
+.addMenu .ant-dropdown-menu-item .c-orange,
+.userMenu .ant-dropdown-menu-item .c-orange,
+.moreMenu .ant-dropdown-menu-item .c-orange {
   color: #ffa102;
 }
-.addMenu .ant-dropdown-menu-item .c-green {
+.addMenu .ant-dropdown-menu-item .c-green,
+.userMenu .ant-dropdown-menu-item .c-green,
+.moreMenu .ant-dropdown-menu-item .c-green {
   color: #41bf89;
 }
-.addMenu .ant-dropdown-menu-item .c-blue {
+.addMenu .ant-dropdown-menu-item .c-blue,
+.userMenu .ant-dropdown-menu-item .c-blue,
+.moreMenu .ant-dropdown-menu-item .c-blue {
   color: #3783fb;
 }
-.addMenu .ant-dropdown-menu-item .c-blue-grey {
+.addMenu .ant-dropdown-menu-item .c-blue-grey,
+.userMenu .ant-dropdown-menu-item .c-blue-grey,
+.moreMenu .ant-dropdown-menu-item .c-blue-grey {
   color: #5f768f;
 }
-.addMenu .ant-dropdown-menu-item .iconfont {
+.addMenu .ant-dropdown-menu-item .iconfont,
+.userMenu .ant-dropdown-menu-item .iconfont,
+.moreMenu .ant-dropdown-menu-item .iconfont {
   display: inline-block;
   width: 1.5em;
   text-align: center;
   margin-right: 0.5em;
 }
-.addMenu .ant-dropdown-menu-item:hover {
+.addMenu .ant-dropdown-menu-item:hover,
+.userMenu .ant-dropdown-menu-item:hover,
+.moreMenu .ant-dropdown-menu-item:hover {
   background-color: #3f51b5;
 }
-.addMenu .ant-dropdown-menu-item:hover .iconfont {
+.addMenu .ant-dropdown-menu-item:hover .iconfont,
+.userMenu .ant-dropdown-menu-item:hover .iconfont,
+.moreMenu .ant-dropdown-menu-item:hover .iconfont {
   transition: color 0.1s linear;
   color: #fff;
 }
-.addMenu .ant-dropdown-menu-item:hover > a {
+.addMenu .ant-dropdown-menu-item:hover > a,
+.userMenu .ant-dropdown-menu-item:hover > a,
+.moreMenu .ant-dropdown-menu-item:hover > a {
   color: #fff;
+}
+.userMenu {
+  margin-left: 1em;
 }
 .msgMenu {
   border: 1px solid #f5eae2;
@@ -165,6 +192,10 @@
   color: #fff;
   font-size: 1.3em;
   padding-left: 1em;
+  transition: background-color 0.5s linear;
+}
+.header .right-menu > .user-menu:hover {
+  background-color: #3f51b5;
 }
 .header .right-menu > .user-menu > .anticon-down {
   margin: 1em;

@@ -7,6 +7,7 @@
 
 import React, { Component } from 'react';
 import './less/headerStyle.less'
+import logo from './images/logo.png'
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Dropdown, Menu, Icon, Layout } from 'antd';
@@ -19,7 +20,7 @@ const addMenu = (
     <Menu.Item>
       <a target="_blank" rel="noopener noreferrer" href="javascript:void(0)">
         <i className="iconfont icon-date c-pink"></i>新增客户
-    </a>
+      </a>
     </Menu.Item>
     <Menu.Item>
       <a target="_blank" rel="noopener noreferrer" href="javascript:void(0)">
@@ -63,6 +64,66 @@ const msgMenu = (
     </Menu.Item>
   </Menu>
 );
+const userMenu = (
+  <Menu className="userMenu">
+
+    <Menu.Item key="0">
+      <a target="_blank" rel="noopener noreferrer" href="javascript:void(0)">
+        账户管理
+      </a>
+    </Menu.Item>
+    <Menu.Item key="1">
+      <a target="_blank" rel="noopener noreferrer" href="javascript:void(0)">
+        个人信息
+      </a>
+    </Menu.Item>
+    <Menu.Item key="2">
+      <a target="_blank" rel="noopener noreferrer" href="javascript:void(0)">
+        布局设置
+      </a>
+    </Menu.Item>
+    <Menu.Item key="3">
+      <a target="_blank" rel="noopener noreferrer" href="javascript:void(0)">
+        使用指南
+      </a>
+    </Menu.Item>
+    <Menu.Item key="4">
+      <a target="_blank" rel="noopener noreferrer" href="javascript:void(0)">
+        问题反馈
+      </a>
+    </Menu.Item>
+    <Menu.Item key="5">
+      <a target="_blank" rel="noopener noreferrer" href="javascript:void(0)">
+        联系我们
+      </a>
+    </Menu.Item>
+  </Menu>
+);
+const moreMenu = (
+  <Menu className="moreMenu">
+
+    <Menu.Item key="0">
+      <Link to='/customer/my'>
+        金融产品管理
+      </Link>
+    </Menu.Item>
+    <Menu.Item key="1">
+      <Link to='/organization/staff'>
+        组织机构管理
+      </Link>
+    </Menu.Item>
+    <Menu.Item key="2">
+      <Link to='/system/users'>
+        系统设置
+      </Link>
+    </Menu.Item>
+    <Menu.Item key="3">
+      <Link to='/customer/my'>
+        应用展示设置
+      </Link>
+    </Menu.Item>
+  </Menu>
+);
 class TopHeader extends React.Component {
   static contextTypes = {
     router: React.PropTypes.object.isRequired
@@ -83,7 +144,7 @@ class TopHeader extends React.Component {
       <Header className="header">
         <div className="header-wrap">
           <div className="logo">
-            <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1490261157755&di=3649d486b6244696b01d3c62a03f1949&imgtype=0&src=http%3A%2F%2Fis3.mzstatic.com%2Fimage%2Fthumb%2FPurple69%2Fv4%2F1b%2F90%2F15%2F1b901510-3952-a3fb-fd46-e8e7a454a7c2%2Fmzl.uunubwhw.png%2F0x0ss-85.jpg" />
+            <img src={logo} />
             精准营销系统
             <div className="version">v1.0</div>
           </div>
@@ -104,9 +165,16 @@ class TopHeader extends React.Component {
               </Link>
             </Menu.Item>
             <Menu.Item key="more">
-              <Link to='/system/more'>
-                更多<Icon type="down" />
-              </Link>
+
+              <Dropdown
+                overlay={moreMenu}
+                placement="bottomCenter"
+              >
+                <a className="ant-dropdown-link" href="#">
+                  更多<Icon type="down" />
+                </a>
+              </Dropdown>
+
             </Menu.Item>
             <Menu.Item key="sound">
               <Link to='/login'>
@@ -116,21 +184,32 @@ class TopHeader extends React.Component {
           </Menu>
           <div className="right-menu">
 
-            <Dropdown overlay={addMenu} placement="bottomRight">
+            <Dropdown
+              overlay={addMenu}
+              placement="bottomRight"
+            >
               <a className="ant-dropdown-link" href="#">
                 <Icon type="plus-circle-o" />
               </a>
             </Dropdown>
             <Dropdown overlay={msgMenu} trigger={['click']} placement="bottomCenter" >
-              <a className="ant-dropdown-link msgDropdown" href="#">
+              <a
+                className="ant-dropdown-link msgDropdown"
+                href="#"
+              >
                 <i className="iconfont icon-msg">
                   <span>12</span>
                 </i>
               </a>
             </Dropdown>
-            <Link className="user-menu">
-              金伟达<Icon type="down" />
-            </Link>
+            <Dropdown
+              overlay={userMenu}
+              placement="bottomRight"
+            >
+              <Link className="user-menu">
+                金伟达<Icon type="down" />
+              </Link>
+            </Dropdown>
           </div>
         </div>
       </Header>

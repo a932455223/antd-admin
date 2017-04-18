@@ -165,12 +165,14 @@ class TablePage extends Component {
 
     return (
       <div>
+
         <header>
           <Button onClick={this.addNewCustomer}>新建客户</Button>
           <Button>更多操作</Button>
         </header>
 
         <Table {...tableProps} />
+
 
         <Pagination {...pageProps} />
 
