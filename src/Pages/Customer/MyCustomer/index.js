@@ -12,7 +12,7 @@ export default class MyCustomer extends Component {
     loading: true,
     columnsLists: [],
     customers: [],
-    page: 1,
+    pagination: {},
     type: 0
   }
 
@@ -35,16 +35,15 @@ export default class MyCustomer extends Component {
     axios.get('/api/customers')
     .then((json) => {
       console.log("=====",json);
-      if(json.status === 200 &&
-        json.statusText === 'OK' &&
-        json.data &&
-        json.data.data &&
-        json.data.data.customers) {
-        // 将数据存入私有的 state中
-        this.setState({
-          loading: false,
-          customers: json.data.data.customers
-        })
+      if(json.status === 200 && json.statusText === 'OK' && json.data) {
+        if(json.data.data && json.data.data.customers && json.data.pagination) {
+          // 将数据存入私有的 state中
+          this.setState({
+            loading: false,
+            customers: json.data.data.customers,
+            pagination: json.data.pagination
+          })
+        }
       }
     })
   }
@@ -137,19 +136,18 @@ export default class MyCustomer extends Component {
   });
 
   render() {
-    const { customers, page, loading, columnsLists, editCustomer } = this.state;
+    const { customers, pagination, loading, columnsLists, editCustomer } = this.state;
 
     // 渲染 Table表格的表头数据
     const columns =  columnsLists && this.handleColumns(columnsLists);
 
     // 渲染表单内部的数据
     const dataSource = this.filterMoviesData(customers);
-    console.log(dataSource);
 
     const myCustomerProps = {
       columns: columns,
       dataSource: dataSource,
-      page: page,
+      pagination: pagination,
       loading: loading,
       editCustomer: editCustomer
     };

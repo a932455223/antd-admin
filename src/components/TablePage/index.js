@@ -32,12 +32,23 @@ class TablePage extends Component {
     }, 'CustomerSlider');
   }
 
+  componentWillReceiveProps() {
+    this.setState({
+
+    })
+  }
+
   // 获取被选中的 row的 Id，打印当前的 Id
   onSelectChange = (selectedRowKeys) => {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
     this.setState({
       selectedRowKeys: selectedRowKeys
     });
+  }
+
+  // 分页
+  pageShowSizeChange = (current, pageSize) => {
+    // console.log(current, pageSize);
   }
 
   // 页面快速跳转
@@ -100,7 +111,7 @@ class TablePage extends Component {
   }
 
   render(){
-    const { columns, dataSource, loading, page } = this.props;
+    const { columns, dataSource, loading, pagination } = this.props;
     // // table 的选择框
     // const rowSelection = {
     //   onChange: this.onSelectChange,
@@ -134,16 +145,17 @@ class TablePage extends Component {
 
     // page props lists
     const pageProps = {
-      defaultCurrent: page,
-      total: 50,
-      // defaultPageSize: 20,
-      // showSizeChanger: true,
+      defaultCurrent: pagination.index ? pagination.index : 1,
+      total: pagination.count ? pagination.count : 0,
+      pageSize: pagination.size ? pagination.size : 10,
+      showSizeChanger: true,
+      pageSizeOptions: [`${pagination.size}`],
       // onShowSizeChange: this.pageShowSizeChange,
       showQuickJumper: true,
       onChange: this.pageChange,
       // showTotal: total => `Total ${total} items`,
       // simple: true,
-      // showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`
+      showTotal: (total, range) => `共${total}条`
     }
 
     // dock props lists
