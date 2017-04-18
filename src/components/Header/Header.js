@@ -98,8 +98,13 @@ class TopHeader extends React.Component {
                 工作台<Icon type="down" />
               </Link>
             </Menu.Item>
+            <Menu.Item key="roles">
+              <Link to='/system/roles'>
+                用户权限<Icon type="down" />
+              </Link>
+            </Menu.Item>
             <Menu.Item key="more">
-              <Link to='/system/users'>
+              <Link to='/system/more'>
                 更多<Icon type="down" />
               </Link>
             </Menu.Item>
