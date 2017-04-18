@@ -22,7 +22,7 @@ export default class MyCustomer extends Component {
   */
   componentWillMount() {
     // 请求表头数据
-    axios.get('/api/popular/columns')
+    axios.get('/asd/popular/columns')
     .then((data) => {
       if(data.status === 200 && data.statusText === 'OK' && data.data) {
         this.setState({

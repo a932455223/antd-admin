@@ -5,6 +5,6 @@ export default {
   SYSTEM_ROLES_LIST: '/asd/system/roles/list'
 }
 
-
-import API from '~/API';
-axios.get(API.CUSTOMERS);
+//
+// import API from '~/API';
+// axios.get(API.CUSTOMERS);

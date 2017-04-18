@@ -22,7 +22,7 @@ module.exports = {
   // 下拉菜单
 
   // 客户资料 sliderBar  menu 下拉菜单
-  'GET /common/dropdown/list/customer': [
+  'GET /asd/common/dropdown/list/customer': [
     {
       id: 1,
       name: '客户资料',
@@ -60,7 +60,7 @@ module.exports = {
     }
   ],
 
-  'GET /common/dropdown/list/system': [
+  'GET /asd/common/dropdown/list/system': [
     {
       id: 2,
       name: '用户和权限',
@@ -78,7 +78,7 @@ module.exports = {
     }
   ],
 
-  'GET /common/dropdown/list/organization': [
+  'GET /asd/common/dropdown/list/organization': [
     {
       id: 3,
       name: '组织机构管理',
@@ -122,9 +122,9 @@ module.exports = {
 
 
 
-  'GET /popular/columns': Mock.mock(popularColumns),
+  'GET /asd/popular/columns': Mock.mock(popularColumns),
   // popular movies data lists
-  'GET /movies/popular': Mock.mock(popularMovies),
+  'GET /asd/movies/popular': Mock.mock(popularMovies),
 
 
   // 角色列表 roles
