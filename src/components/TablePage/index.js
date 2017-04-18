@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 // import { connect } from 'react-redux';
 import { Table, Pagination, Spin } from 'antd';
 import Dock from 'react-dock';
+import './indexStyle.less';
 
 class TablePage extends Component {
   // const propTypes = {
