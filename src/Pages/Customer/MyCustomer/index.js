@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import {
+  Button,
+  Icon
+} from 'antd';
 import axios from 'axios';
 
 import TablePage from '../../../components/TablePage';
@@ -40,6 +44,13 @@ export default class MyCustomer extends Component {
     })
   }
 
+  // 关注客户／取消关注
+  customerFocus = (id, e) => {
+    e.stopPropagation(); // 阻止事件冒泡
+    // 拿到用户的 id，发送请求，取消关注／关注
+    console.log(id);
+  }
+
   // 传入 columnsLists的 key, 返回不同的数字，定义 table columns的宽度
   columnsWidth = (key) => {
     switch(key) {
@@ -53,13 +64,13 @@ export default class MyCustomer extends Component {
         return 15;
 
       case 'riskPreference':
-        return 22;
+        return 20;
 
       case 'customerManager':
         return 15;
 
       case 'subsidiaryOrgan':
-        return 10;
+        return 15;
 
       default:
         return 15;
@@ -69,6 +80,31 @@ export default class MyCustomer extends Component {
   // 处理 columnsLists，生成新的 columns
   handleColumns = columnsLists => columnsLists.map((item) => {
     if(item && item.id) {
+      // 当 item.key === 'subsidiaryOrgan'时，render() 关注，取消关注
+      if(item.key && item.key === 'subsidiaryOrgan') {
+        return {
+          title: item.name,
+          key: item.key,
+          width: `${this.columnsWidth(item.key)}%`,
+          render: record => (
+            <div className='attention'>
+              <p>{record.subsidiaryOrgan}</p>
+              {record.focus && record.focus === true
+                ?
+                <a href="#" onClick={this.customerFocus.bind(this, record.id)}>
+                  <Icon type="heart" />关注
+                </a>
+                :
+                <a href="#" onClick={this.customerFocus.bind(this, record.id)}>
+                  <Icon type="heart-o" />取消关注
+                </a>
+              }
+
+            </div>
+          )
+        }
+      }
+
       return {
         title: item.name,
         dataIndex: item.key,
@@ -85,11 +121,12 @@ export default class MyCustomer extends Component {
         key: item.id,
         id: item.id,
         clientName: item.title,
-        clientCategory: item.subtype,
+        clientType: item.subtype,
         riskPreference: item.rating.average,
         clientPhone: item.year,
         customerManager: item.genres[0],
-        subsidiaryOrgan: item.original_title
+        subsidiaryOrgan: item.original_title,
+        focus: true
       }
     }
   });
@@ -99,45 +136,6 @@ export default class MyCustomer extends Component {
 
     // 渲染 Table表格的表头数据
     const columns =  columnsLists && this.handleColumns(columnsLists);
-
-    // const columns = [
-    //   {
-    //     title: '客户名称',
-    //     dataIndex: 'clientName',
-    //     key: 'clientName',
-    //     width: '15%'
-    //   },
-    //   {
-    //     title: '客户类别',
-    //     dataIndex: 'clientCategory',
-    //     key: 'clientCategory',
-    //     width: '20%'
-    //   },
-    //    {
-    //     title: '电话',
-    //     dataIndex: 'clientPhone',
-    //     key: 'clientPhone',
-    //     width: '15%'
-    //   },
-    //   {
-    //     title: '风险偏好',
-    //     dataIndex: 'riskPreference',
-    //     key: 'riskPreference',
-    //     width: '22%'
-    //   },
-    //   {
-    //     title: '客户经理',
-    //     dataIndex: 'customerManager',
-    //     key: 'customerManager',
-    //     width: '15%'
-    //   },
-    //   {
-    //     title: '所属机构',
-    //     key: 'subsidiaryOrgan',
-    //     dataIndex: 'subsidiaryOrgan',
-    //     width: '10%'
-    //   }
-    // ];
 
     // 渲染表单内部的数据
     const dataSource = popularMovies && popularMovies.subjects
@@ -153,6 +151,14 @@ export default class MyCustomer extends Component {
       loading: loading
     };
 
-    return <TablePage {...myCustomerProps}/>
+    return (
+      <div>
+        <header>
+          <Button>新建客户</Button>
+          <Button>更多操作</Button>
+        </header>
+        <TablePage {...myCustomerProps}/>
+      </div>
+    )
   }
 }

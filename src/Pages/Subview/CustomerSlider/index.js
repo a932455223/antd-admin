@@ -204,8 +204,46 @@ class CustomerSlider extends Component {
       onChange: this.tabChange
     }
 
+    // tabs lists data
+    const tabLists = [
+      {
+        id: 'personalBasicInfo',
+        name: '基本信息',
+        authority: true
+      },
+      {
+        id: 'familyInfo',
+        name: '家庭信息',
+        authority: false
+      },
+      {
+        id: 'jobInfo',
+        name: '工作信息',
+        authority: true
+      },
+      {
+        id: 'financeInfo',
+        name: '基本信息',
+        authority: true
+      },
+      {
+        id: 'riskInfo',
+        name: '风险测试',
+        authority: true
+      },
+    ]
+
     return (
       <Tabs {...tabsProps} >
+        {/*tabLists && tabLists.map((item) => (
+              <TabPane tab={item.name} key={item.id}>
+                {personalClient && personalClient.personalBasicInfo &&
+                  <personalClient.personalBasicInfo {...this.props}/>
+                }
+              </TabPane>
+            )
+          )
+        */}
         <TabPane tab="基本信息" key="personalBasicInfo">
           {personalClient && personalClient.personalBasicInfo &&
             <personalClient.personalBasicInfo {...this.props}/>
@@ -294,9 +332,11 @@ class CustomerSlider extends Component {
               <span className="nav-text">更多</span>
             </Col>
             <Col span={6}>
-              <Icon   className={styles.icon}
-                      onClick={this.openNotification}
-                      type="close"/>
+              <Icon
+                className={styles.icon}
+                onClick={this.openNotification}
+                type="close"
+              />
             </Col>
           </Row>
         </div>

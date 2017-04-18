@@ -60,13 +60,25 @@ const route = (
         <Route path='system' onEnter={validate} component={App}>
             <Route path='users' getComponent={(location, cb)=>{
                 require.ensure([],() => {
-                      cb(null,require('../Pages/System/Users/Users').default)
+                      cb(null,require('../Pages/System/Users/').default)
                  },'users')
             }}/>
             <Route path='roles' getComponent={(location, cb)=>{
                 require.ensure([],() => {
-                      cb(null,require('../Pages/System/Roles/Roles.js').default)
+                      cb(null,require('../Pages/System/Roles/').default)
                  },'roles')
+            }}/>
+        </Route>
+        <Route path='organization' onEnter={validate} component={App}>
+            <Route path='staff' getComponent={(location, cb)=>{
+                require.ensure([],() => {
+                      cb(null,require('../Pages/Organization/Staff').default)
+                 },'staff')
+            }}/>
+            <Route path='branches' getComponent={(location, cb)=>{
+                require.ensure([],() => {
+                      cb(null,require('../Pages/Organization/Branches').default)
+                 },'branches')
             }}/>
         </Route>
         <Route path='login' getComponent={(location, cb)=>{
@@ -74,7 +86,6 @@ const route = (
                   cb(null,require('../Pages/Login/login').default)
              },'login')
         }}/>
-
     </Route>
 )
 

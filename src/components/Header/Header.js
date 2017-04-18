@@ -94,7 +94,7 @@ class TopHeader extends React.Component {
               </Link>
             </Menu.Item>
             <Menu.Item key="workplace">
-              <Link to='/system/users'>
+              <Link to='/organization/staff'>
                 工作台<Icon type="down" />
               </Link>
             </Menu.Item>

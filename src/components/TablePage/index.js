@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 // import { connect } from 'react-redux';
 import { Table, Pagination, Spin } from 'antd';
 import Dock from 'react-dock';
+import './indexStyle.less';
 
 class TablePage extends Component {
   // const propTypes = {
@@ -91,10 +92,10 @@ class TablePage extends Component {
   render(){
     const { columns, dataSource, loading, page } = this.props;
 
-    // table 的选择框
-    const rowSelection = {
-      onChange: this.onSelectChange,
-    };
+    // // table 的选择框
+    // const rowSelection = {
+    //   onChange: this.onSelectChange,
+    // };
 
     // slider visible and row click crrentId
     const sliderProps = {
@@ -117,7 +118,7 @@ class TablePage extends Component {
       onRowClick: this.rowClick,
       // scroll: { y: 240 }, // 固定表头
       rowSelection: {
-        onChange: rowSelection
+        onChange: this.onSelectChange
       } // 打开选择框
     }
 
@@ -143,7 +144,8 @@ class TablePage extends Component {
       dockStyle: {
         backgroundColor: '#f4f5f6',
         padding: '20px 0px',
-        textAlign: 'center'
+        textAlign: 'center',
+        // top: 64
       }, // 背景
       fluid: true,
       defaultSize: .5, // 初始 width/height
@@ -158,9 +160,9 @@ class TablePage extends Component {
         <Pagination {...pageProps} />
 
         <Dock {...dockProps}>
-        {this.state.CustomerSlider &&
-          <this.state.CustomerSlider {...sliderProps}/>
-        }
+          {this.state.CustomerSlider &&
+            <this.state.CustomerSlider {...sliderProps}/>
+          }
         </Dock>
       </div>
     )

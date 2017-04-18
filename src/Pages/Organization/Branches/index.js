@@ -1,6 +1,6 @@
 import React,{ Component } from 'react'
 export default class Home extends Component{
     render(){
-        return <h2> customer focused </h2>
+        return <h2> Organization branches </h2>
     }
 }
