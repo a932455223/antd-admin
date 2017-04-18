@@ -4,8 +4,8 @@ import Dock from "react-dock";
 import axios from "axios";
 //=============================================================
 import ActionBar from "../component/ActionBar";
-import UserInfo from "../component/UserInfoCard";
-import LimitCard from "../component/LimitCard";
+import UserInfo from "./component/UserInfoCard";
+import LimitCard from "./component/LimitCard";
 //===============================================================
 import './less/rolesStyle.less';
 
