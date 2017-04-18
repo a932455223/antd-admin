@@ -57,11 +57,13 @@ class NewCustomer extends Component {
 
     return (
       <div>
-        <Icon
-          className={styles.icon}
-          onClick={this.openNotification}
-          type="close"
-        />
+        <p style={{textAlign: 'right', padding: 10}}>
+          <Icon
+            style={{fontSize: 22}}
+            onClick={this.openNotification}
+            type="close"
+          />
+        </p>
 
         <Form>
           <Row>

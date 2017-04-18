@@ -95,11 +95,13 @@ export default class MyCustomer extends Component {
               {record.attention && record.attention === true
                 ?
                 <a href="#" onClick={this.customerFocus.bind(this, record.id)}>
-                  <Icon type="heart" />关注
+                  <Icon type="heart" />
+                  <span>关注</span>
                 </a>
                 :
                 <a href="#" onClick={this.customerFocus.bind(this, record.id)}>
-                  <Icon type="heart-o" />取消关注
+                  <Icon type="heart-o" />
+                  <span>取消关注</span>
                 </a>
               }
 
@@ -107,6 +109,17 @@ export default class MyCustomer extends Component {
           )
         }
       }
+
+      // 固定 table第一列
+      // if(item.key && item.key === 'clientName') {
+      //   return {
+      //     title: item.name,
+      //     dataIndex: item.key,
+      //     key: item.key,
+      //     width: `${this.columnsWidth(item.key)}%`,
+      //     fixed: 'left'
+      //   }
+      // }
 
       return {
         title: item.name,

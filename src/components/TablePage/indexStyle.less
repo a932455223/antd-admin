@@ -1,18 +1,26 @@
 .ant-table-row {
     cursor: pointer;
-    .attention>a {
+
+    .attention >a {
         display: none;
-    } // hover
-    &:hover .attention>a {
+    }
+
+    // hover
+    &:hover .attention >a {
         display: flex;
         justify-content: center;
         align-items: center;
         position: absolute;
-        margin-top: -34px;
+        margin-top: -36px;
         margin-left: 75px;
         width: 90px;
-        height: 50px;
+        height: 54px;
         background-color: #eee;
+        font-size: 14px;
+
+        >span {
+          padding-left: 8px;
+        }
     }
 }
 
