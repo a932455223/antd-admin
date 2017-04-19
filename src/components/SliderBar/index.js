@@ -1,11 +1,15 @@
 import React, {Component} from "react";
-import "./less/sliderBarStyle.less";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {Link} from "react-router";
 import {Layout, Menu} from "antd";
 import axios from "axios";
+//================================================================
 import updateNavPath from "../../redux/actions/navPathAction";
+//-===============================================================
+import API from '../../../API';
+import "./less/sliderBarStyle.less";
+
 const {SubMenu} = Menu;
 const {Sider} = Layout;
 
@@ -14,10 +18,10 @@ function info(msg, color = 'red') {
 }
 
 const urls = {
-    customer:'/asd/common/dropdown/list/customer',
-    system:'/asd/common/dropdown/list/system',
-    organization:'/asd/common/dropdown/list/organization'
-}
+    customer: API.GET_CUSTOMER_SLIDER_BAR,
+    system: API.GET_SYSTEM_SLIDER_BAR,
+    organization: API.GET_ORGANIZATION_SLIDER_BAR
+};
 
 
 function findItem(arr, currentPath) {

@@ -24,7 +24,7 @@ export default class SystemUsers extends Component {
   };
 
   componentWillMount() {
-    axios.get(API.SYSTEM_ROLES_LIST)
+    axios.get(API.GET_SYSTEM_ROLES_LIST)
       .then(res => {
         this.setState({
           table: {

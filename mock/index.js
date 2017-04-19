@@ -15,12 +15,8 @@ var popularMovies = require('./falseData/popularMovies');
 
 
 module.exports = {
-  'GET /user/list': Mock.mock({
-    'name|1-10': ['@name']
-  }),
 
   // 下拉菜单
-
   // 客户资料 sliderBar  menu 下拉菜单
   'GET /asd/common/dropdown/list/customer': [
     {
@@ -155,7 +151,7 @@ module.exports = {
   // }),
 
 
-  'GET /get/system/roles/users': Mock.mock({
+  'GET /asd/system/roles/users': Mock.mock({
     'user': {
       // 'id|1-100': 1,
       'clientName': '@name',
