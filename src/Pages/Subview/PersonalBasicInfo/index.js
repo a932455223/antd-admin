@@ -16,6 +16,7 @@ import {
   Modal
  } from 'antd';
 import axios from 'axios';
+import API from '../../../../API';
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -244,37 +245,44 @@ class AddCrewModal extends Component {
 export default class BasicInfo extends Component {
   state = {
     modalVisible: false,
-    currentId: this.props.currentId ,
-    eachCustomerData: ''
+    currentId: this.props.currentId + 1,
+    eachCustomerInfo: ''
   }
 
-  // componentWillMount() {
-  //   axios.get('http://115.159.58.21:8099/crm/api/customer/' + this.state.currentId + '/base')
-  //   .then((response) => {
-  //       console.log(response);
-  //       // this.setState({
-  //       //   eachCustomerData: response
-  //       // })
-  //   })
-  // }
+  componentWillMount() {
+    console.log(this.state.currentId)
+    axios.get(API.GET_CUSTOMER_BASE(this.state.currentId))
+    .then((res) => {
+      console.log(res);
+      res.data.data.map(item => {
+        if (item.id === this.state.currentId) {
+          this.setState({
+            eachCustomerInfo: item
+          })
+        }
+      })
+    })
+  }
 
   // render Brief info
-  renderBriefInfo = () => (
+  renderBriefInfo = () => {
+    const {eachCustomerInfo} = this.state;
+    return (
     <Row>
       <Col span={8}>
         <span>所属机构：</span>
-        <span>慈溪支行</span>
+        <span>{eachCustomerInfo.department}</span>
       </Col>
       <Col span={8}>
         <span>客户经理：</span>
-        <span>张建超</span>
+        <span>{eachCustomerInfo.manager}</span>
       </Col>
       <Col span={8}>
         <span>所属网络：</span>
-        <span>B291</span>
+        <span>{eachCustomerInfo.grid}</span>
       </Col>
-    </Row>
-  )
+    </Row>)
+  }
 
   // modal Show
   modalShow = () => {
@@ -292,22 +300,28 @@ export default class BasicInfo extends Component {
 
   // render basic info lists
   renderBasicInfoLists = () => {
+    const {eachCustomerInfo} = this.state;
+    console.log(eachCustomerInfo)
+    return (
     <Row>
       <Col span={24}>
         <Col span={3}>
           <span>账户：</span>
-        </Col>
+        </Col>     
         <Col span={9}>
-          <Input defaultValue='1235'/>
+          <Input defaultValue="d"/>
         </Col>
+        <Col span={3}>
+          <Input defaultValue="d"/>
+        </Col>
+        <Col span={9}></Col>
       </Col>
-
       <Col span={12}>
         <Col span={6}>
           <span>手机号：</span>
         </Col>
         <Col span={18}>
-          <span>13949888182</span>
+          <Input defaultValue={eachCustomerInfo.phone}/>
         </Col>
       </Col>
 
@@ -316,7 +330,7 @@ export default class BasicInfo extends Component {
           <span>微信号：</span>
         </Col>
         <Col span={18}>
-          <span>19929923</span>
+          <Input defaultValue={eachCustomerInfo.wechat}/>
         </Col>
       </Col>
 
@@ -325,7 +339,7 @@ export default class BasicInfo extends Component {
           <span>身份证号：</span>
         </Col>
         <Col span={18}>
-          <span>310283828123</span>
+          <Input defaultValue={eachCustomerInfo.certificate}/>
         </Col>
       </Col>
 
@@ -334,7 +348,7 @@ export default class BasicInfo extends Component {
           <span>生日：</span>
         </Col>
         <Col span={18}>
-          <span>1998-01-12</span>
+          <Input defaultValue={eachCustomerInfo.birth}/>
         </Col>
       </Col>
 
@@ -342,9 +356,7 @@ export default class BasicInfo extends Component {
         <Col span={3}>
           <span>参与者：</span>
         </Col>
-        <Col span={9}>
-          <Tag closable color="#108ee9">张建超</Tag>
-          <Tag closable color="#108ee9">张建超</Tag>
+        <Col span={21}>
           <span className={styles.addCrewButton}
                 onClick={this.modalShow}>
             <Icon type="plus-circle-o" />添加人员
@@ -358,7 +370,7 @@ export default class BasicInfo extends Component {
         <Button type="primary">保存</Button>
         <Button>取消</Button>
       </Col>
-    </Row>
+    </Row>)
   }
 
   render() {

@@ -133,7 +133,7 @@ module.exports = {
     }]
   }),
 
-  'GET /api/privilege/customer': Mock.mock({
+  'GET /asd/privilege/customer': Mock.mock({
     "code": 200,
     "data|1-10": [{
       "id|+1": 1,
@@ -158,10 +158,34 @@ module.exports = {
       'createTime': '2013-12-12',
       'remark': '这里是备注'
     }
+  }),
+  
+  'GET /asd/customer/:id/base':Mock.mock({
+    'code':200,
+    'data|1-10':[{
+      'account|1-3':[/[0-9]{13}/],
+      'address': '@city(true)',
+      'age|1-100': 100,
+      'birth':'1990-01-30',
+      'certificate':/[0-9]{18}/,
+      'department':'慈溪银行',
+      'grid':'B909',
+      'houseType':'商住',
+      'id|+1':1,
+      'joiner|1-3':['@name'],
+      'manager': '张健钊',
+      'marriage|1':true,
+      'needLoan|1': true,
+      'origin':'上海',
+      'phone':/[0-9]{11}/,
+      'wechat':'zli3049',
+      'withCar|1':true,
+      'withDebt':true,
+      'yearExpense':100,
+      'yearIncome':999988,
+    }],
+    'message':'message!!'
   })
-
-
-
 };
 
 

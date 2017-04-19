@@ -10,5 +10,7 @@ export default {
   GET_CUSTOMER_SLIDER_BAR: '/asd/common/dropdown/list/customer',
   GET_ORGANIZATION_SLIDER_BAR: '/asd/common/dropdown/list/organization',
 
+  GET_CUSTOMER_BASE: id =>  `/asd/customer/${id}/base`,
+  
   //=======================================
 }
