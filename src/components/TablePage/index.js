@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 // import { connect } from 'react-redux';
-import { Table, Pagination, Spin, Button } from 'antd';
+import { Table, Pagination, Spin, Button, Icon } from 'antd';
 import Dock from 'react-dock';
 import './indexStyle.less';
 
@@ -171,11 +171,19 @@ class TablePage extends Component {
     }
 
     return (
-      <div>
+      <div className="tablepage">
 
         <header>
-          <Button onClick={this.addNewCustomer}>新建客户</Button>
-          <Button>更多操作</Button>
+          <Button
+            className="addNewCustomer"
+            type="primary"
+            onClick={this.addNewCustomer}
+          >
+            <Icon type="plus" />新建客户
+          </Button>
+          <Button>
+            更多操作<Icon type="down" />
+          </Button>
         </header>
 
         <Table {...tableProps} />

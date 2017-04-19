@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import {
   Button,
-  Icon
+  Icon,
+  Input
 } from 'antd';
 import axios from 'axios';
 
 import TablePage from '../../../components/TablePage';
-import './less/myCustomerStyle.less'
+import './less/myCustomerStyle.less';
+import './indexStyle.less';
 export default class MyCustomer extends Component {
   state = {
     loading: true,
@@ -164,8 +166,12 @@ export default class MyCustomer extends Component {
       editCustomer: editCustomer
     };
     return (
-      <div>
-        <a href="#">筛选</a>
+      <div className="customer">
+        <div className="filter">
+          <span>我的客户</span>
+          <Button>筛选</Button>
+          <Input className="select" type="select"/>
+        </div>
         <TablePage {...myCustomerProps}/>
       </div>
     )
