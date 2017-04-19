@@ -16,13 +16,13 @@ const validate = function (next, replace, callback) {
 }
 const route = (
   <Route path='/'>
-    <IndexRedirect to='customer/my'/>
-    <Route path='customer' onEnter={validate} component={App}>
-      <Route path='my' getComponent={(location, cb) => {
-        require.ensure([], () => {
-          cb(null, require('../Pages/Customer/MyCustomer').default)
-        }, 'MyCustomer')
-      }}/>
+    <IndexRedirect to='organization/staff'/>
+    {/*<Route path='customer' onEnter={validate} component={App}>*/}
+      {/*<Route path='my' getComponent={(location, cb) => {*/}
+        {/*require.ensure([], () => {*/}
+          {/*cb(null, require('../Pages/Customer/MyCustomer').default)*/}
+        {/*}, 'MyCustomer')*/}
+      {/*}}/>*/}
       {/*<Route path='focused' getComponent={(location, cb) => {*/}
         {/*require.ensure([], () => {*/}
           {/*cb(null, require('../Pages/Customer/Focused').default)*/}
@@ -53,7 +53,7 @@ const route = (
           {/*cb(null, require('../Pages/Customer/All').default)*/}
         {/*}, 'All')*/}
       {/*}}/>*/}
-    </Route>
+    {/*</Route>*/}
 
     {/*<Route path='system' onEnter={validate} component={App}>*/}
       {/*<Route path='users' getComponent={(location, cb) => {*/}
@@ -67,18 +67,18 @@ const route = (
         {/*}, 'roles')*/}
       {/*}}/>*/}
     {/*</Route>*/}
-    {/*<Route path='organization' onEnter={validate} component={App}>*/}
-      {/*<Route path='staff' getComponent={(location, cb) => {*/}
-        {/*require.ensure([], () => {*/}
-          {/*cb(null, require('../Pages/Organization/Staff').default)*/}
-        {/*}, 'staff')*/}
-      {/*}}/>*/}
-      {/*<Route path='branches' getComponent={(location, cb) => {*/}
-        {/*require.ensure([], () => {*/}
-          {/*cb(null, require('../Pages/Organization/Branches').default)*/}
-        {/*}, 'branches')*/}
-      {/*}}/>*/}
-    {/*</Route>*/}
+    <Route path='organization' onEnter={validate} component={App}>
+      <Route path='staff' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/Organization/Staff').default)
+        }, 'staff')
+      }}/>
+      <Route path='branches' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/Organization/Branches').default)
+        }, 'branches')
+      }}/>
+    </Route>
     {/*<Route path='login' getComponent={(location, cb) => {*/}
       {/*require.ensure([], () => {*/}
         {/*cb(null, require('../Pages/Login/login').default)*/}

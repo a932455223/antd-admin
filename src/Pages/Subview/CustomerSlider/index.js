@@ -41,6 +41,18 @@ class NewCustomer extends Component {
     // console.log(e.target);
   };
 
+  // submit client
+  submitClient = () => {
+    // console.log({...this.props});
+    const { getFieldsValue, getFieldValue } = this.props.form;
+    const customerName = getFieldValue('clientName');
+    // 判断 customerName是否为空，若不为空，则跳转到 create状态下的 basicInfo页面
+    if(customerName !== '') {
+      this.props.nextStep();
+    }
+    this.props.getCustomersBriefInfo(getFieldsValue())
+  }
+
   // 点击确认不保存按钮后，关闭 Dock弹窗
   openNotification = () => {
     this.props.closeDock();
@@ -49,7 +61,7 @@ class NewCustomer extends Component {
   // 点击确认按钮，跳转到新建客户页面
 
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, getFieldsValue } = this.props.form;
     const formItemLayout = {
       labelCol: {span: 3},
       wrapperCol: {span: 9}
@@ -59,7 +71,7 @@ class NewCustomer extends Component {
       <div>
         <p style={{textAlign: 'right', padding: 10}}>
           <Icon
-            style={{fontSize: 22}}
+            style={{fontSize: 22, cursor: 'pointer'}}
             onClick={this.openNotification}
             type="close"
           />
@@ -70,15 +82,17 @@ class NewCustomer extends Component {
             <Col span={24}>
               <FormItem wrapperCol={{span: 8}}>
                 {getFieldDecorator('clientType', {
+                  initialValue: '个人客户',
                   rules: [{
+                    type: 'string',
                     required: true,
                     // message: 'Please select the movie type!'
                   }],
                   onChange: this.selectChange
                 })(
                   <Select placeholder="请选择客户类别">
-                    <Option value="personalClient">个人客户</Option>
-                    <Option value="enterpriseClient">企业客户</Option>
+                    <Option value="个人客户">个人客户</Option>
+                    <Option value="企业客户">企业客户</Option>
                   </Select>
                 )}
               </FormItem>
@@ -87,7 +101,9 @@ class NewCustomer extends Component {
             <Col span={16}>
               <FormItem wrapperCol={{span: 24}}>
                 {getFieldDecorator('clientName', {
+                  initialValue: '',
                   rules: [{
+                    type: 'string',
                     required: true,
                     // message: 'Please select the movie type!'
                   }],
@@ -104,14 +120,11 @@ class NewCustomer extends Component {
               </FormItem>
             </Col>
           </Row>
-
         </Form>
-
       </div>
     )
   }
 }
-
 const AddNewCustomer = Form.create()(NewCustomer);
 
 // customer Slider component
@@ -281,10 +294,11 @@ class CustomerSlider extends Component {
 
     // 获取当前激活 TabPane的 key，对比是否为 personalBasicInfo
     // this.pageLoading(e);
-  }
+  };
 
   // 个人用户的 Tabs
   personalUserTabs = () => {
+    const { mode } = this.props;
     const { personalClient } = this.state;
     const tabsProps = {
       className: styles.tabs,
@@ -295,58 +309,50 @@ class CustomerSlider extends Component {
       onChange: this.tabChange
     }
 
-    // tabs lists data
-    const tabLists = [
-      {
-        id: 'personalBasicInfo',
-        name: '基本信息',
-        authority: true
-      },
-      {
-        id: 'familyInfo',
-        name: '家庭信息',
-        authority: false
-      },
-      {
-        id: 'jobInfo',
-        name: '工作信息',
-        authority: true
-      },
-      {
-        id: 'financeInfo',
-        name: '基本信息',
-        authority: true
-      },
-      {
-        id: 'riskInfo',
-        name: '风险测试',
-        authority: true
-      },
-    ]
+    // console.log({...this.props})
 
     return (
       <Tabs {...tabsProps} >
-        <TabPane tab="基本信息" key="personalBasicInfo">
+        <TabPane
+          tab="基本信息"
+          key="personalBasicInfo"
+        >
           {personalClient && personalClient.personalBasicInfo &&
             <personalClient.personalBasicInfo {...this.props}/>
           }
         </TabPane>
-        <TabPane tab="家庭信息" key="familyInfo">
+        <TabPane
+          tab="家庭信息"
+          key="familyInfo"
+          disabled={mode === 'create' ? true : false}
+        >
           {personalClient && personalClient.familyInfo &&
             <personalClient.familyInfo />
           }
         </TabPane>
-        <TabPane tab="工作信息" key="jobInfo">
+        <TabPane
+          tab="工作信息"
+          key="jobInfo"
+          disabled={mode === 'create' ? true : false}
+        >
           {personalClient && personalClient.jobInfo &&
             <personalClient.jobInfo />
           }
         </TabPane>
-        <TabPane tab="金融业务信息" key="financeInfo">
+        <TabPane
+          tab="金融业务信息"
+          key="financeInfo"
+          disabled={mode === 'create' ? true : false}
+        >
           {personalClient && personalClient.financeInfo &&
             <personalClient.financeInfo />
           }
         </TabPane>
-        <TabPane tab="风险测试" key="riskInfo">
+        <TabPane
+          tab="风险测试"
+          key="riskInfo"
+          disabled={mode === 'create' ? true : false}
+        >
           {personalClient && personalClient.riskInfo &&
             <personalClient.riskInfo />
           }
@@ -357,6 +363,7 @@ class CustomerSlider extends Component {
 
   // 企业用户的 tabs
   enterpriseUserTabs = () => {
+    const { mode } = this.props;
     const { enterpriseClient } = this.state;
     const tabsProps = {
       className: styles.tabs,
@@ -378,12 +385,20 @@ class CustomerSlider extends Component {
             <enterpriseClient.enterpriseBasicInfo {...this.props}/>
           }
         </TabPane>
-        <TabPane tab="关键人信息" key="keyPersonInfo">
+        <TabPane
+          tab="关键人信息"
+          key="keyPersonInfo"
+          disabled={mode === 'create' ? true : false}
+        >
           {enterpriseClient.keyPersonInfo &&
             <enterpriseClient.keyPersonInfo {...this.props}/>
           }
         </TabPane>
-        <TabPane tab="线下业务" key="offlineInfo">
+        <TabPane
+          tab="线下业务"
+          key="offlineInfo"
+          disabled={mode === 'create' ? true : false}
+        >
           {enterpriseClient.offlineInfo &&
             <enterpriseClient.offlineInfo {...this.props}/>
           }
@@ -394,11 +409,12 @@ class CustomerSlider extends Component {
 
   // edit customer
   editCustomer = () => {
-    const { visible, currentId, clientType, editCustomer } = this.props;
+    const { visible, currentId, clientType, mode, customerName } = this.props;
 
     return(
       <div>
         <div className={styles.header}>
+          <span>{this.props.customerName}</span>
           <span>{this.props.currentId}</span>
 
           <Row className={styles.options}>
@@ -435,19 +451,16 @@ class CustomerSlider extends Component {
   }
 
   render() {
-    const { visible, currentId, clientType, editCustomer } = this.props;
-
-    const addNewCustomerProps = {
-      closeDock: this.props.closeDock
-    }
-
+    const { step, mode } = this.props;
+    // console.log({...this.props});
     return(
       <div>
-        {editCustomer && editCustomer === true
-          ?
+        {step === 1 && mode === 'create' &&
+          <AddNewCustomer {...this.props}/>
+        }
+
+        {step === 2 &&
           this.editCustomer()
-          :
-          <AddNewCustomer {...addNewCustomerProps}/>
         }
       </div>
     )
