@@ -127,7 +127,7 @@ class TablePage extends Component {
       },
       columns: columns,
       dataSource: dataSource,
-      scroll: { y: 480 }, // 固定表头
+      scroll: { y: 600 }, // 固定表头
       loading: loading,
       bordered: true,
       pagination: false,

@@ -18,7 +18,6 @@ import './App.less'
               <Layout>
                 <SiderBar/>
                 <Layout style={{ padding: '0 24px 24px' }}>
-                    <NavPath/>
                     <Content>
                         {this.props.children}
                     </Content>

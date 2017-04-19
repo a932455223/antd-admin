@@ -165,7 +165,6 @@ export default class MyCustomer extends Component {
       loading: loading,
       editCustomer: editCustomer
     };
-
     return (
       <div className="customer">
         <div className="filter">
@@ -178,3 +177,4 @@ export default class MyCustomer extends Component {
     )
   }
 }
+

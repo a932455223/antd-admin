@@ -14,11 +14,12 @@ export default class UserInfo extends Component {
   };
 
   componentWillMount() {
-    axios.get('/api/get/system/roles/users', {
+    axios.get('/asd/system/roles/users', {
       params: {
         id: this.props.id
       }
     }).then(res => {
+      console.log(res)
       this.setState({
         info: res.data.user
       })
