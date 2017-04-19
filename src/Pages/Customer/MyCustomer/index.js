@@ -1,14 +1,12 @@
-import React, { Component } from 'react';
-import {
-  Button,
-  Icon,
-  Input
-} from 'antd';
-import axios from 'axios';
+import React, {Component} from "react";
+import {Button, Icon, Input} from "antd";
+import axios from "axios";
 
-import TablePage from '../../../components/TablePage';
-import './less/myCustomerStyle.less';
-import './indexStyle.less';
+import TablePage from "../../../components/TablePage";
+import "./less/myCustomerStyle.less";
+import "./indexStyle.less";
+
+
 export default class MyCustomer extends Component {
   state = {
     loading: true,
@@ -16,7 +14,7 @@ export default class MyCustomer extends Component {
     customers: [],
     pagination: {},
     type: 0
-  }
+  };
 
   /*
   * 初始化加载的时候，调用接口获取返回的数据
@@ -26,12 +24,12 @@ export default class MyCustomer extends Component {
     // 请求表头数据
     axios.get('/asd/popular/columns')
     .then((data) => {
-      if(data.status === 200 && data.statusText === 'OK' && data.data) {
+      if (data.status === 200 && data.statusText === 'OK' && data.data) {
         this.setState({
           columnsLists: data.data
         })
       }
-    })
+    });
 
     // 请求列表数据
     axios.get('/api/customers')
@@ -177,4 +175,6 @@ export default class MyCustomer extends Component {
     )
   }
 }
+
+
 
