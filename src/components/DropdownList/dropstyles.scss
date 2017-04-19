@@ -1,0 +1,120 @@
+@import "../style/base";
+		
+
+.dropmain{
+	width: 1220px;
+	height: auto;
+	.droplist{
+		width: 100%;
+		height: 68px;
+		position: relative;
+		
+		.filter{
+			padding:0 20px;
+			font-size: 14px;
+			line-height: 68px;
+			cursor: pointer;
+			transition: color .4s ;
+			span{
+				margin: 0  20px;
+				color: #eaeaea;
+			}
+			a{
+				color: #ffa102;
+				padding: 20px 0;
+				&:hover{
+					color:#333;
+					transition: color .4s ;
+				};
+				&:hover .hide{
+					height:310px;
+					transition: height 0.2s ease-in-out;
+				};
+				.hide{
+					transition: height 0.2s ease-in-out;
+					line-height: 28px;
+					position: absolute;
+					background: #fff;
+					top: 48px;
+					left: 10px;
+					height: 0px;
+					overflow: scroll;
+					padding:0 12px;
+					width: 420px;
+					box-shadow: 0px 4px 10px #ddd;
+					border-radius: 10px;
+					z-index: 999;
+					h4{
+						font-size: 12px;
+						color: #333;
+						line-height: 26px;
+						margin-left: 10px;
+						span{
+							display: inline-block;
+							width: 3px;
+							height: 3px;
+							background: #eaeaea;
+							margin: 0 5px 2px 0;
+						}
+
+					}
+					.tag{
+						font-size: 12px;
+						margin: 0px 5px 8px 8px;
+						color: #999;
+						border-radius: 2px;
+						&:hover{
+							background: #aeb3ed;
+							color: #fff;
+						}
+					}
+					:global(.ant-tag-checkable-checked){
+						color: #fff;	
+						background: #aeb3ed;
+					}
+					.firstcoustomer{
+						margin-top: 20px;
+						margin-left: 10px;
+					}
+				}
+			}
+			:global(.ant-input-affix-wrapper){
+				margin-left: 14px;
+				.search{
+					border-radius: 100px;
+					border-color: #eaeaea;
+					&:focus{
+						outline:none;
+						border-color: #ddd;
+					}
+				}
+			}
+			.icon{
+				margin-left: 4px;
+				transform: scale(0.5);
+			}
+			b{
+				font-size: 16px;
+				color: #333;
+			}
+		}
+		
+	}
+	.select{
+			width: 1220px;
+			overflow: hidden;
+			padding:0 18px;
+			border-top: 1px #eaeaea solid;
+			.selecttag{
+				margin: 10px 5px;
+				font-size: 12px;
+				border-radius: 2px;
+				background: #aeb3ed;
+				border: 1px #aeb3ed solid;
+				color: #fff;
+			}
+	}
+}
+
+
+

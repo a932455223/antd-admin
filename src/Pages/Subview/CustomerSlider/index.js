@@ -278,6 +278,7 @@ class CustomerSlider extends Component {
       currentId: this.props.currentId
     })
 
+
     // 获取当前激活 TabPane的 key，对比是否为 personalBasicInfo
     // this.pageLoading(e);
   }

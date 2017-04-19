@@ -15,6 +15,7 @@ import {
   Timeline,
   Modal
  } from 'antd';
+import axios from 'axios';
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -243,7 +244,19 @@ class AddCrewModal extends Component {
 export default class BasicInfo extends Component {
   state = {
     modalVisible: false,
+    currentId: this.props.currentId ,
+    eachCustomerData: ''
   }
+
+  // componentWillMount() {
+  //   axios.get('http://115.159.58.21:8099/crm/api/customer/' + this.state.currentId + '/base')
+  //   .then((response) => {
+  //       console.log(response);
+  //       // this.setState({
+  //       //   eachCustomerData: response
+  //       // })
+  //   })
+  // }
 
   // render Brief info
   renderBriefInfo = () => (
@@ -278,7 +291,7 @@ export default class BasicInfo extends Component {
   }
 
   // render basic info lists
-  renderBasicInfoLists = () => (
+  renderBasicInfoLists = () => {
     <Row>
       <Col span={24}>
         <Col span={3}>
@@ -346,7 +359,7 @@ export default class BasicInfo extends Component {
         <Button>取消</Button>
       </Col>
     </Row>
-  )
+  }
 
   render() {
     const modal = {
