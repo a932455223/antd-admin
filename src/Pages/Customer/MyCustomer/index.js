@@ -163,7 +163,6 @@ export default class MyCustomer extends Component {
       loading: loading,
       editCustomer: editCustomer
     };
-
     return (
       <div>
         <a href="#">筛选</a>
@@ -172,3 +171,4 @@ export default class MyCustomer extends Component {
     )
   }
 }
+
