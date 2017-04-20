@@ -52,6 +52,16 @@ export default class MyCustomer extends Component {
     })
   }
 
+  componentDidUpdate() {
+    const customersMode = this.getCustomersMode(this.state.customers);
+    if(customersMode.length !== 0) {
+      console.log(customersMode);
+    };
+  };
+
+  // 发送 customers lists
+  getCustomersMode = customers => customers.map(customer => customer.id);
+
   // 关注客户／取消关注
   customerFocus = (id, e) => {
     e.stopPropagation(); // 阻止事件冒泡
@@ -155,6 +165,7 @@ export default class MyCustomer extends Component {
   render() {
     const { customers, pagination, loading, columnsLists } = this.state;
 
+    // 渲染 Table表格的表头数据
     const columns = [
       {
         title: '客户名称',
@@ -215,7 +226,6 @@ export default class MyCustomer extends Component {
         )
       }
     ]
-    // 渲染 Table表格的表头数据
     // const columns =  columnsLists && this.handleColumns(columnsLists);
 
     // 渲染表单内部的数据
@@ -229,13 +239,6 @@ export default class MyCustomer extends Component {
     return (
       <div className="customer">
         <Droplist />
-        {/*
-        <div className="filter">
-          <span>我的客户</span>
-          <Button>筛选</Button>
-          <Input className="select" type="select"/>
-        </div>
-        */}
         <TablePage {...myCustomerProps}/>
       </div>
     )

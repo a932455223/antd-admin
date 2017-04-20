@@ -33,10 +33,10 @@ customer: {
     rightSlider: {
         step: 2,
         mode: 'view', // create, view, edit
-        clientType: '个人客户',
+        category: '个人客户',
         currentId: 1,
         currentName: 'xxx',
-        notificate: false, // close edit notification
+        beEdited: false, // close edit notification
     }
 },
 message:{
