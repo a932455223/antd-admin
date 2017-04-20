@@ -62,15 +62,15 @@ export default class MyCustomer extends Component {
     })
   }
 
-  componentDidUpdate() {
-    const customersMode = this.getCustomersMode(this.state.customers);
-    if(customersMode.length !== 0) {
-      console.log(customersMode);
-    };
-  };
-
-  // 发送 customers lists
-  getCustomersMode = customers => customers.map(customer => customer.id);
+  // componentDidUpdate() {
+  //   const customersMode = this.getCustomersMode(this.state.customers);
+  //   if(customersMode.length !== 0) {
+  //     console.log(customersMode);
+  //   };
+  // };
+  //
+  // // 发送 customers lists
+  // getCustomersMode = customers => customers.map(customer => customer.id);
 
   // 关注客户／取消关注
   customerFocus = (id, e) => {

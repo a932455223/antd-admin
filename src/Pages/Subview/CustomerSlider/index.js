@@ -326,6 +326,8 @@ class CustomerSlider extends Component {
       onChange: this.tabChange
     }
 
+    // console.log(this.props);
+
     // console.log({...this.props})
 
     return (
@@ -473,6 +475,7 @@ class CustomerSlider extends Component {
 
   render() {
     const { step, mode } = this.props.currentCustomer;
+    // console.log(this.props.currentCustomer);
     // console.log({...this.props});
     return(
       <div>
