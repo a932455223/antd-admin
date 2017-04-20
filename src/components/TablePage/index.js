@@ -207,7 +207,6 @@ class TablePage extends Component {
 
     return (
       <div className="tablepage">
-
         <header>
           <Button
             className="addNewCustomer"
@@ -222,7 +221,6 @@ class TablePage extends Component {
         </header>
 
         <Table {...tableProps} />
-
 
         <Pagination {...pageProps} />
 

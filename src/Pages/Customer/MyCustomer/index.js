@@ -33,8 +33,9 @@ export default class MyCustomer extends Component {
       }
     })
 
+
     // 请求列表数据
-    axios.get('/api/customers')
+    axios.get('/asd/customers')
     .then((json) => {
       if(json.data && json.data.data && json.data.data.customers && json.data.data.pagination) {
         // 将数据存入私有的 state中
@@ -155,7 +156,6 @@ export default class MyCustomer extends Component {
 
     // 渲染表单内部的数据
     const dataSource = this.filterMoviesData(customers);
-
     const myCustomerProps = {
       columns: columns,
       dataSource: dataSource,
@@ -175,4 +175,3 @@ export default class MyCustomer extends Component {
     )
   }
 }
-
