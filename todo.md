@@ -23,6 +23,9 @@ CustomerSlider
  4.组件私有state init 问题
  5.删选数据
 
+
+
+
 ```javascript
 
 customer:{
@@ -30,10 +33,46 @@ customer:{
     rightSlider:{
         mode:'create',
         currentId:1,
-        currentName:xxx
+        clientType:'个人用户',
+        customerName:xxx
     }
 },
 message:{
 
 }
+```
+
+TablePage.js
+```js
+import CustomerSlider from 'CustomerSlider'
+
+class TablePage{
+    <Docker isVisible={this.props.dockerVisible}>
+        <this.state.CustomerSlider />
+    </Docker>
+}
+mapStateToProps(store){
+    return {dockerVisible:store.rightSlider.dockerVisible}
+}
+
+export connect(mapStateToProps)(TablePage)
+```
+
+
+
+MyCustomer
+```js
+import TablePage from 'TablePage'
+<TablePage columns dataSource/>
+```
+CustomerSlider
+```js
+class CustomerSlider{
+
+}
+
+mapStateToProps(store){
+    return {dockerVisible:store.rightSlider.dockerVisible}
+}
+connect()
 ```
