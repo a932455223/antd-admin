@@ -14,6 +14,7 @@ export default class ActionBar extends Component{
 
 
   render(){
+    console.log(this.props);
     return (
       <div className="organizationActionBar">
         <Card>

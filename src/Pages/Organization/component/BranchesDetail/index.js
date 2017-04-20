@@ -24,13 +24,13 @@ class BranchesDetail extends Component {
 
   render() {
     const {getFieldDecorator} = this.props.form;
-
+    console.log('aaaa',this.props)
     return (
       <Form>
         <div className="departmentDetail">
           <Row className="departmentDetail-title">
             <Col span={22}>
-              {this.props.id === -1 ? '添加员工' : '编辑'}
+              {this.props.id === -1 ? '添加组织机构' : '编辑'}
             </Col>
             <Col span={2}>
             <span
@@ -41,7 +41,6 @@ class BranchesDetail extends Component {
             </span>
             </Col>
           </Row>
-
           <Card
             title={(
               <Row>
