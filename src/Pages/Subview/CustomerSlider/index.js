@@ -53,6 +53,13 @@ class NewCustomer extends Component {
     this.props.getCustomersBriefInfo(getFieldsValue())
   }
 
+  //
+  createCustomer = (e) => {
+    if(e.keyCode === 13) {
+      this.submitClient()
+    }
+  }
+
   // 点击确认不保存按钮后，关闭 Dock弹窗
   openNotification = () => {
     this.props.closeDock();
@@ -109,14 +116,14 @@ class NewCustomer extends Component {
                   }],
                   onChange: this.inputChange
                 })(
-                  <Input />
+                  <Input onKeyDown={this.createCustomer}/>
                 )}
               </FormItem>
             </Col>
 
             <Col span={8}>
               <FormItem>
-                <Button type="primary" onClick={this.submitClient}>Submit</Button>
+                <Button type="primary" onClick={this.submitClient}>确认新建</Button>
               </FormItem>
             </Col>
           </Row>

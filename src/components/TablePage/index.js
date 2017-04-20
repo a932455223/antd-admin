@@ -64,10 +64,10 @@ class TablePage extends Component {
 
     this.setState({
       mode: 'edit',
-      customerName: info.clientName,
+      customerName: info.name,
       dockVisible: true,
       currentId: info.id,
-      clientType: info.clientType,
+      clientType: info.category,
       step: 2
     })
     // const { dispatch, editDock } = this.props;
@@ -153,6 +153,7 @@ class TablePage extends Component {
       bordered: true,
       pagination: false,
       onRowClick: this.rowClick,
+      rowKey: record => record.id,
       // scroll: { y: 240 }, // 固定表头
       rowSelection: {
         onChange: this.onSelectChange

@@ -27,14 +27,18 @@ CustomerSlider
 
 
 ```javascript
-
-customer:{
-    table:{refresh:false},
-    rightSlider:{
-        mode:'create',
-        currentId:1,
-        clientType:'个人用户',
-        customerName:xxx
+customer: {
+    refresh: false, // dataSource refresh
+    table: {
+      visible: false // dock visible
+    },
+    rightSlider: {
+        step: 2,
+        mode: 'view', // create, view, edit
+        category: '个人客户',
+        currentId: 1,
+        currentName: 'xxx',
+        beEdited: false, // close edit notification
     }
 },
 message:{

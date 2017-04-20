@@ -17,56 +17,56 @@ const validate = function (next, replace, callback) {
 const route = (
   <Route path='/'>
     <IndexRedirect to='organization/staff'/>
-    {/*<Route path='customer' onEnter={validate} component={App}>*/}
-      {/*<Route path='my' getComponent={(location, cb) => {*/}
-        {/*require.ensure([], () => {*/}
-          {/*cb(null, require('../Pages/Customer/MyCustomer').default)*/}
-        {/*}, 'MyCustomer')*/}
-      {/*}}/>*/}
-      {/*<Route path='focused' getComponent={(location, cb) => {*/}
-        {/*require.ensure([], () => {*/}
-          {/*cb(null, require('../Pages/Customer/Focused').default)*/}
-        {/*}, 'Focused')*/}
-      {/*}}/>*/}
-      {/*<Route path='undistributed' getComponent={(location, cb) => {*/}
-        {/*require.ensure([], () => {*/}
-          {/*cb(null, require('../Pages/Customer/Undistributed').default)*/}
-        {/*}, 'Undistributed')*/}
-      {/*}}/>*/}
-      {/*<Route path='subordinate' getComponent={(location, cb) => {*/}
-        {/*require.ensure([], () => {*/}
-          {/*cb(null, require('../Pages/Customer/Subordinate').default)*/}
-        {/*}, 'Subordinate')*/}
-      {/*}}/>*/}
-      {/*<Route path='participation' getComponent={(location, cb) => {*/}
-        {/*require.ensure([], () => {*/}
-          {/*cb(null, require('../Pages/Customer/Participation').default)*/}
-        {/*}, 'participation')*/}
-      {/*}}/>*/}
-      {/*<Route path='recentlyDistributed' getComponent={(location, cb) => {*/}
-        {/*require.ensure([], () => {*/}
-          {/*cb(null, require('../Pages/Customer/RecentlyDistributed').default)*/}
-        {/*}, 'RecentlyDistributed')*/}
-      {/*}}/>*/}
-      {/*<Route path='all' getComponent={(location, cb) => {*/}
-        {/*require.ensure([], () => {*/}
-          {/*cb(null, require('../Pages/Customer/All').default)*/}
-        {/*}, 'All')*/}
-      {/*}}/>*/}
-    {/*</Route>*/}
+    <Route path='customer' onEnter={validate} component={App}>
+      <Route path='my' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/Customer/MyCustomer').default)
+        }, 'MyCustomer')
+      }}/>
+      <Route path='focused' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/Customer/Focused').default)
+        }, 'Focused')
+      }}/>
+      <Route path='undistributed' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/Customer/Undistributed').default)
+        }, 'Undistributed')
+      }}/>
+      <Route path='subordinate' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/Customer/Subordinate').default)
+        }, 'Subordinate')
+      }}/>
+      <Route path='participation' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/Customer/Participation').default)
+        }, 'participation')
+      }}/>
+      <Route path='recentlyDistributed' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/Customer/RecentlyDistributed').default)
+        }, 'RecentlyDistributed')
+      }}/>
+      <Route path='all' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/Customer/All').default)
+        }, 'All')
+      }}/>
+    </Route>
 
-    {/*<Route path='system' onEnter={validate} component={App}>*/}
-      {/*<Route path='users' getComponent={(location, cb) => {*/}
-        {/*require.ensure([], () => {*/}
-          {/*cb(null, require('../Pages/System/Users/').default)*/}
-        {/*}, 'users')*/}
-      {/*}}/>*/}
-      {/*<Route path='roles' getComponent={(location, cb) => {*/}
-        {/*require.ensure([], () => {*/}
-          {/*cb(null, require('../Pages/System/Roles/').default)*/}
-        {/*}, 'roles')*/}
-      {/*}}/>*/}
-    {/*</Route>*/}
+    <Route path='system' onEnter={validate} component={App}>
+      <Route path='users' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/System/Users/').default)
+        }, 'users')
+      }}/>
+      <Route path='roles' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/System/Roles/').default)
+        }, 'roles')
+      }}/>
+    </Route>
     <Route path='organization' onEnter={validate} component={App}>
       <Route path='staff' getComponent={(location, cb) => {
         require.ensure([], () => {
@@ -79,31 +79,31 @@ const route = (
         }, 'branches')
       }}/>
     </Route>
-    {/*<Route path='login' getComponent={(location, cb) => {*/}
-      {/*require.ensure([], () => {*/}
-        {/*cb(null, require('../Pages/Login/login').default)*/}
-      {/*}, 'login')*/}
-    {/*}}/>*/}
+    <Route path='login' getComponent={(location, cb) => {
+      require.ensure([], () => {
+        cb(null, require('../Pages/Login/login').default)
+      }, 'login')
+    }}/>
   </Route>
 );
 
-// const routeOne = (
-//   <Route path='/'>
-//     <IndexRedirect to='customer/my'/>
-//     <Route path='customer' onEnter={validate} component={App}>
-//       <Route path='my' getComponent={(location, cb) => {
-//         require.ensure([], () => {
-//           cb(null, require('../Pages/Customer/MyCustomer').default)
-//         }, 'MyCustomer')
-//       }}/>
-//
-//     </Route>
-//     <Route path='login' getComponent={(location, cb) => {
-//       require.ensure([], () => {
-//         cb(null, require('../Pages/Login/login').default)
-//       }, 'login')
-//     }}/>
-//   </Route>
-// )
+const routeOne = (
+  <Route path='/'>
+    <IndexRedirect to='customer/my'/>
+    <Route path='customer' onEnter={validate} component={App}>
+      <Route path='my' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/Customer/MyCustomer').default)
+        }, 'MyCustomer')
+      }}/>
+
+    </Route>
+    <Route path='login' getComponent={(location, cb) => {
+      require.ensure([], () => {
+        cb(null, require('../Pages/Login/login').default)
+      }, 'login')
+    }}/>
+  </Route>
+)
 
 export default route;
