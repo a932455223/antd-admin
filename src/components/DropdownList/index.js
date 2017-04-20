@@ -1,5 +1,5 @@
-import React,{Component} from 'react';
-import style from './dropstyles.scss';
+import React, { Component } from 'react';
+import style from './indexStyle.scss';
 import {
   Menu,
   Icon,
@@ -7,14 +7,14 @@ import {
   Tag,
   Input
 } from 'antd';
-const Search = Input.Search;
+const Search       = Input.Search;
 const CheckableTag = Tag.CheckableTag;
 const tagsCategory = ['个人客户', '企业客户'];
-const tagsLevel = ['普通客户', '重点客户','未激活客户'];
+const tagsLevel    = ['普通客户', '重点客户','未激活客户'];
 const tagsInterest = ['保守型', '激进型','稳健型'];
-const tagsJob = ['农业', '金融业','服务业','零售业','建筑工程','设计'];
-const tagsJob01 = ['农业12', '农业23','农业34'];
-const tagsJob02= ['农业11', '农业22','农业33','农业44','农业55'];
+const tagsJob      = ['农业', '金融业','服务业','零售业','建筑工程','设计'];
+const tagsJob01    = ['农业12', '农业23','农业34'];
+const tagsJob02    = ['农业11', '农业22','农业33','农业44','农业55'];
 
 class Droplist extends React.Component {
   state = {
@@ -104,7 +104,7 @@ class Droplist extends React.Component {
 					            {tag}
 					          </CheckableTag>
 				        ))}
-				      
+
 					</div>
 					<Icon type="caret-down" className={style.icon}/>
 					</a>
@@ -114,20 +114,20 @@ class Droplist extends React.Component {
 						    onSearch={value => console.log(value)}
 						/>
 					</div>
-					
-					
+
+
 				</div>
 				<div className={style.select}> {selectedTags.map(tag => (<Tag className={style.selecttag} key={tag} closable afterClose={() => this.handleClose(tag)} > {tag} </Tag>))} </div>
 			</div>
 		)
 	}
-	
+
 }
 
-       
-        
-      
-   
+
+
+
+
 
 
 export default Droplist ;
