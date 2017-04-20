@@ -17,7 +17,8 @@ export default class MyCustomer extends Component {
     columnsLists: [],
     customers: [],
     pagination: {},
-    type: 0
+    type: 0,
+    privilege:[]
   }
 
   /*
@@ -40,15 +41,24 @@ export default class MyCustomer extends Component {
 
     axios.get(API.GET_CUSTOMERS)
     .then((json) => {
-      console.log(json.data);
-      if(json.data && json.data.code === 200 && json.data.data && json.data.data.customers && json.data.pagination) {
         // 将数据存入私有的 state中
         this.setState({
           loading: false,
-          customers: json.data.data.customers,
+          customers: json.data.data.customers || [],
           pagination: json.data.pagination
         })
-      }
+        return json.data.data.customers || []
+    })
+    .then((customers) => {
+        let permission = customers.map((cstm) => ({customerId:cstm.id,permission:['system:update']}))
+        axios.post(API.POST_CUSTOMER_PRIVILEGE,permission)
+        .then((rest) => {
+            let hasPermission = rest.data.data;
+            this.setState({
+                ...this.state,
+                privilege:hasPermission
+            })
+        })
     })
   }
 
@@ -163,7 +173,7 @@ export default class MyCustomer extends Component {
   // });
 
   render() {
-    const { customers, pagination, loading, columnsLists } = this.state;
+    const { customers, pagination, loading, columnsLists,privilege } = this.state;
 
     // 渲染 Table表格的表头数据
     const columns = [
@@ -234,7 +244,8 @@ export default class MyCustomer extends Component {
       columns: columns,
       dataSource: customers,
       pagination: pagination,
-      loading: loading
+      loading: loading,
+      privilege:privilege
     };
     return (
       <div className="customer">
