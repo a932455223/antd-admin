@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { Table, Pagination, Spin, Button, Icon } from 'antd';
 import Dock from 'react-dock';
 import './indexStyle.less';
+
+import { saveCurrentCustomerInfo, createCustomer } from '../../redux/actions/customerAction';
 
 class TablePage extends Component {
   // const propTypes = {
@@ -63,13 +65,13 @@ class TablePage extends Component {
     }
 
     this.setState({
-      mode: 'edit',
-      customerName: info.name,
       dockVisible: true,
-      currentId: info.id,
-      clientType: info.category,
-      step: 2
     })
+
+    const { dispatch } = this.props;
+    const mode = 'edit';
+    dispatch(saveCurrentCustomerInfo(info, mode))
+
     // const { dispatch, editDock } = this.props;
     // dispatch(showEditDock(true, info.id));
 
@@ -102,14 +104,11 @@ class TablePage extends Component {
 
   // add new customer
   addNewCustomer = () => {
+    const { dispatch } = this.props;
     this.setState({
-      currentId: -1,
-      dockVisible: true,
-      step: 1,
-      mode: 'create',
-      customerName: this.state.customerName,
-      clientType: this.state.clientType
-    })
+      dockVisible: true
+    });
+    dispatch(createCustomer());
   }
 
   // 切换到 step 2，填写具体的信息
@@ -235,12 +234,12 @@ class TablePage extends Component {
   }
 }
 
-export default TablePage;
+// export default TablePage;
 
-// const mapStateToProps = (store) => {
-//   return {
-//     editDock: store.common.editDock.data
-//   }
-// }
+const mapStateToProps = (store) => {
+  return {
+    currentCustomer: store.customer.currentCustomerInfo
+  }
+}
 
-// export default connect(mapStateToProps)(TablePage);
+export default connect(mapStateToProps)(TablePage);

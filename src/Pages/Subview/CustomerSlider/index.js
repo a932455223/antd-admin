@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import {
   Tabs,
   Icon,
@@ -17,7 +17,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 
 import styles from './indexStyle.scss';
-// import { hideEditDock } from '../../../redux/actions/commonAction';
+import { fillCustomerInfo } from '../../../redux/actions/customerAction';
 
 // import personalBasicInfo  from './Pages/personalBasicInfo';
 
@@ -44,13 +44,14 @@ class NewCustomer extends Component {
   // submit client
   submitClient = () => {
     // console.log({...this.props});
-    const { getFieldsValue, getFieldValue } = this.props.form;
-    const customerName = getFieldValue('clientName');
+    const { dispatch } = this.props;
+    const { getFieldsValue } = this.props.form;
+    const customer = getFieldsValue();
     // 判断 customerName是否为空，若不为空，则跳转到 create状态下的 basicInfo页面
-    if(customerName !== '') {
-      this.props.nextStep();
+    if(customer.name !== '') {
+      dispatch(fillCustomerInfo(customer.category, customer.name))
     }
-    this.props.getCustomersBriefInfo(getFieldsValue())
+    // this.props.getCustomersBriefInfo(getFieldsValue())
   }
 
   //
@@ -88,7 +89,7 @@ class NewCustomer extends Component {
           <Row>
             <Col span={24}>
               <FormItem wrapperCol={{span: 8}}>
-                {getFieldDecorator('clientType', {
+                {getFieldDecorator('category', {
                   initialValue: '个人客户',
                   rules: [{
                     type: 'string',
@@ -107,7 +108,7 @@ class NewCustomer extends Component {
 
             <Col span={16}>
               <FormItem wrapperCol={{span: 24}}>
-                {getFieldDecorator('clientName', {
+                {getFieldDecorator('name', {
                   initialValue: '',
                   rules: [{
                     type: 'string',
@@ -305,13 +306,22 @@ class CustomerSlider extends Component {
 
   // 个人用户的 Tabs
   personalUserTabs = () => {
-    const { mode } = this.props;
+    const { currentCustomer } = this.props;
     const { personalClient } = this.state;
+    const mode = currentCustomer.mode;
+
+
     const tabsProps = {
       className: styles.tabs,
       // tabBarExtraContent: operations,
-      key: this.props.currentId,
-      defaultActiveKey: this.props.currentId === this.state.currentId ? this.state.activeTabs : 'personalBasicInfo',
+      key: currentCustomer.id,
+      // 判断当前点击的用户的 ID与之前存储的 id是否相同，若相同，则不重新渲染 tabs
+      defaultActiveKey:
+        currentCustomer.id === this.state.currentId
+        ?
+        this.state.activeTabs
+        :
+        'personalBasicInfo',
       // type: "card",
       onChange: this.tabChange
     }
@@ -370,14 +380,18 @@ class CustomerSlider extends Component {
 
   // 企业用户的 tabs
   enterpriseUserTabs = () => {
-    const { mode } = this.props;
+    const { currentCustomer } = this.props;
     const { enterpriseClient } = this.state;
+    const mode = currentCustomer.mode;
+
+    // tabs props
     const tabsProps = {
       className: styles.tabs,
       // tabBarExtraContent: operations,
-      key: this.props.currentId,
+      key: currentCustomer.id,
+      // 判断当前点击的用户的 ID与之前存储的 id是否相同，若相同，则不重新渲染 tabs
       defaultActiveKey:
-        this.props.currentId === this.state.currentId
+        currentCustomer.id === this.state.currentId
         ?
         this.state.activeTabs
         :
@@ -416,13 +430,13 @@ class CustomerSlider extends Component {
 
   // edit customer
   editCustomer = () => {
-    const { visible, currentId, clientType, mode, customerName } = this.props;
+    const { visible, currentCustomer } = this.props;
 
     return(
       <div>
         <div className={styles.header}>
-          <span>{this.props.customerName}</span>
-          <span>{this.props.currentId}</span>
+          <span>{currentCustomer.name}</span>
+          <span>{currentCustomer.id}</span>
 
           <Row className={styles.options}>
             <Col span={6}>
@@ -447,7 +461,7 @@ class CustomerSlider extends Component {
           </Row>
         </div>
 
-        {clientType && clientType == '个人客户'
+        {currentCustomer.category && currentCustomer.category == '个人客户'
           ?
           this.personalUserTabs()
           :
@@ -458,7 +472,7 @@ class CustomerSlider extends Component {
   }
 
   render() {
-    const { step, mode } = this.props;
+    const { step, mode } = this.props.currentCustomer;
     // console.log({...this.props});
     return(
       <div>
@@ -474,11 +488,11 @@ class CustomerSlider extends Component {
   }
 }
 
-export default CustomerSlider;
-// const mapStateToProps = (store) => {
-//   return {
-//     editDock: store.common.editDock.data
-//   }
-// }
+// export default CustomerSlider;
+const mapStateToProps = (store) => {
+  return {
+    currentCustomer: store.customer.currentCustomerInfo
+  }
+}
 
-// export default connect(mapStateToProps)(CustomerSlider);
+export default connect(mapStateToProps)(CustomerSlider);
