@@ -41,6 +41,13 @@ class NewCustomer extends Component {
     // console.log(e.target);
   };
 
+  // submit client
+  submitClient = () => {
+    const { getFieldsValue } = this.props.form;
+    this.props.nextStep();
+    this.props.getCustomersBriefInfo(getFieldsValue())
+  }
+
   // 点击确认不保存按钮后，关闭 Dock弹窗
   openNotification = () => {
     this.props.closeDock();
@@ -49,11 +56,13 @@ class NewCustomer extends Component {
   // 点击确认按钮，跳转到新建客户页面
 
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, getFieldsValue } = this.props.form;
     const formItemLayout = {
       labelCol: {span: 3},
       wrapperCol: {span: 9}
     };
+
+    console.log(getFieldsValue());
 
     return (
       <div>
@@ -70,6 +79,7 @@ class NewCustomer extends Component {
             <Col span={24}>
               <FormItem wrapperCol={{span: 8}}>
                 {getFieldDecorator('clientType', {
+                  initialValue: '个人客户',
                   rules: [{
                     required: true,
                     // message: 'Please select the movie type!'
@@ -77,8 +87,8 @@ class NewCustomer extends Component {
                   onChange: this.selectChange
                 })(
                   <Select placeholder="请选择客户类别">
-                    <Option value="personalClient">个人客户</Option>
-                    <Option value="enterpriseClient">企业客户</Option>
+                    <Option value="个人客户">个人客户</Option>
+                    <Option value="企业客户">企业客户</Option>
                   </Select>
                 )}
               </FormItem>
@@ -87,6 +97,7 @@ class NewCustomer extends Component {
             <Col span={16}>
               <FormItem wrapperCol={{span: 24}}>
                 {getFieldDecorator('clientName', {
+                  initialValue: '',
                   rules: [{
                     required: true,
                     // message: 'Please select the movie type!'
@@ -104,14 +115,11 @@ class NewCustomer extends Component {
               </FormItem>
             </Col>
           </Row>
-
         </Form>
-
       </div>
     )
   }
 }
-
 const AddNewCustomer = Form.create()(NewCustomer);
 
 // customer Slider component
@@ -295,35 +303,6 @@ class CustomerSlider extends Component {
       onChange: this.tabChange
     }
 
-    // tabs lists data
-    const tabLists = [
-      {
-        id: 'personalBasicInfo',
-        name: '基本信息',
-        authority: true
-      },
-      {
-        id: 'familyInfo',
-        name: '家庭信息',
-        authority: false
-      },
-      {
-        id: 'jobInfo',
-        name: '工作信息',
-        authority: true
-      },
-      {
-        id: 'financeInfo',
-        name: '基本信息',
-        authority: true
-      },
-      {
-        id: 'riskInfo',
-        name: '风险测试',
-        authority: true
-      },
-    ]
-
     return (
       <Tabs {...tabsProps} >
         <TabPane tab="基本信息" key="personalBasicInfo">
@@ -394,11 +373,12 @@ class CustomerSlider extends Component {
 
   // edit customer
   editCustomer = () => {
-    const { visible, currentId, clientType, editCustomer } = this.props;
+    const { visible, currentId, clientType, mode, customerName } = this.props;
 
     return(
       <div>
         <div className={styles.header}>
+          <span>{this.props.customerName}</span>
           <span>{this.props.currentId}</span>
 
           <Row className={styles.options}>
@@ -435,19 +415,16 @@ class CustomerSlider extends Component {
   }
 
   render() {
-    const { visible, currentId, clientType, editCustomer } = this.props;
-
-    const addNewCustomerProps = {
-      closeDock: this.props.closeDock
-    }
+    const { visible, currentId, clientType, step, mode } = this.props;
 
     return(
       <div>
-        {editCustomer && editCustomer === true
-          ?
+        {step === 1 && mode === 'create' &&
+          <AddNewCustomer {...this.props}/>
+        }
+
+        {step === 2 &&
           this.editCustomer()
-          :
-          <AddNewCustomer {...addNewCustomerProps}/>
         }
       </div>
     )

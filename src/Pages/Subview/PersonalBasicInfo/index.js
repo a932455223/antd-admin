@@ -245,17 +245,19 @@ class AddCrewModal extends Component {
 export default class BasicInfo extends Component {
   state = {
     modalVisible: false,
-    currentId: this.props.currentId + 1,
+    // currentId: this.props.currentId + 1,
     eachCustomerInfo: ''
+    // mode: this.props.mode,
+    // step:this.props.step
   }
 
   componentWillMount() {
-    console.log(this.state.currentId)
-    axios.get(API.GET_CUSTOMER_BASE(this.state.currentId))
+    console.log(this.props.currentId);
+    axios.get(API.GET_CUSTOMER_BASE(this.props.currentId + 1))
     .then((res) => {
       console.log(res);
       res.data.data.map(item => {
-        if (item.id === this.state.currentId) {
+        if (item.id === this.props.currentId + 1) {
           this.setState({
             eachCustomerInfo: item
           })
@@ -301,7 +303,7 @@ export default class BasicInfo extends Component {
   // render basic info lists
   renderBasicInfoLists = () => {
     const {eachCustomerInfo} = this.state;
-    console.log(eachCustomerInfo)
+    console.log(eachCustomerInfo);
     return (
     <Row>
       <Col span={24}>
@@ -309,19 +311,20 @@ export default class BasicInfo extends Component {
           <span>账户：</span>
         </Col>     
         <Col span={9}>
-          <Input defaultValue="d"/>
+          <Input value={eachCustomerInfo.certificate}/>
         </Col>
         <Col span={3}>
-          <Input defaultValue="d"/>
+          <Input defaultValue="ddd" />
         </Col>
         <Col span={9}></Col>
       </Col>
+
       <Col span={12}>
         <Col span={6}>
           <span>手机号：</span>
         </Col>
         <Col span={18}>
-          <Input defaultValue={eachCustomerInfo.phone}/>
+          <Input value={eachCustomerInfo.phone}/>
         </Col>
       </Col>
 
@@ -330,7 +333,7 @@ export default class BasicInfo extends Component {
           <span>微信号：</span>
         </Col>
         <Col span={18}>
-          <Input defaultValue={eachCustomerInfo.wechat}/>
+          <Input value={eachCustomerInfo.wechat}/>
         </Col>
       </Col>
 
@@ -339,7 +342,7 @@ export default class BasicInfo extends Component {
           <span>身份证号：</span>
         </Col>
         <Col span={18}>
-          <Input defaultValue={eachCustomerInfo.certificate}/>
+          <Input value={eachCustomerInfo.certificate}/>
         </Col>
       </Col>
 
@@ -368,7 +371,6 @@ export default class BasicInfo extends Component {
         <Col span={3}>
         </Col>
         <Button type="primary">保存</Button>
-        <Button>取消</Button>
       </Col>
     </Row>)
   }
@@ -379,7 +381,7 @@ export default class BasicInfo extends Component {
       show: this.modalShow,
       hide: this.modalHide
     };
-
+    const {step, mode} = this.props;
     return(
       <div style={{textAlign: 'left'}}>
         <div className={styles.detailInfo}>
@@ -388,7 +390,8 @@ export default class BasicInfo extends Component {
         </div>
 
         <div className={styles.detailInfo}>
-          {this.renderBasicInfoLists()}
+          {step === 2 && mode === "edit" && this.renderBasicInfoLists()}
+          {step === 2 && mode === "view" && this}
         </div>
 
         <div className={styles.detailInfo}>

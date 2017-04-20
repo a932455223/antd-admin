@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 // import { connect } from 'react-redux';
-import { Table, Pagination, Spin, Button } from 'antd';
+import { Table, Pagination, Spin, Button, Icon } from 'antd';
 import Dock from 'react-dock';
 import './indexStyle.less';
 
@@ -10,12 +10,14 @@ class TablePage extends Component {
   // };
 
   state = {
-    selectedRowKeys: [],
-    dockVisible: false,
-    CustomerSlider: '',
-    currentId: '',
-    clientType: '',
-    editCustomer: true
+    selectedRowKeys: [], // 被选中的 row
+    dockVisible: false, // slide visible
+    CustomerSlider: '', // 异步加载组件
+    currentId: '', // 当前用户的 id
+    clientType: '个人客户', // 客户类型
+    mode: 'create', // 模式
+    step: 1, // 步骤
+    customerName: ''
   };
 
   componentWillMount() {
@@ -61,10 +63,12 @@ class TablePage extends Component {
     }
 
     this.setState({
-      editCustomer: true,
+      mode: 'edit',
+      customerName: info.clientName,
       dockVisible: true,
       currentId: info.id,
-      clientType: info.clientType
+      clientType: info.clientType,
+      step: 2
     })
     // const { dispatch, editDock } = this.props;
     // dispatch(showEditDock(true, info.id));
@@ -99,8 +103,27 @@ class TablePage extends Component {
   // add new customer
   addNewCustomer = () => {
     this.setState({
+      currentId: -1,
       dockVisible: true,
-      editCustomer: false
+      step: 1,
+      mode: 'create',
+      customerName: this.state.customerName,
+      clientType: this.state.clientType
+    })
+  }
+
+  // 切换到 step2
+  stepByStep = () => {
+    this.setState({
+      step: 2
+    })
+  }
+
+  // 添加 customers，获取所传递的参数
+  getCustomersBriefInfo = (value) => {
+    this.setState({
+      clientType: value.clientType,
+      customerName: value.clientName
     })
   }
 
@@ -111,15 +134,6 @@ class TablePage extends Component {
     //   onChange: this.onSelectChange,
     // };
 
-    // slider visible and row click crrentId
-    const sliderProps = {
-      closeDock: this.closeDock,
-      visible: this.state.dockVisible,
-      currentId: this.state.currentId,
-      clientType: this.state.clientType,
-      editCustomer: this.state.editCustomer
-    }
-
     // table props lists
     const tableProps = {
       style: {
@@ -127,7 +141,7 @@ class TablePage extends Component {
       },
       columns: columns,
       dataSource: dataSource,
-      scroll: { y: 600 }, // 固定表头
+      // scroll: { y: 600 }, // 固定表头
       loading: loading,
       bordered: true,
       pagination: false,
@@ -170,12 +184,33 @@ class TablePage extends Component {
       zIndex: 100,
     }
 
+    // slider visible and row click crrentId
+    const sliderProps = {
+      closeDock: this.closeDock,
+      visible: this.state.dockVisible,
+      currentId: this.state.currentId,
+      clientType: this.state.clientType,
+      mode: this.state.mode,
+      step: this.state.step,
+      nextStep: this.stepByStep,
+      customerName: this.state.customerName,
+      getCustomersBriefInfo: this.getCustomersBriefInfo // 获取添加人员的 brief info
+    }
+
     return (
-      <div>
+      <div className="tablepage">
 
         <header>
-          <Button onClick={this.addNewCustomer}>新建客户</Button>
-          <Button>更多操作</Button>
+          <Button
+            className="addNewCustomer"
+            type="primary"
+            onClick={this.addNewCustomer}
+          >
+            <Icon type="plus" />新建客户
+          </Button>
+          <Button>
+            更多操作<Icon type="down" />
+          </Button>
         </header>
 
         <Table {...tableProps} />
