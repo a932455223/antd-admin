@@ -5,73 +5,34 @@
  * 时间： 17.3.2
  */
 
+
+
 import React, {Component} from "react";
-import {Layout, Tree,Table} from "antd";
-import axios from "axios";
-import Dock from 'react-dock';
-//======================================================
-import ActionBar from "../component/ActionBar";
+//========================================
+import Container from "../component/Container";
 import BranchesDetail from '../component/BranchesDetail';
-//========================================================
-import "./less/branchesStyle.less";
-import API from "../../../../API";
 
-
-const {Sider, Content} = Layout;
-const TreeNode = Tree.TreeNode;
 
 export default class Branches extends Component {
-
   state = {
-    department: {},
     dock: {
-      visible: false,
-      children: null
+      visible: false
     }
   };
 
-
-
-  componentWillMount() {
-    axios.get(API.GET_DEPARTMENT_HIERARCHY)
-      .then(res => {
-        this.setState({
-          department: res.data.data
-        })
-      })
-  }
-
-  createTree(data) {
-
-    if (data.childDepartment) {
-      return (
-        <TreeNode title={data.name} id={data.id} key={data.id}>
-          {
-            data.childDepartment.map(childrenDepartment => {
-              return (
-                this.createTree(childrenDepartment)
-              )
-            })
-          }
-        </TreeNode>  )
-    } else {
-      return <TreeNode title={data.name} id={data.id} key={data.id}/>
-    }
-  }
-
-  showDock(id = -1){
+  closeDock() {
     this.setState({
       dock: {
-        visible: true,
-        children: <BranchesDetail closeDock={this.closeDock.bind(this)} id={id}/>
+        visible: false
       }
     })
   }
 
-  closeDock(){
+  showDock(id) {
     this.setState({
       dock: {
-        visible: false
+        visible: true,
+        children: <BranchesDetail closeDock={this.closeDock.bind(this)} id={id}/>
       }
     })
   }
@@ -123,49 +84,21 @@ export default class Branches extends Component {
       }
     ];
 
+    const actionBarConf = {
+      parent: 'branches',
+      newClick: this.showDock.bind(this,-1),
+    };
+
+    const dockConf = {
+      visible: this.state.dock.visible,
+      closeDock: this.closeDock.bind(this),
+      children: this.state.dock.children
+    };
+
     const tableConf = {
       columns: columns
     };
 
-    const dockConfig = {
-      position: 'right',
-      isVisible: this.state.dock.visible,
-      dimMode: 'opaque',
-      defaultSize: .5,
-      onVisibleChange: () => {
-        this.setState({
-          dock: {
-            visible: false
-          }
-        })
-      },
-      zIndex: 100
-    };
-
-    const actionBarConf = {
-      newClick: this.showDock.bind(this)
-    };
-
-
-    return (
-      <div className="organizationBranches">
-        <ActionBar parent="branches" {...actionBarConf}/>
-        <Layout>
-          <Sider>
-            <Tree
-              defaultExpandAll={true}
-            >
-              {this.createTree(this.state.department)}
-            </Tree>
-          </Sider>
-          <Content>
-            <Table {...tableConf}/>
-          </Content>
-        </Layout>
-        <Dock {...dockConfig}>
-          {this.state.dock.children}
-        </Dock>
-      </div>
-    )
+    return <Container actionBarConf={actionBarConf} dockConf={dockConf} tableConf={tableConf}/>
   }
 }

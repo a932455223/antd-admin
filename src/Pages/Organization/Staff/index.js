@@ -1,70 +1,104 @@
 /**
- * 文件说明： 组织机构管理/员工管理
+ * 文件说明： 组织机构管理/员工
  * 详细描述：
  * 创建者： JU
  * 时间： 17.3.2
  */
 
+
+
 import React, {Component} from "react";
-import {Layout, Tree} from "antd";
-import axios from 'axios';
-import Dock from 'react-dock';
-//======================================================
-import ActionBar from "../component/ActionBar";
-//========================================================
-import "./less/staffStyle.less";
-import API from '../../../../API'
+//========================================
+import Container from "../component/Container";
+import BranchesDetail from '../component/BranchesDetail';
 
-const {Sider, Content} = Layout;
-const TreeNode = Tree.TreeNode;
 
-export default class Home extends Component {
-
+export default class Branches extends Component {
   state = {
-    department: {}
+    dock: {
+      visible: false
+    }
   };
 
-  componentWillMount() {
-    axios.get(API.GET_DEPARTMENT_HIERARCHY)
-      .then(res => {
-        this.setState({
-          department: res.data.data
-        })
-      })
+  closeDock() {
+    this.setState({
+      dock: {
+        visible: false
+      }
+    })
   }
 
-  createTree(data) {
-    if (data.childDepartment) {
-      return (
-        <TreeNode title={data.name} id={data.id} key={data.id}>
-          {
-            data.childDepartment.map(childrenDepartment => {
-              return (
-                this.createTree(childrenDepartment)
-              )
-            })
-          }
-        </TreeNode>  )
-    } else {
-      return <TreeNode title={data.name} id={data.id} key={data.id}/>
-    }
+  showDock(id = -1) {
+    this.setState({
+      dock: {
+        visible: true,
+        children: <BranchesDetail closeDock={this.closeDock.bind(this)} id={id}/>
+      }
+    })
   }
 
   render() {
-    return (
-      <div className="organizationStaff">
-        <ActionBar parent="staff"/>
-        <Layout>
-          <Sider>
-            <Tree
-              defaultExpandAll={true}
-            >
-              {this.createTree(this.state.department)}
-            </Tree>
-          </Sider>
-          <Content>asd</Content>
-        </Layout>
-      </div>
-    )
+    const columns = [
+      {
+        title: '员工姓名',
+        dataIndex: 'clientName',
+        key: 'clientName',
+        width: '20%'
+      },
+      {
+        title: '员工工号',
+        dataIndex: 'customCount',
+        key: 'customCount',
+        width: '16%'
+      },
+      {
+        title: '所属组织',
+        dataIndex: 'branches',
+        key: 'branches',
+        width: '16%'
+      },
+      {
+        title: '职务',
+        dataIndex: 'duty',
+        key: 'duty',
+        width: '16%'
+      },
+      {
+        title: '联系方式',
+        dataIndex: 'contact',
+        key: 'contact',
+        width: '16%'
+      },
+      {
+        title: '操作',
+        dataIndex: 'action',
+        key: 'action',
+        width: '16%',
+        render: (text = '编辑', rowData) => {
+          return (
+            <div>
+              <Button>{text}</Button>
+            </div>
+          )
+        }
+      }
+    ];
+
+    const actionBarConf = {
+      parent: 'staff',
+      newClick: this.showDock.bind(this),
+    };
+
+    const dockConf = {
+      visible: this.state.dock.visible,
+      closeDock: this.closeDock.bind(this),
+      children: this.state.dock.children
+    };
+
+    const tableConf = {
+      columns: columns
+    };
+
+    return <Container actionBarConf={actionBarConf} dockConf={dockConf} tableConf={tableConf}/>
   }
 }
