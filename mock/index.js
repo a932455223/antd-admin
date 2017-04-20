@@ -141,12 +141,11 @@ module.exports = {
     }]
   }),
 
-  'GET /asd/privilege/customer': Mock.mock({
+  'POST /asd/privilege/customer': Mock.mock({
     "code": 200,
     "data|1-10": [{
       "id|+1": 1,
       "permissions": {
-        "system:add|1": true,
         "system:update|1": true
       }
     }],
