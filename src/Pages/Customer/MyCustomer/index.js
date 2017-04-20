@@ -5,8 +5,10 @@ import {
   Input
 } from 'antd';
 import axios from 'axios';
+import API from '../../../../API';
 
 import TablePage from '../../../components/TablePage';
+import Droplist from '../../../components/DropdownList';
 import './less/myCustomerStyle.less';
 import './indexStyle.less';
 export default class MyCustomer extends Component {
@@ -34,14 +36,15 @@ export default class MyCustomer extends Component {
     })
 
     // 请求列表数据
-    axios.get('/api/customers')
+    axios.get(API.GET_CUSTOMERS)
     .then((json) => {
-      if(json.data && json.data.data && json.data.data.customers && json.data.data.pagination) {
+      console.log(json.data);
+      if(json.data && json.data.code === 200 && json.data.data && json.data.data.customers && json.data.pagination) {
         // 将数据存入私有的 state中
         this.setState({
           loading: false,
           customers: json.data.data.customers,
-          pagination: json.data.data.pagination
+          pagination: json.data.pagination
         })
       }
     })
@@ -165,14 +168,16 @@ export default class MyCustomer extends Component {
     };
     return (
       <div className="customer">
+        <Droplist />
+        {/*
         <div className="filter">
           <span>我的客户</span>
           <Button>筛选</Button>
           <Input className="select" type="select"/>
         </div>
+        */}
         <TablePage {...myCustomerProps}/>
       </div>
     )
   }
 }
-

@@ -2,7 +2,7 @@ export default {
 
 /*===============================GET=======================================*/
   // 客户列表
-  GET_CUSTOMERS: '/api/customers',
+  GET_CUSTOMERS: '/asd/customers',
 
   // 用户与权限 角色 列表
   GET_SYSTEM_ROLES_LIST: '/asd/system/roles/list',
@@ -15,7 +15,3 @@ export default {
   GET_ORGANIZATION_SLIDER_BAR: '/asd/common/dropdown/list/organization',
   //==================================================================
 }
-
-
-
-
