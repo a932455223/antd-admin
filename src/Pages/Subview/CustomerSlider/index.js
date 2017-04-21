@@ -472,7 +472,7 @@ class CustomerSlider extends Component {
     // if(this.props.currentCustomer.id !== next.currentCustomer.id) {
       this.setState({
         currentId: this.props.currentCustomer.id ? this.props.currentCustomer.id : '',
-        activeTabs: (this.props.currentCustomer.id !== this.state.currentId || mode === 'create' || this.state.activeTabs === '')  ? 'personalBasicInfo' : this.state.activeTabs
+        activeTabs: (this.props.currentCustomer.id !== this.state.currentId || this.props.currentCustomer.mode === 'create' || this.state.activeTabs === '')  ? 'personalBasicInfo' : this.state.activeTabs
       })
 
 
