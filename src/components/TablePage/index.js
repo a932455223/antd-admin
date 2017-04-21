@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { Table, Pagination, Spin, Button, Icon } from 'antd';
 import Dock from 'react-dock';
 import './indexStyle.less';
+
+import { saveCurrentCustomerInfo, createCustomer } from '../../redux/actions/customerAction';
 
 class TablePage extends Component {
   // const propTypes = {
@@ -21,6 +23,7 @@ class TablePage extends Component {
   };
 
   componentWillMount() {
+    console.log('TablePage: will mount ');
     // 异步加载 edit component
     require.ensure([],() => {
       let CustomerSlider = require('../../Pages/Subview/CustomerSlider').default;
@@ -54,23 +57,28 @@ class TablePage extends Component {
 
   // 点击某一栏，编辑客户信息
   rowClick = (info) => {
-    console.log(info)
-    const LoadSpin = () => {
-      return(
-        <div>
-          <Spin />
-        </div>
-      )
-    }
-
-    this.setState({
-      mode: 'edit',
-      customerName: info.clientName,
-      dockVisible: true,
-      currentId: info.id,
-      clientType: info.clientType,
-      step: 2
+    const { dispatch, privilege } = this.props;
+    privilege.map( cPre => {
+      // 判断当前的 id是否有编辑权限
+      if(cPre.id === info.id) {
+        // 拿到当前的 permissions，再弹出弹窗
+        this.setState({
+          dockVisible: true,
+        });
+        const mode = cPre.permissions['system:update'] ? 'view' : 'edit';
+        dispatch(saveCurrentCustomerInfo(info, mode))
+      }
     })
+
+    // const LoadSpin = () => {
+    //   return(
+    //     <div>
+    //       <Spin />
+    //     </div>
+    //   )
+    // }
+
+
     // const { dispatch, editDock } = this.props;
     // dispatch(showEditDock(true, info.id));
 
@@ -103,14 +111,11 @@ class TablePage extends Component {
 
   // add new customer
   addNewCustomer = () => {
+    const { dispatch } = this.props;
     this.setState({
-      currentId: -1,
-      dockVisible: true,
-      step: 1,
-      mode: 'create',
-      customerName: this.state.customerName,
-      clientType: this.state.clientType
-    })
+      dockVisible: true
+    });
+    dispatch(createCustomer());
   }
 
   // 切换到 step 2，填写具体的信息
@@ -142,6 +147,8 @@ class TablePage extends Component {
     //   onChange: this.onSelectChange,
     // };
 
+    // console.log(this.props.currentCustomer);
+
     // table props lists
     const tableProps = {
       style: {
@@ -154,6 +161,7 @@ class TablePage extends Component {
       bordered: true,
       pagination: false,
       onRowClick: this.rowClick,
+      rowKey: record => record.id,
       // scroll: { y: 240 }, // 固定表头
       rowSelection: {
         onChange: this.onSelectChange
@@ -195,15 +203,7 @@ class TablePage extends Component {
     // slider visible and row click crrentId
     const sliderProps = {
       closeDock: this.closeDock,
-      visible: this.state.dockVisible,
-      currentId: this.state.currentId,
-      clientType: this.state.clientType,
-      mode: this.state.mode,
-      step: this.state.step,
-      nextStep: this.stepByStep,
-      customerName: this.state.customerName,
-      getCustomersBriefInfo: this.getCustomersBriefInfo, // 获取添加人员的 brief info
-      changeModeStatus: this.changeModeStatus // 修改 mode的状态
+      visible: this.state.dockVisible
     }
 
     return (
@@ -235,12 +235,12 @@ class TablePage extends Component {
   }
 }
 
-export default TablePage;
+// export default TablePage;
 
-// const mapStateToProps = (store) => {
-//   return {
-//     editDock: store.common.editDock.data
-//   }
-// }
+const mapStateToProps = (store) => {
+  return {
+    currentCustomer: store.customer.currentCustomerInfo
+  }
+}
 
-// export default connect(mapStateToProps)(TablePage);
+export default connect(mapStateToProps)(TablePage);

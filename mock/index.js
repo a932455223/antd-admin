@@ -108,18 +108,18 @@ module.exports = {
         "category": /企业客户|个人客户/,
         "department": "壶关农商银行XX支行",
         "id|+1": 1,
-        "level": /休眠客户|活跃客户/,
+        "level": /普通客户|重点客户|未激活客户/,
         "manager": /李小龙|张小花|陈二狗/,
         "name": "@name",
         "phone": /[0-9]{11}/,
-        "risk": /安全型|风险型/,
+        "risk": /保守型|激进型|稳健型/,
         "attention|1": true
       }]
     },
     "pagination": {
       "count|1-1000": 1,
       "index|1-10": 1,
-      "size": 20
+      "size": 10
     },
     "message": "this is some message"
   }),
@@ -141,12 +141,11 @@ module.exports = {
     }]
   }),
 
-  'GET /asd/privilege/customer': Mock.mock({
+  'POST /asd/privilege/customer': Mock.mock({
     "code": 200,
     "data|1-10": [{
       "id|+1": 1,
       "permissions": {
-        "system:add|1": true,
         "system:update|1": true
       }
     }],
