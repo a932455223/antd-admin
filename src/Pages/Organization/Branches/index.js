@@ -8,17 +8,37 @@
 
 
 import React, {Component} from "react";
-//========================================
-import Container from "../component/Container";
+import axios from 'axios';
+import {Button} from 'antd';
+//=========================================================
+import Content from "../component/Content";
 import BranchesDetail from '../component/BranchesDetail';
-
+import BranchesEditor from '../component/BranchesEditor';
+//=========================================================
+import API from '../../../../API';
+import BrabchesEditor from "../component/BranchesEditor/index";
 
 export default class Branches extends Component {
   state = {
     dock: {
       visible: false
+    },
+    table: {
+      dataSource: []
     }
   };
+
+
+  componentWillMount(){
+    axios.get(API.GET_DEPARTMENTS)
+      .then( res => {
+        this.setState({
+          table: {
+            dataSource: res.data.data
+          }
+        })
+      })
+  }
 
   closeDock() {
     this.setState({
@@ -37,36 +57,45 @@ export default class Branches extends Component {
     })
   }
 
+  tableClick(id){
+    this.setState({
+      dock: {
+        visible: true,
+        children: <BrabchesEditor closeDock={this.closeDock.bind(this)} id={id}/>
+      }
+    })
+  }
+
   render() {
     const columns = [
       {
         title: '组织名称',
-        dataIndex: 'clientName',
-        key: 'clientName',
+        dataIndex: 'name',
+        key: 'name',
         width: '20%'
       },
       {
         title: '负责人',
-        dataIndex: 'customCount',
-        key: 'customCount',
+        dataIndex: 'director',
+        key: 'director',
         width: '16%'
       },
       {
         title: '客户规模',
-        dataIndex: 'createTime',
-        key: 'createTime',
+        dataIndex: 'customerCount',
+        key: 'customerCount',
         width: '16%'
       },
       {
         title: '存款规模',
-        dataIndex: 'a',
-        key: 'a',
+        dataIndex: 'depositCount',
+        key: 'depositCount',
         width: '16%'
       },
       {
         title: '贷款规模',
-        dataIndex: 'b',
-        key: 'b',
+        dataIndex: 'loanCount',
+        key: 'loanCount',
         width: '16%'
       },
       {
@@ -85,7 +114,7 @@ export default class Branches extends Component {
     ];
 
     const actionBarConf = {
-      parent: 'branches',
+      parent: 'department',
       newClick: this.showDock.bind(this,-1),
     };
 
@@ -96,9 +125,11 @@ export default class Branches extends Component {
     };
 
     const tableConf = {
-      columns: columns
+      columns: columns,
+      dataSource: this.state.table.dataSource,
+      rowClick: this.tableClick.bind(this)
     };
 
-    return <Container actionBarConf={actionBarConf} dockConf={dockConf} tableConf={tableConf}/>
+    return <Content actionBarConf={actionBarConf} dockConf={dockConf} tableConf={tableConf}/>
   }
 }
