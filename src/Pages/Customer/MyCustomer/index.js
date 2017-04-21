@@ -26,6 +26,7 @@ export default class MyCustomer extends Component {
   * 根据返回的状态，拿到相对应的数据
   */
   componentWillMount() {
+    console.log('myCustomer: will mount ');
     // 请求表头数据
     axios.get('/asd/popular/columns')
     .then((data) => {
@@ -38,7 +39,6 @@ export default class MyCustomer extends Component {
 
 
     // 请求列表数据
-
     axios.get(API.GET_CUSTOMERS)
     .then((json) => {
         // 将数据存入私有的 state中
@@ -55,8 +55,7 @@ export default class MyCustomer extends Component {
         .then((rest) => {
             let hasPermission = rest.data.data;
             this.setState({
-                ...this.state,
-                privilege:hasPermission
+                privilege: hasPermission
             })
         })
     })

@@ -23,6 +23,7 @@ class TablePage extends Component {
   };
 
   componentWillMount() {
+    console.log('TablePage: will mount ');
     // 异步加载 edit component
     require.ensure([],() => {
       let CustomerSlider = require('../../Pages/Subview/CustomerSlider').default;
@@ -147,7 +148,7 @@ class TablePage extends Component {
     //   onChange: this.onSelectChange,
     // };
 
-    console.log(this.props.currentCustomer);
+    // console.log(this.props.currentCustomer);
 
     // table props lists
     const tableProps = {
@@ -203,15 +204,7 @@ class TablePage extends Component {
     // slider visible and row click crrentId
     const sliderProps = {
       closeDock: this.closeDock,
-      visible: this.state.dockVisible,
-      currentId: this.state.currentId,
-      clientType: this.state.clientType,
-      mode: this.state.mode,
-      step: this.state.step,
-      nextStep: this.stepByStep,
-      customerName: this.state.customerName,
-      getCustomersBriefInfo: this.getCustomersBriefInfo, // 获取添加人员的 brief info
-      changeModeStatus: this.changeModeStatus // 修改 mode的状态
+      visible: this.state.dockVisible
     }
 
     return (
