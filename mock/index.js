@@ -164,15 +164,31 @@ module.exports = {
   }),
 
 
-  'GET /asd/customer/:id/base': Mock.mock({
-    "code": 200,
-    "data": {
-      "accounts|1-3": [
-        /[0-9]{12}/
-      ],
-      "address": '上海 闵行',
-      "age": /[0-9]{2}/,
-    }
+  'GET /asd/customer/:id/base':Mock.mock({
+    'code':200,
+    'data':{
+      'account|1-3':[{"card":/[0-9]{13}/,"text":"我的银行卡"}],
+      'address': '@city(true)',
+      'age|1-100': 100,
+      'birth':'1990-01-30',
+      'certificate':/[0-9]{18}/,
+      'department':'慈溪银行',
+      'grid':'B909',
+      'houseType':'商住',
+      'id|+1':1,
+      'joiner|1-3':['@name'],
+      'manager': '张健钊',
+      'marriage|1':true,
+      'needLoan|1': true,
+      'origin':'上海',
+      'phone':/[0-9]{11}/,
+      'wechat':'zli3049',
+      'withCar|1':true,
+      'withDebt':true,
+      'yearExpense':100,
+      'yearIncome':999988,
+    },
+    'message':'message!!'
   }),
 
   // 组织机构列表 有层级
@@ -209,6 +225,7 @@ module.exports = {
         }]
       }]
     }
+
   })
 };
 

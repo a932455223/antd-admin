@@ -65,7 +65,6 @@ class TablePage extends Component {
         this.setState({
           dockVisible: true,
         });
-
         const mode = cPre.permissions['system:update'] ? 'view' : 'edit';
         dispatch(saveCurrentCustomerInfo(info, mode))
       }
