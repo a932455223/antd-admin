@@ -23,7 +23,8 @@ class TablePage extends Component {
   };
 
   componentWillMount() {
-    console.log('TablePage: will mount ');
+    console.log('%c/ TablePage /_____will mount', 'color: red');
+
     // 异步加载 edit component
     require.ensure([],() => {
       let CustomerSlider = require('../../Pages/Subview/CustomerSlider').default;
@@ -69,37 +70,6 @@ class TablePage extends Component {
         dispatch(saveCurrentCustomerInfo(info, mode))
       }
     })
-
-    // const LoadSpin = () => {
-    //   return(
-    //     <div>
-    //       <Spin />
-    //     </div>
-    //   )
-    // }
-
-
-    // const { dispatch, editDock } = this.props;
-    // dispatch(showEditDock(true, info.id));
-
-    // 判断被点击的 row和当前的 currentId是否相同，若不相同，则请求加载数据
-    // if(info.id !== this.state.currentId) {
-    //   this.setState({
-    //     CustomerSlider: LoadSpin
-    //   })
-    // }
-    //
-    // // 异步加载 edit component
-    // require.ensure([],() => {
-    //   let editMyCustomer = require('../../Pages/Subview/CustomerSlider').default;
-    //
-    //   setTimeout(() => {
-    //     this.setState({
-    //       CustomerSlider: editMyCustomer,
-    //       currentId: info.id
-    //     })
-    //   }, 300)
-    // }, 'CustomerSlider');
   }
 
   // close slider
@@ -142,12 +112,6 @@ class TablePage extends Component {
 
   render(){
     const { columns, dataSource, loading, pagination } = this.props;
-    // // table 的选择框
-    // const rowSelection = {
-    //   onChange: this.onSelectChange,
-    // };
-
-    // console.log(this.props.currentCustomer);
 
     // table props lists
     const tableProps = {

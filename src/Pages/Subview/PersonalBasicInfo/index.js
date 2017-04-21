@@ -22,7 +22,12 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 
 import './indexStyle.less';
-import {BasicInfoListsEdit, BasicInfoListsRead}  from './basicInfoLists';
+import { BasicInfoListsEdit, BasicInfoListsRead }  from './basicInfoLists';
+
+function logInfo(msg, color = 'red') {
+  console.log("%c" + msg, 'color:' + color);
+}
+
 // 新增维护记录
 class AddNewRecordForm extends Component {
   // 下拉框选择发生变化时
@@ -280,10 +285,6 @@ export default class BasicInfo extends Component {
     this.setState({
       edited:true
     })
-  }
-
-  componentWillMount() {
-    console.log('personalBasicInfo: will mount ');
   }
 
   componentWillReceiveProps(next) {
