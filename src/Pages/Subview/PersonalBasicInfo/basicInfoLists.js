@@ -36,11 +36,10 @@ class BasicInfoEdit extends Component{
   }
   render() {
     const {eachCustomerInfo, edited,currentId} = this.props;
-    console.log(eachCustomerInfo);
     const { getFieldDecorator} = this.props.form;
     return (
         <Form className="basicinfolist">
-          <Row className={currentId === -1 ? "briefinfocreate" : "briefinfoedit"} >  
+          <Row className={currentId === -1 ? "briefinfocreate" : "briefinfoedit"} >
             <Col span={8}>
               <FormItem labelCol={{span: 8}}
                         wrapperCol={{span: 14}}
@@ -65,7 +64,7 @@ class BasicInfoEdit extends Component{
                 )}
               </FormItem>
             </Col>
-           
+
             <Col span={8}>
               <FormItem labelCol={{span: 8}}
                         wrapperCol={{span: 14}}
@@ -114,7 +113,7 @@ class BasicInfoEdit extends Component{
               <Col span={24}>
                 <Col span={3}>
                   <span>账户：</span>
-                </Col>     
+                </Col>
                 <Col span={9}>
                   <Input value=""/>
                 </Col>
@@ -124,8 +123,8 @@ class BasicInfoEdit extends Component{
                 <Col span={9}></Col>
               </Col>
             </Row>
-            
-            <Row>  
+
+            <Row>
               <Col span={12} className={currentId === -1 ? "phonecreate" : "phoneedit"}>
                 <FormItem labelCol={{span: 6}}
                           wrapperCol={{span: 18}}
@@ -138,7 +137,7 @@ class BasicInfoEdit extends Component{
                   )}
                 </FormItem>
               </Col>
-             
+
               <Col span={12} className={currentId === -1 ? "wechatcreate" : "wechatedit"}>
                 <FormItem labelCol={{span: 6}}
                           wrapperCol={{span: 18}}
@@ -153,7 +152,7 @@ class BasicInfoEdit extends Component{
               </Col>
             </Row>
 
-            <Row>  
+            <Row>
               <Col span={12} className={currentId === -1 ? "idcreate" : "idedit"}>
                 <FormItem labelCol={{span: 6}}
                           wrapperCol={{span: 18}}
@@ -166,7 +165,7 @@ class BasicInfoEdit extends Component{
                   )}
                 </FormItem>
               </Col>
-              
+
               <Col span={12} className={currentId === -1 ? "birthcreate" : "birthedit"}>
                 <FormItem labelCol={{span: 6}}
                           wrapperCol={{span: 18}}
@@ -180,7 +179,7 @@ class BasicInfoEdit extends Component{
                 </FormItem>
               </Col>
             </Row>
-     
+
             <Row>
               <Col span={24}>
                 <Col span={3}>
@@ -239,7 +238,7 @@ class BasicInfoRead extends Component{
             <Col span={24}>
               <Col span={3}>
                 <span>账户：</span>
-              </Col>     
+              </Col>
               <Col span={9}>
                 <Input value={eachCustomerInfo.certificate}/>
               </Col>
@@ -249,8 +248,8 @@ class BasicInfoRead extends Component{
               <Col span={9}></Col>
             </Col>
           </Row>
-          
-          <Row>  
+
+          <Row>
             <Col span={12}>
               <FormItem labelCol={{span: 6}}
                         wrapperCol={{span: 18}}
@@ -263,7 +262,7 @@ class BasicInfoRead extends Component{
                 )}
               </FormItem>
             </Col>
-           
+
             <Col span={12}>
               <FormItem labelCol={{span: 6}}
                         wrapperCol={{span: 18}}
@@ -278,7 +277,7 @@ class BasicInfoRead extends Component{
             </Col>
           </Row>
 
-          <Row>  
+          <Row>
             <Col span={12}>
               <FormItem labelCol={{span: 6}}
                         wrapperCol={{span: 18}}
@@ -291,7 +290,7 @@ class BasicInfoRead extends Component{
                 )}
               </FormItem>
             </Col>
-            
+
             <Col span={12}>
               <FormItem labelCol={{span: 6}}
                         wrapperCol={{span: 18}}
@@ -305,7 +304,7 @@ class BasicInfoRead extends Component{
               </FormItem>
             </Col>
           </Row>
-   
+
           <Row>
             <Col span={24}>
               <Col span={3}>
@@ -331,4 +330,3 @@ class BasicInfoRead extends Component{
   }
 }
 export const BasicInfoListsRead = Form.create()(BasicInfoRead);
-

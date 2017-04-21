@@ -17,12 +17,19 @@ import {
  } from 'antd';
 import axios from 'axios';
 import API from '../../../../API';
+import { connect } from 'react-redux';
+
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
 
 import './indexStyle.less';
 import {BasicInfoListsEdit, BasicInfoListsRead}  from './basicInfoLists';
+
+
+function info(msg){
+    console.log('%c'+msg,'color:red')
+}
 // 新增维护记录
 class AddNewRecordForm extends Component {
   // 下拉框选择发生变化时
@@ -242,7 +249,7 @@ class AddCrewModal extends Component {
   }
 }
 
-export default class BasicInfo extends Component {
+export class BasicInfo extends Component {
   state = {
     modalVisible: false,
     edited:false,
@@ -252,16 +259,24 @@ export default class BasicInfo extends Component {
     // step:this.props.step
   }
 
-  componentWillMount() {
-    console.log('%cI will mount.','color:red')
-    axios.get(API.GET_CUSTOMER_BASE(this.props.currentId))
-    .then((res) => {
-        this.setState({
-          eachCustomerInfo: res.data.data
-        })
-    })
+  componentWillMount(){
+      this.getBaseInfo(this.props.currentCustomerInfo.id)
   }
 
+  componentWillReceiveProps(next){
+      this.getBaseInfo(next.currentCustomerInfo.id);
+  }
+
+
+  getBaseInfo = (id) => {
+      axios.get(API.GET_CUSTOMER_BASE(id))
+      .then((res) => {
+          this.setState({
+              ...this.state,
+            eachCustomerInfo: res.data.data
+          })
+      })
+  }
   // modal Show
   modalShow = () => {
     this.setState({
@@ -282,14 +297,7 @@ export default class BasicInfo extends Component {
     })
   }
 
-  componentWillMount() {
-    console.log('personalBasicInfo: will mount ');
-  }
 
-  componentWillReceiveProps(next) {
-    // console.log(this.props);
-    // console.log(next);
-  }
 
   render() {
     const modal = {
@@ -332,3 +340,11 @@ export default class BasicInfo extends Component {
     )
   }
 }
+
+
+const mapStateToProps = (store) => {
+  return {
+    currentCustomerInfo: store.customer.currentCustomerInfo
+  }
+}
+export default connect(mapStateToProps)(BasicInfo);
