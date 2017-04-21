@@ -153,7 +153,7 @@ module.exports = {
     "message": 'there are some message'
   }),
 
-
+  
 
   'GET /asd/system/roles/users': Mock.mock({
     'user': {
@@ -167,8 +167,11 @@ module.exports = {
   
   'GET /asd/customer/:id/base':Mock.mock({
     'code':200,
-    'data|10':[{
-      'account|1-3':[/[0-9]{13}/],
+    'data':{
+      'account|2-3':[{
+        'accNumber':/[0-9]{13}/,
+        'info':"haha"
+      }],
       'address': '@city(true)',
       'age|1-100': 100,
       'birth':'1990-01-30',
@@ -188,7 +191,7 @@ module.exports = {
       'withDebt':true,
       'yearExpense':100,
       'yearIncome':999988,
-    }],
+    },
     'message':'message!!'
   }),
 

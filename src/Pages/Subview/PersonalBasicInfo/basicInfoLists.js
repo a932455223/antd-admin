@@ -17,6 +17,7 @@ import {
  } from 'antd';
  import './indexStyle.less'
 const FormItem = Form.Item;
+const Option = Select.Option;
 
 
 class BasicInfoEdit extends Component{
@@ -50,6 +51,7 @@ class BasicInfoEdit extends Component{
                     required: true,
                     message: '请选择所属机构!'
                   }],
+                  initialValue: eachCustomerInfo.department,
                   onChange: this.inputChange
                 })(
                     <Select
@@ -71,6 +73,7 @@ class BasicInfoEdit extends Component{
                         wrapperCol={{span: 14}}
                         label="客户经理： ">
                 {getFieldDecorator('manager', {
+                  initialValue: eachCustomerInfo.manager,
                   onChange: this.inputChange
                 })(
                   <Select
@@ -92,6 +95,7 @@ class BasicInfoEdit extends Component{
                         wrapperCol={{span: 14}}
                         label="所属网格： ">
                 {getFieldDecorator('grid', {
+                  initialValue: eachCustomerInfo.grid,
                   onChange: this.inputChange
                 })(
                   <Select
@@ -109,19 +113,21 @@ class BasicInfoEdit extends Component{
             </Col>
           </Row>
 
+
+
           <div className="personinfo">
             <Row className={currentId === -1 ? "accountcreate" : "accountedit"}>
-              <Col span={24}>
-                <Col span={3}>
-                  <span>账户：</span>
-                </Col>     
-                <Col span={9}>
-                  <Input value=""/>
-                </Col>
-                <Col span={3}>
-                  <Input defaultValue="ddd" />
-                </Col>
-                <Col span={9}></Col>
+              <Col span={24} className={currentId === -1 ? "phonecreate" : "phoneedit"}>
+                <FormItem labelCol={{span: 6}}
+                          wrapperCol={{span: 18}}
+                          label="账户：">
+                  {getFieldDecorator('account', {
+                    initialValue: eachCustomerInfo.wechat,
+                    onChange: this.inputChange
+                  })(
+                    <Input />
+                  )}
+                </FormItem>
               </Col>
             </Row>
             
@@ -207,6 +213,250 @@ class BasicInfoEdit extends Component{
   }
 }
 export const BasicInfoListsEdit = Form.create()(BasicInfoEdit);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

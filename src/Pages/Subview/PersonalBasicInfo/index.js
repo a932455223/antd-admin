@@ -20,9 +20,10 @@ import API from '../../../../API';
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
-
 import './indexStyle.less';
-import {BasicInfoListsEdit, BasicInfoListsRead}  from './basicInfoLists';
+
+
+
 // 新增维护记录
 class AddNewRecordForm extends Component {
   // 下拉框选择发生变化时
@@ -242,31 +243,253 @@ class AddCrewModal extends Component {
   }
 }
 
+
+
+
+
+
+
+
+
+//个人信息表单................
+class BasicInfoEdit extends Component{
+  constructor(props) {
+    super(props);
+    this.inputChange = this.inputChange.bind(this);
+  }
+  inputChange(){
+    this.props.inputChange()
+  }
+  onHandleSubmit(){
+    const {getFieldsValue} = this.props.form;
+    getFieldsValue();
+    // this.setState({
+    //   mode:"edit"
+    // })
+  }
+  render() {
+    const {eachCustomerInfo, edited,currentId} = this.props;
+    console.log(eachCustomerInfo);
+    const { getFieldDecorator} = this.props.form;
+    getFieldDecorator('keys', { initialValue: [] });
+    const keys = getFieldValue('keys');
+    const formItems = keys.map((k, index) => {
+      return (
+        <FormItem
+          {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+          label={index === 0 ? 'Passengers' : ''}
+          required={false}
+          key={k}
+        >
+          {getFieldDecorator(`names-${k}`, {
+            validateTrigger: ['onChange', 'onBlur'],
+            rules: [{
+              required: true,
+              whitespace: true,
+              message: "Please input passenger's name or delete this field.",
+            }],
+          })(
+            <Input placeholder="passenger name" style={{ width: '60%', marginRight: 8 }} />
+          )}
+          <Icon
+            className="dynamic-delete-button"
+            type="minus-circle-o"
+            disabled={keys.length === 1}
+            onClick={() => this.remove(k)}
+          />
+        </FormItem>
+      )
+    });
+    return (
+        <Form className="basicinfolist">
+          <Row className={currentId === -1 ? "briefinfocreate" : "briefinfoedit"} >  
+            <Col span={8}>
+              <FormItem labelCol={{span: 8}}
+                        wrapperCol={{span: 14}}
+                        label="所属机构： ">
+                {getFieldDecorator('department', {
+                  rules: [{
+                    required: true,
+                    message: '请选择所属机构!'
+                  }],
+                  initialValue: eachCustomerInfo.department,
+                  onChange: this.inputChange
+                })(
+                    <Select
+                      showSearch
+                      placeholder="选择机构"
+                      optionFilterProp="children"
+                      filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    >
+                      <Option value="jack">支行1</Option>
+                      <Option value="lucy">支行2</Option>
+                      <Option value="tom">支行3</Option>
+                    </Select>
+                )}
+              </FormItem>
+            </Col>
+           
+            <Col span={8}>
+              <FormItem labelCol={{span: 8}}
+                        wrapperCol={{span: 14}}
+                        label="客户经理： ">
+                {getFieldDecorator('manager', {
+                  initialValue: eachCustomerInfo.manager,
+                  onChange: this.inputChange
+                })(
+                  <Select
+                    showSearch
+                    placeholder="选择机构"
+                    optionFilterProp="children"
+                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  >
+                    <Option value="jack">支行1</Option>
+                    <Option value="lucy">支行2</Option>
+                    <Option value="tom">支行3</Option>
+                  </Select>
+                )}
+              </FormItem>
+            </Col>
+
+            <Col span={8}>
+              <FormItem labelCol={{span: 8}}
+                        wrapperCol={{span: 14}}
+                        label="所属网格： ">
+                {getFieldDecorator('grid', {
+                  initialValue: eachCustomerInfo.grid,
+                  onChange: this.inputChange
+                })(
+                  <Select
+                    showSearch
+                    placeholder="选择机构"
+                    optionFilterProp="children"
+                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  >
+                    <Option value="jack">支行1</Option>
+                    <Option value="lucy">支行2</Option>
+                    <Option value="tom">支行3</Option>
+                  </Select>
+                )}
+              </FormItem>
+            </Col>
+          </Row>
+
+          <div className="personinfo">
+            <Row className={currentId === -1 ? "accountcreate" : "accountedit"}>
+              <Col span={24} className={currentId === -1 ? "phonecreate" : "phoneedit"}>
+                <Account />
+              </Col>
+            </Row>
+            
+            <Row>  
+              <Col span={12} className={currentId === -1 ? "phonecreate" : "phoneedit"}>
+                <FormItem labelCol={{span: 6}}
+                          wrapperCol={{span: 18}}
+                          label="手机号：">
+                  {getFieldDecorator('phone', {
+                    initialValue: eachCustomerInfo.wechat,
+                    onChange: this.inputChange
+                  })(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+             
+              <Col span={12} className={currentId === -1 ? "wechatcreate" : "wechatedit"}>
+                <FormItem labelCol={{span: 6}}
+                          wrapperCol={{span: 18}}
+                          label="微信号：">
+                  {getFieldDecorator('wechat', {
+                    initialValue: eachCustomerInfo.wechat,
+                    onChange: this.inputChange
+                  })(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+
+            <Row>  
+              <Col span={12} className={currentId === -1 ? "idcreate" : "idedit"}>
+                <FormItem labelCol={{span: 6}}
+                          wrapperCol={{span: 18}}
+                          label="身份证号：">
+                  {getFieldDecorator('certificate', {
+                    initialValue: eachCustomerInfo.certificate,
+                    onChange: this.inputChange
+                  })(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+              
+              <Col span={12} className={currentId === -1 ? "birthcreate" : "birthedit"}>
+                <FormItem labelCol={{span: 6}}
+                          wrapperCol={{span: 18}}
+                          label="生日：">
+                  {getFieldDecorator('birth', {
+                    initialValue: eachCustomerInfo.birth,
+                    onChange: this.inputChange
+                  })(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+     
+            <Row>
+              <Col span={24}>
+                <Col span={3}>
+                  <span>参与者：</span>
+                </Col>
+                <Col span={21}>
+                  <span className="addCrewButton"
+                        onClick={this.props.show}>
+                    <Icon type="plus-circle-o" />添加人员
+                  </span>
+                </Col>
+              </Col>
+            </Row>
+          </div>
+          <Row>
+            <Col span={24} style={{backgroundColor: '#fafafa', padding: '10px 0'}}>
+              <Col span={3}>
+              </Col>
+              <Button type="primary" onClick={this.onHandleSubmit.bind(this)}>保存</Button>
+            </Col>
+          </Row>
+        </Form>
+        )
+  }
+}
+const BasicInfoListsEdit = Form.create()(BasicInfoEdit);
+
+
+
 export default class BasicInfo extends Component {
   state = {
     modalVisible: false,
     edited:false,
-    // currentId: this.props.currentId + 1,
     eachCustomerInfo: ''
-    // mode: this.props.mode,
-    // step:this.props.step
   }
 
   componentWillMount() {
     console.log(this.props.currentId);
-    axios.get(API.GET_CUSTOMER_BASE(this.props.currentId + 1))
+    axios.get(API.GET_CUSTOMER_BASE(this.props.currentId))
     .then((res) => {
       console.log(res);
-      res.data.data.map(item => {
-        if (item.id === this.props.currentId + 1) {
-          this.setState({
-            eachCustomerInfo: item
-          })
-        }
-      })
+        this.setState({
+          eachCustomerInfo: res.data.data
+        })
     })
   }
-
+  onHandleSubmit(){
+    const {getFieldsValue} = this.props.form;
+    getFieldsValue();
+    // this.setState({
+    //   mode:"edit"
+    // })
+  }
   // modal Show
   modalShow = () => {
     this.setState({
@@ -300,11 +523,10 @@ export default class BasicInfo extends Component {
 
         <div className="">
           { mode !== "view" && <BasicInfoListsEdit 
-                                eachCustomerInfo={eachCustomerInfo} 
-                                edited={edited} 
-                                onChangeValue={this.handleChange.bind(this)} 
-                                show={this.modalShow.bind(this)}
-                                currentId={this.props.currentId}/>}
+                                  currentId={this.props.currentId}
+                                  eachCustomerInfo={this.state.eachCustomerInfo}
+                                  edited={this.state.edited}
+                                  inputChange={this.handleChange.bind(this)}/>}
           
           { mode === "view" && <BasicInfoListsRead />}
         </div>
