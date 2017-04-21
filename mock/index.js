@@ -167,7 +167,10 @@ module.exports = {
   'GET /asd/customer/:id/base':Mock.mock({
     'code':200,
     'data':{
-      'account|1-3':[{"card":/[0-9]{13}/,"text":"我的银行卡"}],
+      'account|2-3':[{
+        'accNumber':/[0-9]{13}/,
+        'info':"haha"
+      }],
       'address': '@city(true)',
       'age|1-100': 100,
       'birth':'1990-01-30',
