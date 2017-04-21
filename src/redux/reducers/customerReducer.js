@@ -1,3 +1,4 @@
+import { combineReducers } from 'redux';
 import * as actionTypes from '../actionTypes/customer';
 
 const initialState = {
@@ -34,46 +35,42 @@ const customerOperation = (state = initialState, action) => {
         category: action.category
       }
 
+    case actionTypes.CREATE_CUSTOMER_SUCCESS:
+      return {
+        ...state,
+        mode: 'edit',
+        id: action.id
+      }
+
+    case actionTypes.CUSTOMER_INFO_BE_EDITED:
+      return {
+        ...state,
+        beEdited: true
+      }
+
     default:
       return state;
   }
 }
 
-export const currentCustomerInfo = (state = {}, action) => {
+const currentCustomerInfo = (state = {}, action) => {
   switch (action.type) {
     case actionTypes.SAVE_CURRENT_CUSTOMER_INFO:
     case actionTypes.CREATE_CUSTOMER:
     case actionTypes.FILL_CUSTOMER_INFO:
+    case actionTypes.CREATE_CUSTOMER_SUCCESS:
+    case actionTypes.CUSTOMER_INFO_BE_EDITED:
       return {
         ...state,
-        ...customerOperation(state['rightSlider'], action)
+        ...customerOperation(state[0], action)
       }
     default:
       return state
   }
 }
 
-// export const currentCustomerInfo = (state = initialState, action) => {
-//   switch(action.type) {
-//     case actionTypes.SAVE_CURRENT_CUSTOMER_INFO:
-//       return {
-//         ...state,
-//         ...action.payload
-//       }
-//
-//     case actionTypes.CREATE_CUSTOMER:
-//       return {
-//         ...state,
-//         ...action.payload
-//       }
-//
-//     case actionTypes.FILL_CUSTOMER_INFO:
-//       return {
-//         ...state,
-//         ...action.payload
-//       }
-//
-//     default:
-//       return state;
-//   }
-// }
+const customer = combineReducers({
+  currentCustomerInfo
+})
+
+export default customer;

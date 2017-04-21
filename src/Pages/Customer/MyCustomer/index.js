@@ -18,7 +18,7 @@ export default class MyCustomer extends Component {
     customers: [],
     pagination: {},
     type: 0,
-    privilege:[]
+    privilege: []
   }
 
   /*
@@ -245,7 +245,7 @@ export default class MyCustomer extends Component {
       dataSource: customers,
       pagination: pagination,
       loading: loading,
-      privilege:privilege
+      privilege: privilege
     };
     return (
       <div className="customer">

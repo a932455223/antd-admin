@@ -28,4 +28,16 @@ export const fillCustomerInfo = (category, name) => (
 )
 
 // create customer success
-// export const createCustomerSuccess = ()
+export const createCustomerSuccess = (id) => (
+  {
+    type: actionTypes.CREATE_CUSTOMER_SUCCESS,
+    id
+  }
+)
+
+// customer info be edited
+export const customerInfoBeEdit = () => (
+  {
+    type: actionTypes.CUSTOMER_INFO_BE_EDITED
+  }
+)

@@ -57,7 +57,6 @@ class TablePage extends Component {
   // 点击某一栏，编辑客户信息
   rowClick = (info) => {
     const { dispatch, privilege } = this.props;
-
     privilege.map( cPre => {
       // 判断当前的 id是否有编辑权限
       if(cPre.id === info.id) {
