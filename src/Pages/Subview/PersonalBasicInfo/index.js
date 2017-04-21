@@ -361,6 +361,15 @@ export default class BasicInfo extends Component {
     </Row>
   }
 
+  componentWillMount() {
+    console.log('personalBasicInfo: will mount ');
+  }
+
+  componentWillReceiveProps(next) {
+    // console.log(this.props);
+    // console.log(next);
+  }
+
   render() {
     const modal = {
       visible: this.state.modalVisible,

@@ -119,7 +119,7 @@ module.exports = {
     "pagination": {
       "count|1-1000": 1,
       "index|1-10": 1,
-      "size": 20
+      "size": 10
     },
     "message": "this is some message"
   }),
