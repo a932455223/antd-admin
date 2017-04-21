@@ -14,3 +14,26 @@ CustomerSlider
   2. CustomerSlider接受 mode='edit',customerId,customerType,customerId
   3.如果是customerType = 'personal'，传参(mode='edit',customerId=1)给 对应的组件(baseInfo,familyInfo)
  3> baseInfo 根据 mode='edit'，customerId=1去请求接口 GET_CUSTOMER_BASEINFO
+
+
+
+ 1.willReceiveProps
+ 2.样式问题
+ 3.immutable问题
+ 4.组件私有state init 问题
+ 5.删选数据
+
+```javascript
+
+customer:{
+    table:{refresh:false},
+    rightSlider:{
+        mode:'create',
+        currentId:1,
+        currentName:xxx
+    }
+},
+message:{
+
+}
+```

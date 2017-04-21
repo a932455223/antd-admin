@@ -92,8 +92,16 @@ module.exports = {
     }
   ],
 
+  'GET /asd/customer/:id/family': Mock.mock({
+    "code": 200,
+    "data|1-4": [{
+
+    }]
+  }),
+
+
   // 用户列表
-  'GET /api/customers': Mock.mock({
+  'GET /asd/customers': Mock.mock({
     "code": 200,
     "data": {
       "customers|1-10": [{
@@ -103,7 +111,7 @@ module.exports = {
         "level": /休眠客户|活跃客户/,
         "manager": /李小龙|张小花|陈二狗/,
         "name": "@name",
-        "phone": /[0-9]{13}/,
+        "phone": /[0-9]{11}/,
         "risk": /安全型|风险型/,
         "attention|1": true
       }]
@@ -146,10 +154,6 @@ module.exports = {
   }),
 
 
-  // 'GET /customer/:id/base': Mock.mock({
-  //   a: 1
-  // }),
-
 
   'GET /asd/system/roles/users': Mock.mock({
     'user': {
@@ -159,10 +163,11 @@ module.exports = {
       'remark': '这里是备注'
     }
   }),
+
   
   'GET /asd/customer/:id/base':Mock.mock({
     'code':200,
-    'data|1-10':[{
+    'data|10':[{
       'account|1-3':[/[0-9]{13}/],
       'address': '@city(true)',
       'age|1-100': 100,
@@ -185,6 +190,43 @@ module.exports = {
       'yearIncome':999988,
     }],
     'message':'message!!'
+  }),
+
+  // 组织机构列表 有层级
+  'GET /asd/department/hierarchy': Mock.mock({
+    "code": 200,
+    "data|1-10": {
+      "id": 1,
+      "name": '山西壶关农商总行',
+      childDepartment: [{
+        id: 11,
+        name: '大同市分行'
+      },{
+        id: 12,
+        name: '晋中市分行'
+      },{
+        id: 13,
+        name: '长治市分行',
+        childDepartment: [{
+          id: 131,
+          name: '壶关县分行',
+          childDepartment: [{
+            id: 1311,
+            name: "龙泉镇分理处"
+          },{
+            id: 1312,
+            name: "城关镇分理处"
+          },{
+            id: 1313,
+            name: "百尺镇分理处"
+          }]
+        },{
+          id: 132,
+          name: '长治县分行'
+        }]
+      }]
+    }
+
   })
 };
 

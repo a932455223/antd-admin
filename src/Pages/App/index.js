@@ -18,7 +18,7 @@ import './App.less'
               <Layout>
                 <SiderBar/>
                 <Layout style={{ padding: '0 24px 24px' }}>
-                    <Content>
+                    <Content style={{display: 'flex'}}>
                         {this.props.children}
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>

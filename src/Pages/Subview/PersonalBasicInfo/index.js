@@ -21,8 +21,8 @@ const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-import styles from './indexStyle.scss';
-
+import './indexStyle.less';
+import {BasicInfoListsEdit, BasicInfoListsRead}  from './basicInfoLists';
 // 新增维护记录
 class AddNewRecordForm extends Component {
   // 下拉框选择发生变化时
@@ -152,16 +152,16 @@ const AddNewRecord = Form.create()(AddNewRecordForm);
 class MaintainRecord extends Component {
   render() {
     return(
-      <div className={styles.record}>
-        <Timeline className={styles.timeRecord}>
+      <div className="">
+        <Timeline className="">
           <Timeline.Item >
-            <div className={styles.timeline}>
+            <div className="">
               <div>
                 <p>2015-09-01</p>
                 <p>14:02:20</p>
               </div>
 
-              <div className={styles.recordContent}>
+              <div className="">
                 <header>
                   <span>张益达</span>
                   <span>
@@ -176,7 +176,7 @@ class MaintainRecord extends Component {
                   <span>【产品到期提醒】</span>维护
                 </section>
 
-                <section className={styles.recordDetails}>
+                <section className="">
                   <Input  type='textarea'
                           rows={4}
                           value='介绍理财产品，制定理财计划书，客户下单'/>
@@ -245,6 +245,7 @@ class AddCrewModal extends Component {
 export default class BasicInfo extends Component {
   state = {
     modalVisible: false,
+    edited:false,
     // currentId: this.props.currentId + 1,
     eachCustomerInfo: ''
     // mode: this.props.mode,
@@ -266,26 +267,6 @@ export default class BasicInfo extends Component {
     })
   }
 
-  // render Brief info
-  renderBriefInfo = () => {
-    const {eachCustomerInfo} = this.state;
-    return (
-    <Row>
-      <Col span={8}>
-        <span>所属机构：</span>
-        <span>{eachCustomerInfo.department}</span>
-      </Col>
-      <Col span={8}>
-        <span>客户经理：</span>
-        <span>{eachCustomerInfo.manager}</span>
-      </Col>
-      <Col span={8}>
-        <span>所属网络：</span>
-        <span>{eachCustomerInfo.grid}</span>
-      </Col>
-    </Row>)
-  }
-
   // modal Show
   modalShow = () => {
     this.setState({
@@ -300,101 +281,35 @@ export default class BasicInfo extends Component {
     })
   }
 
-  // render basic info lists
-  renderBasicInfoLists = () => {
-    const {eachCustomerInfo} = this.state;
-    console.log(eachCustomerInfo);
-    return (
-    <Row>
-      <Col span={24}>
-        <Col span={3}>
-          <span>账户：</span>
-        </Col>     
-        <Col span={9}>
-          <Input value={eachCustomerInfo.certificate}/>
-        </Col>
-        <Col span={3}>
-          <Input defaultValue="ddd" />
-        </Col>
-        <Col span={9}></Col>
-      </Col>
-
-      <Col span={12}>
-        <Col span={6}>
-          <span>手机号：</span>
-        </Col>
-        <Col span={18}>
-          <Input value={eachCustomerInfo.phone}/>
-        </Col>
-      </Col>
-
-      <Col span={12}>
-        <Col span={6}>
-          <span>微信号：</span>
-        </Col>
-        <Col span={18}>
-          <Input value={eachCustomerInfo.wechat}/>
-        </Col>
-      </Col>
-
-      <Col span={12}>
-        <Col span={6}>
-          <span>身份证号：</span>
-        </Col>
-        <Col span={18}>
-          <Input value={eachCustomerInfo.certificate}/>
-        </Col>
-      </Col>
-
-      <Col span={12}>
-        <Col span={6}>
-          <span>生日：</span>
-        </Col>
-        <Col span={18}>
-          <Input defaultValue={eachCustomerInfo.birth}/>
-        </Col>
-      </Col>
-
-      <Col span={24}>
-        <Col span={3}>
-          <span>参与者：</span>
-        </Col>
-        <Col span={21}>
-          <span className={styles.addCrewButton}
-                onClick={this.modalShow}>
-            <Icon type="plus-circle-o" />添加人员
-          </span>
-        </Col>
-      </Col>
-
-      <Col span={24} style={{backgroundColor: '#fafafa', padding: '10px 0'}}>
-        <Col span={3}>
-        </Col>
-        <Button type="primary">保存</Button>
-      </Col>
-    </Row>)
+  handleChange(){
+    this.setState({
+      edited:true
+    })
   }
-
   render() {
     const modal = {
       visible: this.state.modalVisible,
-      show: this.modalShow,
       hide: this.modalHide
     };
-    const {step, mode} = this.props;
+    const {step, mode, currentId} = this.props;
+    const {eachCustomerInfo,edited} = this.state;
     return(
       <div style={{textAlign: 'left'}}>
-        <div className={styles.detailInfo}>
-          {this.renderBriefInfo()}
-          <AddCrewModal {...modal}/>
+
+        <AddCrewModal {...modal}/>
+
+        <div className="">
+          { mode !== "view" && <BasicInfoListsEdit 
+                                eachCustomerInfo={eachCustomerInfo} 
+                                edited={edited} 
+                                onChangeValue={this.handleChange.bind(this)} 
+                                show={this.modalShow.bind(this)}
+                                currentId={this.props.currentId}/>}
+          
+          { mode === "view" && <BasicInfoListsRead />}
         </div>
 
-        <div className={styles.detailInfo}>
-          {step === 2 && mode === "edit" && this.renderBasicInfoLists()}
-          {step === 2 && mode === "view" && this}
-        </div>
-
-        <div className={styles.detailInfo}>
+        <div className="">
           <Tabs type='card'>
             <TabPane tab="维护记录" key="basicInfo">
               <AddNewRecord />

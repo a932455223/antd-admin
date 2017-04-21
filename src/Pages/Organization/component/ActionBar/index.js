@@ -1,6 +1,10 @@
 /**
- * Created by jufei on 2017/4/18.
+ * 文件说明： 组织机构管理/组件/ 操作栏
+ * 详细描述：
+ * 创建者： JU
+ * 时间： 17.3.2
  */
+
 import React,{Component} from 'react';
 import {Card,Row,Col,Button,Input} from 'antd';
 //====================================================
@@ -26,7 +30,7 @@ export default class ActionBar extends Component{
             <Col span="9">
             </Col>
             <Col span="2">
-              <Button>新建</Button>
+              <Button onClick={this.props.newClick}>新建</Button>
             </Col>
             <Col span="2">
               <Button>导入</Button>

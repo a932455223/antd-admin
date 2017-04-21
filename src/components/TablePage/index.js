@@ -54,6 +54,7 @@ class TablePage extends Component {
 
   // 点击某一栏，编辑客户信息
   rowClick = (info) => {
+    console.log(info)
     const LoadSpin = () => {
       return(
         <div>
@@ -93,7 +94,7 @@ class TablePage extends Component {
     // }, 'CustomerSlider');
   }
 
-  // close Dock
+  // close slider
   closeDock = () => {
     this.setState({
       dockVisible: false
@@ -112,7 +113,7 @@ class TablePage extends Component {
     })
   }
 
-  // 切换到 step2
+  // 切换到 step 2，填写具体的信息
   stepByStep = () => {
     this.setState({
       step: 2
@@ -124,6 +125,13 @@ class TablePage extends Component {
     this.setState({
       clientType: value.clientType,
       customerName: value.clientName
+    })
+  }
+
+  // customer创建成功后，修改 mode的状态
+  changeModeStatus = () => {
+    this.setState({
+      mode: 'edit'
     })
   }
 
@@ -194,12 +202,12 @@ class TablePage extends Component {
       step: this.state.step,
       nextStep: this.stepByStep,
       customerName: this.state.customerName,
-      getCustomersBriefInfo: this.getCustomersBriefInfo // 获取添加人员的 brief info
+      getCustomersBriefInfo: this.getCustomersBriefInfo, // 获取添加人员的 brief info
+      changeModeStatus: this.changeModeStatus // 修改 mode的状态
     }
 
     return (
       <div className="tablepage">
-
         <header>
           <Button
             className="addNewCustomer"
@@ -214,7 +222,6 @@ class TablePage extends Component {
         </header>
 
         <Table {...tableProps} />
-
 
         <Pagination {...pageProps} />
 
