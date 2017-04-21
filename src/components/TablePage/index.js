@@ -65,7 +65,7 @@ class TablePage extends Component {
         this.setState({
           dockVisible: true,
         });
-        
+
         const mode = cPre.permissions['system:update'] ? 'view' : 'edit';
         dispatch(saveCurrentCustomerInfo(info, mode))
       }
@@ -147,6 +147,8 @@ class TablePage extends Component {
     // const rowSelection = {
     //   onChange: this.onSelectChange,
     // };
+
+    console.log(this.props.currentCustomer);
 
     // table props lists
     const tableProps = {
