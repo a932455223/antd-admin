@@ -253,17 +253,12 @@ export default class BasicInfo extends Component {
   }
 
   componentWillMount() {
-    console.log(this.props.currentId);
-    axios.get(API.GET_CUSTOMER_BASE(this.props.currentId + 1))
+    console.log('%cI will mount.','color:red')
+    axios.get(API.GET_CUSTOMER_BASE(this.props.currentId))
     .then((res) => {
-      console.log(res);
-      res.data.data.map(item => {
-        if (item.id === this.props.currentId + 1) {
-          this.setState({
-            eachCustomerInfo: item
-          })
-        }
-      })
+        this.setState({
+          eachCustomerInfo: res.data.data
+        })
     })
   }
 
@@ -299,13 +294,13 @@ export default class BasicInfo extends Component {
         <AddCrewModal {...modal}/>
 
         <div className="">
-          { mode !== "view" && <BasicInfoListsEdit 
-                                eachCustomerInfo={eachCustomerInfo} 
-                                edited={edited} 
-                                onChangeValue={this.handleChange.bind(this)} 
+          { mode !== "view" && <BasicInfoListsEdit
+                                eachCustomerInfo={eachCustomerInfo}
+                                edited={edited}
+                                onChangeValue={this.handleChange.bind(this)}
                                 show={this.modalShow.bind(this)}
                                 currentId={this.props.currentId}/>}
-          
+
           { mode === "view" && <BasicInfoListsRead />}
         </div>
 
