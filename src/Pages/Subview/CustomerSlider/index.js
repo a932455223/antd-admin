@@ -158,7 +158,6 @@ class CustomerSlider extends Component {
 
   componentWillMount(){
     this.setState({
-
     })
     /*
     * 首次加载，一次性将组件全部加载
@@ -294,35 +293,30 @@ class CustomerSlider extends Component {
 
   // 切换面板
   tabChange = (e) => {
+    console.log(e);
     this.setState({
-      activeTabs: e,
-      currentId: this.props.currentCustomer.id
+      activeTabs: e
     })
 
-
-    // 获取当前激活 TabPane的 key，对比是否为 personalBasicInfo
-    // this.pageLoading(e);
+    // if(id !== this.state.currentId || mode === 'create'){}
   };
 
   // 个人用户的 Tabs
   personalUserTabs = () => {
     const { mode, id } = this.props.currentCustomer;
     const { personalClient } = this.state;
-
-    console.log(id === this.state.currentId);
+    console.log(id, this.state.currentId);
+    // if(this.state.activeTabs === '') {
+    //   this.setState({
+    //     activeTabs: 'personalBasicInfo'
+    //   })
+    // }
 
     const tabsProps = {
       className: styles.tabs,
       // tabBarExtraContent: operations,
-      // key: id,
       // 判断当前点击的用户的 ID与之前存储的 id是否相同，若相同，则不重新渲染 tabs
-      activeKey: (id !== this.state.currentId || mode === 'create')  ? 'personalBasicInfo' : this.state.activeTabs,
-      // defaultActiveKey:
-      //   id !== this.state.currentId
-      //   ?
-      //   this.state.activeTabs
-      //   :
-      //   'personalBasicInfo',
+      activeKey: this.state.activeTabs,
       // type: "card",
       onChange: this.tabChange
     }
@@ -475,9 +469,13 @@ class CustomerSlider extends Component {
 
   componentWillReceiveProps(next) {
     console.log('Receive Props');
+    // if(this.props.currentCustomer.id !== next.currentCustomer.id) {
       this.setState({
-        currentId: this.props.currentCustomer.id
-    })
+        currentId: this.props.currentCustomer.id ? this.props.currentCustomer.id : '',
+        activeTabs: (this.props.currentCustomer.id !== this.state.currentId || mode === 'create' || this.state.activeTabs === '')  ? 'personalBasicInfo' : this.state.activeTabs
+      })
+
+
     // console.log(this.props.currentCustomer.id);
     // console.log(next.currentCustomer.id);
     // console.log('compare:'+ (this.props.currentCustomer.id === next.currentCustomer.id))
@@ -491,8 +489,8 @@ class CustomerSlider extends Component {
     const { step, mode } = this.props.currentCustomer;
     // console.log(this.props.currentCustomer);
     // console.log();
-    console.log(this.state.currentId);
-    console.log(this.props.currentCustomer.id)
+    // console.log(this.state.activeTabs);
+    // console.log(this.props.currentCustomer.id)
     return(
       <div>
         {step === 1 && mode === 'create' &&
