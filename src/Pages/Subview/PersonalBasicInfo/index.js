@@ -252,6 +252,7 @@ class AddCrewModal extends Component {
 
 
 //个人信息表单................
+let uuid = 0;
 class BasicInfoEdit extends Component{
   constructor(props) {
     super(props);
@@ -267,39 +268,89 @@ class BasicInfoEdit extends Component{
     //   mode:"edit"
     // })
   }
+  remove = (k) => {
+    const { form } = this.props;
+    // can use data-binding to get
+    const keys = form.getFieldValue('keys');
+    // We need at least one passenger
+    if (keys.length === 1) {
+      return;
+    }
+
+    // can use data-binding to set
+    form.setFieldsValue({
+      keys: keys.filter(key => key !== k),
+    });
+  }
+
+  add = () => {
+    uuid++;
+    const { form } = this.props;
+    // can use data-binding to get
+    const keys = form.getFieldValue('keys');
+    const nextKeys = keys.concat(uuid);
+    // can use data-binding to set
+    // important! notify form to detect changes
+    form.setFieldsValue({
+      keys: nextKeys,
+    });
+  }
+
   render() {
     const {eachCustomerInfo, edited,currentId} = this.props;
     console.log(eachCustomerInfo);
-    const { getFieldDecorator} = this.props.form;
+    const { getFieldDecorator,getFieldValue} = this.props.form;
     getFieldDecorator('keys', { initialValue: [] });
     const keys = getFieldValue('keys');
+    console.log(keys);
     const formItems = keys.map((k, index) => {
       return (
-        <FormItem
-          {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-          label={index === 0 ? 'Passengers' : ''}
-          required={false}
-          key={k}
-        >
-          {getFieldDecorator(`names-${k}`, {
-            validateTrigger: ['onChange', 'onBlur'],
-            rules: [{
-              required: true,
-              whitespace: true,
-              message: "Please input passenger's name or delete this field.",
-            }],
-          })(
-            <Input placeholder="passenger name" style={{ width: '60%', marginRight: 8 }} />
-          )}
-          <Icon
-            className="dynamic-delete-button"
-            type="minus-circle-o"
-            disabled={keys.length === 1}
-            onClick={() => this.remove(k)}
-          />
-        </FormItem>
+        <div>
+        <Row>
+          <Col span={12}>
+            <FormItem
+              {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+              label={index === 1 ? '账户：' : ''}
+              required={false}
+              key={k}
+              labelCol={{span: 3}}
+              wrapperCol={{span: 9}}
+            >
+              {getFieldDecorator(`names-${k}`, {
+                validateTrigger: ['onChange', 'onBlur'],
+                initialValue: eachCustomerInfo.manager,
+                rules: [{
+                  required: true,
+                  whitespace: true,
+                  message: "Please input passenger's name or delete this field.",
+                }],
+              })(
+                <Input placeholder="passenger name"  />
+              )}
+              
+            </FormItem>
+          </Col>
+          <Col span={12}>
+              <FormItem>
+                {getFieldDecorator('info', {
+                  initialValue: eachCustomerInfo.wechat,
+                  onChange: this.inputChange
+                })(
+                  <Input />
+                )}
+                <Icon
+                  className="dynamic-delete-button"
+                  type="minus-circle-o"
+                  disabled={keys.length === 1}
+                  onClick={() => this.remove(k)}
+                />
+              </FormItem>
+          </Col>
+        </Row>
+        </div>
       )
     });
+    
     return (
         <Form className="basicinfolist">
           <Row className={currentId === -1 ? "briefinfocreate" : "briefinfoedit"} >  
@@ -375,12 +426,7 @@ class BasicInfoEdit extends Component{
           </Row>
 
           <div className="personinfo">
-            <Row className={currentId === -1 ? "accountcreate" : "accountedit"}>
-              <Col span={24} className={currentId === -1 ? "phonecreate" : "phoneedit"}>
-                <Account />
-              </Col>
-            </Row>
-            
+            {formItems}
             <Row>  
               <Col span={12} className={currentId === -1 ? "phonecreate" : "phoneedit"}>
                 <FormItem labelCol={{span: 6}}
