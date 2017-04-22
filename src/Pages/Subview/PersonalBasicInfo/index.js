@@ -18,7 +18,7 @@ import {
 import axios from 'axios';
 import API from '../../../../API';
 import { connect } from 'react-redux';
-
+import { createCustomerSuccess } from '../../../redux/actions/customerAction';
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -625,4 +625,10 @@ const mapStateToProps = (store) => {
     currentCustomerInfo: store.customer.currentCustomerInfo
   }
 }
-export default connect(mapStateToProps)(BasicInfo);
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    createCustomerSuccess:(id) => {dispatch(createCustomerSuccess(id))}
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(BasicInfo);
