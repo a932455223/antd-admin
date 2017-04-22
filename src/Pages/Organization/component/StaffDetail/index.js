@@ -54,11 +54,9 @@ class BranchesDetail extends Component {
           <Card>
             <div className="staff-form">
               <Row>
-                <Col span={9}>
-                  <div className="avatar">
-
-                  </div>
-                  <Upload >
+                <Col span={9} className="avatar-wrapper">
+                  <Icon type="user-add"  className="avatar"/>
+                   <Upload >
                     <Button>
                       <Icon type="upload"/> Click to Upload
                     </Button>
