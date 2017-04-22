@@ -15,7 +15,6 @@ var popularMovies = require('./falseData/popularMovies');
 
 
 module.exports = {
-
   // 下拉菜单
   // 客户资料 sliderBar  menu 下拉菜单
   'GET /asd/common/dropdown/list/customer': [
@@ -104,7 +103,7 @@ module.exports = {
   'GET /asd/customers': Mock.mock({
     "code": 200,
     "data": {
-      "customers|1-10": [{
+      "customers|10": [{
         "category": /企业客户|个人客户/,
         "department": "壶关农商银行XX支行",
         "id|+1": 1,
@@ -143,7 +142,7 @@ module.exports = {
 
   'POST /asd/privilege/customer': Mock.mock({
     "code": 200,
-    "data|1-11": [{
+    "data|10": [{
       "id|+1": 1,
       "permissions": {
         "system:add|1": true,
