@@ -1,5 +1,5 @@
 /**
- * 文件说明： 组织机构管理/组件/ 组织机构新建编辑组件
+ * 文件说明： 组织机构管理/组件/ 组织机构新建组件
  * 详细描述：
  * 创建者： JU
  * 时间： 17.3.2
@@ -55,15 +55,16 @@ class BranchesEditor extends Component {
           {/*组织信息*/}
           <Card
             title={(
+
               <Row>
                 <Col span="18">
                   <h3>编辑</h3>
                 </Col>
                 <Col span="3">
-                  <Button>取消</Button>
+                  <Button className="cancel">取消</Button>
                 </Col>
                 <Col span="3">
-                  <Button>保存</Button>
+                  <Button className="save">保存</Button>
                 </Col>
               </Row>
             )}

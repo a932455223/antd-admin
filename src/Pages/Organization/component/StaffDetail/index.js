@@ -1,10 +1,9 @@
 /**
- * 文件说明： 组织机构管理/组件/ 员工新建编辑组件
+ * 文件说明： 组织机构管理/组件/ 员工新建组件
  * 详细描述：
  * 创建者： JU
  * 时间： 17.3.2
  */
-
 import React, {Component} from "react";
 import {Button, Card, Col, DatePicker, Form, Icon, Input, Row, Select, TreeSelect, Upload} from "antd";
 import classNames from 'classnames';
@@ -55,11 +54,9 @@ class BranchesDetail extends Component {
           <Card>
             <div className="staff-form">
               <Row>
-                <Col span={9}>
-                  <div className="avatar">
-
-                  </div>
-                  <Upload >
+                <Col span={9} className="avatar-wrapper">
+                  <Icon type="user-add"  className="avatar"/>
+                   <Upload >
                     <Button>
                       <Icon type="upload"/> Click to Upload
                     </Button>
@@ -82,7 +79,7 @@ class BranchesDetail extends Component {
                 <FormCreator items={eductionDataForForm} getFieldDecorator={getFieldDecorator} containerID="staffDetail"/>
               </Row>
               <Row className="submit-controller">
-                <Button htmlType="submit">提交</Button>
+                <Button htmlType="submit" className="save">提交</Button>
               </Row>
             </div>
           </Card>

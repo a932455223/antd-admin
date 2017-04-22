@@ -1,3 +1,5 @@
+@organization-primary-color: #7A87C6;
+
 .organization {
   display: flex;
   flex: auto;
@@ -97,27 +99,27 @@
   }
 
   .ant-input:focus, .ant-input:hover {
-    border-color: #7A87C6;
+    border-color: @organization-primary-color;
   }
 
   .ant-input:focus {
-    border-color: #7A87C6;
+    border-color: @organization-primary-color;
     outline: 0;
     box-shadow: 0 0 0 2px RGBA(72, 82, 158, .2);
   }
 
   .ant-select-selection:hover {
-    border-color: #7A87C6;
+    border-color: @organization-primary-color;
   }
 
   .ant-select-open .ant-select-selection {
-    border-color: #7A87C6;
+    border-color: @organization-primary-color;
     outline: 0;
     box-shadow: 0 0 0 2px RGBA(72, 82, 158, .2);
   }
 
   .ant-select-focused .ant-select-selection, .ant-select-selection:focus, .ant-select-selection:active {
-    border-color: #7A87C6;
+    border-color: @organization-primary-color;
     outline: 0;
     box-shadow: 0 0 0 2px RGBA(72, 82, 158, .2);
   }
@@ -130,10 +132,10 @@
     font-size: 18px;
     font-weight: 600;
 
-    span{
+    span {
       font-size: 22px;
       cursor: pointer;
-      &:hover{
+      &:hover {
         color: #f00;
       }
     }
@@ -149,17 +151,60 @@
     background: #F4F4F6;
   }
 
-  .ant-input-lg,.ant-select-lg .ant-select-selection__rendered,.ant-select-lg .ant-select-selection--single{
-    height: 25px;
+  .ant-input-lg, .ant-select-lg .ant-select-selection__rendered, .ant-select-lg .ant-select-selection--single {
+    height: 30px;
   }
 
-  .ant-select-lg .ant-select-selection--multiple{
-    min-height: 25px;
+  .ant-select-lg .ant-select-selection--multiple {
+    min-height: 30px;
     padding-bottom: 0;
   }
 
-  .ant-form-item-control{
-    line-height: 25px;
+  .ant-form-item-control {
+    line-height: 30px;
+  }
+
+  //取消按钮
+  .cancel {
+    border: 0;
+    background: #FAFAFA;
+    color: RGBA(72, 82, 158, .2);
+    &:hover {
+      color: #333
+    }
+  }
+
+  //保存按钮 | 新建员工
+  .save {
+    background: @organization-primary-color;
+    color: #fff;
+
+    &:hover {
+      border-color: RGBA(72, 82, 158, .2);
+    }
+  }
+
+
+  .newStaff{
+    .save;
+    width: 92px;
+    font-size: 14px;
+    padding: 5px 0;
+  }
+    //table 分页
+  .ant-table-pagination{
+    border: 17px solid #fff;
+  }
+    //编辑按钮
+  .edit{
+    border: 0;
+    background: #fff;
+    color: #6E8198;
+
+    &:hover{
+      color: #6E8198;
+      background: #fff;
+    }
   }
 }
 
