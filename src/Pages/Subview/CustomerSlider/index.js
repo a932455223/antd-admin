@@ -19,16 +19,6 @@ const Option = Select.Option;
 import styles from './indexStyle.scss';
 import { fillCustomerInfo } from '../../../redux/actions/customerAction';
 
-// import personalBasicInfo  from './Pages/personalBasicInfo';
-
-const LoadSpin = () => {
-  return(
-    <div>
-      <Spin />
-    </div>
-  )
-};
-
 class NewCustomer extends Component {
   // 下拉框选择发生变化时
   selectChange = (value) => {
@@ -51,10 +41,9 @@ class NewCustomer extends Component {
     if(customer.name !== '') {
       dispatch(fillCustomerInfo(customer.category, customer.name))
     }
-    // this.props.getCustomersBriefInfo(getFieldsValue())
   }
 
-  //
+  // 绑定键盘事件，点击 enter，提交 customer.name customer.category
   createCustomer = (e) => {
     if(e.keyCode === 13) {
       this.submitClient()
@@ -140,7 +129,8 @@ class CustomerSlider extends Component {
   state = {
     visible: '',
     currentId: '',
-    activeTabs: '',
+    activePersonalTabs: '',
+    activeEnterpriseTabs: '',
 
     personalClient: {
       personalBasicInfo: '',
@@ -154,11 +144,7 @@ class CustomerSlider extends Component {
       enterpriseBasicInfo: '',
       keyPersonInfo: '',
       offlineInfo: '',
-    },
-
-    fields: {
-      notificate: false
-    },
+    }
   };
 
   componentWillMount(){
@@ -166,6 +152,8 @@ class CustomerSlider extends Component {
     * 首次加载，一次性将组件全部加载
     * 异步加载 BasicInfo, FamilyInfo, JobInfo, FinanceInfo, RiskInfo
     */
+    console.log('%c/ CustomerSlider /_____will mount', 'color: red');
+
     require.ensure([],() => {
       let PersonalBasicInfo = require('../PersonalBasicInfo').default;
       let FamilyInfo = require('../FamilyInfo').default;
@@ -246,89 +234,30 @@ class CustomerSlider extends Component {
     }
   }
 
-  // 获取当前激活 TabPane的 key，根据 key加载不同的 page view
-  // pageLoading = (key) => {
-    // var t = /^[a-z]/
-    // const upperKey = key.replace(/^[a-z]/, function(l){return l.toUpperCase()})
-    // console.log(upperKey);
-
-    // 异步加载 personalBasicInfo
-    // require.ensure([],() => {
-    //   let FamilyInfo = require('../FamilyInfo').default;
-    //   let JobInfo = require('../JobInfo').default;
-    //   let FinanceInfo = require('../FinanceInfo').default;
-    //   let RiskInfo = require('../RiskInfo').default;
-    //
-    //   setTimeout(() => {
-    //     this.setState({
-    //       familyInfo: FamilyInfo,
-    //       jobInfo: JobInfo,
-    //       riskInfo: RiskInfo,
-    //       financeInfo: FinanceInfo
-    //     })
-    //     switch(key) {
-    //       // 当被点击的 TabPane的 key值为 familyInfo, 加载对应的异步组件
-    //       case 'familyInfo':
-    //         this.setState({
-    //           familyInfo: FamilyInfo
-    //         })
-    //
-    //       case 'jobInfo':
-    //         this.setState({
-    //           jobInfo: JobInfo
-    //         })
-    //
-    //       case 'RiskInfo':
-    //         this.setState({
-    //           riskInfo: RiskInfo
-    //         })
-    //
-    //       case 'financeInfo':
-    //         this.setState({
-    //           financeInfo: FinanceInfo
-    //         })
-    //     }
-    //   }, 1000)
-    // }, 'FamilyInfo');
-  // }
-
-  // 切换面板
-  tabChange = (e) => {
+  // 个人用户 Tabs切换事件
+  personalTabChange = (e) => {
     this.setState({
-      activeTabs: e,
-      currentId: this.props.currentId
+      activePersonalTabs: e
     })
+  };
 
-
-    // 获取当前激活 TabPane的 key，对比是否为 personalBasicInfo
-    // this.pageLoading(e);
+  // 企业用户 Tabs切换事件
+  enterpriseTabChange = (e) => {
+    this.setState({
+      activeEnterpriseTabs: e
+    })
   };
 
   // 个人用户的 Tabs
   personalUserTabs = () => {
-    const { currentCustomer } = this.props;
+    const { mode, id } = this.props.currentCustomerInfo;
     const { personalClient } = this.state;
-    const mode = currentCustomer.mode;
-
 
     const tabsProps = {
       className: styles.tabs,
-      // tabBarExtraContent: operations,
-      key: currentCustomer.id,
-      // 判断当前点击的用户的 ID与之前存储的 id是否相同，若相同，则不重新渲染 tabs
-      defaultActiveKey:
-        currentCustomer.id === this.state.currentId
-        ?
-        this.state.activeTabs
-        :
-        'personalBasicInfo',
-      // type: "card",
-      onChange: this.tabChange
+      activeKey: this.state.activePersonalTabs,
+      onChange: this.personalTabChange
     }
-
-    // console.log(this.props);
-
-    // console.log({...this.props})
 
     return (
       <Tabs {...tabsProps} >
@@ -337,7 +266,7 @@ class CustomerSlider extends Component {
           key="personalBasicInfo"
         >
           {personalClient && personalClient.personalBasicInfo &&
-            <personalClient.personalBasicInfo {...this.props}/>
+            <personalClient.personalBasicInfo />
           }
         </TabPane>
         <TabPane
@@ -382,30 +311,21 @@ class CustomerSlider extends Component {
 
   // 企业用户的 tabs
   enterpriseUserTabs = () => {
-    const { currentCustomer } = this.props;
+    const { mode, id } = this.props.currentCustomerInfo;
     const { enterpriseClient } = this.state;
-    const mode = currentCustomer.mode;
 
     // tabs props
     const tabsProps = {
       className: styles.tabs,
-      // tabBarExtraContent: operations,
-      key: currentCustomer.id,
-      // 判断当前点击的用户的 ID与之前存储的 id是否相同，若相同，则不重新渲染 tabs
-      defaultActiveKey:
-        currentCustomer.id === this.state.currentId
-        ?
-        this.state.activeTabs
-        :
-        'enterpriseBasicInfo',
-      onChange: this.tabChange,
+      activeKey: this.state.activeEnterpriseTabs,
+      onChange: this.enterpriseTabChange,
     }
 
     return(
       <Tabs {...tabsProps} >
         <TabPane tab="基本信息" key="enterpriseBasicInfo">
           {enterpriseClient.enterpriseBasicInfo &&
-            <enterpriseClient.enterpriseBasicInfo {...this.props}/>
+            <enterpriseClient.enterpriseBasicInfo />
           }
         </TabPane>
         <TabPane
@@ -414,7 +334,7 @@ class CustomerSlider extends Component {
           disabled={mode === 'create' ? true : false}
         >
           {enterpriseClient.keyPersonInfo &&
-            <enterpriseClient.keyPersonInfo {...this.props}/>
+            <enterpriseClient.keyPersonInfo />
           }
         </TabPane>
         <TabPane
@@ -423,22 +343,22 @@ class CustomerSlider extends Component {
           disabled={mode === 'create' ? true : false}
         >
           {enterpriseClient.offlineInfo &&
-            <enterpriseClient.offlineInfo {...this.props}/>
+            <enterpriseClient.offlineInfo />
           }
         </TabPane>
       </Tabs>
     )
   }
 
-  // edit customer
-  editCustomer = () => {
-    const { visible, currentCustomer } = this.props;
+  // view or edit customer
+  vieweOrEditCustomer = () => {
+    const { visible, currentCustomerInfo } = this.props;
 
     return(
-      <div>
+      <div id="rightSlider">
         <div className={styles.header}>
-          <span>{currentCustomer.name}</span>
-          <span>{currentCustomer.id}</span>
+          <span>{currentCustomerInfo.name}</span>
+          <span>{currentCustomerInfo.id}</span>
 
           <Row className={styles.options}>
             <Col span={6}>
@@ -463,7 +383,7 @@ class CustomerSlider extends Component {
           </Row>
         </div>
 
-        {currentCustomer.category && currentCustomer.category == '个人客户'
+        {currentCustomerInfo.category && currentCustomerInfo.category == '个人客户'
           ?
           this.personalUserTabs()
           :
@@ -473,10 +393,28 @@ class CustomerSlider extends Component {
     )
   }
 
+  componentWillReceiveProps(next) {
+    console.log('%c/ CustomerSlider /_____Receive Props', 'color: red');
+    const { id, mode } = this.props.currentCustomerInfo;
+    const { currentId, activePersonalTabs, activeEnterpriseTabs } = this.state;
+
+    // 判断 currentId不等于新的 id，mode状态为 create，或者 activePersonalTabs／activeEnterpriseTabs 为空
+    const resstPersonalTabs   = id !== currentId || mode === 'create' || activePersonalTabs === '';
+    const resstEnterpriseTabs = id !== currentId || mode === 'create' || activeEnterpriseTabs === '';
+
+    // 判断当前的 id与 nextProps中的 id是否相等，若不相等，则重置 state
+    if(id !== next.currentCustomerInfo.id) {
+      this.setState({
+        currentId: id ? id : '',
+        activePersonalTabs: resstPersonalTabs ? 'personalBasicInfo' : activePersonalTabs,
+        activeEnterpriseTabs: resstEnterpriseTabs  ? 'enterpriseBasicInfo' : activeEnterpriseTabs
+      })
+    }
+  }
+
   render() {
-    const { step, mode } = this.props.currentCustomer;
-    // console.log(this.props.currentCustomer);
-    // console.log({...this.props});
+    const { step, mode } = this.props.currentCustomerInfo;
+
     return(
       <div>
         {step === 1 && mode === 'create' &&
@@ -484,7 +422,7 @@ class CustomerSlider extends Component {
         }
 
         {step === 2 &&
-          this.editCustomer()
+          this.vieweOrEditCustomer()
         }
       </div>
     )
@@ -494,7 +432,7 @@ class CustomerSlider extends Component {
 // export default CustomerSlider;
 const mapStateToProps = (store) => {
   return {
-    currentCustomer: store.customer.currentCustomerInfo
+    currentCustomerInfo: store.customer.currentCustomerInfo
   }
 }
 

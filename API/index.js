@@ -17,8 +17,25 @@ export default {
   GET_SYSTEM_SLIDER_BAR: '/asd/common/dropdown/list/system',
   GET_CUSTOMER_SLIDER_BAR: '/asd/common/dropdown/list/customer',
   GET_ORGANIZATION_SLIDER_BAR: '/asd/common/dropdown/list/organization',
+
   GET_RELATION_SLIDER_BAR: '/asd/common/dropdown/list/relation',
   GET_JOBCATEGORY_SLIDER_BAR: '/asd/common/dropdown/list/jobCategory',
     //==================================================================
+
+
+
+
+  GET_CUSTOMER_BASE: id =>  `/asd/customer/${id}/base`,
+
+  //=======================================
+
+  //==================================================================
+
+
+  // 组织机构详情列表
+  GET_DEPARTMENTS: '/asd/departments',
+
+  // 组织机构员工列表
+  GET_STAFFS: '/asd/staffs'
 
 }

@@ -23,6 +23,8 @@ class TablePage extends Component {
   };
 
   componentWillMount() {
+    console.log('%c/ TablePage /_____will mount', 'color: red');
+
     // 异步加载 edit component
     require.ensure([],() => {
       let CustomerSlider = require('../../Pages/Subview/CustomerSlider').default;
@@ -57,28 +59,23 @@ class TablePage extends Component {
   // 点击某一栏，编辑客户信息
   rowClick = (info) => {
     const { dispatch, privilege } = this.props;
-
-    privilege.map( cPre => {
-      // 判断当前的 id是否有编辑权限
-      if(cPre.id === info.id) {
-        // 拿到当前的 permissions，再弹出弹窗
-        this.setState({
+    const mode = privilege[info.id]['system:update']  ? 'view':'edit';
+    dispatch(saveCurrentCustomerInfo(info, mode))
+    this.setState({
           dockVisible: true,
-        });
-
-        const mode = cPre.permissions['system:update'] ? 'view' : 'edit';
-        dispatch(saveCurrentCustomerInfo(info, mode))
-      }
-    })
-
-    // const LoadSpin = () => {
-    //   return(
-    //     <div>
-    //       <Spin />
-    //     </div>
-    //   )
-    // }
-
+// <<<<<<< HEAD
+    });
+    // privilege.map( cPre => {
+    //   // 判断当前的 id是否有编辑权限
+    //   if(cPre.id === info.id) {
+    //     // 拿到当前的 permissions，再弹出弹窗
+    //     this.setState({
+    //       dockVisible: true,
+    //     });
+    //     const mode = cPre.permissions['system:update'] ? 'view' : 'edit';
+    //     dispatch(saveCurrentCustomerInfo(info, mode))
+    //   }
+    // })
 
     // const { dispatch, editDock } = this.props;
     // dispatch(showEditDock(true, info.id));
@@ -101,6 +98,13 @@ class TablePage extends Component {
     //     })
     //   }, 300)
     // }, 'CustomerSlider');
+// =======
+//         });
+//         const mode = cPre.permissions['system:update'] ? 'view' : 'edit';
+//         dispatch(saveCurrentCustomerInfo(info, mode))
+//       }
+//     })
+// >>>>>>> 09a7c63f83e498e209c3aa67b9a6ad89dd7b49e7
   }
 
   // close slider
@@ -143,12 +147,6 @@ class TablePage extends Component {
 
   render(){
     const { columns, dataSource, loading, pagination } = this.props;
-    // // table 的选择框
-    // const rowSelection = {
-    //   onChange: this.onSelectChange,
-    // };
-
-    console.log(this.props.currentCustomer);
 
     // table props lists
     const tableProps = {
@@ -204,15 +202,7 @@ class TablePage extends Component {
     // slider visible and row click crrentId
     const sliderProps = {
       closeDock: this.closeDock,
-      visible: this.state.dockVisible,
-      currentId: this.state.currentId,
-      clientType: this.state.clientType,
-      mode: this.state.mode,
-      step: this.state.step,
-      nextStep: this.stepByStep,
-      customerName: this.state.customerName,
-      getCustomersBriefInfo: this.getCustomersBriefInfo, // 获取添加人员的 brief info
-      changeModeStatus: this.changeModeStatus // 修改 mode的状态
+      visible: this.state.dockVisible
     }
 
     return (
@@ -244,7 +234,6 @@ class TablePage extends Component {
   }
 }
 
-// export default TablePage;
 
 const mapStateToProps = (store) => {
   return {

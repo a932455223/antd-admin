@@ -9,19 +9,8 @@
 import { combineReducers } from 'redux';
 import navPath from './navPathReducer';
 import auth from './authReducer';
-import * as commonReducer from './commonReducer';
-import * as customerReducer from './customerReducer';
-
-// 公共的 common reducers
-const common = combineReducers({
-  ...commonReducer
-})
-
-const customer = combineReducers({
-  ...customerReducer
-})
-
-
+import common from './commonReducer';
+import customer from './customerReducer';
 
 const reducers = combineReducers({
     navPath: navPath,

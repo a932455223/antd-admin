@@ -1,3 +1,4 @@
+import { combineReducers } from 'redux';
 import * as actionTypes from '../actionTypes/index';
 
 const initialState = {
@@ -7,7 +8,7 @@ const initialState = {
   }
 }
 // show Dock and Hide Dock
-export const editDock = (state = initialState, action) => {
+const editDock = (state = initialState, action) => {
   switch(action.type) {
     case actionTypes.SHOW_EDIT_DOCK:
       return {
@@ -25,3 +26,9 @@ export const editDock = (state = initialState, action) => {
       return state;
   }
 }
+
+const common = combineReducers({
+  editDock
+})
+
+export default common;

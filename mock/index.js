@@ -119,7 +119,7 @@ module.exports = {
     "pagination": {
       "count|1-1000": 1,
       "index|1-10": 1,
-      "size": 20
+      "size": 10
     },
     "message": "this is some message"
   }),
@@ -143,9 +143,10 @@ module.exports = {
 
   'POST /asd/privilege/customer': Mock.mock({
     "code": 200,
-    "data|1-10": [{
+    "data|1-11": [{
       "id|+1": 1,
       "permissions": {
+        "system:add|1": true,
         "system:update|1": true
       }
     }],
@@ -202,15 +203,34 @@ module.exports = {
   }),
 
 
-  'GET /asd/customer/:id/base': Mock.mock({
-    "code": 200,
-    "data": {
-      "accounts|1-3": [
-        /[0-9]{12}/
-      ],
-      "address": '上海 闵行',
-      "age": /[0-9]{2}/,
-    }
+  'GET /asd/customer/:id/base':Mock.mock({
+    'code':200,
+    'data':{
+      'account|2-3':[{
+        'accNumber':/[0-9]{13}/,
+        'info':"haha"
+      }],
+      'address': '@city(true)',
+      'age|1-100': 100,
+      'birth':'1990-01-30',
+      'certificate':/[0-9]{18}/,
+      'department':'慈溪银行',
+      'grid':'B909',
+      'houseType':'商住',
+      'id|+1':1,
+      'joiner|1-3':['@name'],
+      'manager': '张健钊',
+      'marriage|1':true,
+      'needLoan|1': true,
+      'origin':'上海',
+      'phone':/[0-9]{11}/,
+      'wechat':'zli3049',
+      'withCar|1':true,
+      'withDebt':true,
+      'yearExpense':100,
+      'yearIncome':999988,
+    },
+    'message':'message!!'
   }),
 
   // 组织机构列表 有层级
@@ -220,33 +240,70 @@ module.exports = {
       "id": 1,
       "name": '山西壶关农商总行',
       childDepartment: [{
-        id: 11,
+        id: 2,
         name: '大同市分行'
       },{
-        id: 12,
+        id: 3,
         name: '晋中市分行'
       },{
-        id: 13,
+        id: 4,
         name: '长治市分行',
         childDepartment: [{
-          id: 131,
+          id: 5,
           name: '壶关县分行',
           childDepartment: [{
-            id: 1311,
+            id: 6,
             name: "龙泉镇分理处"
           },{
-            id: 1312,
+            id: 7,
             name: "城关镇分理处"
           },{
-            id: 1313,
+            id: 8,
             name: "百尺镇分理处"
           }]
         },{
-          id: 132,
+          id: 9,
           name: '长治县分行'
         }]
       }]
     }
+
+  }),
+
+    // 组织机构列表
+  'GET /asd/departments': Mock.mock({
+    code: 200,
+    "data|20": [{
+      "name": "@name",
+      "customerCount": /[0-9]{4}/,
+      "depositCount": /[0-9]{5}/,
+      "id|+1": 1,
+      "director|+1": /胡锦涛|习近平|蛤/,
+      "loanCount": /[0-9]{8}/
+    }],
+    message: 'some message'
+  }),
+
+
+  // 组织机构  员工列表
+  'GET /asd/staffs': Mock.mock({
+    code: 200,
+    data: {
+      pagination: {
+        count: /[0-9]{5}/,
+        index: /[0-9]{1}/,
+        size: /10|20|30/
+      },
+      "staffs|100": [{
+        code: /[0-9]{5}/,
+        department: /壶关农商行|长治市分行|壶关县分行/,
+        "id|+!": 1,
+        name: '@name',
+        phone: /[0-9]{11}/,
+        position: /董事长|总行长|职员|分行长/
+      }]
+    },
+    message: 'some message'
   })
 };
 
