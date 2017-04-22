@@ -49,18 +49,43 @@
 
 @c-grey: #fafafa;
 @c-white: #fff;
+@c-grey-darken: #d4d4d5;
 .myTable {
-    // table {
-    //     background-color: @c-white;
-    //     tr
-    //     td {
-    //         border: none;
-    //     }
-    //     td{
-    //       border-right: none;
-    //     }
-    //     tr:nth-of-type(2n) {
-    //         background-color: @c-grey;
-    //     }
+    // .ant-table{
     // }
+    .ant-table-bordered {
+        background-color: @c-white;
+        .ant-table-body {
+            table {
+                border: 1px solid @c-grey-darken;
+            }
+        }
+        .ant-table-thead {
+            tr {
+                th {
+                    border-color: @c-grey-darken;
+                    padding: 1em 0.5em 1em 1em;
+                    &:nth-last-of-type(1){
+                        border-right: none; 
+                    }
+                }
+            }
+        }
+        .ant-table-tbody {
+            tr {
+                height: 0em;
+                td {
+                    padding: 1em 0.5em 1em 1em;
+                    border: none;
+                    &:nth-of-type(2) {
+                        border-right: 1px solid @c-grey-darken;
+                    }
+                }
+                &:nth-of-type(2n) {
+                    background-color: @c-grey;
+                }
+            }
+        }
+    }
 }
+

@@ -143,7 +143,7 @@ module.exports = {
 
   'POST /asd/privilege/customer': Mock.mock({
     "code": 200,
-    "data|1-10": [{
+    "data|1-11": [{
       "id|+1": 1,
       "permissions": {
         "system:add|1": true,
@@ -155,6 +155,44 @@ module.exports = {
 
 
 
+
+  //用户家庭信息
+  'GET /asd/customer/:id/family': Mock.mock({
+    'code': 200,
+    'data|3': [{
+      'id|+1': 1,
+      'name': /张三|李四/,
+      'certificate': /[0-9]{15}/,
+      'jobCategory': /个体商户|机关单位/,
+      'phone': /[0-9]{11}/,
+      'relation': /夫妻|父子|兄弟/
+    }],
+    'message': '注释'
+  }),
+  //用户家庭信息关系列表
+  'GET /asd/common/dropdown/list/relation': Mock.mock({
+    'code': 200,
+    'data': [
+      {'id': 0,'key':'couple','name': '夫妻'},
+      {'id': 1,'key':'borther','name': '兄弟'},
+      {'id': 2,'key':'parent','name': '父子'},
+    ],
+    'message': 'ok'
+  }),
+  //用户家庭信息工作属性列表
+  'GET /asd/common/dropdown/list/jobCategory': Mock.mock({
+    'code': 200,
+    // 'data|3': [{
+    //   'id|+1': 0,
+    //   'name': /个体商户|机关单位|企事业单位/,
+    // }],
+    'data': [
+      {'id': 0,'key':'merchant','name': '个体商户'},
+      {'id': 1,'key':'government','name': '机关单位'},
+      {'id': 2,'key':'business','name': '企事业单位'},
+    ],
+    'message': 'ok'
+  }),
   'GET /asd/system/roles/users': Mock.mock({
     'user': {
       // 'id|1-100': 1,

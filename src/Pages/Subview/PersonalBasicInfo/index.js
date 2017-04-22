@@ -18,14 +18,12 @@ import {
 import axios from 'axios';
 import API from '../../../../API';
 import { connect } from 'react-redux';
-
+import { createCustomerSuccess } from '../../../redux/actions/customerAction';
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
 import './indexStyle.less';
-function info(msg){
-    console.log('%c'+msg,'color:red')
-}
+// import { BasicInfoListsEdit, BasicInfoListsRead }  from './basicInfoLists';
 
 // 新增维护记录
 class AddNewRecordForm extends Component {
@@ -54,7 +52,7 @@ class AddNewRecordForm extends Component {
     };
 
     return (
-      <Card  title={<span>
+      <Card id="maintainRecord"  title={<span>
                       <Icon type="plus-circle-o" />新增维护记录
                     </span>}>
         <Form>
@@ -70,7 +68,10 @@ class AddNewRecordForm extends Component {
                   }],
                   onChange: this.selectChange
                 })(
-                  <Select placeholder="请选择切入类型">
+                  <Select
+                    placeholder="请选择切入类型"
+                    getPopupContainer={() => document.getElementById('maintainRecord')}
+                    >
                     <Option value="deadline">产品到期提醒</Option>
                     <Option value="upgrade">产品升级</Option>
                     <Option value="activate">产品激活</Option>
@@ -90,7 +91,10 @@ class AddNewRecordForm extends Component {
                   }],
                   onChange: this.selectChange
                 })(
-                  <Select placeholder="请选择维护方式">
+                  <Select
+                     placeholder="请选择维护方式"
+                     getPopupContainer={() => document.getElementById('maintainRecord')}
+                  >
                     <Option value="mobile">手机</Option>
                     <Option value="wechat">微信</Option>
                     <Option value="message">短信</Option>
@@ -106,7 +110,10 @@ class AddNewRecordForm extends Component {
                 {getFieldDecorator('maintainDate', {
                   onChange: this.dateChange
                 })(
-                  <DatePicker onChange={this.onChange} />
+                  <DatePicker
+                    onChange={this.onChange}
+                    getCalendarContainer={() => document.getElementById('mybase')}
+                    />
                 )}
               </FormItem>
             </Col>
@@ -164,6 +171,7 @@ class MaintainRecord extends Component {
                 <p>2015-09-01</p>
                 <p>14:02:20</p>
               </div>
+
 
               <div className="">
                 <header>
@@ -349,7 +357,7 @@ class BasicInfoEdit extends Component{
     });
 
     return (
-        <Form className="basicinfolist">
+        <Form id="mybase" className="basicinfolist">
           <Row className={currentId === -1 ? "briefinfocreate" : "briefinfoedit"} >
             <Col span={8}>
               <FormItem labelCol={{span: 8}}
@@ -368,10 +376,11 @@ class BasicInfoEdit extends Component{
                       placeholder="选择机构"
                       optionFilterProp="children"
                       filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                      getPopupContainer={() => document.getElementById('mybase')}
                     >
-                      <Option value="jack">支行1</Option>
-                      <Option value="lucy">支行2</Option>
-                      <Option value="tom">支行3</Option>
+                      <Option value="jack">支行ab</Option>
+                      <Option value="lucy">支行abc</Option>
+                      <Option value="tom">支行abcd</Option>
                     </Select>
                 )}
               </FormItem>
@@ -390,6 +399,7 @@ class BasicInfoEdit extends Component{
                     placeholder="选择机构"
                     optionFilterProp="children"
                     filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    getPopupContainer={() => document.getElementById('mybase')}
                   >
                     <Option value="jack">支行1</Option>
                     <Option value="lucy">支行2</Option>
@@ -412,6 +422,8 @@ class BasicInfoEdit extends Component{
                     placeholder="选择机构"
                     optionFilterProp="children"
                     filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    getPopupContainer={() => document.getElementById('mybase')}
+
                   >
                     <Option value="jack">支行1</Option>
                     <Option value="lucy">支行2</Option>
@@ -554,7 +566,10 @@ class BasicInfo extends Component {
   //   })
   // }
 
-
+  componentWillReceiveProps(next) {
+    // console.log(this.props);
+    // console.log(next);
+  }
 
   render() {
     const modal = {
@@ -604,4 +619,10 @@ const mapStateToProps = (store) => {
     currentCustomerInfo: store.customer.currentCustomerInfo
   }
 }
-export default connect(mapStateToProps)(BasicInfo);
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    createCustomerSuccess:(id) => {dispatch(createCustomerSuccess(id))}
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(BasicInfo);
