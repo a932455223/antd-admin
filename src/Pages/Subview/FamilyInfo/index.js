@@ -9,11 +9,13 @@ import {
   Select
 } from 'antd';
 import _ from 'lodash';
-const FormItem = Form.Item;
-const Option = Select.Option;
 import axios from 'axios';
 import styles from './indexStyle.less';
 import api from './../../../../API';
+import { connect } from 'react-redux';
+const FormItem = Form.Item;
+const Option = Select.Option;
+
 
 /*const AddNew = () => (
   <div className={styles.addNew}>
@@ -107,24 +109,24 @@ export class AddContentForm extends Component{
     if(this.state.isAdd){
       return(
         //card新增表单
-        <Card 
+        <Card
           className="family-card family-card-modify"
           title={
             <div className="my-card-title">
-              {/*<Input 
-                prefix={<i className="iconfont icon-customer1"></i>} 
-                type="text" 
+              {/*<Input
+                prefix={<i className="iconfont icon-customer1"></i>}
+                type="text"
               />*/}
               新建家庭关系
               <span
-                className="cancel-btn" 
-                onClick={()=>{this.toggleAdd()}} 
+                className="cancel-btn"
+                onClick={()=>{this.toggleAdd()}}
               >
                 取消
               </span>
               <span
                 className="save-btn"
-                onClick={()=>{this.toggleAdd()}} 
+                onClick={()=>{this.toggleAdd()}}
               >
                 保存
               </span>
@@ -136,15 +138,15 @@ export class AddContentForm extends Component{
                   <span>姓名</span>
                 </Col>
                 <Col span={16}>
-                  {/*<Input 
-                    type="text" 
-                    value={this.state.editFamilyList[this.state.editFamilyList.length-1].name} 
-                    onChange={(e) => { this.changeFamilyValue(this.state.editFamilyList.length-1, 'name', e.target.value) }} 
+                  {/*<Input
+                    type="text"
+                    value={this.state.editFamilyList[this.state.editFamilyList.length-1].name}
+                    onChange={(e) => { this.changeFamilyValue(this.state.editFamilyList.length-1, 'name', e.target.value) }}
                   />
-                  {/*<Input 
-                    type="text" 
-                    value={this.state.editFamilyList[2].name} 
-                    
+                  {/*<Input
+                    type="text"
+                    value={this.state.editFamilyList[2].name}
+
                   />*/}
                   {/*{this.state.editFamilyList[2].name}*/}
                 </Col>
@@ -209,7 +211,7 @@ export class AddContentForm extends Component{
   }
 }
 
-export default class FamilyInfo extends Component {
+class FamilyInfo extends Component {
   state = {
     // title: '',
     // cardStyle: false,
@@ -219,41 +221,26 @@ export default class FamilyInfo extends Component {
     familyList: [],
     editFamilyList: [],//输入数据暂存区
     isModify: [],//card编辑状态
-    
+
   };
   //
 
-  componentWillMount() {
-    //家庭信息
-    axios.get(api.GET_CUSTOMERS_FAMILY(1))
-      .then((data) => {
-        if (data.status === 200 && data.statusText === 'OK' && data.data) {
-          let familyList = data.data.data;
-          let editFamilyList = _.cloneDeep(familyList);
-          // let eLenth=editFamilyList.length;
-          // editFamilyList[eLenth]={};
-          //增加一个
-          // for (let item in editFamilyList[0]) {  
-          //   editFamilyList[eLenth][item]=" ";
-          // }  
-          
-          // for (let index = 0; index < editFamilyList[0].length; index++) {
-          //   // var element = array[index];
-          //   console.log(editFamilyList[0][index])
-            
-          // }
-          // editFamilyList[0]
-          this.setState({
-            familyList: familyList,
-            editFamilyList: editFamilyList
-          });
-          setTimeout(()=>{
-          console.log(this.state.editFamilyList)
+  getFamilyInfo = (id) => {
+    axios.get(api.GET_CUSTOMERS_FAMILY(id))
+    .then((data) => {
+        let familyList = data.data.data;
+        let editFamilyList = _.cloneDeep(familyList);
+        this.setState({
+          familyList: familyList,
+          editFamilyList: editFamilyList
+        });
+    })
+  }
 
-          },100)
-        }
-      })
+  componentWillMount() {
+    console.log('FamilyInfo will mount.')
     //成员关系
+    this.getFamilyInfo(this.props.currentId);
     axios.get(api.GET_RELATION_SLIDER_BAR)
       .then((data) => {
         if (data.status === 200 && data.statusText === 'OK' && data.data) {
@@ -273,7 +260,16 @@ export default class FamilyInfo extends Component {
           })
         }
       })
-  };
+  }
+
+  componentWillUnMount(){
+    console.log('FamilyInfo Will UnMount.')
+  }
+
+  componentWillReceiveProps(newProps){
+    console.log('FamilyInfo will receive props.')
+    this.getFamilyInfo(newProps.currentId)
+  }
   constructor(props) {
     super(props);
     this.changeFamilyValue = this.changeFamilyValue.bind(this);
@@ -327,7 +323,7 @@ export default class FamilyInfo extends Component {
       this.toggleEdit(index);
     }, 0)
   };
-  
+
   //取消修改信息
   cancelFamilyValue(index) {
     let list = this.state.editFamilyList.map((item, i) => {
@@ -351,7 +347,7 @@ export default class FamilyInfo extends Component {
       isModify: isModify
     })
   };
-  
+
   render() {
     return (
       <div className="families">
@@ -413,20 +409,20 @@ export default class FamilyInfo extends Component {
                     className="family-card family-card-modify"
                     title={
                       <div className="my-card-title">
-                        <Input 
-                          prefix={<i className="iconfont icon-customer1"></i>} 
-                          type="text" 
-                          value={item.name} 
-                          onChange={(e) => { this.changeFamilyValue(i, 'name', e.target.value) }} 
+                        <Input
+                          prefix={<i className="iconfont icon-customer1"></i>}
+                          type="text"
+                          value={item.name}
+                          onChange={(e) => { this.changeFamilyValue(i, 'name', e.target.value) }}
                         />
                         <span
-                          className="cancel-btn" 
+                          className="cancel-btn"
                           onClick={(e) => { this.cancelFamilyValue(i) }}
                         >
                           取消
                         </span>
                         <span
-                          className="save-btn" 
+                          className="save-btn"
                           onClick={(e) => { this.saveFamilyValue(i) }}
                         >
                         保存
@@ -488,10 +484,19 @@ export default class FamilyInfo extends Component {
                 )
               }
           })
-          
+
         }
         <AddContentForm  />
       </div>
     )
   }
 }
+
+const mapStateToProps = (store) => {
+  return {
+    currentId: store.customer.currentCustomerInfo.id,
+    mode:store.customer.currentCustomerInfo.mode
+  }
+}
+
+export default connect(mapStateToProps)(FamilyInfo);
