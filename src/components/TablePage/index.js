@@ -109,6 +109,7 @@ class TablePage extends Component {
 
     // table props lists
     const tableProps = {
+      className: 'myTable',
       style: {
         backgroundColor: '#fcfcfc'
       },
@@ -128,6 +129,7 @@ class TablePage extends Component {
 
     // page props lists
     const pageProps = {
+      className: 'page',
       defaultCurrent: 1,
       total: pagination.count ? pagination.count : 0,
       // pageSize: pagination.size ? pagination.size : 10,
@@ -149,7 +151,7 @@ class TablePage extends Component {
       dimMode: "none", // 遮罩层
       dockStyle: {
         backgroundColor: '#f4f5f6',
-        padding: '13px 0px',
+        padding: '13px 18px',
         textAlign: 'center',
         // top: 64
       }, // 背景
@@ -173,10 +175,12 @@ class TablePage extends Component {
             type="primary"
             onClick={this.addNewCustomer}
           >
-            <Icon type="plus" />新建客户
+            <Icon type="plus" />
+            <span>新建客户</span>
           </Button>
           <Button>
-            更多操作<Icon type="down" />
+            <Icon type="download" />
+            <span>更多操作</span>
           </Button>
         </header>
 

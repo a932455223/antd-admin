@@ -144,8 +144,10 @@ export default class MyCustomer extends Component {
     };
     return (
       <div className="customer">
-        <Droplist />
-        <TablePage {...myCustomerProps}/>
+        <div>
+          <Droplist />
+          <TablePage {...myCustomerProps}/>
+        </div>
       </div>
     )
   }

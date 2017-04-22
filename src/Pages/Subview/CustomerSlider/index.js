@@ -60,6 +60,7 @@ class NewCustomer extends Component {
 
   render() {
     const { getFieldDecorator, getFieldsValue } = this.props.form;
+    console.log(getFieldsValue());
     const formItemLayout = {
       labelCol: {span: 3},
       wrapperCol: {span: 9}
@@ -67,17 +68,17 @@ class NewCustomer extends Component {
 
     return (
       <div>
-        <p style={{textAlign: 'right', padding: 10}}>
+        <p className={styles.createHeader}>
           <Icon
-            style={{fontSize: 22, cursor: 'pointer'}}
+            className={styles.close}
             onClick={this.openNotification}
             type="close"
           />
         </p>
 
-        <Form>
+        <Form className={styles.form}>
           <Row>
-            <Col span={24}>
+            <Col className={styles.input} span={24}>
               <FormItem wrapperCol={{span: 8}}>
                 {getFieldDecorator('category', {
                   initialValue: '个人客户',
@@ -96,7 +97,7 @@ class NewCustomer extends Component {
               </FormItem>
             </Col>
 
-            <Col span={16}>
+            <Col className={styles.input} span={16}>
               <FormItem wrapperCol={{span: 24}}>
                 {getFieldDecorator('name', {
                   initialValue: '',
@@ -112,7 +113,7 @@ class NewCustomer extends Component {
               </FormItem>
             </Col>
 
-            <Col span={8}>
+            <Col className={styles.input} span={8}>
               <FormItem>
                 <Button type="primary" onClick={this.submitClient}>确认新建</Button>
               </FormItem>
