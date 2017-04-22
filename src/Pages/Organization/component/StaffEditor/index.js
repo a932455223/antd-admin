@@ -1,9 +1,9 @@
 /**
- * 文件说明： 组织机构管理/组件/ 组织机构新建编辑组件
- * 详细描述：
- * 创建者： JU
- * 时间： 17.3.2
- */
+* 文件说明： 组织机构管理/组件/ 组织机构编辑组件
+* 详细描述：
+* 创建者： JU
+* 时间： 17.3.2
+*/
 
 import React, {Component} from "react";
 import {Button, Card, Col, Form, Input, Row, Select,DatePicker} from "antd";
@@ -58,11 +58,6 @@ class BranchesEditor extends Component {
             </span>
             </Col>
           </Row>
-
-
-
-
-
           {/*组织信息*/}
           <Card
             title={(
@@ -71,10 +66,10 @@ class BranchesEditor extends Component {
                   <h3>个人档案</h3>
                 </Col>
                 <Col span="3">
-                  <Button>取消</Button>
+                  <Button className="cancel">取消</Button>
                 </Col>
                 <Col span="3">
-                  <Button>保存</Button>
+                  <Button className="save">保存</Button>
                 </Col>
               </Row>
             )}
