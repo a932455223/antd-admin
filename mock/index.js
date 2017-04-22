@@ -91,14 +91,6 @@ module.exports = {
     }
   ],
 
-  'GET /asd/customer/:id/family': Mock.mock({
-    "code": 200,
-    "data|1-4": [{
-
-    }]
-  }),
-
-
   // 用户列表
   'GET /asd/customers': Mock.mock({
     "code": 200,
@@ -296,7 +288,7 @@ module.exports = {
       "staffs|100": [{
         code: /[0-9]{5}/,
         department: /壶关农商行|长治市分行|壶关县分行/,
-        "id|+!": 1,
+        "id|+1": 1,
         name: '@name',
         phone: /[0-9]{11}/,
         position: /董事长|总行长|职员|分行长/

@@ -20,7 +20,7 @@ const formItemLayout = {
     span: 6
   },
   wrapperCol: {
-    span: 12
+    span: 10
   }
 };
 
@@ -267,6 +267,7 @@ export const wordDataForForm = [
     field: 'branches',
     render: (
       <TreeSelect
+        getPopupContainer = { () => document.getElementById('staffDetail')}
         treeData={treeData}
         multiple={true}
       />

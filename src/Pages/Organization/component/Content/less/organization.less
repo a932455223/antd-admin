@@ -42,7 +42,7 @@
     align-items: center;
     border-bottom: 1px solid #d4d4d5;
 
-    .ant-row:before, .ant-row:after{
+    .ant-row:before, .ant-row:after {
       content: '';
     }
 
@@ -59,7 +59,7 @@
     }
   }
 
-  .content-title{
+  .content-title {
     height: 63px;
     border-bottom: 1px solid #d4d4d5;
     display: flex;
@@ -69,20 +69,20 @@
 
   }
 
-  .ant-table-thead{
+  .ant-table-thead {
 
-    th{
+    th {
       //display: block;
       background: #F4F5FA;
       border-bottom: 1px solid #d4d4d5;
     }
 
-    th:not(:last-child){
+    th:not(:last-child) {
       border-right: 1px solid #d4d4d5;
     }
   }
 
-  .ant-table-pagination{
+  .ant-table-pagination {
     width: 100%;
     background: #F4F4F4;
     margin: 0;
@@ -90,7 +90,76 @@
     float: none;
     display: flex;
     justify-content: flex-end;
+  }
 
+  .ant-card-head {
+    background: #FAFAFA;
+  }
+
+  .ant-input:focus, .ant-input:hover {
+    border-color: #7A87C6;
+  }
+
+  .ant-input:focus {
+    border-color: #7A87C6;
+    outline: 0;
+    box-shadow: 0 0 0 2px RGBA(72, 82, 158, .2);
+  }
+
+  .ant-select-selection:hover {
+    border-color: #7A87C6;
+  }
+
+  .ant-select-open .ant-select-selection {
+    border-color: #7A87C6;
+    outline: 0;
+    box-shadow: 0 0 0 2px RGBA(72, 82, 158, .2);
+  }
+
+  .ant-select-focused .ant-select-selection, .ant-select-selection:focus, .ant-select-selection:active {
+    border-color: #7A87C6;
+    outline: 0;
+    box-shadow: 0 0 0 2px RGBA(72, 82, 158, .2);
+  }
+
+  .ant-select-dropdown-menu-item:hover, .ant-select-dropdown-menu-item-active {
+    background-color: RGBA(72, 82, 158, .2);
+  }
+
+  .dock-title {
+    font-size: 18px;
+    font-weight: 600;
+
+    span{
+      font-size: 22px;
+      cursor: pointer;
+      &:hover{
+        color: #f00;
+      }
+    }
+  }
+
+  .dock-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 10px;
+    background: #F4F4F6;
+  }
+
+  .ant-input-lg,.ant-select-lg .ant-select-selection__rendered,.ant-select-lg .ant-select-selection--single{
+    height: 25px;
+  }
+
+  .ant-select-lg .ant-select-selection--multiple{
+    min-height: 25px;
+    padding-bottom: 0;
+  }
+
+  .ant-form-item-control{
+    line-height: 25px;
   }
 }
 

@@ -7,6 +7,7 @@
 
 import React, {Component} from "react";
 import {Button, Card, Col, Form, Input, Row, Select} from "antd";
+import classNames from 'classnames'
 //=================================================
 import "./less/branchesEditor.less";
 
@@ -36,8 +37,8 @@ class BranchesEditor extends Component {
 
     return (
       <Form>
-        <div className="departmentEditor">
-          <Row className="departmentEditor-title">
+        <div className={classNames('dock-container','departmentEditor')}>
+          <Row className="dock-title">
             <Col span={22}>
               详情
             </Col>

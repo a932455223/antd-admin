@@ -58,6 +58,7 @@ export default class Branches extends Component {
   }
 
   tableClick(id){
+    console.log(id);
     this.setState({
       dock: {
         visible: true,

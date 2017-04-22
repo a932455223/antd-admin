@@ -7,6 +7,7 @@
 
 import React, {Component} from "react";
 import {Button, Card, Col, DatePicker, Form, Icon, Input, Row, Select, TreeSelect, Upload} from "antd";
+import classNames from 'classnames';
 //========================================================================================================
 import FormCreator from "../FormCreator";
 import {baseDataForForm, connectDataForForm,eductionDataForForm,wordDataForForm} from "./formConf.js";
@@ -35,11 +36,11 @@ class BranchesDetail extends Component {
     const {getFieldDecorator} = this.props.form;
     return (
       <Form onSubmit={this.handleSubmit.bind(this)}>
-        <div className="staffDetail">
-          <div className="staffDetail-title">
+        <div className={classNames('dock-container','staffDetail')} id="staffDetail">
+          <div className="dock-title">
             <Row>
               <Col span={22}>
-                {this.props.id === -1 ? '添加员工' : '编辑'}
+                添加员工
               </Col>
               <Col span={2}>
             <span
@@ -65,22 +66,24 @@ class BranchesDetail extends Component {
                   </Upload>
                 </Col>
                 <Col span={15}>
-                  <FormCreator items={baseDataForForm} getFieldDecorator={getFieldDecorator}/>
+                  <FormCreator items={baseDataForForm} getFieldDecorator={getFieldDecorator} containerID="staffDetail"/>
                 </Col>
               </Row>
               <Row>
-                <FormCreator items={connectDataForForm} getFieldDecorator={getFieldDecorator}/>
+                <FormCreator items={connectDataForForm} getFieldDecorator={getFieldDecorator} containerID="staffDetail"/>
               </Row>
               <Row>
                 <h1>工作信息</h1>
-                <FormCreator items={wordDataForForm} getFieldDecorator={getFieldDecorator}/>
+                <FormCreator items={wordDataForForm} getFieldDecorator={getFieldDecorator} containerID="staffDetail"/>
 
               </Row>
               <Row>
                 <h1>教育经历</h1>
-                <FormCreator items={eductionDataForForm} getFieldDecorator={getFieldDecorator}/>
+                <FormCreator items={eductionDataForForm} getFieldDecorator={getFieldDecorator} containerID="staffDetail"/>
               </Row>
-              <Button htmlType="submit">提交</Button>
+              <Row className="submit-controller">
+                <Button htmlType="submit">提交</Button>
+              </Row>
             </div>
           </Card>
         </div>

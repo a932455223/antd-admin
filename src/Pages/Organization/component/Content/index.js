@@ -38,8 +38,7 @@ export default class Branches extends Component {
       })
   }
 
-  componentDidMount(){
-    console.log(1)
+  initTableScroll(){
     let sider = document.getElementById('organizationSider');
     let tableScroll = document.getElementsByClassName('ant-table-body')[0];
     let contentTitle = document.getElementById('contentTitle');
@@ -51,8 +50,14 @@ export default class Branches extends Component {
 
     sider.style.width = '260px';
     sider.style.flex = '0 0 260px';
+  }
 
+  componentDidMount(){
+    this.initTableScroll();
+  }
 
+  componentDidUpdate(){
+    this.initTableScroll();
   }
 
   createTree(data) {
@@ -135,13 +140,14 @@ export default class Branches extends Component {
               <Col span="2">
                 {
                   this.props.actionBarConf.parent === 'staff' &&
-                  <Button onClick={this.props.actionBarConf.newClick.bind(this, 'staff')}>新增员工</Button>
+                  <Button onClick={this.props.actionBarConf.newClick.bind(this)}>新增员工</Button>
                 }
               </Col>
             </div>
             <Table
               {...this.props.tableConf}
               onRowClick={(rowData) => {
+                console.log(rowData)
                 this.props.tableConf.rowClick(rowData.id)
               }}
               rowKey={record => record.id}
