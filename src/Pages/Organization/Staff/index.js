@@ -22,6 +22,7 @@ export default class Branches extends Component {
   state = {
     dock: {
       visible: false,
+      // children: <StaffEditor id="id" closeDock={this.closeDock.bind(this)}/>
     },
     table: {
       dataSource: []
@@ -79,7 +80,7 @@ export default class Branches extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: <StaffEditor id="id" closeDock={this.closeDock.bind(this)}/>
+        children: <StaffEditor id={id} closeDock={this.closeDock.bind(this)}/>
       }
     })
   }

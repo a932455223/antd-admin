@@ -7,6 +7,7 @@
 
 import React, {Component} from "react";
 import {Card, Col, Form, Input, Row, Select,Button} from "antd";
+import classNames from 'classnames';
 //=================================================
 import "./less/branchesDetail.less";
 
@@ -24,11 +25,10 @@ class BranchesDetail extends Component {
 
   render() {
     const {getFieldDecorator} = this.props.form;
-    console.log('aaaa',this.props)
     return (
       <Form>
-        <div className="departmentDetail">
-          <Row className="departmentDetail-title">
+        <div className={classNames('dock-container','departmentDetail')}>
+          <Row className="dock-title">
             <Col span={22}>
               {this.props.id === -1 ? '添加组织机构' : '编辑'}
             </Col>

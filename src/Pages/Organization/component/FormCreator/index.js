@@ -46,7 +46,9 @@ export default class FormCreator extends Component{
                       rules: [{required: item.required, message: item.message}],
                       initialValue: item.initialValue
                     })(
-                      <Select>
+                      <Select
+                        getPopupContainer = { () => document.getElementById(this.props.containerID)}
+                      >
                         {item.options.map( (option,index) => {
                           return <Option value={option.value} key={item.field + index}>{option.text}</Option>
                         })}
@@ -66,7 +68,7 @@ export default class FormCreator extends Component{
                       rules: [{required: item.required, message: item.message}],
                       initialValue: item.initialValue
                     })(
-                     <DatePicker/>
+                     <DatePicker getCalendarContainer = { () => document.getElementById(this.props.containerID)}/>
                     )}
                   </FormItem>
                 );

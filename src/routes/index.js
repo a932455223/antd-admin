@@ -23,7 +23,7 @@ const route = (
           cb(null, require('../Pages/Customer/MyCustomer').default)
         }, 'MyCustomer')
       }}/>
-      {/*<Route path='focused' getComponent={(location, cb) => {
+      <Route path='focused' getComponent={(location, cb) => {
         require.ensure([], () => {
           cb(null, require('../Pages/Customer/Focused').default)
         }, 'Focused')
@@ -52,7 +52,7 @@ const route = (
         require.ensure([], () => {
           cb(null, require('../Pages/Customer/All').default)
         }, 'All')
-      }}/>*/}
+      }}/>
     </Route>
 
     <Route path='system' onEnter={validate} component={App}>

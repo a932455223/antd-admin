@@ -180,7 +180,7 @@ class TablePage extends Component {
           </Button>
         </header>
 
-        <Table {...tableProps} className="myTable"/>
+        <Table {...tableProps} />
 
         <Pagination {...pageProps} />
 

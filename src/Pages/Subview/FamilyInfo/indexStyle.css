@@ -112,3 +112,10 @@
   content: ' ';
   display: none;
 }
+.families .family-add-card {
+  background-color: #fafafa;
+  color: #6a819a;
+}
+.families .family-add-card .iconfont-create {
+  color: #cfd8e2;
+}
