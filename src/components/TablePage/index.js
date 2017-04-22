@@ -58,26 +58,22 @@ class TablePage extends Component {
   // 点击某一栏，编辑客户信息
   rowClick = (info) => {
     const { dispatch, privilege } = this.props;
-    privilege.map( cPre => {
-      // 判断当前的 id是否有编辑权限
-      if(cPre.id === info.id) {
-        // 拿到当前的 permissions，再弹出弹窗
-        this.setState({
+    const mode = privilege[info.id]['system:update']  ? 'view':'edit';
+    dispatch(saveCurrentCustomerInfo(info, mode))
+    this.setState({
           dockVisible: true,
-        });
-        const mode = cPre.permissions['system:update'] ? 'view' : 'edit';
-        dispatch(saveCurrentCustomerInfo(info, mode))
-      }
-    })
-
-    // const LoadSpin = () => {
-    //   return(
-    //     <div>
-    //       <Spin />
-    //     </div>
-    //   )
-    // }
-
+    });
+    // privilege.map( cPre => {
+    //   // 判断当前的 id是否有编辑权限
+    //   if(cPre.id === info.id) {
+    //     // 拿到当前的 permissions，再弹出弹窗
+    //     this.setState({
+    //       dockVisible: true,
+    //     });
+    //     const mode = cPre.permissions['system:update'] ? 'view' : 'edit';
+    //     dispatch(saveCurrentCustomerInfo(info, mode))
+    //   }
+    // })
 
     // const { dispatch, editDock } = this.props;
     // dispatch(showEditDock(true, info.id));
@@ -235,7 +231,6 @@ class TablePage extends Component {
   }
 }
 
-// export default TablePage;
 
 const mapStateToProps = (store) => {
   return {

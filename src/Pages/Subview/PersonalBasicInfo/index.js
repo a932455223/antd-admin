@@ -54,7 +54,7 @@ class AddNewRecordForm extends Component {
     };
 
     return (
-      <Card  title={<span>
+      <Card id="maintainRecord"  title={<span>
                       <Icon type="plus-circle-o" />新增维护记录
                     </span>}>
         <Form>
@@ -70,7 +70,10 @@ class AddNewRecordForm extends Component {
                   }],
                   onChange: this.selectChange
                 })(
-                  <Select placeholder="请选择切入类型">
+                  <Select
+                    placeholder="请选择切入类型"
+                    getPopupContainer={() => document.getElementById('maintainRecord')}
+                    >
                     <Option value="deadline">产品到期提醒</Option>
                     <Option value="upgrade">产品升级</Option>
                     <Option value="activate">产品激活</Option>
@@ -90,7 +93,10 @@ class AddNewRecordForm extends Component {
                   }],
                   onChange: this.selectChange
                 })(
-                  <Select placeholder="请选择维护方式">
+                  <Select
+                     placeholder="请选择维护方式"
+                     getPopupContainer={() => document.getElementById('maintainRecord')}
+                  >
                     <Option value="mobile">手机</Option>
                     <Option value="wechat">微信</Option>
                     <Option value="message">短信</Option>
@@ -106,7 +112,10 @@ class AddNewRecordForm extends Component {
                 {getFieldDecorator('maintainDate', {
                   onChange: this.dateChange
                 })(
-                  <DatePicker onChange={this.onChange} />
+                  <DatePicker
+                    onChange={this.onChange}
+                    getCalendarContainer={() => document.getElementById('mybase')}
+                    />
                 )}
               </FormItem>
             </Col>
@@ -349,7 +358,7 @@ class BasicInfoEdit extends Component{
     });
 
     return (
-        <Form className="basicinfolist">
+        <Form id="mybase" className="basicinfolist">
           <Row className={currentId === -1 ? "briefinfocreate" : "briefinfoedit"} >
             <Col span={8}>
               <FormItem labelCol={{span: 8}}
@@ -368,10 +377,11 @@ class BasicInfoEdit extends Component{
                       placeholder="选择机构"
                       optionFilterProp="children"
                       filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                      getPopupContainer={() => document.getElementById('mybase')}
                     >
-                      <Option value="jack">支行1</Option>
-                      <Option value="lucy">支行2</Option>
-                      <Option value="tom">支行3</Option>
+                      <Option value="jack">支行ab</Option>
+                      <Option value="lucy">支行abc</Option>
+                      <Option value="tom">支行abcd</Option>
                     </Select>
                 )}
               </FormItem>
@@ -390,6 +400,7 @@ class BasicInfoEdit extends Component{
                     placeholder="选择机构"
                     optionFilterProp="children"
                     filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    getPopupContainer={() => document.getElementById('mybase')}
                   >
                     <Option value="jack">支行1</Option>
                     <Option value="lucy">支行2</Option>
@@ -412,6 +423,8 @@ class BasicInfoEdit extends Component{
                     placeholder="选择机构"
                     optionFilterProp="children"
                     filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    getPopupContainer={() => document.getElementById('mybase')}
+
                   >
                     <Option value="jack">支行1</Option>
                     <Option value="lucy">支行2</Option>

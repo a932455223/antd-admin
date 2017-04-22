@@ -53,9 +53,8 @@ export default class MyCustomer extends Component {
         let permission = customers.map((cstm) => ({customerId:cstm.id,permission:['system:update']}))
         axios.post(API.POST_CUSTOMER_PRIVILEGE,permission)
         .then((rest) => {
-            let hasPermission = rest.data.data;
             this.setState({
-                privilege: hasPermission
+                privilege: rest.data.data.map(item => ({[item.id]:item.permissions}))
             })
         })
     })

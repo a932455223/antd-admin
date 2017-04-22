@@ -425,7 +425,7 @@ class CustomerSlider extends Component {
     const { visible, currentCustomer } = this.props;
 
     return(
-      <div>
+      <div id="rightSlider">
         <div className={styles.header}>
           <span>{currentCustomer.name}</span>
           <span>{currentCustomer.id}</span>
