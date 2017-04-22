@@ -23,9 +23,7 @@ const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
 import './indexStyle.less';
-function info(msg){
-    console.log('%c'+msg,'color:red')
-}
+// import { BasicInfoListsEdit, BasicInfoListsRead }  from './basicInfoLists';
 
 // 新增维护记录
 class AddNewRecordForm extends Component {
@@ -173,6 +171,7 @@ class MaintainRecord extends Component {
                 <p>2015-09-01</p>
                 <p>14:02:20</p>
               </div>
+
 
               <div className="">
                 <header>
@@ -575,7 +574,10 @@ class BasicInfo extends Component {
     })
   }
 
-
+  componentWillReceiveProps(next) {
+    // console.log(this.props);
+    // console.log(next);
+  }
 
   render() {
     const modal = {

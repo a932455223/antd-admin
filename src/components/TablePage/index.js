@@ -23,7 +23,8 @@ class TablePage extends Component {
   };
 
   componentWillMount() {
-    console.log('TablePage: will mount ');
+    console.log('%c/ TablePage /_____will mount', 'color: red');
+
     // 异步加载 edit component
     require.ensure([],() => {
       let CustomerSlider = require('../../Pages/Subview/CustomerSlider').default;
@@ -62,6 +63,7 @@ class TablePage extends Component {
     dispatch(saveCurrentCustomerInfo(info, mode))
     this.setState({
           dockVisible: true,
+// <<<<<<< HEAD
     });
     // privilege.map( cPre => {
     //   // 判断当前的 id是否有编辑权限
@@ -96,6 +98,13 @@ class TablePage extends Component {
     //     })
     //   }, 300)
     // }, 'CustomerSlider');
+// =======
+//         });
+//         const mode = cPre.permissions['system:update'] ? 'view' : 'edit';
+//         dispatch(saveCurrentCustomerInfo(info, mode))
+//       }
+//     })
+// >>>>>>> 09a7c63f83e498e209c3aa67b9a6ad89dd7b49e7
   }
 
   // close slider
@@ -138,12 +147,6 @@ class TablePage extends Component {
 
   render(){
     const { columns, dataSource, loading, pagination } = this.props;
-    // // table 的选择框
-    // const rowSelection = {
-    //   onChange: this.onSelectChange,
-    // };
-
-    // console.log(this.props.currentCustomer);
 
     // table props lists
     const tableProps = {
