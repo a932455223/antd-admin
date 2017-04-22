@@ -534,14 +534,6 @@ class BasicInfo extends Component {
       })
   }
 
-  onHandleSubmit(){
-    const {getFieldsValue} = this.props.form;
-    getFieldsValue();
-    // this.setState({
-    //   mode:"edit"
-    // })
-  }
-
   // modal Show
   modalShow = () => {
     this.setState({
@@ -556,11 +548,11 @@ class BasicInfo extends Component {
     })
   }
 
-  handleChange(){
-    this.setState({
-      edited:true
-    })
-  }
+  // handleChange(){
+  //   this.setState({
+  //     edited:true
+  //   })
+  // }
 
 
 
@@ -581,8 +573,7 @@ class BasicInfo extends Component {
           { mode !== "view" && <BasicInfoListsEdit
                                   currentId={this.props.currentId}
                                   eachCustomerInfo={this.state.eachCustomerInfo}
-                                  edited={this.state.edited}
-                                  inputChange={this.handleChange.bind(this)}/>}
+                                  />}
 
           { mode === "view" && <BasicInfoListsRead />}
         </div>
@@ -608,6 +599,7 @@ class BasicInfo extends Component {
 
 
 const mapStateToProps = (store) => {
+  console.log(store)
   return {
     currentCustomerInfo: store.customer.currentCustomerInfo
   }
