@@ -17,9 +17,15 @@ export default {
 
 
   GET_CUSTOMER_BASE: id =>  `/asd/customer/${id}/base`,
-  
+
   //=======================================
 
   //==================================================================
 
+
+  // 组织机构详情列表
+  GET_DEPARTMENTS: '/asd/departments',
+
+  // 组织机构员工列表
+  GET_STAFFS: '/asd/staffs'
 }

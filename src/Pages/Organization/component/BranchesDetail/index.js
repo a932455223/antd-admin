@@ -45,7 +45,7 @@ class BranchesDetail extends Component {
             title={(
               <Row>
                 <Col span="18">
-                  <h3>编辑</h3>
+                  <h3>添加组织机构</h3>
                 </Col>
                 <Col span="3">
                   <Button>取消</Button>
@@ -95,7 +95,6 @@ class BranchesDetail extends Component {
                 })(
                   <Select
                     placeholder="Please select a country"
-                    defaultValue="china"
                   >
                     <Option value="china">China</Option>
                     <Option value="use">U.S.A</Option>
@@ -114,7 +113,6 @@ class BranchesDetail extends Component {
                 })(
                   <Select
                     placeholder="Please select a country"
-                    defaultValue="china"
                   >
                     <Option value="china">China</Option>
                     <Option value="use">U.S.A</Option>
@@ -135,7 +133,6 @@ class BranchesDetail extends Component {
                     <Col span="8">
                       <Select
                         placeholder="Please select a country"
-                        defaultValue="china"
                       >
                         <Option value="china">China</Option>
                         <Option value="use">U.S.A</Option>
@@ -144,7 +141,6 @@ class BranchesDetail extends Component {
                     <Col span="8">
                       <Select
                         placeholder="Please select a country"
-                        defaultValue="china"
                       >
                         <Option value="china">China</Option>
                         <Option value="use">U.S.A</Option>
@@ -153,7 +149,6 @@ class BranchesDetail extends Component {
                     <Col span="8">
                       <Select
                         placeholder="Please select a country"
-                        defaultValue="china"
                       >
                         <Option value="china">China</Option>
                         <Option value="use">U.S.A</Option>

@@ -6,24 +6,44 @@
  */
 
 
-
 import React, {Component} from "react";
+import axios from "axios";
+import {Button} from "antd";
 //========================================
-import Container from "../component/Container";
+import StaffDetail from "../component/StaffDetail";
+import StaffEditor from '../component/StaffEditor';
 import BranchesDetail from '../component/BranchesDetail';
+//==================================================
+import Content from "../component/Content";
+import API from "../../../../API";
 
 
 export default class Branches extends Component {
   state = {
     dock: {
-      visible: false
+      visible: false,
+    },
+    table: {
+      dataSource: []
     }
   };
+
+  componentWillMount() {
+    axios.get(API.GET_STAFFS)
+      .then(res => {
+        this.setState({
+          table: {
+            dataSource: res.data.data.staffs
+          }
+        });
+        console.log(res.data.data.staffs)
+      })
+  }
 
   closeDock() {
     this.setState({
       dock: {
-        visible: false
+        visible: false,
       }
     })
   }
@@ -32,41 +52,69 @@ export default class Branches extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: <BranchesDetail closeDock={this.closeDock.bind(this)} id={id}/>
+        children: <StaffDetail closeDock={this.closeDock.bind(this)} id={id}/>
       }
     })
   }
+
+  newClick(target){
+    if(target === 'department'){
+      this.setState({
+        dock: {
+          visible: true,
+          children: <BranchesDetail id="-1" closeDock={this.closeDock.bind(this)} />
+        }
+      })
+    }else {
+      this.setState({
+        dock: {
+          visible: true,
+          children: <StaffDetail id="-1" closeDock={this.closeDock.bind(this)} />
+        }
+      })
+    }
+  }
+
+  tableClick(id) {
+    this.setState({
+      dock: {
+        visible: true,
+        children: <StaffEditor id="id" closeDock={this.closeDock.bind(this)}/>
+      }
+    })
+  }
+
 
   render() {
     const columns = [
       {
         title: '员工姓名',
-        dataIndex: 'clientName',
-        key: 'clientName',
+        dataIndex: 'name',
+        key: 'name',
         width: '20%'
       },
       {
         title: '员工工号',
-        dataIndex: 'customCount',
-        key: 'customCount',
+        dataIndex: 'code',
+        key: 'code',
         width: '16%'
       },
       {
         title: '所属组织',
-        dataIndex: 'branches',
-        key: 'branches',
+        dataIndex: 'department',
+        key: 'department',
         width: '16%'
       },
       {
         title: '职务',
-        dataIndex: 'duty',
-        key: 'duty',
+        dataIndex: 'position',
+        key: 'position',
         width: '16%'
       },
       {
         title: '联系方式',
-        dataIndex: 'contact',
-        key: 'contact',
+        dataIndex: 'phone',
+        key: 'phone',
         width: '16%'
       },
       {
@@ -86,7 +134,7 @@ export default class Branches extends Component {
 
     const actionBarConf = {
       parent: 'staff',
-      newClick: this.showDock.bind(this),
+      newClick: this.newClick.bind(this),
     };
 
     const dockConf = {
@@ -96,9 +144,11 @@ export default class Branches extends Component {
     };
 
     const tableConf = {
-      columns: columns
+      columns: columns,
+      dataSource: this.state.table.dataSource,
+      rowClick: this.tableClick.bind(this)
     };
 
-    return <Container actionBarConf={actionBarConf} dockConf={dockConf} tableConf={tableConf}/>
+    return <Content actionBarConf={actionBarConf} dockConf={dockConf} tableConf={tableConf}/>
   }
 }

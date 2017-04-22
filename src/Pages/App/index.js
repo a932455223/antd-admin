@@ -17,13 +17,11 @@ import './App.less'
               <Header />
               <Layout>
                 <SiderBar/>
-                <Layout style={{ padding: '0 24px 24px' }}>
+                <Layout>
                     <Content style={{display: 'flex'}}>
                         {this.props.children}
                     </Content>
-                    <Footer style={{ textAlign: 'center' }}>
-                      Antd demo ©2017 Created by Yeapoo Front-end
-                    </Footer>
+
                 </Layout>
              </Layout>
         </Layout>
