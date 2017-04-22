@@ -12,6 +12,9 @@ import Droplist from '../../../components/DropdownList';
 import './less/myCustomerStyle.less';
 import './indexStyle.less';
 
+import queryString from 'query-string'
+
+
 export default class MyCustomer extends Component {
   state = {
     loading: true,
@@ -38,27 +41,29 @@ export default class MyCustomer extends Component {
       }
     })
 
+      this.getCustomers();
+  }
 
-    // 请求列表数据
-    axios.get(API.GET_CUSTOMERS)
-    .then((json) => {
-        // 将数据存入私有的 state中
-        this.setState({
-          loading: false,
-          customers: json.data.data.customers || [],
-          pagination: json.data.pagination
-        })
-        return json.data.data.customers || []
-    })
-    .then((customers) => {
-        let permission = customers.map((cstm) => ({customerId:cstm.id,permission:['system:update']}))
-        axios.post(API.POST_CUSTOMER_PRIVILEGE,permission)
-        .then((rest) => {
-            this.setState({
-                privilege: rest.data.data.map(item => ({[item.id]:item.permissions}))
-            })
-        })
-    })
+  getCustomers = (params) => {
+      axios.get(API.GET_CUSTOMERS+'?'+queryString.stringify(params||{page:1}))
+          .then((json) => {
+              // 将数据存入私有的 state中
+              this.setState({
+                  loading: false,
+                  customers: json.data.data.customers || [],
+                  pagination: json.data.pagination
+              })
+              return json.data.data.customers || []
+          })
+          .then((customers) => {
+              let permission = customers.map((cstm) => ({customerId:cstm.id,permission:['system:update']}))
+              axios.post(API.POST_CUSTOMER_PRIVILEGE,permission)
+                  .then((rest) => {
+                      this.setState({
+                          privilege: rest.data.data.map(item => ({[item.id]:item.permissions}))
+                      })
+                  })
+          })
   }
 
   // 关注客户／取消关注
@@ -140,7 +145,15 @@ export default class MyCustomer extends Component {
       dataSource: customers,
       pagination: pagination,
       loading: loading,
-      privilege: privilege
+      privilege: privilege,
+      pageChange:(pageNumber) => {
+          this.setState({
+              ...this.state,
+              loading:true
+          })
+
+          this.getCustomers({page:pageNumber});
+      }
     };
     return (
       <div className="customer">

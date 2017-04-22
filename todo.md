@@ -84,5 +84,8 @@ connect()
 
 日期：4-21
 
-1.mock数据不符合预期
 2.customerSlider 里的ensure加载 为什么要setTimeout.
+
+3.取消按钮
+
+4.列表页面，关注按钮样式 @魏鸣

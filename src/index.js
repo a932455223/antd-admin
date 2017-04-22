@@ -7,11 +7,10 @@
 // import "babel-polyfill";
 import React from 'react';
 import {render} from  'react-dom';
-// import Root from './containers/Root.dev';
-// import configStores from './redux/store'
-// const store = configStores();
+import Root from './containers/Root.dev';
+import configStores from './redux/store'
+const store = configStores();
 
 import S from './components/SelectStaff'
-render(<S/>,document.getElementById('root'));
-// render(<Root store= {store}/>,document.getElementById('root'));
-
+// render(<S/>,document.getElementById('root'));
+render(<Root store= {store}/>,document.getElementById('root'));

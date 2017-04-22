@@ -46,15 +46,6 @@ class TablePage extends Component {
     });
   }
 
-  // 分页
-  pageShowSizeChange = (current, pageSize) => {
-    // console.log(current, pageSize);
-  }
-
-  // 页面快速跳转
-  pageChange = (pageNumber) => {
-    console.log('Page: ', pageNumber);
-  };
 
   // 点击某一栏，编辑客户信息
   rowClick = (info) => {
@@ -129,14 +120,11 @@ class TablePage extends Component {
     // page props lists
     const pageProps = {
       defaultCurrent: 1,
-      total: pagination.count ? pagination.count : 0,
-      // pageSize: pagination.size ? pagination.size : 10,
-      showSizeChanger: true,
+      total: pagination.count,
+    //   showSizeChanger: true,
       pageSizeOptions: [`${pagination.size}`],
-      // onShowSizeChange: this.pageShowSizeChange,
       showQuickJumper: true,
-      onChange: this.pageChange,
-      // showTotal: total => `Total ${total} items`,
+      onChange: this.props.pageChange,
       // simple: true,
       showTotal: (total, range) => `共${total}条`
     }
