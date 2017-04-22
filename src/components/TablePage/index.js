@@ -230,7 +230,7 @@ class TablePage extends Component {
           </Button>
         </header>
 
-        <Table {...tableProps} />
+        <Table {...tableProps} className="myTable"/>
 
         <Pagination {...pageProps} />
 
