@@ -77,33 +77,34 @@ const Option = Select.Option;
 // const addContent = Form.create()(addContentForm);
 
 export class AddContentForm extends Component{
-  state={
-    isAdd:true,
+
+  static propTypes={
     addData:{
-      '':'',
-      '':'',
-      '':'',
-      '':'',
-      '':''
+      "certificate": " ",
+      "id": "",
+      "jobCategory": "",
+      "name": "",
+      "phone": "",
+      "relation": ""
     }
   }
-  constructor(props) {
-    super(props);
-    this.toggleAdd = this.toggleAdd.bind(this);
-  };
+
+  state={
+    isAdd:false,
+  }
+
   //增加按钮和表单切换
-  toggleAdd(){
+  toggleAdd = () => {
     this.setState({
       isAdd:!this.state.isAdd
     });
   }
-  componentWillMount(){
+  componentWillReceiveProps(){
     this.setState({
       // length
       // addData:this.props.parentState.editFamilyList[length-1]
     })
-    console.log("listttt",this.state.addData);
-
+    console.log("listttt",this.props.relation);
   }
   render(){
     if(this.state.isAdd){
@@ -113,11 +114,12 @@ export class AddContentForm extends Component{
           className="family-card family-card-modify"
           title={
             <div className="my-card-title">
-              {/*<Input
+              <Input
                 prefix={<i className="iconfont icon-customer1"></i>}
                 type="text"
-              />*/}
-              新建家庭关系
+                ref='name'
+                placeholder='请输入姓名'
+              />
               <span
                 className="cancel-btn"
                 onClick={()=>{this.toggleAdd()}}
@@ -135,36 +137,23 @@ export class AddContentForm extends Component{
         >
             <Row>
                 <Col span={8}>
-                  <span>姓名</span>
-                </Col>
-                <Col span={16}>
-                  {/*<Input
-                    type="text"
-                    value={this.state.editFamilyList[this.state.editFamilyList.length-1].name}
-                    onChange={(e) => { this.changeFamilyValue(this.state.editFamilyList.length-1, 'name', e.target.value) }}
-                  />
-                  {/*<Input
-                    type="text"
-                    value={this.state.editFamilyList[2].name}
-
-                  />*/}
-                  {/*{this.state.editFamilyList[2].name}*/}
-                </Col>
-              </Row>
-            <Row>
-                <Col span={8}>
                   <span>关系：</span>
                 </Col>
                 <Col span={16}>
-                  {/*<Select>
+                  <Select
+                    getPopupContainer={() => document.getElementsByClassName('families')[0]}
+                    defaultValue='请选择关系'
+                  >
                     {
-                      this.state.relation.map((rel) => {
+
+                      this.props.relation.map((rel) => {
+                        console.log(rel.name);
                         return (
                           <Option value={rel.name} key={rel.key}>{rel.name}</Option >
                         )
                       })
                     }
-                  </Select>*/}
+                  </Select>
                 </Col>
               </Row>
               <Row>
@@ -172,6 +161,7 @@ export class AddContentForm extends Component{
                   <span>联系方式：</span>
                 </Col>
                 <Col span={16}>
+                  <Input type="text" ref='phone' placeholder='请输入联系方式'></Input>
                 </Col>
               </Row>
               <Row>
@@ -179,6 +169,7 @@ export class AddContentForm extends Component{
                   <span>身份证号：</span>
                 </Col>
                 <Col span={16}>
+                  <Input type="text" ref='certificate'placeholder='请输入身份证号'></Input>
                 </Col>
               </Row>
               <Row>
@@ -186,15 +177,18 @@ export class AddContentForm extends Component{
                   <span>工作属性：</span>
                 </Col>
                 <Col span={16}>
-                  {/*<Select >
+                  <Select
+                    getPopupContainer={() => document.getElementsByClassName('families')[0]}
+                    defaultValue='请选工作属性'
+                  >
                     {
-                      this.state.jobCategory.map((job) => {
+                      this.props.jobCategory.map((job) => {
                         return (
                           <Option value={job.name} key={job.key}>{job.name}</Option >
                         )
                       })
                     }
-                  </Select>*/}
+                  </Select>
                 </Col>
               </Row>
         </Card>
@@ -202,8 +196,8 @@ export class AddContentForm extends Component{
     }else{
       return(
         //add按钮
-        <Card  className="family-card addCard" onClick={()=>{this.toggleAdd()}}>
-          <i className="iconfont icon-create"></i>
+        <Card  className="family-card family-add-card">
+          <i className="iconfont icon-create"  onClick={()=>{this.toggleAdd()}}></i>
           <p>新建家庭关系</p>
         </Card>
       )
@@ -436,7 +430,12 @@ class FamilyInfo extends Component {
                         <span>关系：</span>
                       </Col>
                       <Col span={16}>
-                        <Select defaultValue={item.relation} onChange={(value) => { this.changeFamilyValue(i, 'relation', value) }}>
+                        <Select
+                          defaultValue={item.relation}
+                          onChange=
+                            {(value) => { this.changeFamilyValue(i, 'relation', value) }}
+                          getPopupContainer={() => document.getElementsByClassName('families')[0]}
+                        >
                           {
                             this.state.relation.map((rel) => {
                               return (
@@ -468,7 +467,9 @@ class FamilyInfo extends Component {
                         <span>工作属性：</span>
                       </Col>
                       <Col span={16}>
-                        <Select defaultValue={item.jobCategory} onChange={(value) => { this.changeFamilyValue(i, 'jobCategory', value) }}>
+                        <Select defaultValue={item.jobCategory} onChange={(value) => { this.changeFamilyValue(i, 'jobCategory', value) }}
+                          getPopupContainer={() => document.getElementsByClassName('families')[0]}
+                        >
                           {
                             this.state.jobCategory.map((job) => {
                               return (
@@ -486,7 +487,7 @@ class FamilyInfo extends Component {
           })
 
         }
-        <AddContentForm  />
+        <AddContentForm  relation={this.state.relation} jobCategory={this.state.jobCategory}/>
       </div>
     )
   }
