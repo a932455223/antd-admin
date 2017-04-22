@@ -62,49 +62,8 @@ class TablePage extends Component {
     const mode = privilege[info.id]['system:update']  ? 'view':'edit';
     dispatch(saveCurrentCustomerInfo(info, mode))
     this.setState({
-          dockVisible: true,
-// <<<<<<< HEAD
+        dockVisible: true,
     });
-    // privilege.map( cPre => {
-    //   // 判断当前的 id是否有编辑权限
-    //   if(cPre.id === info.id) {
-    //     // 拿到当前的 permissions，再弹出弹窗
-    //     this.setState({
-    //       dockVisible: true,
-    //     });
-    //     const mode = cPre.permissions['system:update'] ? 'view' : 'edit';
-    //     dispatch(saveCurrentCustomerInfo(info, mode))
-    //   }
-    // })
-
-    // const { dispatch, editDock } = this.props;
-    // dispatch(showEditDock(true, info.id));
-
-    // 判断被点击的 row和当前的 currentId是否相同，若不相同，则请求加载数据
-    // if(info.id !== this.state.currentId) {
-    //   this.setState({
-    //     CustomerSlider: LoadSpin
-    //   })
-    // }
-    //
-    // // 异步加载 edit component
-    // require.ensure([],() => {
-    //   let editMyCustomer = require('../../Pages/Subview/CustomerSlider').default;
-    //
-    //   setTimeout(() => {
-    //     this.setState({
-    //       CustomerSlider: editMyCustomer,
-    //       currentId: info.id
-    //     })
-    //   }, 300)
-    // }, 'CustomerSlider');
-// =======
-//         });
-//         const mode = cPre.permissions['system:update'] ? 'view' : 'edit';
-//         dispatch(saveCurrentCustomerInfo(info, mode))
-//       }
-//     })
-// >>>>>>> 09a7c63f83e498e209c3aa67b9a6ad89dd7b49e7
   }
 
   // close slider
@@ -184,12 +143,13 @@ class TablePage extends Component {
 
     // dock props lists
     const dockProps = {
+      className: 'slider',
       isVisible: this.state.dockVisible,
       position: "right", // 位置
       dimMode: "none", // 遮罩层
       dockStyle: {
         backgroundColor: '#f4f5f6',
-        padding: '20px 0px',
+        padding: '13px 0px',
         textAlign: 'center',
         // top: 64
       }, // 背景
@@ -224,11 +184,13 @@ class TablePage extends Component {
 
         <Pagination {...pageProps} />
 
-        <Dock {...dockProps}>
-          {this.state.CustomerSlider &&
-            <this.state.CustomerSlider {...sliderProps}/>
-          }
-        </Dock>
+        <div className="slider">
+          <Dock {...dockProps}>
+            {this.state.CustomerSlider &&
+              <this.state.CustomerSlider {...sliderProps}/>
+            }
+          </Dock>
+        </div>
       </div>
     )
   }

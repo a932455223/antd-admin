@@ -17,6 +17,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 
 import styles from './indexStyle.scss';
+import './indexStyle.less';
 import { fillCustomerInfo } from '../../../redux/actions/customerAction';
 
 class NewCustomer extends Component {
@@ -254,7 +255,7 @@ class CustomerSlider extends Component {
     const { personalClient } = this.state;
 
     const tabsProps = {
-      className: styles.tabs,
+      className: 'customer-tabs',
       activeKey: this.state.activePersonalTabs,
       onChange: this.personalTabChange
     }
@@ -316,7 +317,7 @@ class CustomerSlider extends Component {
 
     // tabs props
     const tabsProps = {
-      className: styles.tabs,
+      className: 'customer-tabs',
       activeKey: this.state.activeEnterpriseTabs,
       onChange: this.enterpriseTabChange,
     }
@@ -357,30 +358,36 @@ class CustomerSlider extends Component {
     return(
       <div id="rightSlider">
         <div className={styles.header}>
-          <span>{currentCustomerInfo.name}</span>
-          <span>{currentCustomerInfo.id}</span>
+          <div>
+            <div className={styles.img}>
+              <i className="iconfont icon-customer1"></i>
+            </div>
+            <span className={styles.name}>{currentCustomerInfo.name}</span>
+          </div>
 
-          <Row className={styles.options}>
-            <Col span={6}>
+          {/*
+            <span>{currentCustomerInfo.id}</span>
+          */}
+
+          <div className={styles.options}>
+            <span>
               <Icon type="star-o" />
-              <span className="nav-text">关注</span>
-            </Col>
-            <Col span={6}>
+              <span>关注</span>
+            </span>
+            <span>
               <Icon type="bell" />
-              <span className="nav-text">提醒</span>
-            </Col>
-            <Col span={6}>
+              <span>提醒</span>
+            </span>
+            <span>
               <Icon type="ellipsis" />
-              <span className="nav-text">更多</span>
-            </Col>
-            <Col span={6}>
-              <Icon
-                className={styles.icon}
-                onClick={this.openNotification}
-                type="close"
-              />
-            </Col>
-          </Row>
+              <span>更多</span>
+            </span>
+            <Icon
+              className={styles.icon}
+              onClick={this.openNotification}
+              type="close"
+            />
+          </div>
         </div>
 
         {currentCustomerInfo.category && currentCustomerInfo.category == '个人客户'

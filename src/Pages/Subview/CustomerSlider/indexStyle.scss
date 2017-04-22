@@ -3,33 +3,66 @@
   align-items: center;
   justify-content: space-between;
 
-  padding: 0 20px 10px 20px;
+  padding: 0 18px 10px 18px;
   font-size: 16px;
   // text-align: left;
+
+  > div {
+    .img {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 34px;
+      height: 34px;
+      background-color: #d2d2d2;
+      border-radius: 17px;
+    }
+
+    .name {
+      margin-left: 13px;
+      font-size: 16px;
+    	font-weight: 600;
+    	color: #1b2432;
+    }
+  }
 }
 
 .options {
-  display: inline-block;
-  width: 240px;
+  display: inline-flex;
+  // width: 240px;
+  align-items: center;
+  height: 34px;
 
-  font-size: 12px;
+  font-size: 14px;
   text-align: right;
 
-  span {
-    margin-left: 5px;
+  > span {
+    margin-right: 25px;
+
+    // width: 28px;
+  	height: 20px;
+  	font-family: PingFangSC;
+  	font-size: 14px;
+  	font-weight: 500;
+  	color: #6a819a;
+    
+    >i {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    > span {
+      margin-left: 6px;
+    }
   }
 
   .icon {
     text-align: center;
     vertical-align: middle;
-    font-size: 20px;
+    font-size: 24px;
 
     cursor: pointer;
   }
-}
-
-.tabs {
-  padding: 0 20px;
 }
 
 .card {

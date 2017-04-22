@@ -118,17 +118,19 @@ class Droplist extends React.Component {
       	</div>
 
         <div className={style.select}>
-          <span>客户类型</span>
-          {selectedTags && selectedTags.map(tag =>
-            <Tag
-              className={style.selecttag}
-              key={tag}
-              closable
-              afterClose={() => this.handleClose(tag)}
-            >
-              {tag}
-            </Tag>)
-          }
+          <span>
+            <span>客户类型：</span>
+            {selectedTags && selectedTags.map(tag =>
+              <Tag
+                className={style.selecttag}
+                key={tag}
+                closable
+                afterClose={() => this.handleClose(tag)}
+              >
+                {tag}
+              </Tag>)
+            }
+          </span>
         </div>
       </div>
 		)
