@@ -253,5 +253,4 @@ class BranchesEditor extends Component {
 
 }
 
-
 export default Form.create()(BranchesEditor)
