@@ -165,6 +165,7 @@ class MaintainRecord extends Component {
                 <p>2015-09-01</p>
                 <p>14:02:20</p>
               </div>
+              
 
               <div className="">
                 <header>
