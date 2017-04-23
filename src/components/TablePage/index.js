@@ -125,7 +125,7 @@ class TablePage extends Component {
       total: pagination.count,
     //   showSizeChanger: true,
       pageSizeOptions: [`${pagination.size}`],
-      showQuickJumper: true,
+      // showQuickJumper: true,
       onChange: this.props.pageChange,
       // simple: true,
       showTotal: (total, range) => `共${total}条`
