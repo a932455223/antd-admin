@@ -8,7 +8,7 @@ import axios from 'axios';
 import API from '../../../../API';
 
 import TablePage from '../../../components/TablePage';
-import Droplist from '../../../components/DropdownList';
+import CustomerFilter from '../../../components/CustomerFilter';
 import './less/myCustomerStyle.less';
 import './indexStyle.less';
 
@@ -70,7 +70,6 @@ export default class MyCustomer extends Component {
   customerFocus = (id, e) => {
     e.stopPropagation(); // 阻止事件冒泡
     // 拿到用户的 id，发送请求，取消关注／关注
-    console.log(id);
   }
 
 
@@ -122,16 +121,16 @@ export default class MyCustomer extends Component {
         render: customer => (
           <div className='attention'>
             <p>{customer.department}</p>
-            {customer.attention && customer.attention === true
+            {customer.attention
               ?
+                <a href="#" onClick={this.customerFocus.bind(this, customer.id)}>
+                    <Icon type="heart-o" />
+                    <span>取消关注</span>
+                </a>
+                :
               <a href="#" onClick={this.customerFocus.bind(this, customer.id)}>
                 <Icon type="heart" />
                 <span>关注</span>
-              </a>
-              :
-              <a href="#" onClick={this.customerFocus.bind(this, customer.id)}>
-                <Icon type="heart-o" />
-                <span>取消关注</span>
               </a>
             }
           </div>
@@ -158,7 +157,9 @@ export default class MyCustomer extends Component {
     return (
       <div className="customer">
         <div>
-          <Droplist />
+          <CustomerFilter onChange={(filters)=>{
+
+          }} />
           <TablePage {...myCustomerProps}/>
         </div>
       </div>

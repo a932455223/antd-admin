@@ -295,7 +295,16 @@ module.exports = {
       }]
     },
     message: 'some message'
-  })
+  }),
+    'GET /asd/customersFilters': Mock.mock({
+        code: 200,
+        data: {
+            category:[{text:'企业客户',id:1},{text:'私人客户',id:2}],
+            level:[{text:'普通客户',id:1},{text:'VIP1',id:2},{text:'VIP2',id:3}],
+            risk:[{text:'保守型',id:1},{text:'稳健型',id:2}]
+        },
+        message: 'some message'
+    })
 };
 
 
