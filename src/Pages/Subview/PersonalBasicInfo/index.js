@@ -50,15 +50,12 @@ class AddNewRecordForm extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const formItemLayout = {
-      labelCol: {span: 3},
-      wrapperCol: {span: 9}
-    };
-
     return (
       <Card id="maintainRecord"  title={<span>
                       <Icon type="plus-circle-o" />新增维护记录
-                    </span>}>
+                    </span>}
+            className="addrecord"
+                    >
         <Form>
           <Row>
             <Col span={12}>
@@ -263,8 +260,14 @@ class AddCrewModal extends Component {
 //个人信息表单................
 let addkey = 100;
 class BasicInfoEdit extends Component{
- 
-
+  state = {
+    tags : []
+  } 
+  componentWillReceiveProps(next) {
+     this.setState({
+        tags:next.eachCustomerInfo.joiner
+      })
+  }
   inputChange = () => {
     
   }
@@ -273,20 +276,18 @@ class BasicInfoEdit extends Component{
     const { form } = this.props;
     // can use data-binding to get
     const keys = form.getFieldValue('keys');
-    // We need at least one passenger
     if (keys.length === 1) {
       return;
     }
 
     // can use data-binding to set
     form.setFieldsValue({
-      keys: keys.filter(key => key !== k),
+      keys: keys.filter(key => key !== k)
     });
   }
 
   add = () => {
     const { form } = this.props;
-    // can use data-binding to get
     const keys = form.getFieldValue('keys');
     const {eachCustomerInfo} = this.props;
     const nextKeys = keys.concat(`row-${addkey++}`);
@@ -294,7 +295,9 @@ class BasicInfoEdit extends Component{
       keys: nextKeys,
     });
   }
+  handleClose = () => {
 
+  }
   render() {
     const {eachCustomerInfo, edited, currentId, createCustomerSuccess} = this.props;
     console.log(eachCustomerInfo);
@@ -311,21 +314,20 @@ class BasicInfoEdit extends Component{
     const keys = getFieldValue('keys');
     const formItemLayout = {
       labelCol: {
-        sm: { span: 7 }
+        sm: { span: 8 }
       },
       wrapperCol: {
-        sm: { span: 16 },
+        sm: { span: 15 },
       },
     };
     const formItemLayoutWithOutLabel = {
       wrapperCol: {
-        sm: { span: 16, offset: 7 },
+        sm: { span: 15, offset: 8 },
       },
     };
     const formItems = () => {
       var len = eachCustomerInfo.account && eachCustomerInfo.account.length;
-      var formItemArray = keys.map((k, index) => {
-      console.log(k,index,len);    
+      var formItemArray = keys.map((k, index) => {   
         return (
           <Row>
             <Col span={12}>
@@ -348,7 +350,7 @@ class BasicInfoEdit extends Component{
             </Col>
             <Col span={12} className="addmessage">
                 <FormItem
-                  wrapperCol={{span: 22,offset : 2}}
+                  wrapperCol={{span: 24}}
                   
                 >
                   {getFieldDecorator('info', {
@@ -379,7 +381,13 @@ class BasicInfoEdit extends Component{
       });
       return formItemArray;
     }
-
+    const tagsitems =  this.state.tags && this.state.tags.map((item,index) => {
+          return (
+            <Tag key={item} closable="true" afterClose={() => this.handleClose(item)}>
+              {item}
+            </Tag>
+            )
+     })
     return (
         <Form id="mybase" className="basicinfolist">
           <Row className={currentId === -1 ? "briefinfocreate" : "briefinfoedit"} type="flex" justify="space-between">
@@ -461,77 +469,11 @@ class BasicInfoEdit extends Component{
 
 
           <div className="personinfo">
-          {formItems()}
-
-        {/*
-           {  eachCustomerInfo.account && eachCustomerInfo.account.map((item , index) =>   
-                <Row>
-                  <Col span={12}>
-                    <FormItem
-                      label={index === 0 ? '账户' : ' '}
-                      required={false}
-                      labelCol={{span: 6}}
-                      wrapperCol={{span: 18}}
-                      key={`self${index}`}
-                    >
-                      {getFieldDecorator(`self-${index}`, {
-                        validateTrigger: ['onChange', 'onBlur'],
-                        initialValue: item.accNumber,
-                        rules: [{
-                          required: true,
-                          whitespace: true,
-                          message: "Please input passenger's name or delete this field.",
-                        }],
-                      })(
-                        <Input />
-                      )}
-
-                    </FormItem>
-                  </Col>
-                  <Col span={12} className="addmessage">
-                      <FormItem 
-                        label=" "
-                        labelCol={{span: 2}}
-                        wrapperCol={{span:22}}
-                        className="ffffff"
-                        key={`selfme${index}`}
-                      >
-                        {getFieldDecorator(`selfme-${index}`, {
-                          initialValue: item.info,
-                          onChange: this.inputChange
-                        })(
-                          <Input />
-                        )}
-                        {
-                          index === 0
-                          ? 
-                          <Icon
-                            className="dynamic-delete-button"
-                            type="plus-circle-o"
-                            onClick={this.add}
-                          />
-                          :
-                          <Icon
-                            className="dynamic-delete-button"
-                            type="minus-circle-o"
-                            onClick={() => this.move}
-                          />
-
-                        }
-                        
-                      </FormItem>
-                  </Col>
-                </Row>
-              
-            )
-          }
-            */}
-
-            
+            {formItems()}
             <Row>
               <Col span={12} className={currentId === -1 ? "phonecreate" : "phoneedit"}>
-                <FormItem labelCol={{span: 7}}
-                          wrapperCol={{span: 16}}
+                <FormItem labelCol={{span: 8}}
+                          wrapperCol={{span: 15}}
                           label="手机号：">
                   {getFieldDecorator('phone', {
                     initialValue: eachCustomerInfo.wechat,
@@ -547,8 +489,8 @@ class BasicInfoEdit extends Component{
               </Col>
 
               <Col span={12} className={currentId === -1 ? "wechatcreate" : "wechatedit"}>
-                <FormItem labelCol={{span: 6,offset:2}}
-                          wrapperCol={{span: 16}}
+                <FormItem labelCol={{span: 8,offset:1}}
+                          wrapperCol={{span: 15}}
                           label="微信号：">
                   {getFieldDecorator('wechat', {
                     initialValue: eachCustomerInfo.wechat,
@@ -562,8 +504,8 @@ class BasicInfoEdit extends Component{
 
             <Row>
               <Col span={12} className={currentId === -1 ? "idcreate" : "idedit"}>
-                <FormItem labelCol={{span: 7}}
-                          wrapperCol={{span: 16}}
+                <FormItem labelCol={{span: 8}}
+                          wrapperCol={{span: 15}}
                           label="身份证号："
                           className="idnumber"
                           >
@@ -578,8 +520,8 @@ class BasicInfoEdit extends Component{
               </Col>
 
               <Col span={12} className={currentId === -1 ? "birthcreate" : "birthedit"}>
-                <FormItem labelCol={{span: 6,offset:2}}
-                          wrapperCol={{span: 16}}
+                <FormItem labelCol={{span: 8,offset:1}}
+                          wrapperCol={{span: 15}}
                           label="生日：">
                   {getFieldDecorator('birth', {
                     initialValue: eachCustomerInfo.birth,
@@ -591,14 +533,14 @@ class BasicInfoEdit extends Component{
               </Col>
             </Row>
 
-            <Row>
+            <Row className="joiners">
               <Col span={24}>
-                <Col span={3}>
+                <Col span={4}>
                   <span>参与者：</span>
                 </Col>
-                <Col span={21}>
-                  
-                  <span className="addCrewButton"
+                <Col span={20}>
+                  {tagsitems}
+                  <span className="addcrewbutton"
                         onClick={this.props.show}>
                     <Icon type="plus-circle-o" />添加人员
                   </span>
@@ -606,9 +548,9 @@ class BasicInfoEdit extends Component{
               </Col>
             </Row>
           </div>
-          <Row>
-            <Col span={24} style={{backgroundColor: '#fafafa', padding: '10px 0'}}>
-              <Col span={3}>
+          <Row className="buttonsave">
+            <Col span={24} >
+              <Col span={4}>
               </Col>
               <Button type="primary" onClick={createCustomerSuccess}>保存</Button>
             </Col>
@@ -686,7 +628,6 @@ class BasicInfo extends Component {
         <AddCrewModal {...modal}/>
 
         <div className="">
-
           { mode !== "view" && <BasicInfoListsEdit
                                   currentId={this.props.currentId}
                                   eachCustomerInfo={this.state.eachCustomerInfo}
