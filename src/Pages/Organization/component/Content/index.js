@@ -38,21 +38,31 @@ export default class Branches extends Component {
       })
   }
 
-  componentDidMount(){
-    console.log(1)
+  initTableScroll(){
     let sider = document.getElementById('organizationSider');
     let tableScroll = document.getElementsByClassName('ant-table-body')[0];
     let contentTitle = document.getElementById('contentTitle');
     let content = document.getElementById('content');
     let thead = document.getElementsByTagName('thead')[0];
 
-    tableScroll.style['max-height'] = content.offsetHeight - contentTitle.offsetHeight - thead.offsetHeight - 40  + 'px';
+    tableScroll.style['max-height'] = content.offsetHeight - contentTitle.offsetHeight - thead.offsetHeight - 74  + 'px';
     tableScroll.style['overflow-y'] = 'auto';
 
     sider.style.width = '260px';
     sider.style.flex = '0 0 260px';
+  }
 
+  componentDidMount(){
+    this.initTableScroll();
+    addEventListener('resize',this.initTableScroll)
+  }
 
+  componentDidUpdate(){
+    this.initTableScroll();
+  }
+
+  componentWillUnmount(){
+    removeEventListener('resize',this.initTableScroll)
   }
 
   createTree(data) {
@@ -82,13 +92,7 @@ export default class Branches extends Component {
     })
   }
 
-  closeDock() {
-    this.setState({
-      dock: {
-        visible: false
-      }
-    })
-  }
+
 
 
 
@@ -96,9 +100,8 @@ export default class Branches extends Component {
     const dockConfig = {
       position: 'right',
       isVisible: this.props.dockConf.visible,
-      dimMode: 'opaque',
+      dimMode: 'none',
       defaultSize: .5,
-      onVisibleChange: this.props.dockConf.closeDock,
       zIndex: 100
     };
 
@@ -129,13 +132,19 @@ export default class Branches extends Component {
           </Sider>
           <Content id="content">
             <div className="content-title" id="contentTitle">
-              <Col span="22">
+              <Col span="18">
                 <h3>金融科技部</h3>
               </Col>
-              <Col span="2">
+              <Col span="4">
                 {
                   this.props.actionBarConf.parent === 'staff' &&
-                  <Button onClick={this.props.actionBarConf.newClick.bind(this, 'staff')}>新增员工</Button>
+                  <Button
+                    onClick={this.props.actionBarConf.newClick.bind(this)}
+                    className="newStaff"
+                  >
+                    <Icon type="plus" />
+                    新增员工
+                  </Button>
                 }
               </Col>
             </div>

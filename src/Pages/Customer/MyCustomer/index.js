@@ -8,9 +8,12 @@ import axios from 'axios';
 import API from '../../../../API';
 
 import TablePage from '../../../components/TablePage';
-import Droplist from '../../../components/DropdownList';
+import CustomerFilter from '../../../components/CustomerFilter';
 import './less/myCustomerStyle.less';
 import './indexStyle.less';
+
+import queryString from 'query-string'
+
 
 export default class MyCustomer extends Component {
   state = {
@@ -38,34 +41,35 @@ export default class MyCustomer extends Component {
       }
     })
 
+      this.getCustomers();
+  }
 
-    // 请求列表数据
-    axios.get(API.GET_CUSTOMERS)
-    .then((json) => {
-        // 将数据存入私有的 state中
-        this.setState({
-          loading: false,
-          customers: json.data.data.customers || [],
-          pagination: json.data.pagination
-        })
-        return json.data.data.customers || []
-    })
-    .then((customers) => {
-        let permission = customers.map((cstm) => ({customerId:cstm.id,permission:['system:update']}))
-        axios.post(API.POST_CUSTOMER_PRIVILEGE,permission)
-        .then((rest) => {
-            this.setState({
-                privilege: rest.data.data.map(item => ({[item.id]:item.permissions}))
-            })
-        })
-    })
+  getCustomers = (params) => {
+      axios.get(API.GET_CUSTOMERS+'?'+queryString.stringify(params||{page:1}))
+          .then((json) => {
+              // 将数据存入私有的 state中
+              this.setState({
+                  loading: false,
+                  customers: json.data.data.customers || [],
+                  pagination: json.data.pagination
+              })
+              return json.data.data.customers || []
+          })
+          .then((customers) => {
+              let permission = customers.map((cstm) => ({customerId:cstm.id,permission:['system:update']}))
+              axios.post(API.POST_CUSTOMER_PRIVILEGE,permission)
+                  .then((rest) => {
+                      this.setState({
+                          privilege: rest.data.data.map(item => ({[item.id]:item.permissions}))
+                      })
+                  })
+          })
   }
 
   // 关注客户／取消关注
   customerFocus = (id, e) => {
     e.stopPropagation(); // 阻止事件冒泡
     // 拿到用户的 id，发送请求，取消关注／关注
-    console.log(id);
   }
 
 
@@ -117,16 +121,16 @@ export default class MyCustomer extends Component {
         render: customer => (
           <div className='attention'>
             <p>{customer.department}</p>
-            {customer.attention && customer.attention === true
+            {customer.attention
               ?
+                <a href="#" onClick={this.customerFocus.bind(this, customer.id)}>
+                    <Icon type="heart-o" />
+                    <span>取消关注</span>
+                </a>
+                :
               <a href="#" onClick={this.customerFocus.bind(this, customer.id)}>
                 <Icon type="heart" />
                 <span>关注</span>
-              </a>
-              :
-              <a href="#" onClick={this.customerFocus.bind(this, customer.id)}>
-                <Icon type="heart-o" />
-                <span>取消关注</span>
               </a>
             }
           </div>
@@ -140,12 +144,24 @@ export default class MyCustomer extends Component {
       dataSource: customers,
       pagination: pagination,
       loading: loading,
-      privilege: privilege
+      privilege: privilege,
+      pageChange:(pageNumber) => {
+          this.setState({
+              ...this.state,
+              loading:true
+          })
+
+          this.getCustomers({page:pageNumber});
+      }
     };
     return (
       <div className="customer">
-        <Droplist />
-        <TablePage {...myCustomerProps}/>
+        <div>
+          <CustomerFilter onChange={(filters)=>{
+
+          }} />
+          <TablePage {...myCustomerProps}/>
+        </div>
       </div>
     )
   }

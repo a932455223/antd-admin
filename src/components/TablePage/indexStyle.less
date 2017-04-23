@@ -1,3 +1,4 @@
+@add-button: #5c6bc0;
 .ant-table-row {
     cursor: pointer;
 
@@ -11,14 +12,19 @@
         justify-content: center;
         align-items: center;
         position: absolute;
-        margin-top: -36px;
-        margin-left: 108px;
-        width: 114px;
-        height: 54px;
+        margin-top: -32px;
+        margin-left: 116px;
+        width: 112px;
+        height: 46px;
         background-color: #eee;
         font-size: 14px;
 
+        i {
+          color: #5c6bc0;
+        }
+
         >span {
+          color: #5c6bc0;
           padding-left: 8px;
         }
     }
@@ -33,17 +39,89 @@
     right: 16px;
     margin-top: -91px;
 
-    .addNewCustomer {
+    display: flex;
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       margin-right: 8px;
+      width: 98px;
+    	height: 32px;
+    	border-radius: 2px;
+
+      i {
+        font-size: 16px;
+      }
+
+      >span {
+        height: 20px;
+      	font-family: PingFangSC;
+      	font-size: 14px;
+      }
+    }
+
+    .addNewCustomer {
+    	background-color: @add-button;
+    	border: solid 1px @add-button;
+
+      >span {
+      	color: #ffffff;
+      }
     }
   }
 
-  .ant-pagination {
+  .page {
     margin: 16px 16px 0 16px;
     padding: 6px 16px;
     text-align: right;
-
     background-color: #f4f4f4;
+
+    // li {
+    //   &:hover {
+    //     border-color: @add-button;
+    //
+    //     a {
+    //       color: @add-button;
+    //     }
+    //   }
+    // }
+
+    .ant-pagination-options {
+      &:hover {
+        // .ant-select-selection--single {
+        //   border-color: @add-button;
+        //   color: @add-button;
+        // }
+
+        .ant-select {
+
+        }
+
+        .ant-pagination-options-quick-jumper {
+          &:hover input {
+            border-color: @add-button;
+          }
+        }
+        // div {
+        //
+        // }
+      }
+    }
+
+    .ant-pagination-item-active {
+      background-color: @add-button;
+      border-color: @add-button;
+      color: #fff;
+    }
+  }
+}
+
+.slider {
+  >div {
+    >div {
+      box-shadow: 0 16px 16px 0 rgba(0, 0, 0, 0.24), 0 0 16px 0 rgba(0, 0, 0, 0.18) !important;
+    }
   }
 }
 
@@ -51,22 +129,28 @@
 @c-white: #fff;
 @c-grey-darken: #d4d4d5;
 .myTable {
-    // .ant-table{
-    // }
+    .ant-table{
+      border-radius: 0;
+    }
+
     .ant-table-bordered {
         background-color: @c-white;
         .ant-table-body {
-            table {
-                border: 1px solid @c-grey-darken;
+            > table {
+                border-left: 0;
+                border-right: 0;
+                border-top: 1px solid @c-grey-darken;
+                border-bottom: 1px solid @c-grey-darken;
+                border-radius: 0;
             }
         }
         .ant-table-thead {
             tr {
                 th {
                     border-color: @c-grey-darken;
-                    padding: 1em 0.5em 1em 1em;
+                    padding: 1em 2em 1em 2em;
                     &:nth-last-of-type(1){
-                        border-right: none; 
+                        border-right: none;
                     }
                 }
             }
@@ -75,7 +159,7 @@
             tr {
                 height: 0em;
                 td {
-                    padding: 1em 0.5em 1em 1em;
+                    padding: 1em 2em 1em 2em;
                     border: none;
                     &:nth-of-type(2) {
                         border-right: 1px solid @c-grey-darken;
@@ -88,4 +172,3 @@
         }
     }
 }
-

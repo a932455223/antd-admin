@@ -1,3 +1,5 @@
+@organization-primary-color: #7A87C6;
+
 .organization {
   display: flex;
   flex: auto;
@@ -42,7 +44,7 @@
     align-items: center;
     border-bottom: 1px solid #d4d4d5;
 
-    .ant-row:before, .ant-row:after{
+    .ant-row:before, .ant-row:after {
       content: '';
     }
 
@@ -59,7 +61,7 @@
     }
   }
 
-  .content-title{
+  .content-title {
     height: 63px;
     border-bottom: 1px solid #d4d4d5;
     display: flex;
@@ -69,20 +71,20 @@
 
   }
 
-  .ant-table-thead{
+  .ant-table-thead {
 
-    th{
+    th {
       //display: block;
       background: #F4F5FA;
       border-bottom: 1px solid #d4d4d5;
     }
 
-    th:not(:last-child){
+    th:not(:last-child) {
       border-right: 1px solid #d4d4d5;
     }
   }
 
-  .ant-table-pagination{
+  .ant-table-pagination {
     width: 100%;
     background: #F4F4F4;
     margin: 0;
@@ -90,7 +92,119 @@
     float: none;
     display: flex;
     justify-content: flex-end;
+  }
 
+  .ant-card-head {
+    background: #FAFAFA;
+  }
+
+  .ant-input:focus, .ant-input:hover {
+    border-color: @organization-primary-color;
+  }
+
+  .ant-input:focus {
+    border-color: @organization-primary-color;
+    outline: 0;
+    box-shadow: 0 0 0 2px RGBA(72, 82, 158, .2);
+  }
+
+  .ant-select-selection:hover {
+    border-color: @organization-primary-color;
+  }
+
+  .ant-select-open .ant-select-selection {
+    border-color: @organization-primary-color;
+    outline: 0;
+    box-shadow: 0 0 0 2px RGBA(72, 82, 158, .2);
+  }
+
+  .ant-select-focused .ant-select-selection, .ant-select-selection:focus, .ant-select-selection:active {
+    border-color: @organization-primary-color;
+    outline: 0;
+    box-shadow: 0 0 0 2px RGBA(72, 82, 158, .2);
+  }
+
+  .ant-select-dropdown-menu-item:hover, .ant-select-dropdown-menu-item-active {
+    background-color: RGBA(72, 82, 158, .2);
+  }
+
+  .dock-title {
+    font-size: 18px;
+    font-weight: 600;
+
+    span {
+      font-size: 22px;
+      cursor: pointer;
+      &:hover {
+        color: #f00;
+      }
+    }
+  }
+
+  .dock-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 10px;
+    background: #F4F4F6;
+  }
+
+  .ant-input-lg, .ant-select-lg .ant-select-selection__rendered, .ant-select-lg .ant-select-selection--single {
+    height: 30px;
+  }
+
+  .ant-select-lg .ant-select-selection--multiple {
+    min-height: 30px;
+    padding-bottom: 0;
+  }
+
+  .ant-form-item-control {
+    line-height: 30px;
+  }
+
+  //取消按钮
+  .cancel {
+    border: 0;
+    background: #FAFAFA;
+    color: RGBA(72, 82, 158, .2);
+    &:hover {
+      color: #333
+    }
+  }
+
+  //保存按钮 | 新建员工
+  .save {
+    background: @organization-primary-color;
+    color: #fff;
+
+    &:hover {
+      border-color: RGBA(72, 82, 158, .2);
+    }
+  }
+
+
+  .newStaff{
+    .save;
+    width: 92px;
+    font-size: 14px;
+    padding: 5px 0;
+  }
+    //table 分页
+  .ant-table-pagination{
+    border: 17px solid #fff;
+  }
+    //编辑按钮
+  .edit{
+    border: 0;
+    background: #fff;
+    color: #6E8198;
+
+    &:hover{
+      color: #6E8198;
+      background: #fff;
+    }
   }
 }
 

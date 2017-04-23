@@ -1,5 +1,8 @@
 /**
- * Created by jufei on 2017/4/20.
+ * 文件说明： 组织机构管理/ 员工新建组件 form生成器配置文件
+ * 详细描述：
+ * 创建者： JU
+ * 时间： 17.3.2
  */
 import React from 'react';
 import {TreeSelect} from 'antd';
@@ -20,7 +23,7 @@ const formItemLayout = {
     span: 6
   },
   wrapperCol: {
-    span: 12
+    span: 10
   }
 };
 
@@ -267,6 +270,7 @@ export const wordDataForForm = [
     field: 'branches',
     render: (
       <TreeSelect
+        getPopupContainer = { () => document.getElementById('staffDetail')}
         treeData={treeData}
         multiple={true}
       />

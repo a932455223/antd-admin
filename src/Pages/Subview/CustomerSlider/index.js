@@ -17,6 +17,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 
 import styles from './indexStyle.scss';
+import './indexStyle.less';
 import { fillCustomerInfo } from '../../../redux/actions/customerAction';
 
 class NewCustomer extends Component {
@@ -59,6 +60,7 @@ class NewCustomer extends Component {
 
   render() {
     const { getFieldDecorator, getFieldsValue } = this.props.form;
+    console.log(getFieldsValue());
     const formItemLayout = {
       labelCol: {span: 3},
       wrapperCol: {span: 9}
@@ -66,17 +68,17 @@ class NewCustomer extends Component {
 
     return (
       <div>
-        <p style={{textAlign: 'right', padding: 10}}>
+        <p className={styles.createHeader}>
           <Icon
-            style={{fontSize: 22, cursor: 'pointer'}}
+            className={styles.close}
             onClick={this.openNotification}
             type="close"
           />
         </p>
 
-        <Form>
+        <Form className={styles.form}>
           <Row>
-            <Col span={24}>
+            <Col className={styles.input} span={24}>
               <FormItem wrapperCol={{span: 8}}>
                 {getFieldDecorator('category', {
                   initialValue: '个人客户',
@@ -95,7 +97,7 @@ class NewCustomer extends Component {
               </FormItem>
             </Col>
 
-            <Col span={16}>
+            <Col className={styles.input} span={16}>
               <FormItem wrapperCol={{span: 24}}>
                 {getFieldDecorator('name', {
                   initialValue: '',
@@ -111,7 +113,7 @@ class NewCustomer extends Component {
               </FormItem>
             </Col>
 
-            <Col span={8}>
+            <Col className={styles.input} span={8}>
               <FormItem>
                 <Button type="primary" onClick={this.submitClient}>确认新建</Button>
               </FormItem>
@@ -254,7 +256,7 @@ class CustomerSlider extends Component {
     const { personalClient } = this.state;
 
     const tabsProps = {
-      className: styles.tabs,
+      className: 'customer-tabs',
       activeKey: this.state.activePersonalTabs,
       onChange: this.personalTabChange
     }
@@ -316,7 +318,7 @@ class CustomerSlider extends Component {
 
     // tabs props
     const tabsProps = {
-      className: styles.tabs,
+      className: 'customer-tabs',
       activeKey: this.state.activeEnterpriseTabs,
       onChange: this.enterpriseTabChange,
     }
@@ -357,30 +359,36 @@ class CustomerSlider extends Component {
     return(
       <div id="rightSlider">
         <div className={styles.header}>
-          <span>{currentCustomerInfo.name}</span>
-          <span>{currentCustomerInfo.id}</span>
+          <div>
+            <div className={styles.img}>
+              <i className="iconfont icon-customer1"></i>
+            </div>
+            <span className={styles.name}>{currentCustomerInfo.name}</span>
+          </div>
 
-          <Row className={styles.options}>
-            <Col span={6}>
+          {/*
+            <span>{currentCustomerInfo.id}</span>
+          */}
+
+          <div className={styles.options}>
+            <span>
               <Icon type="star-o" />
-              <span className="nav-text">关注</span>
-            </Col>
-            <Col span={6}>
+              <span>关注</span>
+            </span>
+            <span>
               <Icon type="bell" />
-              <span className="nav-text">提醒</span>
-            </Col>
-            <Col span={6}>
+              <span>提醒</span>
+            </span>
+            <span>
               <Icon type="ellipsis" />
-              <span className="nav-text">更多</span>
-            </Col>
-            <Col span={6}>
-              <Icon
-                className={styles.icon}
-                onClick={this.openNotification}
-                type="close"
-              />
-            </Col>
-          </Row>
+              <span>更多</span>
+            </span>
+            <Icon
+              className={styles.icon}
+              onClick={this.openNotification}
+              type="close"
+            />
+          </div>
         </div>
 
         {currentCustomerInfo.category && currentCustomerInfo.category == '个人客户'

@@ -8,11 +8,11 @@
 
 import React, {Component} from "react";
 import axios from "axios";
-import {Button} from "antd";
+import {Button,Icon} from "antd";
 //========================================
 import StaffDetail from "../component/StaffDetail";
-import StaffEditor from '../component/StaffEditor';
-import BranchesDetail from '../component/BranchesDetail';
+import StaffEditor from "../component/StaffEditor";
+import BranchesDetail from "../component/BranchesDetail";
 //==================================================
 import Content from "../component/Content";
 import API from "../../../../API";
@@ -22,6 +22,7 @@ export default class Branches extends Component {
   state = {
     dock: {
       visible: false,
+      // children: <StaffEditor id="id" closeDock={this.closeDock.bind(this)}/>
     },
     table: {
       dataSource: []
@@ -57,19 +58,19 @@ export default class Branches extends Component {
     })
   }
 
-  newClick(target){
-    if(target === 'department'){
+  newClick(target) {
+    if (target === 'department') {
       this.setState({
         dock: {
           visible: true,
-          children: <BranchesDetail id="-1" closeDock={this.closeDock.bind(this)} />
+          children: <BranchesDetail id="-1" closeDock={this.closeDock.bind(this)}/>
         }
       })
-    }else {
+    } else {
       this.setState({
         dock: {
           visible: true,
-          children: <StaffDetail id="-1" closeDock={this.closeDock.bind(this)} />
+          children: <StaffDetail id="-1" closeDock={this.closeDock.bind(this)}/>
         }
       })
     }
@@ -79,10 +80,11 @@ export default class Branches extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: <StaffEditor id="id" closeDock={this.closeDock.bind(this)}/>
+        children: <StaffEditor id={id} closeDock={this.closeDock.bind(this)}/>
       }
     })
   }
+
 
 
   render() {
@@ -125,7 +127,10 @@ export default class Branches extends Component {
         render: (text = '编辑', rowData) => {
           return (
             <div>
-              <Button>{text}</Button>
+              <Button className="edit">
+                <Icon type="edit" />
+                {text}
+              </Button>
             </div>
           )
         }

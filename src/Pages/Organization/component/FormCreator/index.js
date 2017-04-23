@@ -1,6 +1,10 @@
 /**
- * Created by jufei on 2017/4/20.
+ * 文件说明： 组织机构管理/ form生成器
+ * 详细描述：适用于 列表型
+ * 创建者： JU
+ * 时间： 17.3.2
  */
+
 
 
 import React,{Component} from 'react';
@@ -46,7 +50,11 @@ export default class FormCreator extends Component{
                       rules: [{required: item.required, message: item.message}],
                       initialValue: item.initialValue
                     })(
-                      <Select>
+                      <Select
+                        getPopupContainer = {
+                          () => document.getElementById(this.props.containerID)
+                        }
+                      >
                         {item.options.map( (option,index) => {
                           return <Option value={option.value} key={item.field + index}>{option.text}</Option>
                         })}
@@ -66,7 +74,23 @@ export default class FormCreator extends Component{
                       rules: [{required: item.required, message: item.message}],
                       initialValue: item.initialValue
                     })(
-                     <DatePicker/>
+                     <DatePicker getCalendarContainer = { () => document.getElementById(this.props.containerID)}/>
+                    )}
+                  </FormItem>
+                );
+
+              case 'textarea':
+                return (
+                  <FormItem
+                    label={<span>{item.label}</span>}
+                    {...item.formItemLayout}
+                    key={item.field}
+                  >
+                    {getFieldDecorator(item.field, {
+                      rules: [{required: item.required, message: item.message}],
+                      initialValue: item.initialValue
+                    })(
+                      <Input type="textarea"/>
                     )}
                   </FormItem>
                 );

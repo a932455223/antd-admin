@@ -1,0 +1,35 @@
+.select-staff{
+  width: 581px;
+  margin: 0 auto;
+
+
+  .title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .select-staff-body{
+    > div:first-child{
+      border-right: 1px solid #ccc;
+    }
+  }
+
+  .tags-wrapper{
+    background: #F0F2F5;
+
+    > div:not(:last-child){
+      border-bottom: 1px solid #333 ;
+    }
+
+    >div{
+      padding: 20px;
+    }
+
+    >div:first-child{
+      .title;
+      border-bottom: 1px solid #ccc;
+      padding: 10px;
+    }
+  }
+}

@@ -6,16 +6,14 @@
  */
 
 
-
 import React, {Component} from "react";
-import axios from 'axios';
-import {Button} from 'antd';
+import axios from "axios";
+import {Button,Icon} from "antd";
 //=========================================================
 import Content from "../component/Content";
-import BranchesDetail from '../component/BranchesDetail';
-import BranchesEditor from '../component/BranchesEditor';
+import BranchesDetail from "../component/BranchesDetail";
 //=========================================================
-import API from '../../../../API';
+import API from "../../../../API";
 import BrabchesEditor from "../component/BranchesEditor/index";
 
 export default class Branches extends Component {
@@ -29,9 +27,9 @@ export default class Branches extends Component {
   };
 
 
-  componentWillMount(){
+  componentWillMount() {
     axios.get(API.GET_DEPARTMENTS)
-      .then( res => {
+      .then(res => {
         this.setState({
           table: {
             dataSource: res.data.data
@@ -57,7 +55,7 @@ export default class Branches extends Component {
     })
   }
 
-  tableClick(id){
+  tableClick(id) {
     this.setState({
       dock: {
         visible: true,
@@ -106,7 +104,10 @@ export default class Branches extends Component {
         render: (text = '编辑', rowData) => {
           return (
             <div>
-              <Button>{text}</Button>
+              <Button className="edit">
+                <Icon type="edit" />
+                {text}
+              </Button>
             </div>
           )
         }
@@ -115,7 +116,7 @@ export default class Branches extends Component {
 
     const actionBarConf = {
       parent: 'department',
-      newClick: this.showDock.bind(this,-1),
+      newClick: this.showDock.bind(this, -1),
     };
 
     const dockConf = {

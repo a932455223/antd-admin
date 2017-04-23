@@ -1,4 +1,4 @@
-.staffEditor{
+.staffEditor {
   position: absolute;
   top: 0;
   left: 0;
@@ -7,19 +7,22 @@
   padding: 20px;
   overflow: auto;
 
-  > div{
+  > div {
+    &:first-child{
+      margin-bottom: 10px;
+    }
     margin-bottom: 20px;
   }
-  .staffEditor-title{
+  .staffEditor-title {
     height: 45px;
     margin-bottom: 20px;
 
-    > div{
+    > div {
       line-height: 45px;
       height: 45px;
     }
 
-    .close{
+    .close {
       display: block;
       font-size: 30px;
       cursor: pointer;
@@ -27,21 +30,33 @@
       height: 45px;
     }
 
-    .close:hover{
+    .close:hover {
       color: #f00;
     }
   }
 
-
-
-  .staff-form{
+  .staff-form {
     padding: 20px;
   }
 
-  .business .ant-card-body{
-    > div{
+  .business .ant-card-body {
+    > div {
       padding: 10px 0;
       border-bottom: 1px dotted #eee;
+    }
+  }
+
+  .avatar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    > div {
+      width: 35px;
+      height: 35px;
+      background: #ccc;
+      border-radius: 50%;
+      margin-right: 20px;
     }
   }
 }
