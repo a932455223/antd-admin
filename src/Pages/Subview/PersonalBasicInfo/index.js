@@ -25,6 +25,10 @@ const Option = Select.Option;
 import './indexStyle.less';
 // import { BasicInfoListsEdit, BasicInfoListsRead }  from './basicInfoLists';
 
+function info(msg,color){
+  console.log('%c'+msg,'color:'+color);
+}
+
 // 新增维护记录
 class AddNewRecordForm extends Component {
   // 下拉框选择发生变化时
@@ -257,22 +261,14 @@ class AddCrewModal extends Component {
 
 
 //个人信息表单................
-let uuid = 0;
+let addkey = 100;
 class BasicInfoEdit extends Component{
-  constructor(props) {
-    super(props);
-    this.inputChange = this.inputChange.bind(this);
+ 
+
+  inputChange = () => {
+    
   }
-  inputChange(){
-    this.props.inputChange()
-  }
-  onHandleSubmit(){
-    const {getFieldsValue} = this.props.form;
-    getFieldsValue();
-    // this.setState({
-    //   mode:"edit"
-    // })
-  }
+
   remove = (k) => {
     const { form } = this.props;
     // can use data-binding to get
@@ -289,161 +285,261 @@ class BasicInfoEdit extends Component{
   }
 
   add = () => {
-    uuid++;
     const { form } = this.props;
     // can use data-binding to get
     const keys = form.getFieldValue('keys');
-    const nextKeys = keys.concat(uuid);
-    // can use data-binding to set
-    // important! notify form to detect changes
+    const {eachCustomerInfo} = this.props;
+    const nextKeys = keys.concat(`row-${addkey++}`);
     form.setFieldsValue({
       keys: nextKeys,
     });
   }
 
   render() {
-    const {eachCustomerInfo, edited,currentId} = this.props;
+    const {eachCustomerInfo, edited, currentId, createCustomerSuccess} = this.props;
     console.log(eachCustomerInfo);
-    const { getFieldDecorator,getFieldValue} = this.props.form;
-    getFieldDecorator('keys', { initialValue: [] });
-    const keys = getFieldValue('keys');
-    console.log(keys);
-    const formItems = keys.map((k, index) => {
-      return (
-        <div>
-        <Row>
-          <Col span={12}>
-            <FormItem
-              {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-              label={index === 1 ? '账户：' : ''}
-              required={false}
-              key={k}
-              labelCol={{span: 3}}
-              wrapperCol={{span: 9}}
-            >
-              {getFieldDecorator(`names-${k}`, {
-                validateTrigger: ['onChange', 'onBlur'],
-                initialValue: eachCustomerInfo.manager,
-                rules: [{
-                  required: true,
-                  whitespace: true,
-                  message: "Please input passenger's name or delete this field.",
-                }],
-              })(
-                <Input placeholder="passenger name"  />
-              )}
+    const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
 
-            </FormItem>
-          </Col>
-          <Col span={12}>
-              <FormItem>
-                {getFieldDecorator('info', {
-                  initialValue: eachCustomerInfo.wechat,
+    const kinitialValue = function(){
+      var selfkeys = [];
+      eachCustomerInfo.account && eachCustomerInfo.account.map((item ,index) => {
+        selfkeys.push(`row-${index}`);
+      })
+      return selfkeys;
+    }
+    getFieldDecorator('keys', { initialValue: kinitialValue() });
+    const keys = getFieldValue('keys');
+    const formItemLayout = {
+      labelCol: {
+        sm: { span: 7 }
+      },
+      wrapperCol: {
+        sm: { span: 16 },
+      },
+    };
+    const formItemLayoutWithOutLabel = {
+      wrapperCol: {
+        sm: { span: 16, offset: 7 },
+      },
+    };
+    const formItems = () => {
+      var len = eachCustomerInfo.account && eachCustomerInfo.account.length;
+      var formItemArray = keys.map((k, index) => {
+      console.log(k,index,len);    
+        return (
+          <Row>
+            <Col span={12}>
+              <FormItem
+                label={index === 0 ? '账户' : ''}
+                required={false}
+                key={k}
+                {...(index===0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                className="account"
+              >
+                {getFieldDecorator(`names-${k}`, {
+                  validateTrigger: ['onChange', 'onBlur'],
+                  initialValue:len > index ? eachCustomerInfo.account[index].accNumber : "",
                   onChange: this.inputChange
                 })(
-                  <Input />
+                  <Input placeholder="填写账号信息"  />
                 )}
-                <Icon
-                  className="dynamic-delete-button"
-                  type="minus-circle-o"
-                  disabled={keys.length === 1}
-                  onClick={() => this.remove(k)}
-                />
+
               </FormItem>
-          </Col>
-        </Row>
-        </div>
-      )
-    });
+            </Col>
+            <Col span={12} className="addmessage">
+                <FormItem
+                  wrapperCol={{span: 22,offset : 2}}
+                  
+                >
+                  {getFieldDecorator('info', {
+                    initialValue:len > index ? eachCustomerInfo.account[index].info : "",
+                    onChange: this.inputChange
+                  })(
+                    <Input placeholder="填写备注信息"/>
+                  )}
+                  {
+                    index === 0
+                    ? 
+                    <Icon
+                      className="dynamic-delete-button"
+                      type="plus-circle-o"
+                      onClick={this.add}
+                    />
+                    :
+                    <Icon
+                      className="dynamic-delete-button"
+                      type="minus-circle-o"
+                      onClick={() => this.remove(k)}
+                    />
+                  }
+                </FormItem>
+            </Col>
+          </Row>
+        )
+      });
+      return formItemArray;
+    }
 
     return (
         <Form id="mybase" className="basicinfolist">
-          <Row className={currentId === -1 ? "briefinfocreate" : "briefinfoedit"} >
-            <Col span={8}>
-              <FormItem labelCol={{span: 8}}
-                        wrapperCol={{span: 14}}
-                        label="所属机构： ">
+          <Row className={currentId === -1 ? "briefinfocreate" : "briefinfoedit"} type="flex" justify="space-between">
+            <Col span={7}>
+              <FormItem labelCol={{span: 11}}
+                        wrapperCol={{span: 13}}
+                        label="所属机构">
                 {getFieldDecorator('department', {
                   rules: [{
                     required: true,
-                    message: '请选择所属机构!'
+                    message: '选择所属机构!'
                   }],
                   initialValue: eachCustomerInfo.department,
                   onChange: this.inputChange
                 })(
                     <Select
                       showSearch
-                      placeholder="选择机构"
+                      placeholder="选择所属机构"
                       optionFilterProp="children"
                       filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                       getPopupContainer={() => document.getElementById('mybase')}
                     >
-                      <Option value="jack">支行ab</Option>
-                      <Option value="lucy">支行abc</Option>
-                      <Option value="tom">支行abcd</Option>
+                      <Option value="jack">慈溪支行</Option>
+                      <Option value="lucy">长治支行</Option>
+                      <Option value="tom">苏州支行</Option>
                     </Select>
                 )}
               </FormItem>
             </Col>
 
-            <Col span={8}>
-              <FormItem labelCol={{span: 8}}
-                        wrapperCol={{span: 14}}
-                        label="客户经理： ">
+            <Col span={7}>
+              <FormItem labelCol={{span: 11}}
+                        wrapperCol={{span: 13}}
+                        label="客户经理">
                 {getFieldDecorator('manager', {
                   initialValue: eachCustomerInfo.manager,
                   onChange: this.inputChange
                 })(
                   <Select
                     showSearch
-                    placeholder="选择机构"
+                    placeholder="选择客户经理"
                     optionFilterProp="children"
                     filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                     getPopupContainer={() => document.getElementById('mybase')}
                   >
-                    <Option value="jack">支行1</Option>
-                    <Option value="lucy">支行2</Option>
-                    <Option value="tom">支行3</Option>
+                    <Option value="jack">李小龙</Option>
+                    <Option value="lucy">深井冰</Option>
+                    <Option value="tom">爱德华</Option>
                   </Select>
                 )}
               </FormItem>
             </Col>
 
-            <Col span={8}>
-              <FormItem labelCol={{span: 8}}
-                        wrapperCol={{span: 14}}
-                        label="所属网格： ">
+            <Col span={7}>
+              <FormItem labelCol={{span: 11}}
+                        wrapperCol={{span: 13}}
+                        label="所属网格">
                 {getFieldDecorator('grid', {
                   initialValue: eachCustomerInfo.grid,
                   onChange: this.inputChange
                 })(
                   <Select
                     showSearch
-                    placeholder="选择机构"
+                    placeholder="选择所属网格"
                     optionFilterProp="children"
                     filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                     getPopupContainer={() => document.getElementById('mybase')}
 
                   >
-                    <Option value="jack">支行1</Option>
-                    <Option value="lucy">支行2</Option>
-                    <Option value="tom">支行3</Option>
+                    <Option value="jack">G666</Option>
+                    <Option value="lucy">S889</Option>
+                    <Option value="tom">Q233</Option>
                   </Select>
                 )}
               </FormItem>
             </Col>
           </Row>
 
+
+
           <div className="personinfo">
-            {formItems}
+          {formItems()}
+
+        {/*
+           {  eachCustomerInfo.account && eachCustomerInfo.account.map((item , index) =>   
+                <Row>
+                  <Col span={12}>
+                    <FormItem
+                      label={index === 0 ? '账户' : ' '}
+                      required={false}
+                      labelCol={{span: 6}}
+                      wrapperCol={{span: 18}}
+                      key={`self${index}`}
+                    >
+                      {getFieldDecorator(`self-${index}`, {
+                        validateTrigger: ['onChange', 'onBlur'],
+                        initialValue: item.accNumber,
+                        rules: [{
+                          required: true,
+                          whitespace: true,
+                          message: "Please input passenger's name or delete this field.",
+                        }],
+                      })(
+                        <Input />
+                      )}
+
+                    </FormItem>
+                  </Col>
+                  <Col span={12} className="addmessage">
+                      <FormItem 
+                        label=" "
+                        labelCol={{span: 2}}
+                        wrapperCol={{span:22}}
+                        className="ffffff"
+                        key={`selfme${index}`}
+                      >
+                        {getFieldDecorator(`selfme-${index}`, {
+                          initialValue: item.info,
+                          onChange: this.inputChange
+                        })(
+                          <Input />
+                        )}
+                        {
+                          index === 0
+                          ? 
+                          <Icon
+                            className="dynamic-delete-button"
+                            type="plus-circle-o"
+                            onClick={this.add}
+                          />
+                          :
+                          <Icon
+                            className="dynamic-delete-button"
+                            type="minus-circle-o"
+                            onClick={() => this.move}
+                          />
+
+                        }
+                        
+                      </FormItem>
+                  </Col>
+                </Row>
+              
+            )
+          }
+            */}
+
+            
             <Row>
               <Col span={12} className={currentId === -1 ? "phonecreate" : "phoneedit"}>
-                <FormItem labelCol={{span: 6}}
-                          wrapperCol={{span: 18}}
+                <FormItem labelCol={{span: 7}}
+                          wrapperCol={{span: 16}}
                           label="手机号：">
                   {getFieldDecorator('phone', {
                     initialValue: eachCustomerInfo.wechat,
-                    onChange: this.inputChange
+                    onChange: this.inputChange,
+                    rules: [{
+                    required: true,
+                    message: '请填写手机号'
+                  }],
                   })(
                     <Input />
                   )}
@@ -451,8 +547,8 @@ class BasicInfoEdit extends Component{
               </Col>
 
               <Col span={12} className={currentId === -1 ? "wechatcreate" : "wechatedit"}>
-                <FormItem labelCol={{span: 6}}
-                          wrapperCol={{span: 18}}
+                <FormItem labelCol={{span: 6,offset:2}}
+                          wrapperCol={{span: 16}}
                           label="微信号：">
                   {getFieldDecorator('wechat', {
                     initialValue: eachCustomerInfo.wechat,
@@ -466,9 +562,12 @@ class BasicInfoEdit extends Component{
 
             <Row>
               <Col span={12} className={currentId === -1 ? "idcreate" : "idedit"}>
-                <FormItem labelCol={{span: 6}}
-                          wrapperCol={{span: 18}}
-                          label="身份证号：">
+                <FormItem labelCol={{span: 7}}
+                          wrapperCol={{span: 16}}
+                          label="身份证号："
+                          className="idnumber"
+                          >
+                          
                   {getFieldDecorator('certificate', {
                     initialValue: eachCustomerInfo.certificate,
                     onChange: this.inputChange
@@ -479,8 +578,8 @@ class BasicInfoEdit extends Component{
               </Col>
 
               <Col span={12} className={currentId === -1 ? "birthcreate" : "birthedit"}>
-                <FormItem labelCol={{span: 6}}
-                          wrapperCol={{span: 18}}
+                <FormItem labelCol={{span: 6,offset:2}}
+                          wrapperCol={{span: 16}}
                           label="生日：">
                   {getFieldDecorator('birth', {
                     initialValue: eachCustomerInfo.birth,
@@ -498,6 +597,7 @@ class BasicInfoEdit extends Component{
                   <span>参与者：</span>
                 </Col>
                 <Col span={21}>
+                  
                   <span className="addCrewButton"
                         onClick={this.props.show}>
                     <Icon type="plus-circle-o" />添加人员
@@ -510,11 +610,11 @@ class BasicInfoEdit extends Component{
             <Col span={24} style={{backgroundColor: '#fafafa', padding: '10px 0'}}>
               <Col span={3}>
               </Col>
-              <Button type="primary" onClick={this.onHandleSubmit.bind(this)}>保存</Button>
+              <Button type="primary" onClick={createCustomerSuccess}>保存</Button>
             </Col>
           </Row>
         </Form>
-        )
+      )
   }
 }
 const BasicInfoListsEdit = Form.create()(BasicInfoEdit);
@@ -528,10 +628,12 @@ class BasicInfo extends Component {
     eachCustomerInfo: ''
   }
   componentWillMount(){
+      info('basicInfo will mount')
       this.getBaseInfo(this.props.currentCustomerInfo.id)
   }
 
   componentWillReceiveProps(next){
+    info('basicInfo will receive props.')
       this.getBaseInfo(next.currentCustomerInfo.id);
   }
 
@@ -566,7 +668,7 @@ class BasicInfo extends Component {
   //   })
   // }
 
-  componentWillReceiveProps(next) {
+  x(next) {
     // console.log(this.props);
     // console.log(next);
   }

@@ -206,7 +206,7 @@ module.exports = {
     'code':200,
     'data':{
       'account|2-3':[{
-        'accNumber':/[0-9]{13}/,
+        'accNumber':/[0-9]{18}/,
         'info':"haha"
       }],
       'address': '@city(true)',
@@ -217,7 +217,7 @@ module.exports = {
       'grid':'B909',
       'houseType':'商住',
       'id|+1':1,
-      'joiner|1-3':['@name'],
+      'joiner|2-3':['@name'],
       'manager': '张健钊',
       'marriage|1':true,
       'needLoan|1': true,
