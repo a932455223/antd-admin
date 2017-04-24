@@ -23,6 +23,7 @@ const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
 import './indexStyle.less';
+
 // import { BasicInfoListsEdit, BasicInfoListsRead }  from './basicInfoLists';
 
 function info(msg,color){
@@ -367,7 +368,7 @@ class BasicInfoEdit extends Component{
                 {getFieldDecorator(`names-${k}`, {
                   validateTrigger: ['onChange', 'onBlur'],
                   initialValue:len > index ? eachCustomerInfo.account[index].accNumber : "",
-                  onChange: this.inputChange
+                  
                 })(
                   <Input placeholder="填写账号信息"  />
                 )}

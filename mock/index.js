@@ -193,7 +193,7 @@ module.exports = {
     }
   }),
 
-
+  //客户基本信息——个人客户
   'GET /asd/customer/:id/base':Mock.mock({
     'code':200,
     'data':{
@@ -222,6 +222,28 @@ module.exports = {
       'yearIncome':999988,
     },
     'message':'message!!'
+  }),
+
+  //客户基本信息——企业客户
+  'GET /asd/company/:id/base':Mock.mock({
+    'code':200,
+    'data':{
+      'department':'上海支行',
+      'grid':'C666',
+      'manager': '张健钊',
+      'registertime':'2013/12/12',
+      'industry': '互联网',
+      'business': '3219389382900',
+      'yearmoney':'999988799',
+      'owner':'张三',
+      'phone':/[0-9]{11}/,
+      'people':'1000',
+      'saliary':'100000',
+      'address':'山西省-长治市-壶关县',
+      'addressinfo': '山西省长治市壶关县云台山xxx路xx号',
+      'joiner|2':['@name']
+    },
+    'message':'company message!'
   }),
 
   // 组织机构列表 有层级
