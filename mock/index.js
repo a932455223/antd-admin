@@ -193,13 +193,13 @@ module.exports = {
     }
   }),
 
-
+  //客户基本信息——个人客户
   'GET /asd/customer/:id/base':Mock.mock({
     'code':200,
     'data':{
       'account|2-3':[{
         'accNumber':/[0-9]{13}/,
-        'info':"haha"
+        'info':/一类账户|二类账户/
       }],
       'address': '@city(true)',
       'age|1-100': 100,
@@ -222,6 +222,28 @@ module.exports = {
       'yearIncome':999988,
     },
     'message':'message!!'
+  }),
+
+  //客户基本信息——企业客户
+  'GET /asd/company/:id/base':Mock.mock({
+    'code':200,
+    'data':{
+      'department':'上海支行',
+      'grid':'C666',
+      'manager': '张健钊',
+      'registertime':'2013/12/12',
+      'industry': '互联网',
+      'business': '3219389382900',
+      'yearmoney':'999988799',
+      'owner':'张三',
+      'phone':/[0-9]{11}/,
+      'people':'1000',
+      'saliary':'100000',
+      'address':'山西省-长治市-壶关县',
+      'addressinfo': '山西省长治市壶关县云台山xxx路xx号',
+      'joiner|2':['@name']
+    },
+    'message':'company message!'
   }),
 
   // 组织机构列表 有层级
@@ -295,7 +317,39 @@ module.exports = {
       }]
     },
     message: 'some message'
-  })
+  }),
+
+  'GET /asd/staff/:id/base': Mock.mock({
+    code: 200,
+    data: {
+      name: '李小花',
+      sex: '男',
+      age: /[19]{2}/,
+      certificateType: '身份证',
+      certificate: /[0-9]{13}/,
+      birth: '1995-12-11',
+      phone: /[0-9]{13}/,
+      wechat: /[0-9]{8}/,
+      email: /[0-9]{13}@gmail.com/,
+      address: '上海 闵行'
+    }
+  }),
+
+  'GET /asd/department/:id/base': Mock.mock({
+    code: 200,
+    data: {
+      name: '壶关农商行',
+      category: /总行|分行/,
+      parentDepartment: '壶关农商总行',
+      director: /老(王|黄|张)/,
+      phone: /[0-9]{13}/,
+      address: '上海 闵行'
+    }
+  }),
+
+  'GET /api/common/region/parent/:id': {
+    data: 'asd'
+  }
 };
 
 

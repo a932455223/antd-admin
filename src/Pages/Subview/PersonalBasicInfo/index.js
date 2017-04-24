@@ -24,8 +24,6 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 import './indexStyle.less';
 
-// import { BasicInfoListsEdit, BasicInfoListsRead }  from './basicInfoLists';
-
 function info(msg,color){
   console.log('%c'+msg,'color:'+color);
 }
@@ -373,11 +371,10 @@ class BasicInfoEdit extends Component{
                 {getFieldDecorator(`names-${k}`, {
                   validateTrigger: ['onChange', 'onBlur'],
                   initialValue:len > index ? eachCustomerInfo.account[index].accNumber : "",
-                  onChange: this.inputChange
+                  
                 })(
                   <Input placeholder="填写账号信息"  />
                 )}
-
               </FormItem>
             </Col>
             <Col span={12} className="addmessage">
@@ -385,26 +382,26 @@ class BasicInfoEdit extends Component{
                   wrapperCol={{span: 24}}
 
                 >
+                  <span>(</span>
                   {getFieldDecorator(`info-${k}`, {
                     initialValue:len > index ? eachCustomerInfo.account[index].info : "",
                     onChange: this.inputChange
                   })(
                     <Input placeholder="填写备注信息"/>
                   )}
+                  <span>)</span>
                   {
                     index === 0
                     ?
-                    <Icon
-                      className="dynamic-delete-button"
-                      type="plus-circle-o"
+                    <i
+                      className="dynamic-add-button iconfont"
                       onClick={this.add}
-                    />
+                    >&#xe688;</i>
                     :
-                    <Icon
-                      className="dynamic-delete-button"
-                      type="minus-circle-o"
+                    <i
+                      className="dynamic-delete-button iconfont"
                       onClick={() => this.remove(k)}
-                    />
+                    >&#xe697;</i>
                   }
                 </FormItem>
             </Col>

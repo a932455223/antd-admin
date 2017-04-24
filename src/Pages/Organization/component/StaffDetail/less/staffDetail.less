@@ -1,4 +1,6 @@
-.staffDetail{
+@import "../../../../../commonStyle/common.less";
+@import "../../../../../style/iconfont.less";
+.staffDetail {
   position: absolute;
   top: 0;
   left: 0;
@@ -7,16 +9,16 @@
   padding: 20px;
   overflow: auto;
 
-  .staffDetail-title{
+  .staffDetail-title {
     height: 45px;
     margin-bottom: 20px;
 
-    > div{
+    > div {
       line-height: 45px;
       height: 45px;
     }
 
-    .close{
+    .close {
       display: block;
       font-size: 30px;
       cursor: pointer;
@@ -24,18 +26,19 @@
       height: 45px;
     }
 
-    .close:hover{
+    .close:hover {
       color: #f00;
     }
   }
 
+  .staff-form {
 
-
-  .staff-form{
-    padding: 20px;
-
-    > div{
+    > div {
       padding: 20px 0;
+
+      >div{
+
+      }
     }
 
     > div:not(:last-child) {
@@ -43,25 +46,87 @@
     }
   }
 
-  .avatar-wrapper{
+  .avatar-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-direction: column;
   }
 
-  .avatar{
+  .avatar {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    //background: #f00;
     margin: 0 auto;
     margin-bottom: 20px;
     font-size: 100px;
     text-align: center;
   }
 
-  .submit-controller{
+  .submit-controller {
     text-align: center;
   }
+
+  .form-group {
+    display: flex;
+    >div{
+      &:first-child{
+        width: 25%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      &:last-child{
+        flex: 1;
+      }
+    }
+    h1{
+
+    }
+    h1 + div{
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      > div{
+        width: 50%;
+      }
+    }
+  }
+
+  .iconfont{
+    margin-right: 11px;
+
+    + strong{
+      font-size: 16px;
+    }
+  }
+
+  .ant-card-body{
+    padding: 16px;
+  }
+
+  label span{
+    color: #999999;
+  }
+
+  form input[type="radio"], form input[type="checkbox"],.ant-radio-inner{
+    width: 18px;
+    height: 18px;
+  }
+  .ant-radio-wrapper:hover .ant-radio .ant-radio-inner, .ant-radio:hover .ant-radio-inner, .ant-radio-focused .ant-radio-inner{
+    border-color: @organization-primary-color;
+  }
+
+  .ant-radio-inner:after{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: @organization-primary-color;
+
+  }
+  .ant-radio-checked .ant-radio-inner{
+    border-color: @organization-primary-color;
+  }
 }
+

@@ -23,7 +23,7 @@ export default class Branches extends Component {
     },
     table: {
       dataSource: []
-    }
+    },
   };
 
 
@@ -37,6 +37,7 @@ export default class Branches extends Component {
         })
       })
   }
+
 
   closeDock() {
     this.setState({

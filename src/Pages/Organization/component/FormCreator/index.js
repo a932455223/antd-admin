@@ -6,21 +6,20 @@
  */
 
 
-
-import React,{Component} from 'react';
-import {Button, Card, Col, DatePicker, Form, Icon, Input, Row, Select, TreeSelect, Upload} from "antd";
+import React, {Component} from "react";
+import {DatePicker, Form, Input, Select} from "antd";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-export default class FormCreator extends Component{
-  render(){
+export default class FormCreator extends Component {
+  render() {
     const {getFieldDecorator} = this.props;
     return (
       <div>
         {
-          this.props.items.map( (item,index) => {
-            switch (item.type){
+          this.props.items.map((item, index) => {
+            switch (item.type) {
 
               case 'input':
                 return (
@@ -51,11 +50,11 @@ export default class FormCreator extends Component{
                       initialValue: item.initialValue
                     })(
                       <Select
-                        getPopupContainer = {
+                        getPopupContainer={
                           () => document.getElementById(this.props.containerID)
                         }
                       >
-                        {item.options.map( (option,index) => {
+                        {item.options.map((option, index) => {
                           return <Option value={option.value} key={item.field + index}>{option.text}</Option>
                         })}
                       </Select>
@@ -74,7 +73,7 @@ export default class FormCreator extends Component{
                       rules: [{required: item.required, message: item.message}],
                       initialValue: item.initialValue
                     })(
-                     <DatePicker getCalendarContainer = { () => document.getElementById(this.props.containerID)}/>
+                      <DatePicker getCalendarContainer={ () => document.getElementById(this.props.containerID)}/>
                     )}
                   </FormItem>
                 );
