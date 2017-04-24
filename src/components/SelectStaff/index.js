@@ -17,10 +17,7 @@ export default class SelectStaff extends Component {
   state = {
     department: {},
     table: {
-      dataSource: [{
-        name: 'asd',
-        phone: '1241325'
-      }]
+      dataSource: []
     }
   };
 
@@ -31,7 +28,22 @@ export default class SelectStaff extends Component {
         this.setState({
           department: res.data.data
         })
+      });
+
+
+    axios.get(API.GET_STAFFS)
+      .then( res => {
+        console.log(res.data.data.staffs)
+        this.setState({
+          table: {
+            dataSource: res.data.data.staffs
+          }
+        })
       })
+  }
+
+  componentDidMount(){
+    this.initTableScroll();
   }
 
   createTree(data) {
@@ -50,6 +62,30 @@ export default class SelectStaff extends Component {
       return <TreeNode title={<span>{data.name}</span>} id={data.id} key={data.id}/>
     }
   }
+
+  rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    },
+    onSelect: (record, selected, selectedRows) => {
+      console.log(record, selected, selectedRows);
+    },
+    onSelectAll: (selected, selectedRows, changeRows) => {
+      console.log(selected, selectedRows, changeRows);
+    },
+    getCheckboxProps: record => ({
+      disabled: record.name === 'Disabled User',    // Column configuration not to be checked
+    }),
+  };
+
+  initTableScroll(){
+    let container = document.getElementById('mainBody');
+    let tableScroll = document.getElementsByClassName('ant-table-body')[0];
+    tableScroll.style['max-height'] = container.offsetHeight - 76  + 'px';
+    tableScroll.style['min-height'] = container.offsetHeight - 76  + 'px';
+    tableScroll.style['overflow-y'] = 'auto';
+  }
+
 
 
   render() {
@@ -74,6 +110,7 @@ export default class SelectStaff extends Component {
     return (
       <div className="select-staff">
         <Card
+          className="card-body"
           title={
             <div className="title">
               <h3>选择人员</h3>
@@ -81,8 +118,8 @@ export default class SelectStaff extends Component {
             </div>
           }
         >
-          <Row className="select-staff-body">
-            <Col span="11">
+          <div className="select-staff-body" id="mainBody">
+            <div>
               <Tabs defaultActiveKey="1">
                 <TabPane tab={<span>职位</span>} key="1">
                   <Tree
@@ -95,21 +132,24 @@ export default class SelectStaff extends Component {
                   Tab 2
                 </TabPane>
               </Tabs>
-            </Col>
+            </div>
 
 
-            <Col span="13">
+            <div>
               <Table
                 {...tableConf}
                 checkable
-                rowKey={record => record.phone}
-                rowSelection
-                pagination={false}
+                rowKey={record => record.id}
+                rowSelection={this.rowSelection}
+                scroll={{y: 500}}
+                pagination={{
+                  pageSize:20
+                }}
               />
-            </Col>
-          </Row>
+            </div>
+          </div>
           <div className="tags-wrapper">
-            <div className="selected-staff">
+            <div className="tags-title">
               <h3>已选成员</h3>
               <span>6ren</span>
             </div>
@@ -119,7 +159,7 @@ export default class SelectStaff extends Component {
               <Tag closable >Tag 2</Tag>
               <Tag closable >Prevent Default</Tag>
             </div>
-            <div>
+            <div className="btn-group">
               <Button>取消</Button>
               <Button>确认</Button>
             </div>

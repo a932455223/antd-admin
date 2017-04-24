@@ -1,35 +1,196 @@
-.select-staff{
+@organization-primary-color: #7A87C6;
+
+.select-staff {
   width: 581px;
   margin: 0 auto;
 
-
-  .title{
+  .title {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
-  .select-staff-body{
-    > div:first-child{
+  .select-staff-body {
+    min-height: 500px;
+    height: 500px;
+    display: flex;
+
+    > div {
+      height: 100%;
+    }
+
+    > div:first-child {
+      width: 42%;
+      height: 100%;
       border-right: 1px solid #ccc;
+
+      + div {
+        width: 58%;
+      }
+    }
+
+  }
+
+  .tags-wrapper {
+    background: #f0f2f5;
+
+    .tags-title {
+      h3 {
+        font-size: 12px;
+      }
+    }
+
+    > div:not(:last-child) {
+      border-bottom: 1px solid #e1e2e4;
+    }
+
+    > div {
+      padding: 10px;
+    }
+
+    > div:first-child {
+      .title;
+      border-bottom: 1px solid #e1e2e4;
+      padding: 10px;
+    }
+
+    .btn-group {
+      text-align: right;
+
+      .ant-btn:hover, .ant-btn:focus {
+        color: #333;
+        background-color: #fff;
+        border-color: #E1E2E4;
+      }
+
+      button {
+        &:hover {
+          box-shadow: 0 1px 3px 0 #dfdfe1;
+        }
+
+        &:first-child {
+          margin-right: 14px;
+
+          + button {
+            color: #fff;
+            background: @organization-primary-color;
+            &:hover, &:focus {
+              color: #fff;
+              background-color: @organization-primary-color;
+              border-color: @organization-primary-color;
+            }
+          }
+        }
+      }
     }
   }
 
-  .tags-wrapper{
-    background: #F0F2F5;
+  .ant-card-body {
+    padding: 0;
+  }
 
-    > div:not(:last-child){
-      border-bottom: 1px solid #333 ;
-    }
+  .ant-tabs-nav {
+    width: 100%;
+  }
 
-    >div{
-      padding: 20px;
+  .ant-tabs-nav-scroll {
+    > .ant-tabs-tab {
+      width: 50%;
     }
+  }
 
-    >div:first-child{
-      .title;
-      border-bottom: 1px solid #ccc;
-      padding: 10px;
+  .ant-tabs-nav .ant-tabs-tab {
+    width: 50%;
+    margin: 0;
+    text-align: center;
+  }
+
+  .ant-tree-checkbox, .ant-tree-checkbox-inner {
+    border-radius: 50%;
+  }
+
+  .ant-table-thead > tr > th, .ant-table-tbody > tr > td {
+    padding: 9px;
+  }
+
+  td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ant-table-wrapper {
+    height: 100%;
+  }
+
+  .ant-spin-container {
+    ul {
+      width: 100%;
+      margin: 0;
+      padding: 3px;
+      border: 3px solid #fff;
+      background: #F4F4F4;
+      display: flex;
+      justify-content: space-between;
+
+      li {
+        margin: 0;
+      }
     }
+  }
+
+  //分页
+  .ant-pagination-item-active {
+    background-color: @organization-primary-color;
+    border-color: @organization-primary-color;
+  }
+  .ant-pagination-item:hover {
+    a {
+      color: @organization-primary-color;
+    }
+    transition: all 0.3s ease;
+    border-color: @organization-primary-color;
+  }
+  .ant-pagination-prev:hover, .ant-pagination-next:hover {
+    border-color: @organization-primary-color;
+    a {
+      color: @organization-primary-color;
+    }
+  }
+
+  //tabs
+  .ant-tabs-nav .ant-tabs-tab:hover {
+    color: @organization-primary-color;
+  }
+
+  .ant-tabs-nav .ant-tabs-tab-active {
+    color: @organization-primary-color;
+  }
+
+  .ant-tabs-ink-bar {
+    background-color: @organization-primary-color;
+  }
+
+  //table
+  .ant-table-tbody > tr:hover td{
+    background: RGBA(122, 135, 198, .2);
+  }
+
+  //checkbox
+  .ant-checkbox-wrapper:hover .ant-checkbox-inner, .ant-checkbox:hover .ant-checkbox-inner, .ant-checkbox-input:focus + .ant-checkbox-inner{
+    border-color: @organization-primary-color;
+  }
+
+  .ant-checkbox-checked .ant-checkbox-inner, .ant-checkbox-indeterminate .ant-checkbox-inner{
+    background-color: @organization-primary-color;
+    border-color: @organization-primary-color;
+  }
+
+  .ant-tree-checkbox-wrapper:hover .ant-tree-checkbox-inner, .ant-tree-checkbox:hover .ant-tree-checkbox-inner, .ant-tree-checkbox-input:focus + .ant-tree-checkbox-inner{
+    border-color: @organization-primary-color;
+  }
+  .ant-tree-checkbox-checked .ant-tree-checkbox-inner, .ant-tree-checkbox-indeterminate .ant-tree-checkbox-inner{
+    background-color: @organization-primary-color;
+    border-color: @organization-primary-color;
   }
 }
