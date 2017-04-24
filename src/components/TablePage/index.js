@@ -143,8 +143,8 @@ class TablePage extends Component {
         textAlign: 'center',
         // top: 64
       }, // 背景
-      fluid: true,
-      defaultSize: .5, // 初始 width/height
+      fluid: false,
+      defaultSize: 540, // 初始 width/height
       duration: 350, // 动画时间
       zIndex: 100,
     }

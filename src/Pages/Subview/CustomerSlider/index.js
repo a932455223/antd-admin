@@ -376,7 +376,6 @@ class CustomerSlider extends Component {
 
   render() {
     const { step, mode, id, name, beEdited } = this.props.currentCustomerInfo;
-    console.log(beEdited);
 
     return(
       <div>

@@ -654,7 +654,7 @@ class BasicInfo extends Component {
     };
     const {step, mode, currentId, customerInfoBeEdit} = this.props;
     const {eachCustomerInfo,edited} = this.state;
-    console.log(this.props);
+    // console.log(this.props);
     return(
       <div style={{textAlign: 'left'}}>
 

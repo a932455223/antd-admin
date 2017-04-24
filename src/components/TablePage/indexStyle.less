@@ -7,26 +7,34 @@
     }
 
     // hover
-    &:hover .attention >a {
+    &:hover
+    .attention {
+      >a {
         display: flex;
         justify-content: center;
         align-items: center;
         position: absolute;
-        margin-top: -32px;
-        margin-left: 116px;
-        width: 112px;
-        height: 46px;
-        background-color: #eee;
+        margin-top: -29px;
+        margin-left: 140px;
+        width: 107px;
+        height: 40px;
+        background-color: #fff4df;
         font-size: 14px;
 
         i {
-          color: #5c6bc0;
+          width: 13px;
+        	height: 12.6px;
         }
 
         >span {
-          color: #5c6bc0;
-          padding-left: 8px;
+          height: 20px;
+          font-weight: 300;
+        	font-family: PingFangSC;
+        	font-size: 14px;
+        	color: #a66800;
+          padding-left: 5px;
         }
+      }
     }
 }
 
@@ -148,7 +156,7 @@
             tr {
                 th {
                     border-color: @c-grey-darken;
-                    padding: 1em 2em 1em 2em;
+                    padding: 1.2em 2em;
                     &:nth-last-of-type(1){
                         border-right: none;
                     }
@@ -159,7 +167,7 @@
             tr {
                 height: 0em;
                 td {
-                    padding: 1em 2em 1em 2em;
+                    padding: .8em 2em;
                     border: none;
                     &:nth-of-type(2) {
                         border-right: 1px solid @c-grey-darken;
