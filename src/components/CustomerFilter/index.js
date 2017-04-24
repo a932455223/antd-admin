@@ -8,12 +8,6 @@ import {
 import update from 'immutability-helper';
 const Search       = Input.Search;
 const CheckableTag = Tag.CheckableTag;
-const tagsCategory = ['个人客户', '企业客户'];
-const tagsLevel    = ['普通客户', '重点客户','未激活客户'];
-const tagsInterest = ['保守型', '激进型','稳健型'];
-const tagsJob      = ['农业', '金融业','服务业','零售业','建筑工程','设计'];
-const tagsJob01    = ['农业12', '农业23','农业34'];
-const tagsJob02    = ['农业11', '农业22','农业33','农业44','农业55'];
 const filterNames = {category:'客户类别',level:'客户评级',risk:'风险偏好',job:'工作类型'}
 
 
@@ -55,11 +49,34 @@ class CustomerFilter extends Component {
   }
 
 	render() {
+    const pathname = window.location.pathname; // 获取当前路由参数
+    const path = pathname.split('/')[2];
+
 		const { selectedTags } = this.state;
 		return (
       <div className={style.droplist} id="customerFilter">
       	<div className={style.filter}>
-          <b>我的客户</b>
+          {path && path === 'my' &&
+            <b>我的客户</b>
+          }
+          {path && path === 'focused' &&
+            <b>我关注的客户</b>
+          }
+          {path && path === 'undistributed' &&
+            <b>公海客户</b>
+          }
+          {path && path === 'subordinate' &&
+            <b>我下属的客户</b>
+          }
+          {path && path === 'participation' &&
+            <b>我参与的客户</b>
+          }
+          {path && path === 'recentlyDistributed' &&
+            <b>新分配给我的客户</b>
+          }
+          {path && path === 'all' &&
+            <b>我的全部客户</b>
+          }
           <span>|</span>
           <a>高级筛选
       	    <Icon type="caret-down" className={style.icon}/>

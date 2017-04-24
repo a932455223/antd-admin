@@ -19,7 +19,7 @@ const Option = Select.Option;
 
 import styles from './indexStyle.scss';
 import './indexStyle.less';
-import { fillCustomerInfo, cancleBeEditedCustomerInfo } from '../../../redux/actions/customerAction';
+import { fillCustomerInfo } from '../../../redux/actions/customerAction';
 
 class NewCustomer extends Component {
   state = {
@@ -207,9 +207,6 @@ class CustomerSlider extends Component {
   }
 
   confirmNotSave = (e) => {
-    const { dispatch } = this.props;
-    dispatch(cancleBeEditedCustomerInfo());
-
     this.setState({
       modalVisible: false,
     });
