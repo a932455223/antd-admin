@@ -115,7 +115,18 @@
 .families .family-add-card {
   background-color: #fafafa;
   color: #6a819a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.families .family-add-card .iconfont-create {
+.families .family-add-card .ant-card-body {
+  padding-top: 12px;
+}
+.families .family-add-card .ant-card-body .icon-create {
   color: #cfd8e2;
+  font-size: 3em;
+  cursor: pointer;
+}
+.families .family-add-card .ant-card-body p {
+  font-size: 1.3em;
 }
