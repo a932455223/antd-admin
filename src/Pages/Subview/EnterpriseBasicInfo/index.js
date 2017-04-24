@@ -550,7 +550,7 @@ class BasicInfoEdit extends Component{
 
               <Col span={12} className={currentId === -1 ? "wechatcreate" : "wechatedit"}>
                 <FormItem 
-                          wrapperCol={{span: 15}}
+                          wrapperCol={{span: 24}}
                           >
                   {getFieldDecorator('addressinfo', {
                     initialValue: eachCustomerInfo.addressinfo,

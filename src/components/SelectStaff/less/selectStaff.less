@@ -1,35 +1,145 @@
-.select-staff{
+@import "../../../commonStyle/common.less";
+@organization-primary-color: #7A87C6;
+
+
+.select-staff {
   width: 581px;
   margin: 0 auto;
 
-
-  .title{
+  .title {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
-  .select-staff-body{
-    > div:first-child{
-      border-right: 1px solid #ccc;
+  .select-staff-body {
+    min-height: 500px;
+    height: 500px;
+    display: flex;
+
+    > div {
+      height: 100%;
     }
+
+    > div:first-child {
+      width: 42%;
+      height: 100%;
+      border-right: 1px solid #ccc;
+
+      + div {
+        width: 58%;
+      }
+    }
+
   }
 
-  .tags-wrapper{
-    background: #F0F2F5;
+  .tags-wrapper {
+    background: #f0f2f5;
 
-    > div:not(:last-child){
-      border-bottom: 1px solid #333 ;
+    .tags-title {
+      h3 {
+        font-size: 12px;
+      }
     }
 
-    >div{
-      padding: 20px;
+    > div:not(:last-child) {
+      border-bottom: 1px solid #e1e2e4;
     }
 
-    >div:first-child{
-      .title;
-      border-bottom: 1px solid #ccc;
+    > div {
       padding: 10px;
     }
+
+    > div:first-child {
+      .title;
+      border-bottom: 1px solid #e1e2e4;
+      padding: 10px;
+    }
+
+    .btn-group {
+      text-align: right;
+
+      .ant-btn:hover, .ant-btn:focus {
+        color: #333;
+        background-color: #fff;
+        border-color: #E1E2E4;
+      }
+
+      button {
+        &:hover {
+          box-shadow: 0 1px 3px 0 #dfdfe1;
+        }
+
+        &:first-child {
+          margin-right: 14px;
+
+          + button {
+            color: #fff;
+            background: @organization-primary-color;
+            &:hover, &:focus {
+              color: #fff;
+              background-color: @organization-primary-color;
+              border-color: @organization-primary-color;
+            }
+          }
+        }
+      }
+    }
   }
+
+  .ant-card-body {
+    padding: 0;
+  }
+
+  .ant-tabs-nav {
+    width: 100%;
+  }
+
+  .ant-tabs-nav-scroll {
+    > .ant-tabs-tab {
+      width: 50%;
+    }
+  }
+
+  .ant-tabs-nav .ant-tabs-tab {
+    width: 50%;
+    margin: 0;
+    text-align: center;
+  }
+
+  .ant-tree-checkbox, .ant-tree-checkbox-inner {
+    border-radius: 50%;
+  }
+
+  .ant-table-thead > tr > th, .ant-table-tbody > tr > td {
+    padding: 9px;
+  }
+
+  td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ant-table-wrapper {
+    height: 100%;
+  }
+
+  .ant-spin-container {
+    ul {
+      width: 100%;
+      margin: 0;
+      padding: 3px;
+      border: 3px solid #fff;
+      background: #F4F4F4;
+      display: flex;
+      justify-content: flex-end;
+
+      li {
+        margin: 0;
+        margin-right: 5px;
+      }
+    }
+  }
+
 }

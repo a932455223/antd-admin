@@ -37,7 +37,6 @@ export default class Branches extends Component {
             dataSource: res.data.data.staffs
           }
         });
-        console.log(res.data.data.staffs)
       })
   }
 

@@ -1,15 +1,17 @@
 /**
-* 文件说明： 组织机构管理/组件/ 组织机构编辑组件
-* 详细描述：
-* 创建者： JU
-* 时间： 17.3.2
-*/
+ * 文件说明： 组织机构管理/组件/ 组织机构编辑组件
+ * 详细描述：
+ * 创建者： JU
+ * 时间： 17.3.2
+ */
 
 import React, {Component} from "react";
-import {Button, Card, Col, Form, Input, Row, Select,DatePicker} from "antd";
-import classNames from 'classnames';
+import {Button, Card, Col, DatePicker, Form, Input, Row, Select} from "antd";
+import classNames from "classnames";
+import axios from "axios";
 //=================================================
 import "./less/staffEditor.less";
+import API from "../../../../../API";
 
 
 const FormItem = Form.Item;
@@ -17,9 +19,28 @@ const Option = Select.Option;
 
 
 class BranchesEditor extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
+  }
 
+  state = {
+    staff: {
+      base: {}
+    },
+    changed: false
+  };
+
+
+  componentWillMount() {
+    axios.get(API.GET_STAFF_BASE(this.props.id))
+      .then(res => {
+        this.setState({
+          staff: {
+            base: res.data.data
+          }
+        });
+      });
+    console.log(this.props.id)
   }
 
   closeDock() {
@@ -32,21 +53,23 @@ class BranchesEditor extends Component {
 
     const formItemLayout = {
       labelCol: {
-        span: 8
+        span: 6
       },
       wrapperCol: {
-        span: 16
+        span: 14
       }
     };
 
+    const baseInfo = this.state.staff.base
+
     return (
       <Form>
-        <div className={classNames('dock-container','staffEditor')} id="staffEditor">
+        <div className={classNames('dock-container', 'staffEditor')} id="staffEditor">
           <Row className="dock-title">
             <Col span={22}>
               <Row className="avatar">
                 <div></div>
-                <p>浙江德清县武康镇支行  张权</p>
+                <p>浙江德清县武康镇支行 张权</p>
               </Row>
             </Col>
             <Col span={2}>
@@ -66,10 +89,16 @@ class BranchesEditor extends Component {
                   <h3>个人档案</h3>
                 </Col>
                 <Col span="3">
-                  <Button className="cancel">取消</Button>
+                  <Button
+                    className="cancel"
+                    disabled={this.state.changed ? false : true}
+                  >取消</Button>
                 </Col>
                 <Col span="3">
-                  <Button className="save">保存</Button>
+                  <Button
+                    className="save"
+                    disabled={this.state.changed ? false : true}
+                  >保存</Button>
                 </Col>
               </Row>
             )}
@@ -83,6 +112,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('name', {
                     rules: [{required: true, message: '请填写员工名称!'}],
+                    initialValue: baseInfo.name
                   })(
                     <Input/>
                   )}
@@ -95,12 +125,13 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('sex', {
                     rules: [{required: false, message: '请选择性别!'}],
+                    initialValue: baseInfo.sex
                   })(
                     <Select
-                      getPopupContainer = { () => document.getElementById('staffEditor')}
+                      getPopupContainer={ () => document.getElementById('staffEditor')}
                     >
-                      <Option value={1}>男</Option>
-                      <Option value={0}>女</Option>
+                      <Option value="1">男</Option>
+                      <Option value="0">女</Option>
                     </Select>
                   )}
                 </FormItem>
@@ -114,6 +145,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('certificateType', {
                     rules: [{required: false, message: '请填写证件类型!'}],
+                    initialValue: baseInfo.certificateType
                   })(
                     <Input/>
                   )}
@@ -126,6 +158,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('certificate', {
                     rules: [{required: true, message: '请填写证件号码!'}],
+                    initialValue: baseInfo.certificate
                   })(
                     <Input/>
                   )}
@@ -138,10 +171,11 @@ class BranchesEditor extends Component {
                   label={<span>出生日期</span>}
                   {...formItemLayout}
                 >
-                  {getFieldDecorator('birthday', {
-                    rules: [{required: true, message: '请选择出生日期!'}],
+                  {getFieldDecorator('birth', {
+                    rules: [{required: false, message: '请选择出生日期!'}],
+                    // initialValue: baseInfo.birth
                   })(
-                    <DatePicker getCalendarContainer = { () => document.getElementById('staffEditor')}/>
+                    <DatePicker getCalendarContainer={ () => document.getElementById('staffEditor')}/>
                   )}
                 </FormItem>
               </Col>
@@ -152,6 +186,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('phone', {
                     rules: [{required: true, message: '请填写手机号码!'}],
+                    initialValue: baseInfo.phone
                   })(
                     <Input/>
                   )}
@@ -165,7 +200,8 @@ class BranchesEditor extends Component {
                   {...formItemLayout}
                 >
                   {getFieldDecorator('wechat', {
-                    rules: [{required: true, message: '请输入微信号!'}],
+                    rules: [{required: false, message: '请输入微信号!'}],
+                    initialValue: baseInfo.wechat
                   })(
                     <Input/>
                   )}
@@ -177,7 +213,8 @@ class BranchesEditor extends Component {
                   {...formItemLayout}
                 >
                   {getFieldDecorator('email', {
-                    rules: [{required: true, message: '请输入微信号!'}],
+                    rules: [{required: false, message: '请输入邮箱!'}],
+                    initialValue: baseInfo.email
                   })(
                     <Input/>
                   )}
@@ -187,11 +224,12 @@ class BranchesEditor extends Component {
             <Row>
               <Col span={12}>
                 <FormItem
-                  label={<span>微信号</span>}
+                  label={<span>家庭住址</span>}
                   {...formItemLayout}
                 >
-                  {getFieldDecorator('家庭住址', {
+                  {getFieldDecorator('address', {
                     rules: [{required: false, message: '请填写家庭住址!'}],
+                    initialValue: baseInfo.address
                   })(
                     <Input/>
                   )}

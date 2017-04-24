@@ -23,7 +23,8 @@ export default class Branches extends Component {
     },
     table: {
       dataSource: []
-    }
+    },
+    cahnged: false
   };
 
 

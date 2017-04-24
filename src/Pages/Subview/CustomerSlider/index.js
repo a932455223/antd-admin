@@ -10,7 +10,8 @@ import {
   notification,
   Form,
   Select,
-  Input
+  Input,
+  Modal
 } from 'antd';
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
@@ -18,23 +19,34 @@ const Option = Select.Option;
 
 import styles from './indexStyle.scss';
 import './indexStyle.less';
-import { fillCustomerInfo } from '../../../redux/actions/customerAction';
+import { fillCustomerInfo, cancleBeEditedCustomerInfo } from '../../../redux/actions/customerAction';
 
 class NewCustomer extends Component {
+  state = {
+    activeButton: false
+  }
   // 下拉框选择发生变化时
   selectChange = (value) => {
     // console.log(value);
   }
 
   inputChange = (e) => {
-    // const { getFieldValue } = this.props.form;
-    // console.log(getFieldValue('name'))
-    // console.log(e.target);
+    const { getFieldValue } = this.props.form;
+
+    // 判断输入的值是否为空
+    if(e.target.value !== '') {
+      this.setState({
+        activeButton: true
+      })
+    } else {
+      this.setState({
+        activeButton: false
+      })
+    }
   };
 
   // submit client
   submitClient = () => {
-    // console.log({...this.props});
     const { dispatch } = this.props;
     const { getFieldsValue } = this.props.form;
     const customer = getFieldsValue();
@@ -60,67 +72,61 @@ class NewCustomer extends Component {
 
   render() {
     const { getFieldDecorator, getFieldsValue } = this.props.form;
-    console.log(getFieldsValue());
     const formItemLayout = {
       labelCol: {span: 3},
       wrapperCol: {span: 9}
     };
 
     return (
-      <div>
-        <p className={styles.createHeader}>
-          <Icon
-            className={styles.close}
-            onClick={this.openNotification}
-            type="close"
-          />
-        </p>
+      <Form className={styles.form}>
+        <Row gutter={16}>
+          <Col className={styles.input} span={6}>
+            <FormItem>
+              {getFieldDecorator('category', {
+                initialValue: '个人客户',
+                rules: [{
+                  type: 'string',
+                  required: true,
+                  // message: 'Please select the movie type!'
+                }],
+                onChange: this.selectChange
+              })(
+                <Select placeholder="请选择客户类别">
+                  <Option value="个人客户">个人客户</Option>
+                  <Option value="企业客户">企业客户</Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
 
-        <Form className={styles.form}>
-          <Row>
-            <Col className={styles.input} span={24}>
-              <FormItem wrapperCol={{span: 8}}>
-                {getFieldDecorator('category', {
-                  initialValue: '个人客户',
-                  rules: [{
-                    type: 'string',
-                    required: true,
-                    // message: 'Please select the movie type!'
-                  }],
-                  onChange: this.selectChange
-                })(
-                  <Select placeholder="请选择客户类别">
-                    <Option value="个人客户">个人客户</Option>
-                    <Option value="企业客户">企业客户</Option>
-                  </Select>
-                )}
-              </FormItem>
-            </Col>
+          <Col className={styles.input} span={14}>
+            <FormItem>
+              {getFieldDecorator('name', {
+                initialValue: '',
+                rules: [{
+                  type: 'string',
+                  required: true,
+                  // message: 'Please select the movie type!'
+                }],
+                onChange: this.inputChange
+              })(
+                <Input placeholder="请输入用户姓名" onKeyDown={this.createCustomer}/>
+              )}
+            </FormItem>
+          </Col>
 
-            <Col className={styles.input} span={16}>
-              <FormItem wrapperCol={{span: 24}}>
-                {getFieldDecorator('name', {
-                  initialValue: '',
-                  rules: [{
-                    type: 'string',
-                    required: true,
-                    // message: 'Please select the movie type!'
-                  }],
-                  onChange: this.inputChange
-                })(
-                  <Input onKeyDown={this.createCustomer}/>
-                )}
-              </FormItem>
-            </Col>
-
-            <Col className={styles.input} span={8}>
-              <FormItem>
-                <Button type="primary" onClick={this.submitClient}>确认新建</Button>
-              </FormItem>
-            </Col>
-          </Row>
-        </Form>
-      </div>
+          <Col className={styles.input} span={4}>
+            <FormItem>
+              <Button
+                disabled={this.state.activeButton ? false : true} // 判断输入框的值是否为空
+                type="primary"
+                onClick={this.submitClient}
+              >
+              确认新建</Button>
+            </FormItem>
+          </Col>
+        </Row>
+      </Form>
     )
   }
 }
@@ -133,6 +139,7 @@ class CustomerSlider extends Component {
     currentId: '',
     activePersonalTabs: '',
     activeEnterpriseTabs: '',
+    modalVisible: false,
 
     personalClient: {
       personalBasicInfo: '',
@@ -188,52 +195,32 @@ class CustomerSlider extends Component {
   };
 
   // show and hide notification
-  openNotification = () => {
-    if(this.state.fields && this.state.fields.notificate) {
-      // 每次显示，生成不同的key，重新渲染页面
-      const key = `open${Date.now()}`;
-
-      // 点击放弃编辑按钮，关闭Dock
-      const btnClick = () => {
-        notification.close(key);
-        // 点击确认不保存按钮后，关闭 Dock弹窗
-        this.props.closeDock();
-
-        // 关闭在点击 Dock后，重置 notificate: false
-        this.setState({
-          fields: {
-            username: {
-              value: 'ABC'
-            },
-            age: {
-              value: 12
-            },
-            notificate: false
-          },
-        })
-      };
-
-      // 放弃编辑按钮
-      const btn = (
-        <Button type="primary" size="small" onClick={btnClick}>
-          放弃编辑
-        </Button>
-      );
-
-      // 提示主体内容
-      notification.open({
-        message: '您已编辑了该页面，请点击保存',
-        description: '该页面的数据发生了变化，请点击保存按钮，保存修改，若不想保存，请点击放弃',
-        btn,
-        key,
-        // onClose,
-        placement: 'topRight'
-        // bottom: 50
+  saveEditInfo = () => {
+    const { beEdited } = this.props.currentCustomerInfo;
+    if(beEdited) {
+      this.setState({
+        modalVisible: true
       });
     } else {
-      // 点击确认不保存按钮后，关闭 Dock弹窗
       this.props.closeDock();
     }
+  }
+
+  confirmNotSave = (e) => {
+    const { dispatch } = this.props;
+    dispatch(cancleBeEditedCustomerInfo());
+
+    this.setState({
+      modalVisible: false,
+    });
+
+    this.props.closeDock();
+  }
+
+  handleCancel = (e) => {
+    this.setState({
+      modalVisible: false,
+    });
   }
 
   // 个人用户 Tabs切换事件
@@ -358,39 +345,6 @@ class CustomerSlider extends Component {
 
     return(
       <div id="rightSlider">
-        <div className={styles.header}>
-          <div>
-            <div className={styles.img}>
-              <i className="iconfont icon-customer1"></i>
-            </div>
-            <span className={styles.name}>{currentCustomerInfo.name}</span>
-          </div>
-
-          {/*
-            <span>{currentCustomerInfo.id}</span>
-          */}
-
-          <div className={styles.options}>
-            <span>
-              <Icon type="star-o" />
-              <span>关注</span>
-            </span>
-            <span>
-              <Icon type="bell" />
-              <span>提醒</span>
-            </span>
-            <span>
-              <Icon type="ellipsis" />
-              <span>更多</span>
-            </span>
-            <Icon
-              className={styles.icon}
-              onClick={this.openNotification}
-              type="close"
-            />
-          </div>
-        </div>
-
         {currentCustomerInfo.category && currentCustomerInfo.category == '个人客户'
           ?
           this.personalUserTabs()
@@ -421,10 +375,56 @@ class CustomerSlider extends Component {
   }
 
   render() {
-    const { step, mode } = this.props.currentCustomerInfo;
+    const { step, mode, id, name, beEdited } = this.props.currentCustomerInfo;
+    console.log(beEdited);
 
     return(
       <div>
+
+        <Modal
+          title="Waring"
+          visible={this.state.modalVisible}
+          onOk={this.confirmNotSave}
+          onCancel={this.handleCancel}
+          okText="放弃保存"
+        >
+          <p>您已更新了该客户的信息，是否需要保存？</p>
+        </Modal>
+        <div className={styles.header}>
+          <div>
+            <div className={styles.img}>
+              <i className="iconfont icon-customer1"></i>
+            </div>
+            <span className={styles.name}>{name}</span>
+          </div>
+
+          <div className={styles.options}>
+            { id !== -1 &&
+              <span>
+                <Icon type="star-o" />
+                <span>关注</span>
+              </span>
+            }
+            { id !== -1 &&
+              <span>
+                <Icon type="bell" />
+                <span>提醒</span>
+              </span>
+            }
+            { id !== -1 &&
+              <span>
+                <Icon type="ellipsis" />
+                <span>更多</span>
+              </span>
+            }
+            <Icon
+              className={styles.icon}
+              onClick={this.saveEditInfo}
+              type="close"
+            />
+          </div>
+        </div>
+
         {step === 1 && mode === 'create' &&
           <AddNewCustomer {...this.props}/>
         }

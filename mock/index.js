@@ -198,8 +198,8 @@ module.exports = {
     'code':200,
     'data':{
       'account|2-3':[{
-        'accNumber':/[0-9]{18}/,
-        'info':"haha"
+        'accNumber':/[0-9]{13}/,
+        'info':/一类账户|二类账户/
       }],
       'address': '@city(true)',
       'age|1-100': 100,
@@ -291,7 +291,7 @@ module.exports = {
       "customerCount": /[0-9]{4}/,
       "depositCount": /[0-9]{5}/,
       "id|+1": 1,
-      "director|+1": /胡锦涛|习近平|蛤/,
+      "director|+1": /李逵|张牛|元得/,
       "loanCount": /[0-9]{8}/
     }],
     message: 'some message'
@@ -311,22 +311,29 @@ module.exports = {
         code: /[0-9]{5}/,
         department: /壶关农商行|长治市分行|壶关县分行/,
         "id|+1": 1,
-        name: '@name',
+        name: /(赵|钱|孙|李|周|吴|郑|王)小二/,
         phone: /[0-9]{11}/,
         position: /董事长|总行长|职员|分行长/
       }]
     },
     message: 'some message'
   }),
-    'GET /asd/customersFilters': Mock.mock({
-        code: 200,
-        data: {
-            category:[{text:'企业客户',id:1},{text:'私人客户',id:2}],
-            level:[{text:'普通客户',id:1},{text:'VIP1',id:2},{text:'VIP2',id:3}],
-            risk:[{text:'保守型',id:1},{text:'稳健型',id:2}]
-        },
-        message: 'some message'
-    })
+
+  'GET /asd/staff/:id/base': Mock.mock({
+    code: 200,
+    data: {
+      name: '李小花',
+      sex: '男',
+      age: /[19]{2}/,
+      certificateType: '身份证',
+      certificate: /[0-9]{13}/,
+      birth: '1995-12-11',
+      phone: /[0-9]{13}/,
+      wechat: /[0-9]{8}/,
+      email: /[0-9]{13}@gmail.com/,
+      address: '上海 闵行'
+    }
+  })
 };
 
 

@@ -78,16 +78,16 @@ const Option = Select.Option;
 
 export class AddContentForm extends Component{
 
-  static propTypes={
-    addData:{
-      "certificate": " ",
-      "id": "",
-      "jobCategory": "",
-      "name": "",
-      "phone": "",
-      "relation": ""
-    }
-  }
+  // static propTypes={
+  //   addData:{
+  //     "certificate": " ",
+  //     "id": "",
+  //     "jobCategory": "",
+  //     "name": "",
+  //     "phone": "",
+  //     "relation": ""
+  //   }
+  // }
 
   state={
     isAdd:false,

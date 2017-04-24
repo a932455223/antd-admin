@@ -18,6 +18,10 @@ const Option = Select.Option;
 
 class BranchesEditor extends Component {
 
+  state = {
+    changed: false
+  };
+
   closeDock() {
     console.log('bye bye');
     this.props.closeDock()
@@ -28,10 +32,10 @@ class BranchesEditor extends Component {
 
     const formItemLayout = {
       labelCol: {
-        span: 8
+        span: 6
       },
       wrapperCol: {
-        span: 16
+        span: 14
       }
     };
 
@@ -61,10 +65,16 @@ class BranchesEditor extends Component {
                   <h3>编辑</h3>
                 </Col>
                 <Col span="3">
-                  <Button className="cancel">取消</Button>
+                  <Button
+                    className="cancel"
+                    disabled={this.state.changed ? false : true}
+                  >取消</Button>
                 </Col>
                 <Col span="3">
-                  <Button className="save">保存</Button>
+                  <Button
+                    className="save"
+                    disabled={this.state.changed ? false : true}
+                  >保存</Button>
                 </Col>
               </Row>
             )}

@@ -27,7 +27,11 @@ export default {
 
   GET_CUSTOMER_BASE: id =>  `/asd/customer/${id}/base`,
 
+
   GET_COMPANY_BASE: id => `/asd/company/${id}/base`,
+
+
+  GET_STAFF_BASE: id => `/asd/staff/${id}/base`,
 
   //=======================================
 

@@ -61,8 +61,8 @@
     @c-blue-darken: #5c6bc0;
     @c-white: #fff;
     @c-white-two: #d2d2d2;
-    @c-cloudy-blue:#cfd8e2;
-    @c-grey-blue:#6a819a;
+    @c-cloudy-blue: #cfd8e2;
+    @c-grey-blue: #6a819a;
     .family-card {
         // card最外层
         border: 1px solid @c-gery-border;
@@ -180,11 +180,23 @@
             }
         }
     }
-    .family-add-card{
-        background-color:@c-gery-bg;
+    .family-add-card {
+        background-color: @c-gery-bg;
         color: @c-grey-blue;
-        .iconfont-create{
-            color:@c-cloudy-blue;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .ant-card-body{
+            .icon-create{
+                color: @c-cloudy-blue;
+                font-size: 3em;
+                cursor: pointer;
+            }
+            padding-top: 12px;
+            p{
+                font-size: 1.3em;
+
+            }
         }
     }
 }

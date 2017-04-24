@@ -18,20 +18,18 @@ import {
 import axios from 'axios';
 import API from '../../../../API';
 import { connect } from 'react-redux';
-import { createCustomerSuccess } from '../../../redux/actions/customerAction';
+import { createCustomerSuccess, customerInfoBeEdit } from '../../../redux/actions/customerAction';
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
 import './indexStyle.less';
-
-// import { BasicInfoListsEdit, BasicInfoListsRead }  from './basicInfoLists';
 
 function info(msg,color){
   console.log('%c'+msg,'color:'+color);
 }
 
 // 新增维护记录
-class AddNewRecordForm extends Component {
+class AddMaintainRecordForm extends Component {
   // 下拉框选择发生变化时
   selectChange = (value) => {
     // console.log(value);
@@ -39,14 +37,13 @@ class AddNewRecordForm extends Component {
 
   // 日期修改时，打印日期
   dateChange = (date, dateString) => {
-    console.log(date, dateString);
+    // console.log(date, dateString);
   };
 
   // 修改输入的次数
   inputChange = (e) => {
-    // const { getFieldValue } = this.props.form;
-    // console.log(getFieldValue('name'))
-    // console.log(e.target);
+    // const { getFieldsValue } = this.props.form;
+    // console.log(getFieldsValue())
   };
 
   render() {
@@ -159,7 +156,7 @@ class AddNewRecordForm extends Component {
     )
   }
 }
-const AddNewRecord = Form.create()(AddNewRecordForm);
+const AddMaintainRecord = Form.create()(AddMaintainRecordForm);
 
 // 维护记录
 class MaintainRecord extends Component {
@@ -226,7 +223,7 @@ class MaintainRecord extends Component {
                 </section>
 
                 <section className="text">
-                  <Input  value='介绍理财产品，制定理财计划书，客户下单'/>
+                  <Input  placeholder='介绍理财产品，制定理财计划书，客户下单'/>
                 </section>
               </div>
             </div>
@@ -289,14 +286,19 @@ let addkey = 100;
 class BasicInfoEdit extends Component{
   state = {
     tags : []
-  } 
+  }
+
   componentWillReceiveProps(next) {
      this.setState({
-        tags:next.eachCustomerInfo.joiner
+        tags: next.eachCustomerInfo.joiner
       })
   }
-  inputChange = () => {
-    
+
+  inputChange = (e) => {
+    console.log('things changed');
+    // const { dispatch } = this.props;
+    this.props.customerInfoBeEdit();
+    // dispatch(customerInfoBeEdit())
   }
 
   remove = (k) => {
@@ -327,8 +329,9 @@ class BasicInfoEdit extends Component{
   }
   render() {
     const {eachCustomerInfo, edited, currentId, createCustomerSuccess} = this.props;
-    console.log(eachCustomerInfo);
+    // console.log(eachCustomerInfo);
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
+    // console.log(getFieldsValue())
 
     const kinitialValue = function(){
       var selfkeys = [];
@@ -354,9 +357,9 @@ class BasicInfoEdit extends Component{
     };
     const formItems = () => {
       var len = eachCustomerInfo.account && eachCustomerInfo.account.length;
-      var formItemArray = keys.map((k, index) => {   
+      var formItemArray = keys.map((k, index) => {
         return (
-          <Row>
+          <Row key={index}>
             <Col span={12}>
               <FormItem
                 label={index === 0 ? '账户' : ''}
@@ -372,34 +375,33 @@ class BasicInfoEdit extends Component{
                 })(
                   <Input placeholder="填写账号信息"  />
                 )}
-
               </FormItem>
             </Col>
             <Col span={12} className="addmessage">
                 <FormItem
                   wrapperCol={{span: 24}}
-                  
+
                 >
+                  <span>(</span>
                   {getFieldDecorator(`info-${k}`, {
                     initialValue:len > index ? eachCustomerInfo.account[index].info : "",
                     onChange: this.inputChange
                   })(
                     <Input placeholder="填写备注信息"/>
                   )}
+                  <span>)</span>
                   {
                     index === 0
-                    ? 
-                    <Icon
-                      className="dynamic-delete-button"
-                      type="plus-circle-o"
+                    ?
+                    <i
+                      className="dynamic-add-button iconfont"
                       onClick={this.add}
-                    />
+                    >&#xe688;</i>
                     :
-                    <Icon
-                      className="dynamic-delete-button"
-                      type="minus-circle-o"
+                    <i
+                      className="dynamic-delete-button iconfont"
                       onClick={() => this.remove(k)}
-                    />
+                    >&#xe697;</i>
                   }
                 </FormItem>
             </Col>
@@ -536,7 +538,7 @@ class BasicInfoEdit extends Component{
                           label="身份证号："
                           className="idnumber"
                           >
-                          
+
                   {getFieldDecorator('certificate', {
                     initialValue: eachCustomerInfo.certificate,
                     onChange: this.inputChange
@@ -647,8 +649,9 @@ class BasicInfo extends Component {
       visible: this.state.modalVisible,
       hide: this.modalHide
     };
-    const {step, mode, currentId} = this.props;
+    const {step, mode, currentId, customerInfoBeEdit} = this.props;
     const {eachCustomerInfo,edited} = this.state;
+    console.log(this.props);
     return(
       <div style={{textAlign: 'left'}}>
 
@@ -656,6 +659,7 @@ class BasicInfo extends Component {
 
         <div className="">
           { mode !== "view" && <BasicInfoListsEdit
+                                  customerInfoBeEdit={customerInfoBeEdit}
                                   currentId={this.props.currentId}
                                   eachCustomerInfo={this.state.eachCustomerInfo}
                                   />}
@@ -666,14 +670,14 @@ class BasicInfo extends Component {
         <div className="maintain">
           <Tabs type='card'>
             <TabPane tab="维护记录" key="basicInfo">
-              <AddNewRecord />
+              <AddMaintainRecord />
               <MaintainRecord />
             </TabPane>
             <TabPane tab="操作记录" key="familyInfo">
-              2
+              <p></p>
             </TabPane>
             <TabPane tab="修改记录" key="jobInfo">
-              3
+              <p>3</p>
             </TabPane>
           </Tabs>
         </div>
@@ -684,7 +688,7 @@ class BasicInfo extends Component {
 
 
 const mapStateToProps = (store) => {
-  console.log(store)
+  // console.log(store)
   return {
     currentCustomerInfo: store.customer.currentCustomerInfo
   }
@@ -692,7 +696,9 @@ const mapStateToProps = (store) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createCustomerSuccess:(id) => {dispatch(createCustomerSuccess(id))}
+    createCustomerSuccess:(id) => {dispatch(createCustomerSuccess(id))},
+    customerInfoBeEdit: () => {dispatch(customerInfoBeEdit())}
   }
 }
+
 export default connect(mapStateToProps,mapDispatchToProps)(BasicInfo);

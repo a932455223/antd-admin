@@ -112,7 +112,7 @@ class TablePage extends Component {
       pagination: false,
       onRowClick: this.rowClick,
       rowKey: record => record.id,
-      // scroll: { y: 240 }, // 固定表头
+      scroll: { y: 1 }, // 固定表头
       rowSelection: {
         onChange: this.onSelectChange
       } // 打开选择框
@@ -156,8 +156,8 @@ class TablePage extends Component {
     }
 
     return (
-      <div className="tablepage">
-        <header>
+      <div className="tablepage" id="tablePage">
+        <header id="customerTableHeader">
           <Button
             className="addNewCustomer"
             type="primary"
@@ -168,7 +168,7 @@ class TablePage extends Component {
           </Button>
           <Button>
             <Icon type="download" />
-            <span>更多操作</span>
+            <span>导入客户</span>
           </Button>
         </header>
 

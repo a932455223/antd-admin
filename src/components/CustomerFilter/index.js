@@ -57,7 +57,7 @@ class CustomerFilter extends Component {
 	render() {
 		const { selectedTags } = this.state;
 		return (
-      <div className={style.droplist}>
+      <div className={style.droplist} id="customerFilter">
       	<div className={style.filter}>
           <b>我的客户</b>
           <span>|</span>
