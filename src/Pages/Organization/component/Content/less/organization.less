@@ -105,7 +105,7 @@
     font-size: 18px;
     font-weight: 600;
 
-    span {
+    span:last-child {
       font-size: 22px;
       cursor: pointer;
       &:hover {
@@ -134,9 +134,9 @@
     color: #fff;
 
 
-    &:hover {
+    &:hover ,&:focus,&:active{
       border-color: @organization-primary-color;
-
+      color: #fff;
     }
   }
 

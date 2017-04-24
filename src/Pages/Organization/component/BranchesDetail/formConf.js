@@ -3,23 +3,25 @@
  */
 import React from 'react';
 import {Row,Col,Select} from 'antd';
+import AreaSelect from '../../../../components/AreaSelect';
+
 
 
 const Option = Select.Option;
 
 const formItemLayout = {
   labelCol: {
-    span: 6
+    span: 5
   },
   wrapperCol: {
-    span: 8
+    span: 12
   }
 };
 
 
 export const addDepartmentForForm = [
   {
-    label: '组织机构名称',
+    label: '机构名称',
     type: 'input',
     required: true,
     message: '请填写组织机构名称！',
@@ -78,41 +80,7 @@ export const addDepartmentForForm = [
     formItemLayout: formItemLayout,
     field: 'address',
     render: (
-      <Row>
-        <Col span="8">
-          <Select
-            getPopupContainer = {
-              () => document.getElementById("branchesDetail")
-            }
-            placeholder="Please select a country"
-          >
-            <Option value="china">China</Option>
-            <Option value="use">U.S.A</Option>
-          </Select>
-        </Col>
-        <Col span="8">
-          <Select
-            getPopupContainer = {
-              () => document.getElementById("branchesDetail")
-            }
-            placeholder="Please select a country"
-          >
-            <Option value="china">China</Option>
-            <Option value="use">U.S.A</Option>
-          </Select>
-        </Col>
-        <Col span="8">
-          <Select
-            placeholder="Please select a country"
-            getPopupContainer = {
-              () => document.getElementById("branchesDetail")
-            }
-          >
-            <Option value="china">China</Option>
-            <Option value="use">U.S.A</Option>
-          </Select>
-        </Col>
-      </Row>
+      <AreaSelect/>
     )
   },
   {

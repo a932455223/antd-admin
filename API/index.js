@@ -33,6 +33,10 @@ export default {
 
   GET_STAFF_BASE: id => `/asd/staff/${id}/base`,
 
+  GET_DEPARTMENT_BASE: id => `/asd/department/${id}/base`,
+
+  GET_AREA_SELECT: id => `/api/common/region/parent/${id}`,
+
   //=======================================
 
   //==================================================================

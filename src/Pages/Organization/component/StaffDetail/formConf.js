@@ -5,8 +5,8 @@
  * 时间： 17.3.2
  */
 import React from 'react';
-import {TreeSelect} from 'antd';
-
+import {TreeSelect,Radio} from 'antd';
+const RadioGroup = Radio.Group;
 
 const formItemLayoutS = {
   labelCol: {
@@ -20,10 +20,10 @@ const formItemLayoutS = {
 
 const formItemLayout = {
   labelCol: {
-    span: 4
+    span: 6
   },
   wrapperCol: {
-    span: 5
+    span: 12
   }
 };
 
@@ -48,21 +48,17 @@ export const baseDataForForm = [
   },
   {
     label: '性别',
-    type: 'select',
+    type: 'other',
     required: false,
     message: '请选择性别！',
     formItemLayout: formItemLayoutS,
     field: 'sex',
-    options: [
-      {
-        value: "1",
-        text: '男'
-      },
-      {
-        value: "0",
-        text: '女'
-      }
-    ]
+    render: (
+      <RadioGroup >
+        <Radio value={1}>男</Radio>
+        <Radio value={0}>女</Radio>
+      </RadioGroup>
+    )
   },
   {
     label: '出生日期',
@@ -110,7 +106,7 @@ export const connectDataForForm = [
     field: 'address'
   },
   {
-    label: '添加为用户',
+    label: '添加用户',
     type: 'select',
     required: true,
     message: '请选择是否添加用户！',

@@ -1,4 +1,4 @@
-.departmentDetail{
+.departmentDetail {
   position: absolute;
   top: 0;
   left: 0;
@@ -7,16 +7,16 @@
   padding: 20px;
   overflow: auto;
 
-  .departmentDetail-title{
+  .departmentDetail-title {
     height: 45px;
     margin-bottom: 20px;
 
-    > div{
+    > div {
       line-height: 45px;
       height: 45px;
     }
 
-    .close{
+    .close {
       display: block;
       font-size: 30px;
       cursor: pointer;
@@ -24,14 +24,27 @@
       height: 45px;
     }
 
-    .close:hover{
+    .close:hover {
       color: #f00;
     }
   }
 
+  .branches-form {
+    > div:first-child {
+      border-bottom: 1px solid #F4F4F6;
+      > div {
+        display: flex;
+        justify-content: center;
+      }
+    }
 
+    > div:last-child{
+      text-align: center;
+      padding-top: 20px;
 
-  .branches-form{
-    padding: 20px;
+      button{
+        margin: 0 10px;
+      }
+    }
   }
 }

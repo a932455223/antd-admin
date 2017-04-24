@@ -333,7 +333,23 @@ module.exports = {
       email: /[0-9]{13}@gmail.com/,
       address: '上海 闵行'
     }
-  })
+  }),
+
+  'GET /asd/department/:id/base': Mock.mock({
+    code: 200,
+    data: {
+      name: '壶关农商行',
+      category: /总行|分行/,
+      parentDepartment: '壶关农商总行',
+      director: /老(王|黄|张)/,
+      phone: /[0-9]{13}/,
+      address: '上海 闵行'
+    }
+  }),
+
+  'GET /api/common/region/parent/:id': {
+    data: 'asd'
+  }
 };
 
 
