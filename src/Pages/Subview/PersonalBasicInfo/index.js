@@ -31,7 +31,7 @@ function info(msg,color){
 }
 
 // 新增维护记录
-class AddNewRecordForm extends Component {
+class AddMaintainRecordForm extends Component {
   // 下拉框选择发生变化时
   selectChange = (value) => {
     // console.log(value);
@@ -158,7 +158,7 @@ class AddNewRecordForm extends Component {
     )
   }
 }
-const AddNewRecord = Form.create()(AddNewRecordForm);
+const AddMaintainRecord = Form.create()(AddMaintainRecordForm);
 
 // 维护记录
 class MaintainRecord extends Component {
@@ -225,7 +225,7 @@ class MaintainRecord extends Component {
                 </section>
 
                 <section className="text">
-                  <Input  value='介绍理财产品，制定理财计划书，客户下单'/>
+                  <Input  placeholder='介绍理财产品，制定理财计划书，客户下单'/>
                 </section>
               </div>
             </div>
@@ -361,7 +361,7 @@ class BasicInfoEdit extends Component{
       var len = eachCustomerInfo.account && eachCustomerInfo.account.length;
       var formItemArray = keys.map((k, index) => {
         return (
-          <Row>
+          <Row key={index}>
             <Col span={12}>
               <FormItem
                 label={index === 0 ? '账户' : ''}
@@ -673,14 +673,14 @@ class BasicInfo extends Component {
         <div className="maintain">
           <Tabs type='card'>
             <TabPane tab="维护记录" key="basicInfo">
-              <AddNewRecord />
+              <AddMaintainRecord />
               <MaintainRecord />
             </TabPane>
             <TabPane tab="操作记录" key="familyInfo">
-              2
+              <p></p>
             </TabPane>
             <TabPane tab="修改记录" key="jobInfo">
-              3
+              <p>3</p>
             </TabPane>
           </Tabs>
         </div>
