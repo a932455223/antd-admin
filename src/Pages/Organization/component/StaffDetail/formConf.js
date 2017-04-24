@@ -20,10 +20,10 @@ const formItemLayoutS = {
 
 const formItemLayout = {
   labelCol: {
-    span: 6
+    span: 4
   },
   wrapperCol: {
-    span: 10
+    span: 5
   }
 };
 

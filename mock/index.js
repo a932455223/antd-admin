@@ -295,6 +295,22 @@ module.exports = {
       }]
     },
     message: 'some message'
+  }),
+
+  'GET /asd/staff/:id/base': Mock.mock({
+    code: 200,
+    data: {
+      name: '李小花',
+      sex: '男',
+      age: /[19]{2}/,
+      certificateType: '身份证',
+      certificate: /[0-9]{13}/,
+      birth: '1995-12-11',
+      phone: /[0-9]{13}/,
+      wechat: /[0-9]{8}/,
+      email: /[0-9]{13}@gmail.com/,
+      address: '上海 闵行'
+    }
   })
 };
 
