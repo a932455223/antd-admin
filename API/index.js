@@ -46,6 +46,9 @@ export default {
   GET_DEPARTMENTS: '/asd/departments',
 
   // 组织机构员工列表
-  GET_STAFFS: '/asd/staffs'
+  GET_STAFFS: '/asd/staffs',
+
+  // 用户权限管理 用户列表
+  GET_USERS: '/asd/system/users'
 
 }

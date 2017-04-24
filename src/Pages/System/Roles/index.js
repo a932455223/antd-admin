@@ -3,14 +3,13 @@ import {Button, Table} from "antd";
 import Dock from "react-dock";
 import axios from "axios";
 //=============================================================
-import ActionBar from "../component/ActionBar";
-import UserInfo from "./component/UserInfoCard";
-import LimitCard from "./component/LimitCard";
+
+import Content from '../component/Content';
 //===============================================================
 import './less/rolesStyle.less';
 import API from '../../../../API';
 
-export default class SystemUsers extends Component {
+export default class SystemRoles extends Component {
 
   state = {
     table: {
@@ -35,66 +34,12 @@ export default class SystemUsers extends Component {
       })
   }
 
-  componentDidMount() {
-
-  }
-
   rowClick(rowData) {
     this.setState({
       dock: {
         visible: true,
-        children: (
-          <UserInfo
-            id={rowData.id}
-            showLimit={this.showLimitCardFromUserInfoCard.bind(this)}
-          />
-        )
       }
     });
-  }
-
-  showLimitCardFromTable(id) {
-    this.setState({
-      dock: {
-        visible: true,
-        children: <LimitCard
-          id={id}
-          saveClick={() => {
-            this.setState({
-              dock: {
-                visible: false
-              }
-            })
-          }}
-        />
-      }
-    })
-  }
-
-  showLimitCardFromUserInfoCard(id) {
-    this.setState({
-      dock: {
-        visible: true,
-        children: (
-          <LimitCard
-            id={id}
-            saveClick={() => {
-              this.setState({
-                dock: {
-                  visible: true,
-                  children: (
-                    <UserInfo
-                      id={id}
-                      showLimit={this.showLimitCardFromUserInfoCard.bind(this)}
-                    />
-                  )
-                }
-              })
-            }}
-          />
-        )
-      }
-    })
   }
 
   render() {
@@ -126,13 +71,10 @@ export default class SystemUsers extends Component {
           return (
             <div>
               <Button>{text}</Button>
-
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
-                  this.showLimitCardFromTable(rowData.id)
                 }}
-
                 className="tableRolesBtn"
               >
                 分配权限
@@ -144,37 +86,23 @@ export default class SystemUsers extends Component {
     ];
 
 
-    const tableConfig = {
+    const tableConf = {
       columns: columns,
       dataSource: this.state.table.dataSource,
       loading: this.state.table.loading,
       onRowClick: this.rowClick.bind(this)
     };
 
-    const dockConfig = {
-      position: 'right',
-      isVisible: this.state.dock.visible,
-      dimMode: 'opaque',
-      defaultSize: .5,
-      onVisibleChange: () => {
-        this.setState({
-          dock: {
-            visible: false
-          }
-        })
-      }
+    const dockConf = {
+      visible: this.state.dock.visible,
+      children: this.state.dock.children
     };
 
     return (
-      <div className="roles">
-        <ActionBar/>
-        <Table {...tableConfig} scroll={{y: 390}}/>
-        <Dock {...dockConfig}>
-          <div className="dockContainer">
-            {this.state.dock.children}
-          </div>
-        </Dock>
-      </div>
+      <Content
+        tableConf={tableConf}
+        dockConf={dockConf}
+      />
     )
   }
 }
