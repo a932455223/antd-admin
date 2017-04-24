@@ -379,7 +379,7 @@ class BasicInfoEdit extends Component{
                   wrapperCol={{span: 24}}
                   
                 >
-                  {getFieldDecorator('info', {
+                  {getFieldDecorator(`info-${k}`, {
                     initialValue:len > index ? eachCustomerInfo.account[index].info : "",
                     onChange: this.inputChange
                   })(
