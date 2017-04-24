@@ -17,6 +17,11 @@
 }
 .basicinfolist input{
   font-size: 14px;
+  color: #000;
+  border:1px solid #fff;
+  &:hover{
+    border: 1px solid #d9d9d9;
+  };
 }
 .basicinfolist{
   margin-bottom: 18px;
@@ -27,9 +32,25 @@
     box-shadow: 0 1px 3px 0 #dfdfe1;
     border:1px solid #d4d4d5;
     margin-bottom: 18px;
-    .ant-select-selection__rendered .ant-select-selection-selected-value{
-      font-size: 14px;
+    .ant-select-selection{
+      border:1px solid #fff;
+      &:hover{
+        border: 1px solid #d9d9d9;
+        transition: all 0.3s;
+        .ant-select-arrow{
+          display: block;
+        }
+      };
+      .ant-select-selection__rendered .ant-select-selection-selected-value{
+        font-size: 14px;
+        color: #000;
+      }
+      .ant-select-arrow{
+        display: none;
+        transition: all 0.3s;
+      }
     }
+    
 
   }
   .personinfo{
@@ -81,7 +102,160 @@
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
     box-shadow: 0 1px 3px 0 #dfdfe1;
+    button{
+      padding: 3px 10px;
+      color: #999;
+      border:1px solid #d4d4d5;
+      background: #efefef;
+    }
   }
 }
+
+.maintain{
+  label{
+    font-size: 14px;
+    color: #999;
+  }
+  .ant-row{
+    margin: 8px 0;
+  }
+  .ant-select-selection__rendered{
+    font-size: 14px;
+  }
+  .ant-tabs.ant-tabs-card{
+    .ant-tabs-bar{
+      margin-bottom: 0;
+        .ant-tabs-nav-container{
+          height: 50px;
+          background: #fafafa;
+          border:1px solid #d4d4d5;
+          border-radius: 4px 4px 0 0;
+          overflow: hidden;
+          /*border-bottom: none;*/
+          .ant-tabs-nav-scroll{
+            .ant-tabs-nav{
+              margin-left: -1px;
+              margin-top: -1px;
+              .ant-tabs-tab{
+                padding: 14px 20px 16px;
+                border: none;
+                border-radius: 0;
+                margin-right: 0;
+              }
+              .ant-tabs-tab-active{
+                color: black;
+                border-right: 1px solid #d4d4d5;
+                border-left: 1px solid #d4d4d5;
+              } 
+            }
+          }
+        } 
+    } 
+    .ant-tabs-content{
+      border:1px solid #d4d4d5;
+      border-top:none; 
+      background: #fff;
+      padding: 15px;
+      border-radius: 0 0 4px 4px;
+      box-shadow: 0 1px 3px 0 #dfdfe1;
+      overflow: hidden;
+      .ant-card-bordered{
+        border:1px solid #d4d4d5;
+        border-radius: 4px;
+        &:hover{
+          box-shadow: none;
+        }
+        .ant-card-head{
+          border:none;
+          .ant-card-head-title{
+            
+          }
+          span i{
+            margin-right: 4px;
+          }
+        }
+        .ant-card-body{
+          padding-top: 0px;
+          .buttons{
+            .submit{
+              background-color: #5c6bc0;
+              border-color: #5c6bc0;
+              padding: 3px 10px;
+              font-weight: normal;
+              margin-right: 8px;
+            }
+            .cancle{
+               padding: 3px 12px;
+            }
+          } 
+        }
+      }
+      ul.ant-timeline{
+        margin-top: 30px;
+        padding-left: 30px;
+        .ant-timeline-item{
+          .ant-timeline-item-content{
+            overflow: hidden;
+            .time{
+              float: left;
+              p{
+                color: #999;
+              }
+            }
+            .timelinereacod{
+              float: right;
+              width: 480px;
+              .edit{
+                position: absolute;
+                top: 0;
+                right: 0;
+                color: #5f768f;
+                span{
+                  margin-left: 12px;
+                }
+              }
+              .record{
+                line-height: 28px;
+                color: #999;
+                div{
+                  color: #333;
+                  line-height: 15px;
+                }
+              }
+              .text{
+                background: #f5f5f5;
+                footer{
+                  margin-top: 8px;
+                  float: right;
+                  span{
+                    color: #5c6bc0;
+                  }
+                  button{
+                    padding: 3px 10px;
+                    background: #5c6bc0;
+                    font-weight: 100;
+                    border:none;
+                    margin-left: 12px;
+                    span{
+                      color: #fff;
+                    }
+                  }
+                  
+                }
+              }
+
+            }
+          }
+        }
+      }
+      .loadmore{
+        width: 480px;
+        float: right;
+      }
+    }
+  }
+}
+
+
 
 

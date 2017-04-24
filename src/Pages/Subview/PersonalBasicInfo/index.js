@@ -146,11 +146,11 @@ class AddNewRecordForm extends Component {
               </FormItem>
             </Col>
 
-            <Col span={24}>
+            <Col span={24} className="buttons">
               <Col span={4}>
               </Col>
-              <Button type="primary">发布</Button>
-              <Button>取消</Button>
+              <Button type="primary" className="submit">发布</Button>
+              <Button className="cancle">取消</Button>
             </Col>
           </Row>
         </Form>
@@ -164,49 +164,75 @@ const AddNewRecord = Form.create()(AddNewRecordForm);
 class MaintainRecord extends Component {
   render() {
     return(
-      <div className="">
-        <Timeline className="">
+      <div className="maintainrecord">
+        <Timeline>
           <Timeline.Item >
-            <div className="">
-              <div>
+            <div className="timeline">
+              <div className="time">
                 <p>2015-09-01</p>
                 <p>14:02:20</p>
               </div>
 
 
-              <div className="">
-                <header>
-                  <span>张益达</span>
+              <div className="timelinereacod">
+                <section className="edit">
                   <span>
                     <span><Icon type="edit" />编辑</span>
                     <span><Icon type="delete" />删除</span>
                   </span>
-                </header>
+                </section>
 
-                <section>
+                <section className="record">
+                  <div>张益达</div>
                   <span>【电话】</span>进行了
                   <span>1</span>次
                   <span>【产品到期提醒】</span>维护
                 </section>
 
-                <section className="">
+                <section className="text">
                   <Input  type='textarea'
-                          rows={4}
+                          rows={2}
                           value='介绍理财产品，制定理财计划书，客户下单'/>
                   <footer>
                     <span>取消</span>
-                    <span>保存修改</span>
+                    <Button>保存</Button>
                   </footer>
                 </section>
               </div>
             </div>
           </Timeline.Item>
-          <Timeline.Item>Solve initial network problems 2015-09-01</Timeline.Item>
-          <Timeline.Item dot={<Icon type="clock-circle-o" style={{ fontSize: '16px' }} />} color="red">Technical testing 2015-09-01</Timeline.Item>
-          <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
+          <Timeline.Item >
+            <div className="timeline">
+              <div className="time">
+                <p>2015-09-01</p>
+                <p>14:02:20</p>
+              </div>
+
+
+              <div className="timelinereacod">
+                <section className="edit">
+                  <span>
+                    <span><Icon type="edit" />编辑</span>
+                    <span><Icon type="delete" />删除</span>
+                  </span>
+                </section>
+
+                <section className="record">
+                  <div>张益达</div>
+                  <span>【电话】</span>进行了
+                  <span>1</span>次
+                  <span>【产品到期提醒】</span>维护
+                </section>
+
+                <section className="text">
+                  <Input  value='介绍理财产品，制定理财计划书，客户下单'/>
+                </section>
+              </div>
+            </div>
+          </Timeline.Item>
         </Timeline>
 
-        <Button>加载更多<Icon type="down" /></Button>
+        <Button className="loadmore">加载更多<Icon type="down" /></Button>
       </div>
     )
   }
@@ -636,7 +662,7 @@ class BasicInfo extends Component {
           { mode === "view" && <BasicInfoListsRead />}
         </div>
 
-        <div className="">
+        <div className="maintain">
           <Tabs type='card'>
             <TabPane tab="维护记录" key="basicInfo">
               <AddNewRecord />
