@@ -16,13 +16,18 @@
   .input {
     padding-top: 20px;
 
-    button {
+    .ant-btn-primary {
       width: 98px;
     	height: 32px;
     	border-radius: 2px;
-    	background-color: #5c6bc0;
+      background-color: #5c6bc0;
     	border: solid 1px #5c6bc0;
     }
+
+    // button {
+    //
+    //
+    // }
   }
 }
 
@@ -81,6 +86,7 @@
 
     > span {
       margin-left: 6px;
+      cursor: pointer;
     }
   }
 

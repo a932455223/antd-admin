@@ -18,11 +18,12 @@ import {
 import axios from 'axios';
 import API from '../../../../API';
 import { connect } from 'react-redux';
-import { createCustomerSuccess } from '../../../redux/actions/customerAction';
+import { createCustomerSuccess, customerInfoBeEdit } from '../../../redux/actions/customerAction';
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
 import './indexStyle.less';
+
 // import { BasicInfoListsEdit, BasicInfoListsRead }  from './basicInfoLists';
 
 function info(msg,color){
@@ -38,14 +39,13 @@ class AddNewRecordForm extends Component {
 
   // 日期修改时，打印日期
   dateChange = (date, dateString) => {
-    console.log(date, dateString);
+    // console.log(date, dateString);
   };
 
   // 修改输入的次数
   inputChange = (e) => {
-    // const { getFieldValue } = this.props.form;
-    // console.log(getFieldValue('name'))
-    // console.log(e.target);
+    // const { getFieldsValue } = this.props.form;
+    // console.log(getFieldsValue())
   };
 
   render() {
@@ -288,14 +288,19 @@ let addkey = 100;
 class BasicInfoEdit extends Component{
   state = {
     tags : []
-  } 
+  }
+
   componentWillReceiveProps(next) {
      this.setState({
-        tags:next.eachCustomerInfo.joiner
+        tags: next.eachCustomerInfo.joiner
       })
   }
-  inputChange = () => {
-    
+
+  inputChange = (e) => {
+    console.log('things changed');
+    // const { dispatch } = this.props;
+    this.props.customerInfoBeEdit();
+    // dispatch(customerInfoBeEdit())
   }
 
   remove = (k) => {
@@ -326,8 +331,9 @@ class BasicInfoEdit extends Component{
   }
   render() {
     const {eachCustomerInfo, edited, currentId, createCustomerSuccess} = this.props;
-    console.log(eachCustomerInfo);
+    // console.log(eachCustomerInfo);
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
+    // console.log(getFieldsValue())
 
     const kinitialValue = function(){
       var selfkeys = [];
@@ -353,7 +359,7 @@ class BasicInfoEdit extends Component{
     };
     const formItems = () => {
       var len = eachCustomerInfo.account && eachCustomerInfo.account.length;
-      var formItemArray = keys.map((k, index) => {   
+      var formItemArray = keys.map((k, index) => {
         return (
           <Row>
             <Col span={12}>
@@ -377,7 +383,7 @@ class BasicInfoEdit extends Component{
             <Col span={12} className="addmessage">
                 <FormItem
                   wrapperCol={{span: 24}}
-                  
+
                 >
                   {getFieldDecorator(`info-${k}`, {
                     initialValue:len > index ? eachCustomerInfo.account[index].info : "",
@@ -387,7 +393,7 @@ class BasicInfoEdit extends Component{
                   )}
                   {
                     index === 0
-                    ? 
+                    ?
                     <Icon
                       className="dynamic-delete-button"
                       type="plus-circle-o"
@@ -535,7 +541,7 @@ class BasicInfoEdit extends Component{
                           label="身份证号："
                           className="idnumber"
                           >
-                          
+
                   {getFieldDecorator('certificate', {
                     initialValue: eachCustomerInfo.certificate,
                     onChange: this.inputChange
@@ -646,8 +652,9 @@ class BasicInfo extends Component {
       visible: this.state.modalVisible,
       hide: this.modalHide
     };
-    const {step, mode, currentId} = this.props;
+    const {step, mode, currentId, customerInfoBeEdit} = this.props;
     const {eachCustomerInfo,edited} = this.state;
+    console.log(this.props);
     return(
       <div style={{textAlign: 'left'}}>
 
@@ -655,6 +662,7 @@ class BasicInfo extends Component {
 
         <div className="">
           { mode !== "view" && <BasicInfoListsEdit
+                                  customerInfoBeEdit={customerInfoBeEdit}
                                   currentId={this.props.currentId}
                                   eachCustomerInfo={this.state.eachCustomerInfo}
                                   />}
@@ -683,7 +691,7 @@ class BasicInfo extends Component {
 
 
 const mapStateToProps = (store) => {
-  console.log(store)
+  // console.log(store)
   return {
     currentCustomerInfo: store.customer.currentCustomerInfo
   }
@@ -691,7 +699,9 @@ const mapStateToProps = (store) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createCustomerSuccess:(id) => {dispatch(createCustomerSuccess(id))}
+    createCustomerSuccess:(id) => {dispatch(createCustomerSuccess(id))},
+    customerInfoBeEdit: () => {dispatch(customerInfoBeEdit())}
   }
 }
+
 export default connect(mapStateToProps,mapDispatchToProps)(BasicInfo);

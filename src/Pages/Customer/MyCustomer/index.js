@@ -25,6 +25,33 @@ export default class MyCustomer extends Component {
     privilege: []
   }
 
+  initTableScroll = () => {
+    const tableScroll     = document.getElementsByClassName('ant-table-body')[0];
+    const customer        = document.getElementById('customer');
+    const customerFilter  = document.getElementById('customerFilter');
+    const thead           = document.getElementsByTagName('thead')[0];
+    const customerPadding = 48;
+    const pageFooter      = 74;
+
+    tableScroll.style['max-height'] = customer.offsetHeight - customerFilter.offsetHeight -  thead.offsetHeight - customerPadding - pageFooter  + 'px';
+    tableScroll.style['overflow-y'] = 'auto';
+  }
+
+  componentDidMount(){
+    this.initTableScroll();
+    addEventListener('resize', this.initTableScroll)
+  }
+
+  // 更新页面高度
+  componentDidUpdate(){
+    this.initTableScroll();
+  }
+
+  // 卸载方法
+  componentWillUnmount(){
+    removeEventListener('resize', this.initTableScroll)
+  }
+
   /*
   * 初始化加载的时候，调用接口获取返回的数据
   * 根据返回的状态，拿到相对应的数据
@@ -155,7 +182,7 @@ export default class MyCustomer extends Component {
       }
     };
     return (
-      <div className="customer">
+      <div className="customer" id="customer">
         <div>
           <CustomerFilter onChange={(filters)=>{
 

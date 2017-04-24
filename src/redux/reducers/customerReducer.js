@@ -45,7 +45,14 @@ const customerOperation = (state = initialState, action) => {
     case actionTypes.CUSTOMER_INFO_BE_EDITED:
       return {
         ...state,
+        step: 2,
         beEdited: true
+      }
+
+    case actionTypes.CANCLE_BE_EDITED_CUSTOMER_INFO:
+      return {
+        ...state,
+        ...initialState
       }
 
     default:
@@ -60,6 +67,7 @@ const currentCustomerInfo = (state = {}, action) => {
     case actionTypes.FILL_CUSTOMER_INFO:
     case actionTypes.CREATE_CUSTOMER_SUCCESS:
     case actionTypes.CUSTOMER_INFO_BE_EDITED:
+    case actionTypes.CANCLE_BE_EDITED_CUSTOMER_INFO:
       return {
         ...state,
         ...customerOperation(state[0], action)

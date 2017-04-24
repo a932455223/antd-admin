@@ -41,3 +41,10 @@ export const customerInfoBeEdit = () => (
     type: actionTypes.CUSTOMER_INFO_BE_EDITED
   }
 )
+
+// cancle be edit customer info
+export const cancleBeEditedCustomerInfo = () => (
+  {
+    type: actionTypes.CANCLE_BE_EDITED_CUSTOMER_INFO
+  }
+)
