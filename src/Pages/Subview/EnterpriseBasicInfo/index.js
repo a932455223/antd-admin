@@ -487,7 +487,7 @@ class EnterpriseBasicInfo extends Component {
 
 
   getBaseInfo = (id) => {
-      axios.get(API.GET_JOBINFO_BASE(id))
+      axios.get(API.GET_COMPANY_BASE(id))
       .then((res) => {
           this.setState({
               ...this.state,
