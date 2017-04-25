@@ -1,6 +1,10 @@
 @import '../../../style/iconfont.less';
 .addmessage .ant-input{
   width: auto;
+  color: #999;
+  &:focus{
+    color:#000;
+  };
 }
 .basicinfolist .ant-form-item-label{
   text-align: left;
@@ -163,7 +167,9 @@
               .ant-tabs-tab{
                 position: static;
                 padding: 14px 20px 16px;
-                border: none;
+                border-right: 1px solid #fafafa;
+                border-left: 1px solid #fafafa;
+                border-top: none;
                 border-radius: 0;
                 margin-right: 0;
               }

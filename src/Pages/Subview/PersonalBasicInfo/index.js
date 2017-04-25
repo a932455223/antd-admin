@@ -183,14 +183,14 @@ class BasicInfoEdit extends Component{
                   wrapperCol={{span: 24}}
 
                 >
-                  <span>(</span>
+                  
                   {getFieldDecorator(`info-${k}`, {
                     initialValue:len > index ? eachCustomerInfo.account[index].info : "",
                     onChange: this.inputChange
                   })(
                     <Input placeholder="填写备注信息"/>
                   )}
-                  <span>)</span>
+                  
                   {
                     index === 0
                     ?
