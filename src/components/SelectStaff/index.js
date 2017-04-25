@@ -125,9 +125,7 @@ export default class SelectStaff extends Component {
               <h3>选择人员</h3>
               <Icon
                 type="close"
-                onClick={() => {
-                  this.props.back(this.props.id)
-                }}
+                onClick={this.props.back.bind(this,this.props.id)}
                 className="back"
               />
             </div>
@@ -178,7 +176,7 @@ export default class SelectStaff extends Component {
               <Tag closable>Prevent Default</Tag>
             </div>
             <div className="btn-group">
-              <Button>取消</Button>
+              <Button onClick={this.props.back.bind(this,this.props.id)}>取消</Button>
               <Button>确认</Button>
             </div>
           </div>

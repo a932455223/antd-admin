@@ -31,7 +31,9 @@ class UserEdit extends Component {
         <div className="user-edit-title">
           <h3>张三</h3>
           <span>
-            <Button>重置密码</Button>
+            <Button onClick={() => {
+              alert('重置成功')
+            }}>重置密码</Button>
             <Button
               className="close"
               onClick={this.props.close}
