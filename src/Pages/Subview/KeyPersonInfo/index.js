@@ -57,8 +57,7 @@ export default class KeyPersonInfo extends Component {
                   prefix={
                     <i className="iconfont icon-customer1"></i>}
                   type="text"
-                  placeholder="请输入关键人姓名"
-                  value=""
+                  value="张三"
                 />
                 <span
                   className="cancel-btn"
@@ -83,7 +82,7 @@ export default class KeyPersonInfo extends Component {
                     prefix={
                       <i className="iconfont icon-customer1"></i>}
                     type="text"
-                    placeholder="请输入部门"
+                    value="业务部门"
                   />
                 </FormItem>
               </Col>
@@ -98,7 +97,7 @@ export default class KeyPersonInfo extends Component {
                     prefix={
                       <i className="iconfont icon-customer1"></i>}
                     type="text"
-                    placeholder="请输入手机号"
+                    value='15473638595'
                   />
                 </FormItem>
               </Col>
