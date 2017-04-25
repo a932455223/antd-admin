@@ -17,6 +17,7 @@ export default {
   GET_SYSTEM_SLIDER_BAR: '/asd/common/dropdown/list/system',
   GET_CUSTOMER_SLIDER_BAR: '/asd/common/dropdown/list/customer',
   GET_ORGANIZATION_SLIDER_BAR: '/asd/common/dropdown/list/organization',
+  GET_PRODUCT_SLIDER_BAR: '/asd/common/dropdown/list/product',
 
   GET_RELATION_SLIDER_BAR: '/asd/common/dropdown/list/relation',
   GET_JOBCATEGORY_SLIDER_BAR: '/asd/common/dropdown/list/jobCategory',
@@ -29,6 +30,7 @@ export default {
   GET_JOBINFO_BASE: id =>  `/asd/jobinfo/${id}/base`,
 
   GET_COMPANY_BASE: id => `/asd/company/${id}/base`,
+  GET_FINANCE_BASE: id => `/asd/finance/${id}/base`,
 
 
   GET_STAFF_BASE: id => `/asd/staff/${id}/base`,
@@ -49,6 +51,14 @@ export default {
   GET_STAFFS: '/asd/staffs',
 
   // 用户权限管理 用户列表
-  GET_USERS: '/asd/system/users'
+  GET_USERS: '/asd/system/users',
 
+  // 产品类别 层级
+  GET_PRODUCT_HIERARCHY: '/asd/product/hierarchy',
+
+  // 所有产品
+  GET_ALL_PRODUCT: '/asd/product/list',
+
+  // 产品分类列表
+  GET_PRODUCT_CLASSIFY_LIST: '/asd/product/classify/list'
 }

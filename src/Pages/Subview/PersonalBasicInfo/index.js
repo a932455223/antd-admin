@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
 import {
-  Card,
   Tabs,
   Row,
   Col,
   Icon,
   Form,
-  InputNumber,
   Input,
   Button,
   Tag,
   Select,
-  DatePicker,
-  Timeline,
   Modal
  } from 'antd';
 import axios from 'axios';
@@ -25,7 +21,7 @@ const Option = Select.Option;
 import './indexStyle.less';
 import AddMaintainRecordForm from './widget/AddMaintainRecordForm'
 import MaintainRecord from './widget/MaintainRecord'
-
+import SelectStaff from '../../../components/SelectStaff'
 function info(msg,color){
   console.log('%c'+msg,'color:'+color);
 }
@@ -64,17 +60,12 @@ class AddCrewModal extends Component {
     const { visible } = this.props;
     return(
       <Modal  title="选择人员"
-              visible={visible}
+              width="500"
+              visible={false}
               onOk={this.handleOk}
               confirmLoading={this.state.confirmLoading}
               onCancel={this.handleCancel}>
-
-        <Tabs type='card'>
-          <TabPane tab="职位" key="crewPosition">
-          </TabPane>
-          <TabPane tab="群组" key="crewGroup">
-          </TabPane>
-        </Tabs>
+        <SelectStaff id="selectStaff"/>
       </Modal>
     )
   }
@@ -170,9 +161,8 @@ class BasicInfoEdit extends Component{
                 className="account"
               >
                 {getFieldDecorator(`names-${k}`, {
-                  validateTrigger: ['onChange', 'onBlur'],
                   initialValue:len > index ? eachCustomerInfo.account[index].accNumber : "",
-
+                  onChange: this.inputChange
                 })(
                   <Input placeholder="填写账号信息"  />
                 )}
@@ -183,14 +173,14 @@ class BasicInfoEdit extends Component{
                   wrapperCol={{span: 24}}
 
                 >
-                  
+
                   {getFieldDecorator(`info-${k}`, {
                     initialValue:len > index ? eachCustomerInfo.account[index].info : "",
                     onChange: this.inputChange
                   })(
                     <Input placeholder="填写备注信息"/>
                   )}
-                  
+
                   {
                     index === 0
                     ?
@@ -392,7 +382,6 @@ class BasicInfoEdit extends Component{
 const BasicInfoListsEdit = Form.create()(BasicInfoEdit);
 
 
-
 class BasicInfo extends Component {
   state = {
     modalVisible: false,
@@ -469,16 +458,36 @@ class BasicInfo extends Component {
         </div>
 
         <div className="maintain">
-          <Tabs type='card'>
-            <TabPane tab="维护记录" key="basicInfo">
+          <Tabs>
+            <TabPane tab="维护记录" key="basicInfo" className="tab01">
               <AddMaintainRecord />
               <MaintainRecord />
             </TabPane>
-            <TabPane tab="操作记录" key="familyInfo">
-              <p></p>
+            <TabPane tab="操作记录" key="familyInfo" className="tab02">
+              <div className="history">
+                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+
             </TabPane>
-            <TabPane tab="修改记录" key="jobInfo">
-              <p>3</p>
+            <TabPane tab="修改记录" key="jobInfo" className="tab03">
+             
             </TabPane>
           </Tabs>
         </div>

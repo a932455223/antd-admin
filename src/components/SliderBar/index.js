@@ -20,7 +20,8 @@ function info(msg, color = 'red') {
 const urls = {
     customer: API.GET_CUSTOMER_SLIDER_BAR,
     system: API.GET_SYSTEM_SLIDER_BAR,
-    organization: API.GET_ORGANIZATION_SLIDER_BAR
+    organization: API.GET_ORGANIZATION_SLIDER_BAR,
+    product: API.GET_PRODUCT_SLIDER_BAR
 };
 
 

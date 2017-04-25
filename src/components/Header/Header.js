@@ -103,7 +103,7 @@ const moreMenu = (
   <Menu className="moreMenu">
 
     <Menu.Item key="0">
-      <Link to='/customer/my'>
+      <Link to='/product/all'>
         金融产品管理
       </Link>
     </Menu.Item>

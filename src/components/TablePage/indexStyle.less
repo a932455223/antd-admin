@@ -45,19 +45,23 @@
     position: absolute;
     margin-left: 18px;
     margin-top: -91px;
-    // padding-top: 20px;
     padding-bottom: 20px;
-    // border-bottom: 1px #eaeaea solid;
-    background-color: #fff;
+    // background-color: #fff;
+    transition: all 1s ease;
     z-index: 10;
-    transition: width .3s ease-in-out;
+    transform: translateX(-100%);
 
     button {
       margin-right: 16px;
     }
   }
 
-  header {
+  .batchProcessingActive {
+    background-color: #fff;
+    transform: translateX(0);
+  }
+
+  > header {
     position: absolute;
     right: 16px;
     margin-top: -91px;

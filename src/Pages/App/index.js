@@ -9,6 +9,7 @@ import styles from'./index.scss'
 import SiderBar from '../../components/SliderBar'
 import NavPath from '../../components/NavPath/NavPath'
 import './App.less'
+import '../../style/base.less'
 
  class App extends Component{
     render(){

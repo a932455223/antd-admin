@@ -1,12 +1,12 @@
 import React, { PropTypes } from 'react'
-import { Form, Input, Button, Row, Col, Icon, notification } from 'antd'
+import { Form, Input, Button, Row, Col, Icon, notification, Card} from 'antd'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { login } from '../../redux/actions/auth'
 
 const FormItem = Form.Item
 
-import './login.scss'
+import './login.less'
 
 const propTypes = {
   user: PropTypes.object,
@@ -20,7 +20,6 @@ const contextTypes = {
 };
 
 class Login extends React.Component {
-
   constructor (props) {
     super(props);
     this.state = {
@@ -68,26 +67,78 @@ class Login extends React.Component {
   render () {
     const { getFieldDecorator } = this.props.form
     return (
-      <Row className="login-row" type="flex" justify="space-around" align="middle">
-        <Col span="8">
-          <Form layout="horizontal" onSubmit={this.handleSubmit.bind(this)} className="login-form">
-            <h2 className="logo"><span>logo</span></h2>
-            <FormItem>
-              {getFieldDecorator('user')(
-                <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder='admin' />
-              )}
-            </FormItem>
-            <FormItem>
-              {getFieldDecorator('password')(
-                <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type='password' placeholder='123456' />
-              )}
-            </FormItem>
-            <p>
-              <Button className="btn-login" type='primary' size="large" icon="poweroff" loading={this.state.loading} htmlType='submit'>确定</Button>
-            </p>
+      // <Row className="login-row" type="flex" justify="space-around" align="middle">
+      //   <Col span="8">
+      //     <Form layout="horizontal" onSubmit={this.handleSubmit.bind(this)} className="login-form">
+      //       <h2 className="logo"><span>logo</span></h2>
+      //       <FormItem>
+      //         {getFieldDecorator('user')(
+      //           <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder='admin' />
+      //         )}
+      //       </FormItem>
+      //       <FormItem>
+      //         {getFieldDecorator('password')(
+      //           <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type='password' placeholder='123456' />
+      //         )}
+      //       </FormItem>
+      //       <p>
+      //         <Button className="btn-login" type='primary' size="large" icon="poweroff" loading={this.state.loading} htmlType='submit'>登陆</Button>
+      //       </p>
+      //     </Form>
+      //   </Col>
+      // </Row>
+
+      <div className="loginpagebc">
+        <div className="loginpage">
+        <div className="img"></div>
+        <div className="loginbox">
+          <h1>登陆精准营销系统</h1>
+          <Form>
+              <FormItem labelCol={{span: 24}}
+                        wrapperCol={{span: 24}}
+                        label="用户名"
+                        className="user">
+                {getFieldDecorator('uesr', {
+                  onChange: this.dateChange
+                })(
+                  <Input  placeholder="请输入用户名" size="large"/>
+                )}
+              </FormItem>
+              <FormItem labelCol={{span: 24}}
+                        wrapperCol={{span: 24}}
+                        label="密码"
+                        className="password">
+                {getFieldDecorator('password', {
+                  onChange: this.dateChange
+                })(
+                  <Input  placeholder="请输入密码" size="large"/>
+                )}
+              </FormItem>
+              <FormItem labelCol={{span: 24}}
+                        wrapperCol={{span: 24}}
+                        label="验证码"
+                        className="yanzhengcode">
+                <Row gutter={8}>
+                  <Col span={14}>
+                    {getFieldDecorator('captcha', {
+                      rules: [{message: 'Please input the captcha you got!' }],
+                    })(
+                      <Input size="large" />
+                    )}
+                  </Col>
+                  <Col span={10}>
+                    <div></div>
+                  </Col>
+                </Row>
+              </FormItem>
+              <FormItem 
+               className="button">
+                <Button type="primary" htmlType="submit" size="large">登陆</Button>
+              </FormItem>
           </Form>
-        </Col>
-      </Row>
+        </div>
+        </div>
+      </div>
 
     )
   }
