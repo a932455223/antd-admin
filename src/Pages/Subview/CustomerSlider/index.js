@@ -198,6 +198,7 @@ class CustomerSlider extends Component {
   saveEditInfo = () => {
     const { beEdited } = this.props.currentCustomerInfo;
     if(beEdited) {
+      // let newState = update(this.state,{modalVisible:{$set:true}})
       this.setState({
         modalVisible: true
       });
