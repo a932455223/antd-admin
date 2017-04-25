@@ -1,0 +1,97 @@
+.risk {
+  text-align: left;
+}
+.my-test {
+  border-radius: 3px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px 0 #dfdfe1;
+  border: solid 1px #d4d4d5;
+  padding: 1em;
+}
+.my-test li p {
+  text-align: left;
+}
+.my-test li .ant-radio-group {
+  padding-left: 1em;
+  display: flex;
+  font-size: 12px;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.my-test li .ant-radio-group .ant-radio-wrapper {
+  padding: 0.3em 0 ;
+}
+.my-test footer {
+  border-top: 3px solid #efefef;
+}
+.my-test footer .ant-btn {
+  margin: 1em 0.5em;
+}
+.test-result {
+  border-radius: 3px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px 0 #dfdfe1;
+  border: solid 1px #d4d4d5;
+  padding: 1em;
+}
+.test-result .ant-row:nth-of-type(1) {
+  display: flex;
+}
+.test-result .my-row {
+  display: flex;
+  padding: 2.5em 1em;
+}
+.test-result .my-row .test-score {
+  width: 105px;
+  height: 105px;
+  border-radius: 55px;
+  background-color: #ffa102;
+  border: solid 5px #ffe5b9;
+  box-shadow: 0px 0px 0px 5px #fff6e5;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.test-result .my-row .test-score span:nth-of-type(1) {
+  line-height: 1;
+}
+.test-result .my-row .test-score span:nth-of-type(1) i {
+  font-style: normal;
+  font-size: 3em;
+  padding: 0 5px 0 0 ;
+}
+.test-result .my-row .test-type {
+  width: 200px;
+  flex-grow: 1;
+  text-align: left;
+  padding-left: 3em;
+}
+.test-result .my-row .test-type .ant-btn {
+  margin-left: 1em;
+}
+.test-result .my-row .test-type p {
+  color: #999999;
+  margin: 0.5em 0;
+}
+.test-result table .ant-table-thead tr th {
+  background-color: #7986cb;
+  color: #fff;
+}
+.test-result table .ant-table-thead tr th:nth-of-type(1) {
+  width: 8em;
+}
+.test-result table .ant-table-thead tr th:nth-of-type(2) {
+  width: 10em;
+}
+.test-result table .ant-table-tbody tr td {
+  border: none;
+}
+.test-result table .ant-table-tbody tr:nth-of-type(2n+1) {
+  color: #999999;
+}
+.test-result table .ant-table-tbody tr:nth-of-type(2n) {
+  background-color: #e8eaf6;
+}
