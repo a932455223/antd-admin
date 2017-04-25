@@ -2,11 +2,11 @@
  * Created by jufei on 2017/4/22.
  */
 import React, {Component} from "react";
-import {Card, Col, Icon, Row, Table, Tabs, Tree,Tag,Button} from "antd";
+import {Card, Col, Icon, Row, Table, Tabs, Tree,Tag, Button, message} from "antd";
 import axios from "axios";
 //=============================================+
 import "./less/indexStyle.less";
-import API from "../../../API";
+import API from "../../../../../API";
 
 
 const TabPane = Tabs.TabPane;
@@ -76,12 +76,13 @@ export default class BatchParticipate extends Component {
   initTableScroll(){
     let container = document.getElementById('selectStaffBody');
     let thead = document.getElementsByClassName('ant-table-thead')[0];
-    let tableScroll = document.getElementsByClassName('ant-table-body')[1];
     let table = document.getElementsByClassName('participateTable')[0];
+    let tableScroll = table.getElementsByClassName('ant-table-body')[0];
+    let pagenationHeight = 32;
 
-    tableScroll.style['max-height'] = container.offsetHeight - thead.offsetHeight - 40 + 'px';
-    tableScroll.style['overflow-y'] = 'auto';
-    console.log(table)
+    tableScroll.style['max-height'] = container.offsetHeight - thead.offsetHeight - pagenationHeight + 'px';
+    // tableScroll.style['overflow-y'] = 'auto';
+    // console.log(tableScroll.style['max-height'])
   }
 
   componentDidMount(){
@@ -106,6 +107,11 @@ export default class BatchParticipate extends Component {
   // log
   log = (e) => {
     // console.log(e)
+  }
+
+  // 确认参与人员的信息
+  confirmParticipant = () => {
+    message.success('参与者修改成功');
   }
 
   render() {
@@ -165,6 +171,7 @@ export default class BatchParticipate extends Component {
             <Table
               className="participateTable"
               {...tableConf}
+              rowClassName={(record, index) => {return 'participate'}}
               checkable
               rowKey={record => record.id}
               rowSelection={this.rowSelection}
@@ -178,7 +185,7 @@ export default class BatchParticipate extends Component {
 
         <div className="btn-group">
           <Button>取消</Button>
-          <Button>确认</Button>
+          <Button onClick={this.confirmParticipant}>确认</Button>
         </div>
       </div>
     )

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Table, Pagination, Spin, Button, Icon } from 'antd';
+import { Table, Pagination, Spin, Button, Icon, message } from 'antd';
 import Dock from 'react-dock';
 import './indexStyle.less';
 
@@ -33,7 +33,7 @@ class TablePage extends Component {
     // 异步加载 edit component
     require.ensure([],() => {
       let CustomerSlider = require('../../Pages/Subview/CustomerSlider').default;
-      let BatchParticipate = require('../BatchParticipate').default;
+      let BatchParticipate = require('./widget/BatchParticipate').default;
 
       setTimeout(() => {
         this.setState({
@@ -122,6 +122,11 @@ class TablePage extends Component {
     })
   }
 
+  // 批量关注
+  batchFocus = () => {
+    message.success('关注成功');
+  }
+
   render(){
     const { columns, dataSource, loading, pagination } = this.props;
 
@@ -192,7 +197,7 @@ class TablePage extends Component {
           <div
             className={this.state.batchProcessing ? "batchProcessing batchProcessingActive" : "batchProcessing"}
           >
-            <Button>批量关注</Button>
+            <Button onClick={this.batchFocus}>批量关注</Button>
             <Button onClick={this.batchParticipate}>批量参与</Button>
             <Button>批量提醒</Button>
             <Button>取消关注</Button>

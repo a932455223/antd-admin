@@ -366,7 +366,7 @@ class CustomerSlider extends Component {
     // 判断 currentId不等于新的 id，mode状态为 create，或者 activePersonalTabs／activeEnterpriseTabs 为空
     const resstPersonalTabs   = id !== currentId || mode === 'create' || activePersonalTabs === '';
     const resstEnterpriseTabs = id !== currentId || mode === 'create' || activeEnterpriseTabs === '';
-    console.log(id, next.currentCustomerInfo.id);
+    // console.log(id, next.currentCustomerInfo.id);
 
     // 判断当前的 id与 nextProps中的 id是否相等，若不相等，则重置 state
     if(id !== next.currentCustomerInfo.id) {
