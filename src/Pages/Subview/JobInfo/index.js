@@ -39,78 +39,31 @@ class MyJobInfo extends Component{
     const {eachJobInfo, edited, currentId, createCustomerSuccess} = this.props;
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
     return (
-        <Form id="mybase" className="basicinfolist">
+        <Form id="myjobbase" className="basicinfolist">
           <Row className={currentId === -1 ? "briefinfocreate" : "briefinfoedit"} type="flex" justify="space-between">
-            <Col span={7}>
+            <Col span={8}>
               <FormItem labelCol={{span: 11}}
                         wrapperCol={{span: 13}}
-                        label="所属机构">
-                {getFieldDecorator('department', {
+                        label="工作属性">
+                {getFieldDecorator('jobclass', {
                   rules: [{
                     required: true,
-                    message: '选择所属机构!'
+                    message: '选择工作属性!'
                   }],
-                  initialValue: eachJobInfo.department,
+                  initialValue: eachJobInfo.jobclass,
                   onChange: this.inputChange
                 })(
                     <Select
                       showSearch
-                      placeholder="选择所属机构"
+                      placeholder="选择工作属性"
                       optionFilterProp="children"
                       filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                      getPopupContainer={() => document.getElementById('mybase')}
+                      getPopupContainer={() => document.getElementById('myjobbase')}
                     >
-                      <Option value="jack">慈溪支行</Option>
-                      <Option value="lucy">长治支行</Option>
-                      <Option value="tom">苏州支行</Option>
+                      <Option value="jack">个体户</Option>
+                      <Option value="lucy">白领</Option>
+                      <Option value="tom">退休</Option>
                     </Select>
-                )}
-              </FormItem>
-            </Col>
-
-            <Col span={7}>
-              <FormItem labelCol={{span: 11}}
-                        wrapperCol={{span: 13}}
-                        label="客户经理">
-                {getFieldDecorator('manager', {
-                  initialValue: eachJobInfo.manager,
-                  onChange: this.inputChange
-                })(
-                  <Select
-                    showSearch
-                    placeholder="选择客户经理"
-                    optionFilterProp="children"
-                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    getPopupContainer={() => document.getElementById('mybase')}
-                  >
-                    <Option value="jack">李小龙</Option>
-                    <Option value="lucy">深井冰</Option>
-                    <Option value="tom">爱德华</Option>
-                  </Select>
-                )}
-              </FormItem>
-            </Col>
-
-            <Col span={7}>
-              <FormItem labelCol={{span: 11}}
-                        wrapperCol={{span: 13}}
-                        label="所属网格">
-                {getFieldDecorator('grid', {
-                  initialValue: eachJobInfo.grid,
-                  onChange: this.inputChange
-                })(
-                  <Select
-                    showSearch
-                    placeholder="选择所属网格"
-                    optionFilterProp="children"
-                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    getPopupContainer={() => document.getElementById('mybase')}
-
-                  >
-                    <Option value="jack">G666</Option>
-                    <Option value="lucy">S889</Option>
-                    <Option value="tom">Q233</Option>
-                  </Select>
                 )}
               </FormItem>
             </Col>
@@ -119,31 +72,48 @@ class MyJobInfo extends Component{
 
 
           <div className="personinfo">
-            {formItems()}
             <Row>
-              <Col span={12} className={currentId === -1 ? "phonecreate" : "phoneedit"}>
-                <FormItem labelCol={{span: 8}}
-                          wrapperCol={{span: 15}}
-                          label="手机号：">
-                  {getFieldDecorator('phone', {
-                    initialValue: eachJobInfo.wechat,
+              <Col span={24} className={currentId === -1 ? "phonecreate" : "phoneedit"}>
+                <FormItem labelCol={{span: 4}}
+                          wrapperCol={{span: 20}}
+                          label="经营范围">
+                  {getFieldDecorator('businessScope', {
+                    initialValue: eachJobInfo.businessScope,
                     onChange: this.inputChange,
                     rules: [{
                     required: true,
-                    message: '请填写手机号'
+                    message: '请填写经营范围'
                   }],
                   })(
                     <Input />
                   )}
                 </FormItem>
               </Col>
+            </Row>
 
-              <Col span={12} className={currentId === -1 ? "wechatcreate" : "wechatedit"}>
+            <Row>
+              <Col span={12} className={currentId === -1 ? "idcreate" : "idedit"}>
+                <FormItem labelCol={{span: 8}}
+                          wrapperCol={{span: 15}}
+                          label="经营产量"
+                          className="idnumber"
+                          >
+
+                  {getFieldDecorator('businessYield', {
+                    initialValue: eachJobInfo.businessYield,
+                    onChange: this.inputChange
+                  })(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+
+              <Col span={12} className={currentId === -1 ? "birthcreate" : "birthedit"}>
                 <FormItem labelCol={{span: 8,offset:1}}
                           wrapperCol={{span: 15}}
-                          label="微信号：">
-                  {getFieldDecorator('wechat', {
-                    initialValue: eachJobInfo.wechat,
+                          label="产量单价">
+                  {getFieldDecorator('businessPrice', {
+                    initialValue: eachJobInfo.businessPrice,
                     onChange: this.inputChange
                   })(
                     <Input />
@@ -156,12 +126,12 @@ class MyJobInfo extends Component{
               <Col span={12} className={currentId === -1 ? "idcreate" : "idedit"}>
                 <FormItem labelCol={{span: 8}}
                           wrapperCol={{span: 15}}
-                          label="身份证号："
+                          label="月收入"
                           className="idnumber"
                           >
 
-                  {getFieldDecorator('certificate', {
-                    initialValue: eachJobInfo.certificate,
+                  {getFieldDecorator('businessYield', {
+                    initialValue: eachJobInfo.monthIncome,
                     onChange: this.inputChange
                   })(
                     <Input />
@@ -172,9 +142,9 @@ class MyJobInfo extends Component{
               <Col span={12} className={currentId === -1 ? "birthcreate" : "birthedit"}>
                 <FormItem labelCol={{span: 8,offset:1}}
                           wrapperCol={{span: 15}}
-                          label="生日：">
-                  {getFieldDecorator('birth', {
-                    initialValue: eachJobInfo.birth,
+                          label="年收入">
+                  {getFieldDecorator('yearIncom', {
+                    initialValue: eachJobInfo.yearIncom,
                     onChange: this.inputChange
                   })(
                     <Input />
@@ -182,27 +152,12 @@ class MyJobInfo extends Component{
                 </FormItem>
               </Col>
             </Row>
-
-            <Row className="joiners">
-              <Col span={24}>
-                <Col span={4}>
-                  <span>参与者：</span>
-                </Col>
-                <Col span={20}>
-                  {tagsitems}
-                  <span className="addcrewbutton"
-                        onClick={this.props.show}>
-                    <Icon type="plus-circle-o" />添加人员
-                  </span>
-                </Col>
-              </Col>
-            </Row>
           </div>
           <Row className="buttonsave">
             <Col span={24} >
               <Col span={4}>
               </Col>
-              <Button type="primary" onClick={createCustomerSuccess}>保存</Button>
+                <Button type="primary" onClick={createCustomerSuccess}>保存</Button>
             </Col>
           </Row>
         </Form>
@@ -218,18 +173,16 @@ class JobInfo extends Component {
     eachJobInfo: ''
   }
   componentWillMount(){
-      info('basicInfo will mount')
       this.getBaseInfo(this.props.currentCustomerInfo.id)
   }
 
   componentWillReceiveProps(next){
-    info('basicInfo will receive props.')
       this.getBaseInfo(next.currentCustomerInfo.id);
   }
 
 
   getBaseInfo = (id) => {
-      axios.get(API.GET_CUSTOMER_BASE(id))
+      axios.get(API.GET_JOBINFO_BASE(id))
       .then((res) => {
           this.setState({
               ...this.state,
@@ -273,13 +226,11 @@ class JobInfo extends Component {
     console.log(this.props);
     return(
         <div className="">
-          { mode !== "view" && <JobInfoForm
-                                  customerInfoBeEdit={customerInfoBeEdit}
-                                  currentId={this.props.currentId}
-                                  eachJobInfo={this.state.eachJobInfo}
-                                  />}
-
-          { mode === "view" && <JobInfoForm />}
+         <JobInfoForm
+          customerInfoBeEdit={customerInfoBeEdit}
+          currentId={this.props.currentId}
+          eachJobInfo={this.state.eachJobInfo}
+        />
         </div>
     )
   }

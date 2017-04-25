@@ -144,7 +144,7 @@ class TablePage extends Component {
         // top: 64
       }, // 背景
       fluid: false,
-      defaultSize: 540, // 初始 width/height
+      defaultSize: 680, // 初始 width/height
       duration: 350, // 动画时间
       zIndex: 100,
     }

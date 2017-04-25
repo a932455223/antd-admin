@@ -26,7 +26,7 @@ export default {
 
 
   GET_CUSTOMER_BASE: id =>  `/asd/customer/${id}/base`,
-  GET_JOBINFO_BASE: id =>  `/asd/JOBINFO/${id}/base`,
+  GET_JOBINFO_BASE: id =>  `/asd/jobinfo/${id}/base`,
 
   GET_COMPANY_BASE: id => `/asd/company/${id}/base`,
 
