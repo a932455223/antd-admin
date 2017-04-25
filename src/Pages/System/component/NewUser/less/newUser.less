@@ -1,0 +1,38 @@
+.new-user{
+  .new-user-title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    margin-bottom: 16px;
+
+    >span{
+      display: flex;
+
+      button{
+        line-height: 26px;
+        margin-left: 15px;
+      }
+
+      button.close{
+        border: 0;
+        background: #F4F4F6;
+        font-size: 22px;
+        font-weight: 600;
+
+        &:hover,&:focus,&:active{
+          color: #f00;
+        }
+      }
+    }
+  }
+
+  .edit-username{
+    display: flex;
+    justify-content: space-between;
+
+    > div{
+      flex: auto;
+    }
+  }
+}

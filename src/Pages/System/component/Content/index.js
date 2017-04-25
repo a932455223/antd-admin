@@ -5,7 +5,7 @@ import React,{Component} from 'react';
 import {Card,Table} from 'antd';
 import Dock from 'react-dock';
 //============================================================
-import Filter from '../../../../components/CustomerFilter';
+import Filter from '../CustomerFilter';
 //===========================================================
 import './less/content.less';
 
@@ -56,14 +56,17 @@ export default class Content extends Component{
     return (
       <div className="system-content">
         <Card id="wrapper">
-          <Filter />
+          <Filter {...this.props.actionBarConf}/>
           <Table
             {...this.props.tableConf}
+            rowKey={record => record.id}
             scroll={{y: 300}}
           />
         </Card>
         <Dock {...dockConfig} {...this.props.dockConf}>
-          {this.props.dockConf.children}
+          <div className="dock-container">
+            {this.props.dockConf.children}
+          </div>
         </Dock>
       </div>
     )

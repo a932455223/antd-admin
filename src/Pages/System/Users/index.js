@@ -4,6 +4,8 @@ import Dock from "react-dock";
 import axios from "axios";
 //=============================================================
 import Content from '../component/Content';
+import UserEdit from '../component/UserEdit';
+import NewUser from '../component/NewUser';
 //===============================================================
 import './less/user.less';
 import API from '../../../../API';
@@ -33,10 +35,36 @@ export default class SystemUsers extends Component {
       })
   }
 
+  // 表格点击事件
   rowClick(rowData) {
     this.setState({
       dock: {
         visible: true,
+        children: (
+          <UserEdit
+            id={rowData.id}
+            close={this.close.bind(this)}
+          />
+        )
+      }
+    });
+  }
+
+  // 新增用户
+  newClick(){
+    this.setState({
+      dock: {
+        visible: true,
+        children: <NewUser close={this.close.bind(this)}/>
+      }
+    })
+  }
+
+  // 关闭dock
+  close(){
+    this.setState({
+      dock: {
+        visible: false,
       }
     });
   }
@@ -99,8 +127,14 @@ export default class SystemUsers extends Component {
       children: this.state.dock.children,
     };
 
+    const actionBarConf = {
+      mode: 'user',
+      newClick: this.newClick.bind(this)
+    };
+
     return (
       <Content
+        actionBarConf={actionBarConf}
         tableConf={tableConf}
         dockConf={dockConf}
       />

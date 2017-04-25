@@ -4,7 +4,6 @@
  * 创建者： JU
  * 时间： 17.3.2
  */
-// impo
 
 var Mock = require('mockjs');
 var axios = require('axios');
@@ -124,9 +123,9 @@ module.exports = {
 
   // 角色列表 roles
   'GET /asd/system/roles/list': Mock.mock({
-    'list|1-100': [{
+    'list|20': [{
       'id|+1': 1,
-      'clientName': '@name',
+      'clientName': /职员|管理层|行长|片区主管/,
       'customCount|1-20': 10,
       'createTime': '2013-12-12',
     }]
@@ -353,6 +352,7 @@ module.exports = {
     }
   }),
 
+
   //金融业务
   'GET /asd/finance/:id/base': Mock.mock({
     'code': 200,
@@ -366,6 +366,34 @@ module.exports = {
       'profit':'3.8%'
     }],
     'message':'finance message!'
+  }),
+  
+  'GET /asd/department/:id/base': Mock.mock({
+    code: 200,
+    data: {
+      name: '壶关农商行',
+      category: /总行|分行/,
+      parentDepartment: '壶关农商总行',
+      director: /老(王|黄|张)/,
+      phone: /[0-9]{13}/,
+      address: '上海 闵行'
+    }
+  }),
+
+  'GET /api/common/region/parent/:id': {
+    data: 'asd'
+  },
+
+  'GET /asd/system/users': Mock.mock({
+    code: 200,
+    "data|100": [{
+      name: /(周|吴|郑|王|赵|钱|孙|李)小嘿/,
+      phone: /[0-9]{13}/,
+      post: /职员|行长|分行长/,
+      department: /壶关农商行|长治市分行|壶关县分行/,
+      lastTime: '2012-13-13'
+    }]
+
   })
 };
 

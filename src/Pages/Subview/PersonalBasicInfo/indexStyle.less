@@ -1,122 +1,128 @@
 @import '../../../style/iconfont.less';
-.addmessage .ant-input{
+
+.addmessage .ant-input {
   width: auto;
   color: #999;
-  &:focus{
-    color:#000;
-  };
+  &:focus {
+    color: #000;
+  }
+;
 }
-.basicinfolist .ant-form-item-label{
+
+.basicinfolist .ant-form-item-label {
   text-align: left;
-  label{
+  label {
     font-size: 14px;
     color: #999;
   }
 }
-.basicinfolist input{
+
+.basicinfolist input {
   font-size: 14px;
   color: #000;
-  border:1px solid #fff;
-  &:hover{
+  border: 1px solid #fff;
+  &:hover {
     border: 1px solid #d9d9d9;
-  };
+  }
+;
 }
-.basicinfolist{
+
+.basicinfolist {
   margin-bottom: 18px;
-  .ant-form-item{
+  .ant-form-item {
     margin: 0;
   }
-  
-  .briefinfoedit{
+
+  .briefinfoedit {
     background: #fff;
     border-radius: 4px;
     padding: 10px 15px;
     box-shadow: 0 1px 3px 0 #dfdfe1;
-    border:1px solid #d4d4d5;
+    border: 1px solid #d4d4d5;
     margin-bottom: 18px;
-    .ant-select-selection{
-      border:1px solid #fff;
-      &:hover{
+    .ant-select-selection {
+      border: 1px solid #fff;
+      &:hover {
         border: 1px solid #d9d9d9;
         transition: all 0.3s;
-        .ant-select-arrow{
+        .ant-select-arrow {
           display: block;
         }
-      };
-      .ant-select-selection__rendered{
-        .ant-select-selection-selected-value{
+      }
+    ;
+      .ant-select-selection__rendered {
+        .ant-select-selection-selected-value {
           font-size: 14px;
           color: #000;
         }
-        .ant-select-search__field{
-          &:hover{
-            border:none;
+        .ant-select-search__field {
+          &:hover {
+            border: none;
           }
         }
-      } 
-      .ant-select-arrow{
+      }
+      .ant-select-arrow {
         display: none;
         transition: all 0.3s;
       }
     }
-    
 
   }
-  .personinfo{
+  .personinfo {
     background: #fff;
-    border:1px solid #d4d4d5;
+    border: 1px solid #d4d4d5;
     border-bottom: none;
     padding: 15px;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    .iconfont{
+    .iconfont {
       float: right;
-      margin:0 3px 0 0;
+      margin: 0 3px 0 0;
     }
-    .dynamic-delete-button{
-        color: #fe6168;
+    .dynamic-delete-button {
+      color: #fe6168;
     }
-    .dynamic-add-button{
-        color: #41bf89;
+    .dynamic-add-button {
+      color: #41bf89;
     }
-    .ant-row{
-      margin:4px 0;
-      .account .ant-form-item-label:before{
-        display:inline-block;
+    .ant-row {
+      margin: 4px 0;
+      .account .ant-form-item-label:before {
+        display: inline-block;
         width: 11px;
-        content:"";
+        content: "";
       }
-      .idnumber .ant-form-item-label:before{
-        display:inline-block;
+      .idnumber .ant-form-item-label:before {
+        display: inline-block;
         width: 11px;
-        content:"";
+        content: "";
       }
     }
-    .joiners{
+    .joiners {
       margin-top: 10px;
-      .ant-tag{
-          background: #fff;
+      .ant-tag {
+        background: #fff;
       }
-      .ant-col-4:before{
-        display:inline-block;
+      .ant-col-4:before {
+        display: inline-block;
         width: 11px;
-        content:"";
-        
-      } 
-      .ant-col-4 span{
-          font-size: 14px;
-          color: #999;
-       } 
+        content: "";
+
+      }
+      .ant-col-4 span {
+        font-size: 14px;
+        color: #999;
+      }
       .ant-col-20 .addcrewbutton {
         font-size: 14px;
         color: #5f768f;
-        i{
+        i {
           margin-right: 4px;
         }
-      }  
-    } 
+      }
+    }
   }
-  .buttonsave{
+  .buttonsave {
     border-left: 1px solid #d4d4d5;
     border-right: 1px solid #d4d4d5;
     background: #fafafa;
@@ -125,158 +131,158 @@
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
     box-shadow: 0 1px 3px 0 #dfdfe1;
-    button{
+    button {
       padding: 3px 10px;
       color: #999;
-      border:1px solid #d4d4d5;
+      border: 1px solid #d4d4d5;
       background: #efefef;
       float: left;
     }
   }
 }
 
-.maintain{
-  label{
+.maintain {
+  label {
     font-size: 14px;
     color: #999;
   }
-  .ant-row{
+  .ant-row {
     margin: 8px 0;
   }
-  .ant-select-selection__rendered{
+  .ant-select-selection__rendered {
     font-size: 14px;
   }
-  .ant-tabs{
-    .ant-tabs-bar{
+  .ant-tabs {
+    .ant-tabs-bar {
       margin-bottom: 0;
-        .ant-tabs-nav-container{
+      .ant-tabs-nav-container {
+        overflow: visible;
+        height: 50px;
+        background: #fafafa;
+        border: 1px solid #d4d4d5;
+        border-radius: 4px 4px 0 0;
+        .ant-tabs-nav-wrap {
           overflow: visible;
-          height: 50px;
-          background: #fafafa;
-          border:1px solid #d4d4d5;
-          border-radius: 4px 4px 0 0;
-          .ant-tabs-nav-wrap{
-            overflow: visible;
-          }
-          .ant-tabs-nav-scroll{
-            overflow: visible;
-            .ant-tabs-nav{
-              /*position: absolute;*/
-              margin-bottom: -1px;
-              height: 48px;
-              margin-left: -1px;
-              .ant-tabs-tab{
-                position: static;
-                padding: 14px 20px 16px;
-                border-right: 1px solid #fafafa;
-                border-left: 1px solid #fafafa;
-                border-top: none;
-                border-radius: 0;
-                margin-right: 0;
-              }
-              .ant-tabs-tab-active{
-                background: #fff;
-                color: black;
-                border-right: 1px solid #d4d4d5;
-                border-left: 1px solid #d4d4d5;
-              }
-              .ant-tabs-ink-bar{
-                background: #fff;
-              } 
+        }
+        .ant-tabs-nav-scroll {
+          overflow: visible;
+          .ant-tabs-nav {
+            /*position: absolute;*/
+            margin-bottom: -1px;
+            height: 48px;
+            margin-left: -1px;
+            .ant-tabs-tab {
+              position: static;
+              padding: 14px 20px 16px;
+              border-right: 1px solid #fafafa;
+              border-left: 1px solid #fafafa;
+              border-top: none;
+              border-radius: 0;
+              margin-right: 0;
+            }
+            .ant-tabs-tab-active {
+              background: #fff;
+              color: black;
+              border-right: 1px solid #d4d4d5;
+              border-left: 1px solid #d4d4d5;
+            }
+            .ant-tabs-ink-bar {
+              background: #fff;
             }
           }
-        } 
-    } 
-    .ant-tabs-content{
-      border:1px solid #d4d4d5;
-      border-top:none; 
+        }
+      }
+    }
+    .ant-tabs-content {
+      border: 1px solid #d4d4d5;
+      border-top: none;
       background: #fff;
       padding: 15px;
       border-radius: 0 0 4px 4px;
       box-shadow: 0 1px 3px 0 #dfdfe1;
       overflow: hidden;
-      .ant-card-bordered{
-        border:1px solid #d4d4d5;
+      .ant-card-bordered {
+        border: 1px solid #d4d4d5;
         border-radius: 4px;
-        &:hover{
+        &:hover {
           box-shadow: none;
         }
-        .ant-card-head{
-          border:none;
-          .ant-card-head-title{
-            
+        .ant-card-head {
+          border: none;
+          .ant-card-head-title {
+
           }
-          span i{
+          span i {
             margin-right: 4px;
           }
         }
-        .ant-card-body{
+        .ant-card-body {
           padding-top: 0px;
-          .buttons{
-            .submit{
+          .buttons {
+            .submit {
               background-color: #5c6bc0;
               border-color: #5c6bc0;
               padding: 3px 10px;
               font-weight: normal;
               margin-right: 8px;
             }
-            .cancle{
-               padding: 3px 12px;
+            .cancle {
+              padding: 3px 12px;
             }
-          } 
+          }
         }
       }
-      ul.ant-timeline{
+      ul.ant-timeline {
         margin-top: 30px;
         padding-left: 30px;
-        .ant-timeline-item{
-          .ant-timeline-item-content{
+        .ant-timeline-item {
+          .ant-timeline-item-content {
             overflow: hidden;
-            .time{
+            .time {
               float: left;
-              p{
+              p {
                 color: #999;
               }
             }
-            .timelinereacod{
+            .timelinereacod {
               float: right;
               width: 480px;
-              .edit{
+              .edit {
                 position: absolute;
                 top: 0;
                 right: 0;
                 color: #5f768f;
-                span{
+                span {
                   margin-left: 12px;
                 }
               }
-              .record{
+              .record {
                 line-height: 28px;
                 color: #999;
-                div{
+                div {
                   color: #333;
                   line-height: 15px;
                 }
               }
-              .text{
+              .text {
                 background: #f5f5f5;
-                footer{
+                footer {
                   margin-top: 8px;
                   float: right;
-                  span{
+                  span {
                     color: #5c6bc0;
                   }
-                  button{
+                  button {
                     padding: 3px 10px;
                     background: #5c6bc0;
                     font-weight: 100;
-                    border:none;
+                    border: none;
                     margin-left: 12px;
-                    span{
+                    span {
                       color: #fff;
                     }
                   }
-                  
+
                 }
               }
 
@@ -284,14 +290,20 @@
           }
         }
       }
-      .loadmore{
+      .loadmore {
         width: 480px;
         float: right;
       }
     }
   }
+
+
 }
 
-
+.ant-modal-wrap{
+  #selectStaff{
+    height: 500px;
+  }
+}
 
 

@@ -78,7 +78,7 @@ class BranchesEditor extends Component {
       }
     };
 
-    const baseInfo = this.state.staff.base
+    const baseInfo = this.state.staff.base;
 
     return (
       <Form onSubmit={this.handleSubmit.bind(this)}>

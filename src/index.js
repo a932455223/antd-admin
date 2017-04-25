@@ -13,4 +13,5 @@ const store = configStores();
 
 import S from './components/SelectStaff'
 // render(<S/>,document.getElementById('root'));
+
 render(<Root store= {store}/>,document.getElementById('root'));

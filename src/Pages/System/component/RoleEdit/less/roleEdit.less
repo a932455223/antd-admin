@@ -1,0 +1,94 @@
+@organization-primary-color: #7A87C6;
+
+.role-edit {
+  height: 100%;
+
+  .role-edit-title {
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+    span {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      button {
+        margin-right: 15px;
+        line-height: 28px;
+
+      }
+    }
+  }
+
+  .ant-card:not(:last-child) {
+    margin-bottom: 16px;
+  }
+
+  .ant-card-body {
+    padding: 16px;
+  }
+
+  .base-info {
+    p:not(:last-child) {
+      margin-bottom: 24px;
+    }
+
+    p {
+      font-size: 14px;
+      span {
+        display: inline-block;
+        width: 90px;
+        color: #A7A7A7;
+      }
+
+      &:last-child {
+        display: flex;
+      }
+    }
+  }
+
+  .ant-card-head-title {
+    p {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h3 {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .delete {
+    border: 0;
+    color: #f00;
+
+    &:hover {
+      color: #f00;
+    }
+  }
+
+  tr:hover .delete {
+    background: #F4F5FA;
+  }
+
+  .close,.close:visited,.close:focus {
+    font-size: 22px;
+    background: #F4F4F6;
+    color: #333;
+    border: 0;
+
+
+    &:hover{
+      color: #f00;
+    }
+  }
+
+  .save,.save:hover{
+    background: @organization-primary-color;
+    color: #fff;
+  }
+}
