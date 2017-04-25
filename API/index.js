@@ -51,6 +51,14 @@ export default {
   GET_STAFFS: '/asd/staffs',
 
   // 用户权限管理 用户列表
-  GET_USERS: '/asd/system/users'
+  GET_USERS: '/asd/system/users',
 
+  // 产品类别 层级
+  GET_PRODUCT_HIERARCHY: '/asd/product/hierarchy',
+
+  // 所有产品
+  GET_ALL_PRODUCT: '/asd/product/list',
+
+  // 产品分类列表
+  GET_PRODUCT_CLASSIFY_LIST: '/asd/product/classify/list'
 }
