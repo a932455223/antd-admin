@@ -21,7 +21,6 @@ export default class SelectStaff extends Component {
     }
   };
 
-
   componentWillMount() {
     axios.get(API.GET_DEPARTMENT_HIERARCHY)
       .then(res => {
@@ -29,7 +28,6 @@ export default class SelectStaff extends Component {
           department: res.data.data
         })
       });
-
 
     axios.get(API.GET_STAFFS)
       .then(res => {
@@ -132,8 +130,7 @@ export default class SelectStaff extends Component {
           }
         >
 
-          <div className="select-staff-body" id="mainBody">
-
+          <div className="select-staff-body">
             <div>
               <div>
                 <Tabs defaultActiveKey="1">
@@ -180,10 +177,7 @@ export default class SelectStaff extends Component {
               <Button>确认</Button>
             </div>
           </div>
-
-
         </Card>
-
       </div>
     )
   }

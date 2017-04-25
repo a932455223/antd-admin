@@ -17,6 +17,7 @@ export default {
   GET_SYSTEM_SLIDER_BAR: '/asd/common/dropdown/list/system',
   GET_CUSTOMER_SLIDER_BAR: '/asd/common/dropdown/list/customer',
   GET_ORGANIZATION_SLIDER_BAR: '/asd/common/dropdown/list/organization',
+  GET_PRODUCT_SLIDER_BAR: '/asd/common/dropdown/list/product',
 
   GET_RELATION_SLIDER_BAR: '/asd/common/dropdown/list/relation',
   GET_JOBCATEGORY_SLIDER_BAR: '/asd/common/dropdown/list/jobCategory',

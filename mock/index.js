@@ -90,6 +90,24 @@ module.exports = {
     }
   ],
 
+  'GET /asd/common/dropdown/list/product': [
+    {
+      id: 4,
+      name: '金融产品管理',
+      children: [
+        {
+          id: 40,
+          name: '产品库',
+          url: '/product/all'
+        }, {
+          id: 41,
+          name: '类别管理',
+          url: '/product/classify'
+        }
+      ]
+    }
+  ],
+
   // 用户列表
   'GET /asd/customers': Mock.mock({
     "code": 200,

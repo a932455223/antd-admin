@@ -79,6 +79,18 @@ const route = (
         }, 'branches')
       }}/>
     </Route>
+    <Route path='product' onEnter={validate} component={App}>
+      <Route path='all' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/Product/AllProduct').default)
+        }, 'allProduct')
+      }}/>
+      <Route path='classify' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/Product/Classify').default)
+        }, 'classify')
+      }}/>
+    </Route>
     <Route path='login' getComponent={(location, cb) => {
       require.ensure([], () => {
         cb(null, require('../Pages/Login/login').default)
