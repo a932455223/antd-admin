@@ -23,6 +23,9 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 import './indexStyle.less';
 
+function info(msg, color = 'red') {
+  console.log("%c" + msg, 'color:' + color);
+}
 
 class MyJobInfo extends Component{
 
