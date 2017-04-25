@@ -48,6 +48,17 @@ const customerOperation = (state = initialState, action) => {
         beEdited: true
       }
 
+    case actionTypes.RESET_CUSTOMER_INFO:
+      return {
+        ...state,
+        step: 1,
+        mode: 'create',
+        name: '',
+        id: -1,
+        category: '个人客户',
+        beEdited: false
+      }
+
     default:
       return state;
   }
@@ -59,8 +70,13 @@ const currentCustomerInfo = (state = {}, action) => {
     case actionTypes.CREATE_CUSTOMER:
     case actionTypes.FILL_CUSTOMER_INFO:
     case actionTypes.CREATE_CUSTOMER_SUCCESS:
+    case actionTypes.RESET_CUSTOMER_INFO:
+      return {
+        ...state,
+        ...customerOperation(state[0], action)
+      }
+
     case actionTypes.CUSTOMER_INFO_BE_EDITED:
-    case actionTypes.CANCLE_BE_EDITED_CUSTOMER_INFO:
       return {
         ...state,
         ...customerOperation(state, action)

@@ -41,3 +41,10 @@ export const customerInfoBeEdit = () => (
     type: actionTypes.CUSTOMER_INFO_BE_EDITED
   }
 )
+
+// customer info be edited
+export const resetCustomerInfo = () => (
+  {
+    type: actionTypes.RESET_CUSTOMER_INFO
+  }
+)

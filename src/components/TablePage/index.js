@@ -19,7 +19,8 @@ class TablePage extends Component {
     clientType: '个人客户', // 客户类型
     mode: 'create', // 模式
     step: 1, // 步骤
-    customerName: ''
+    customerName: '',
+    batchProcessing: false
   };
 
   componentWillMount() {
@@ -40,12 +41,25 @@ class TablePage extends Component {
 
   // 获取被选中的 row的 Id，打印当前的 Id
   onSelectChange = (selectedRowKeys) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    console.log(selectedRowKeys);
     this.setState({
       selectedRowKeys: selectedRowKeys
     });
-  }
 
+    if(selectedRowKeys.length === 0) {
+      this.setState({
+        batchProcessing: false
+      })
+      console.log('disappear');
+    }
+
+    if(selectedRowKeys.length !== 0 && this.state.batchProcessing === false) {
+      this.setState({
+        batchProcessing: true
+      })
+      console.log('show')
+    }
+  }
 
   // 点击某一栏，编辑客户信息
   rowClick = (info) => {
@@ -143,8 +157,8 @@ class TablePage extends Component {
         textAlign: 'center',
         // top: 64
       }, // 背景
-      fluid: false,
-      defaultSize: 680, // 初始 width/height
+      fluid: true,
+      defaultSize: .47, // 初始 width/height
       duration: 350, // 动画时间
       zIndex: 100,
     }
@@ -157,6 +171,24 @@ class TablePage extends Component {
 
     return (
       <div className="tablepage" id="tablePage">
+        {this.state.batchProcessing &&
+          <div
+            className="batchProcessing"
+            style={this.state.batchProcessing
+              ?
+              {width: 600}
+              :
+              {width: 0}
+            }
+          >
+            <Button>批量关注</Button>
+            <Button>批量参与</Button>
+            <Button>批量提醒</Button>
+            <Button>取消关注</Button>
+            <Button>批量转移</Button>
+          </div>
+        }
+
         <header id="customerTableHeader">
           <Button
             className="addNewCustomer"
