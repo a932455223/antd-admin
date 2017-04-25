@@ -155,6 +155,17 @@ export default class SelectStaff extends Component {
             <Button>确认</Button>
           </div>
         </div>
+        {/*// <Card*/}
+        {/*//   className="card-body"*/}
+        {/*//   title={*/}
+        {/*//     <div className="title">*/}
+        {/*//       <h3>选择人员</h3>*/}
+        {/*//       <Icon type="close"/>*/}
+        {/*//     </div>*/}
+        {/*//   }*/}
+        {/*/!*>*!/*/}
+          {/*/!**!/*/}
+        {/*/!*</Card>*!/*/}
       </div>
     )
   }
