@@ -1,5 +1,4 @@
 
-
 import React, { Component } from 'react';
 import {
   Card,
@@ -156,126 +155,6 @@ class AddNewRecordForm extends Component {
   }
 }
 const AddNewRecord = Form.create()(AddNewRecordForm);
-
-// 维护记录
-class MaintainRecord extends Component {
-  render() {
-    return(
-      <div className="maintainrecord">
-        <Timeline>
-          <Timeline.Item >
-            <div className="timeline">
-              <div className="time">
-                <p>2015-09-01</p>
-                <p>14:02:20</p>
-              </div>
-
-
-              <div className="timelinereacod">
-                <section className="edit">
-                  <span>
-                    <span><Icon type="edit" />编辑</span>
-                    <span><Icon type="delete" />删除</span>
-                  </span>
-                </section>
-
-                <section className="record">
-                  <div>张益达</div>
-                  <span>【电话】</span>进行了
-                  <span>1</span>次
-                  <span>【产品到期提醒】</span>维护
-                </section>
-
-                <section className="text">
-                  <Input  type='textarea'
-                          rows={2}
-                          placeholder='介绍理财产品，制定理财计划书，客户下单'/>
-                  <footer>
-                    <span>取消</span>
-                    <Button>保存</Button>
-                  </footer>
-                </section>
-              </div>
-            </div>
-          </Timeline.Item>
-          <Timeline.Item >
-            <div className="timeline">
-              <div className="time">
-                <p>2015-09-01</p>
-                <p>14:02:20</p>
-              </div>
-
-
-              <div className="timelinereacod">
-                <section className="edit">
-                  <span>
-                    <span><Icon type="edit" />编辑</span>
-                    <span><Icon type="delete" />删除</span>
-                  </span>
-                </section>
-
-                <section className="record">
-                  <div>张益达</div>
-                  <span>【电话】</span>进行了
-                  <span>1</span>次
-                  <span>【产品到期提醒】</span>维护
-                </section>
-
-                <section className="text">
-                  <Input  placeholder='介绍理财产品，制定理财计划书，客户下单'/>
-                </section>
-              </div>
-            </div>
-          </Timeline.Item>
-        </Timeline>
-        <Button className="loadmore">加载更多<Icon type="down" /></Button>
-      </div>
-    )
-  }
-}
-
-// 添加人员弹窗
-class AddCrewModal extends Component {
-  state = {
-    confirmLoading: false,
-  };
-
-  handleOk = () => {
-    this.setState({
-      confirmLoading: true,
-    });
-
-    setTimeout(() => {
-      this.props.hide();
-      this.setState({
-        confirmLoading: false,
-      });
-    }, 2000);
-  };
-
-  handleCancel = () => {
-    this.props.hide();
-  };
-
-  render() {
-    const { visible } = this.props;
-    return(
-      <Modal  title="选择人员"
-              visible={visible}
-              onOk={this.handleOk}
-              confirmLoading={this.state.confirmLoading}
-              onCancel={this.handleCancel}>
-
-        <Tabs type='card'>
-          <TabPane tab="职位" key="crewPosition">
-          </TabPane>
-          <TabPane tab="群组" key="crewGroup">
-          </TabPane>
-        </Tabs>
-      </Modal>
-    )
-  }
-}
 
 
 
@@ -608,7 +487,7 @@ class EnterpriseBasicInfo extends Component {
 
 
   getBaseInfo = (id) => {
-      axios.get(API.GET_COMPANY_BASE(id))
+      axios.get(API.GET_JOBINFO_BASE(id))
       .then((res) => {
           this.setState({
               ...this.state,
@@ -650,10 +529,6 @@ class EnterpriseBasicInfo extends Component {
     const {step, mode, currentId} = this.props;
     const {eachCompanyInfo,edited} = this.state;
     return(
-      <div style={{textAlign: 'left'}}>
-
-        <AddCrewModal {...modal}/>
-
         <div className="">
           { mode !== "view" && <BasicInfoListsEdit
                                   currentId={this.props.currentId}
@@ -661,23 +536,7 @@ class EnterpriseBasicInfo extends Component {
                                   />}
 
           { mode === "view" && <BasicInfoListsRead />}
-        </div>
-
-        <div className="maintain">
-          <Tabs type="card">
-            <TabPane tab="维护记录" key="basicInfo">
-              <AddNewRecord />
-              <MaintainRecord />
-            </TabPane>
-            <TabPane tab="操作记录" key="familyInfo">
-              2
-            </TabPane>
-            <TabPane tab="修改记录" key="jobInfo">
-              3
-            </TabPane>
-          </Tabs>
-        </div>
-      </div>
+        </div>     
     )
   }
 }

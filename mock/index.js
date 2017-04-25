@@ -225,7 +225,7 @@ module.exports = {
   }),
 
   //客户工作信息
-  'GET /asd/customer/:id/job':Mock.mock({
+  'GET /asd/jobinfo/:id/job':Mock.mock({
     'code':200,
     'data':{
       'businessPrice': 1999,
@@ -234,19 +234,11 @@ module.exports = {
       'certificate':/[0-9]{18}/,
       'downCompany':'山西省煤矿厂',
       'id|+1':1,
-      'monthIncome':['@name'],
-      'manager': '张健钊',
-      'marriage|1':true,
-      'needLoan|1': true,
-      'origin':'上海',
-      'phone':/[0-9]{11}/,
-      'wechat':'zli3049',
-      'withCar|1':true,
-      'withDebt':true,
-      'yearExpense':100,
-      'yearIncome':999988,
+      'monthIncome':'29000',
+      'upCompany': '中国企业',
+      'yearIncom':19999999999
     },
-    'message':'message!!'
+    'message':' jobinfo message!!'
   }),
 
   //客户基本信息——企业客户
