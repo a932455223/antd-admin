@@ -351,6 +351,21 @@ module.exports = {
       email: /[0-9]{13}@gmail.com/,
       address: '上海 闵行'
     }
+  }),
+
+  //金融业务
+  'GET /asd/finance/:id/base': Mock.mock({
+    'code': 200,
+    'data|3':[{
+      'project':/金融全家福|黄金商铺一号/,
+      'buyDate': '2017／01/01',
+      'department': /上海浦发|山西太原/,
+      'expireDate': '2018/01/01',
+      'money':8888888,
+      'id|+1':1,
+      'profit':'3.8%'
+    }],
+    'message':'finance message!'
   })
 };
 

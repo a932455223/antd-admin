@@ -170,9 +170,8 @@ class BasicInfoEdit extends Component{
                 className="account"
               >
                 {getFieldDecorator(`names-${k}`, {
-                  validateTrigger: ['onChange', 'onBlur'],
                   initialValue:len > index ? eachCustomerInfo.account[index].accNumber : "",
-
+                  onChange: this.inputChange
                 })(
                   <Input placeholder="填写账号信息"  />
                 )}
