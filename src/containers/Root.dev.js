@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import route from '../routes/index';
+import route from '../routes/index.dev';
 import DevTools from './DevTools';
 import { Router, browserHistory } from 'react-router';
 

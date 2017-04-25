@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
 import {
-  Card,
   Tabs,
   Row,
   Col,
   Icon,
   Form,
-  InputNumber,
   Input,
   Button,
   Tag,
   Select,
-  DatePicker,
-  Timeline,
   Modal
  } from 'antd';
 import axios from 'axios';
