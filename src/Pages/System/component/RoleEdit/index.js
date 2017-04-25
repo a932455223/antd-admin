@@ -60,7 +60,13 @@ export default class RoleEdit extends Component {
           <h3>角色</h3>
           <span>
           <Button onClick={this.props.rolePermission.bind(this,this.props.id)}>分配权限</Button>
-          <Button className="save">保存</Button>
+          <Button
+            className="save"
+            onClick={() => {
+              alert('保存成功');
+              this.props.close()
+            }}
+          >保存</Button>
           <Button className="close" onClick={this.props.close}>&times;</Button>
         </span>
         </div>

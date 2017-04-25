@@ -6,6 +6,7 @@ import RoleEdit from "../component/RoleEdit";
 import Content from "../component/Content";
 import SelectStaff from "../../../components/SelectStaff";
 import RolePermission from "../component/RolePermission";
+import NewRole from '../component/NewRole';
 //===============================================================
 import "./less/rolesStyle.less";
 import API from "../../../../API";
@@ -59,6 +60,7 @@ export default class SystemRoles extends Component {
     this.setState({
       dock: {
         visible: true,
+        children: <NewRole close={this.close.bind(this)}/>
       }
     });
   }
