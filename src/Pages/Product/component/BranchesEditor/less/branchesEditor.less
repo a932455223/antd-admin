@@ -1,0 +1,57 @@
+.departmentEditor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 20px;
+  overflow: auto;
+
+  > div {
+    &:first-child {
+      margin-bottom: 10px;
+    }
+    margin-bottom: 20px;
+  }
+  .departmentEditor-title {
+    height: 45px;
+    margin-bottom: 20px;
+
+    > div {
+      line-height: 45px;
+      height: 45px;
+    }
+
+    .close {
+      display: block;
+      font-size: 30px;
+      cursor: pointer;
+      line-height: 45px;
+      height: 45px;
+    }
+
+    .close:hover {
+      color: #f00;
+    }
+  }
+
+  .branches-form {
+    padding: 20px;
+  }
+
+  .business .ant-card-body {
+
+    > div {
+      padding-top: 10px;
+    }
+
+    > div:not(:last-child) {
+      padding: 10px 0;
+      border-bottom: 1px dotted #eee;
+    }
+  }
+  h3 {
+    font-size: 14px;
+  }
+
+}
