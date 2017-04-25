@@ -225,9 +225,10 @@ module.exports = {
   }),
 
   //客户工作信息
-  'GET /asd/jobinfo/:id/job':Mock.mock({
+  'GET /asd/jobinfo/:id/base':Mock.mock({
     'code':200,
     'data':{
+      'jobclass' : '个体户',
       'businessPrice': 1999,
       'businessScope': '100',
       'businessYield':989888888,
