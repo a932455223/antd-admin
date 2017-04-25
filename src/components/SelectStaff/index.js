@@ -2,7 +2,7 @@
  * Created by jufei on 2017/4/22.
  */
 import React, {Component} from "react";
-import {Card, Col, Icon, Row, Table, Tabs, Tree,Tag,Button} from "antd";
+import {Button, Card, Icon, Table, Tabs, Tag, Tree} from "antd";
 import axios from "axios";
 //=============================================+
 import "./less/selectStaff.less";
@@ -32,8 +32,7 @@ export default class SelectStaff extends Component {
 
 
     axios.get(API.GET_STAFFS)
-      .then( res => {
-        console.log(res.data.data.staffs)
+      .then(res => {
         this.setState({
           table: {
             dataSource: res.data.data.staffs
@@ -42,8 +41,17 @@ export default class SelectStaff extends Component {
       })
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.initTableScroll();
+    addEventListener('resize',this.initTableScroll)
+  }
+
+  componentDidUpdate() {
+    this.initTableScroll();
+  }
+
+  componentWillUnmout(){
+    removeEventListener('resize',this.initTableScroll)
   }
 
   createTree(data) {
@@ -78,14 +86,15 @@ export default class SelectStaff extends Component {
     }),
   };
 
-  initTableScroll(){
-    let container = document.getElementById('mainBody');
-    let tableScroll = document.getElementsByClassName('ant-table-body')[0];
-    tableScroll.style['max-height'] = container.offsetHeight - 76  + 'px';
-    tableScroll.style['min-height'] = container.offsetHeight - 76  + 'px';
+  initTableScroll() {
+    let selectStaff = document.getElementById('selectStaff');
+    let container = selectStaff.getElementsByClassName('ant-card-body')[0];
+    let tableScroll = selectStaff.getElementsByClassName('ant-table-body')[0];
+    tableScroll.style['max-height'] = container.offsetHeight - 83 - 130 + 'px';
+    tableScroll.style['height'] = container.offsetHeight - 83 - 130 + 'px';
     tableScroll.style['overflow-y'] = 'auto';
+    console.log(tableScroll)
   }
-
 
 
   render() {
@@ -108,53 +117,75 @@ export default class SelectStaff extends Component {
     };
 
     return (
-      <div className="select-staff">
-        <div className="select-staff-body" id="mainBody">
-          <div>
-            <Tabs defaultActiveKey="1">
-              <TabPane tab={<span>职位</span>} key="1">
-                <Tree
+      <div className="select-staff" id="selectStaff">
+        <Card
+          className="card-body"
+          title={
+            <div className="title">
+              <h3>选择人员</h3>
+              <Icon
+                type="close"
+                onClick={() => {
+                  this.props.back(this.props.id)
+                }}
+                className="back"
+              />
+            </div>
+          }
+        >
+
+          <div className="select-staff-body" id="mainBody">
+
+            <div>
+              <div>
+                <Tabs defaultActiveKey="1">
+                  <TabPane tab={<span>职位</span>} key="1">
+                    <Tree
+                      checkable
+                    >
+                      {this.createTree(this.state.department)}
+                    </Tree>
+                  </TabPane>
+                  <TabPane tab={<span>群组</span>} key="2">
+                    Tab 2
+                  </TabPane>
+                </Tabs>
+              </div>
+              <div>
+                <Table
+                  {...tableConf}
                   checkable
-                >
-                  {this.createTree(this.state.department)}
-                </Tree>
-              </TabPane>
-              <TabPane tab={<span>群组</span>} key="2">
-                Tab 2
-              </TabPane>
-            </Tabs>
+                  rowKey={record => record.id}
+                  rowSelection={this.rowSelection}
+                  scroll={{y: 300}}
+                  pagination={{
+                    pageSize: 20
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="tags-wrapper">
+            <div className="tags-title">
+              <h3>已选成员</h3>
+              <span>6ren</span>
+            </div>
+            <div>
+              <Tag>Tag 1</Tag>
+              <Tag><a href="https://github.com/ant-design/ant-design/issues/1862">Link</a></Tag>
+              <Tag closable>Tag 2</Tag>
+              <Tag closable>Prevent Default</Tag>
+            </div>
+            <div className="btn-group">
+              <Button>取消</Button>
+              <Button>确认</Button>
+            </div>
           </div>
 
 
-          <div>
-            <Table
-              {...tableConf}
-              checkable
-              rowKey={record => record.id}
-              rowSelection={this.rowSelection}
-              scroll={{y: 500}}
-              pagination={{
-                pageSize:20
-              }}
-            />
-          </div>
-        </div>
-        <div className="tags-wrapper">
-          <div className="tags-title">
-            <h3>已选成员</h3>
-            <span>6ren</span>
-          </div>
-          <div>
-            <Tag>Tag 1</Tag>
-            <Tag><a href="https://github.com/ant-design/ant-design/issues/1862">Link</a></Tag>
-            <Tag closable >Tag 2</Tag>
-            <Tag closable >Prevent Default</Tag>
-          </div>
-          <div className="btn-group">
-            <Button>取消</Button>
-            <Button>确认</Button>
-          </div>
-        </div>
+        </Card>
+
       </div>
     )
   }

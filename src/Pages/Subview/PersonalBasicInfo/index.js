@@ -60,13 +60,12 @@ class AddCrewModal extends Component {
     const { visible } = this.props;
     return(
       <Modal  title="选择人员"
-              width="600"
-              height="800"
-              visible={true}
+              width="500"
+              visible={false}
               onOk={this.handleOk}
               confirmLoading={this.state.confirmLoading}
               onCancel={this.handleCancel}>
-        <SelectStaff />
+        <SelectStaff id="selectStaff"/>
       </Modal>
     )
   }
