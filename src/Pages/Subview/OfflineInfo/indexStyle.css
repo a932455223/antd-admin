@@ -1,0 +1,132 @@
+@import url('http://at.alicdn.com/t/font_y5fxbr3igc1h5mi.css');
+@font-face {
+  font-family: 'iconfont';
+  /* project id 278144 */
+  src: url('//at.alicdn.com/t/font_y5fxbr3igc1h5mi.eot');
+  src: url('//at.alicdn.com/t/font_y5fxbr3igc1h5mi.eot?#iefix') format('embedded-opentype'), url('//at.alicdn.com/t/font_y5fxbr3igc1h5mi.woff') format('woff'), url('//at.alicdn.com/t/font_y5fxbr3igc1h5mi.ttf') format('truetype'), url('//at.alicdn.com/t/font_y5fxbr3igc1h5mi.svg#iconfont') format('svg');
+}
+.families {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.families .family-card {
+  border: 1px solid #d4d4d5;
+  width: 48%;
+  margin: 1em 0;
+  min-height: 195px;
+}
+.families .family-card .ant-card-head {
+  background-color: #fafafa;
+}
+.families .family-card .ant-card-head .ant-card-head-title {
+  text-align: left;
+  color: #333333;
+  font-size: 1.2em;
+  font-family: "Microsoft YaHei";
+  font-weight: bold;
+}
+.families .family-card .ant-card-head .ant-card-head-title:before {
+  content: '\e696';
+  font-family: 'iconfont';
+  color: #d2d2d2;
+  margin-right: 0.7em;
+}
+.families .family-card .ant-card-extra a {
+  font-size: 1.2em;
+  margin-left: 0.5em;
+}
+.families .family-card .ant-card-extra a:link {
+  color: #6A819A;
+  background-color: transparent;
+}
+.families .family-card .ant-card-extra a:visited {
+  color: #6A819A;
+  background-color: transparent;
+}
+.families .family-card .ant-card-extra a:hover {
+  color: #6A819A;
+  background-color: transparent;
+}
+.families .family-card .ant-card-extra a:active {
+  background-color: transparent;
+  color: #6A819A;
+}
+.families .family-card .ant-card-extra a .iconfont {
+  font-size: 0.7em;
+  padding: 0 0.2em;
+}
+.families .family-card .ant-card-body .ant-row {
+  padding: 0.4em 0;
+}
+.families .family-card .ant-card-body .ant-row div {
+  text-align: left;
+}
+.families .family-card .ant-card-body .ant-row div:nth-of-type(2) {
+  color: #000000;
+}
+.families .family-card-modify .ant-card-head .ant-card-head-title .my-card-title {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+}
+.families .family-card-modify .ant-card-head .ant-card-head-title .my-card-title .ant-input-affix-wrapper {
+  flex-grow: 1;
+  color: #000;
+}
+.families .family-card-modify .ant-card-head .ant-card-head-title .my-card-title .ant-input-affix-wrapper .ant-input-prefix {
+  padding-left: 0.3em;
+}
+.families .family-card-modify .ant-card-head .ant-card-head-title .my-card-title .ant-input-affix-wrapper .iconfont {
+  color: #d2d2d2;
+}
+.families .family-card-modify .ant-card-head .ant-card-head-title .my-card-title .ant-input-affix-wrapper .ant-input {
+  padding-left: 3em;
+  font-size: 1em;
+  font-weight: bold;
+}
+.families .family-card-modify .ant-card-head .ant-card-head-title .my-card-title .cancel-btn {
+  color: #5c6bc0;
+  padding: 0 1.1em;
+  border-radius: 0.2em;
+  font-weight: normal;
+  font-size: 0.9em;
+  margin-left: 0.5em;
+  height: 2.2em;
+  line-height: 2.2em;
+  cursor: pointer;
+}
+.families .family-card-modify .ant-card-head .ant-card-head-title .my-card-title .save-btn {
+  background-color: #5c6bc0;
+  color: #fff;
+  padding: 0 1.1em;
+  border-radius: 0.2em;
+  font-weight: normal;
+  font-size: 0.9em;
+  margin-left: 0.5em;
+  height: 2.2em;
+  line-height: 2.2em;
+  cursor: pointer;
+}
+.families .family-card-modify .ant-card-head .ant-card-head-title:before {
+  content: ' ';
+  display: none;
+}
+.families .family-add-card {
+  background-color: #fafafa;
+  color: #6a819a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.families .family-add-card .ant-card-body {
+  padding-top: 12px;
+}
+.families .family-add-card .ant-card-body .icon-create {
+  color: #cfd8e2;
+  font-size: 3em;
+  cursor: pointer;
+}
+.families .family-add-card .ant-card-body p {
+  font-size: 1.3em;
+}

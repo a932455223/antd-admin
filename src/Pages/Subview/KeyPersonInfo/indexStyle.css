@@ -132,3 +132,6 @@
 .keypersons .keyperson-card-modify .ant-card-body .ant-row {
   padding: 0.1em 0;
 }
+.keypersons .keyperson-card-modify .ant-card-body .ant-row div {
+  margin: 0;
+}
