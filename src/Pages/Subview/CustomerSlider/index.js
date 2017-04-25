@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import update from 'immutability-helper';
 import {
   Tabs,
   Icon,
@@ -19,7 +20,7 @@ const Option = Select.Option;
 
 import styles from './indexStyle.scss';
 import './indexStyle.less';
-import { fillCustomerInfo } from '../../../redux/actions/customerAction';
+import { fillCustomerInfo, resetCustomerInfo } from '../../../redux/actions/customerAction';
 
 class NewCustomer extends Component {
   state = {
@@ -175,21 +176,25 @@ class CustomerSlider extends Component {
       let OfflineInfo = require('../OfflineInfo').default;
 
       setTimeout(() => {
-        this.setState({
-          personalClient: {
-            personalBasicInfo: PersonalBasicInfo,
-            familyInfo: FamilyInfo,
-            jobInfo: JobInfo,
-            riskInfo: RiskInfo,
-            financeInfo: FinanceInfo
-          },
-
-          enterpriseClient: {
-            enterpriseBasicInfo: EnterpriseBasicInfo,
-            keyPersonInfo: KeyPersonInfo,
-            offlineInfo: OfflineInfo,
+        let newState = {};
+        newState = update(
+          this.state,
+          {
+            personalClient: {
+              personalBasicInfo: {$set: PersonalBasicInfo},
+              familyInfo: {$set: FamilyInfo},
+              jobInfo: {$set: JobInfo},
+              riskInfo: {$set: RiskInfo},
+              financeInfo: {$set: FinanceInfo}
+            },
+            enterpriseClient: {
+              enterpriseBasicInfo: {$set: EnterpriseBasicInfo},
+              keyPersonInfo: {$set: KeyPersonInfo},
+              offlineInfo: {$set: OfflineInfo},
+            }
           }
-        })
+        )
+        this.setState(newState)
       }, 100)
     }, 'InfoTabs');
   };
@@ -198,40 +203,35 @@ class CustomerSlider extends Component {
   saveEditInfo = () => {
     const { beEdited } = this.props.currentCustomerInfo;
     if(beEdited) {
-      this.setState({
-        modalVisible: true
-      });
+      let newState = update(this.state, {modalVisible: {$set: true}})
+      this.setState(newState);
     } else {
       this.props.closeDock();
     }
   }
 
   confirmNotSave = (e) => {
-    this.setState({
-      modalVisible: false,
-    });
+    let newState = update(this.state, {modalVisible: {$set: false}})
+    this.setState(newState);
 
     this.props.closeDock();
   }
 
   handleCancel = (e) => {
-    this.setState({
-      modalVisible: false,
-    });
+    let newState = update(this.state, {modalVisible: {$set: false}})
+    this.setState(newState);
   }
 
   // 个人用户 Tabs切换事件
   personalTabChange = (e) => {
-    this.setState({
-      activePersonalTabs: e
-    })
+    let newState = update(this.state, {activePersonalTabs: {$set: e}})
+    this.setState(newState);
   };
 
   // 企业用户 Tabs切换事件
   enterpriseTabChange = (e) => {
-    this.setState({
-      activeEnterpriseTabs: e
-    })
+    let newState = update(this.state, {activeEnterpriseTabs: {$set: e}})
+    this.setState(newState);
   };
 
   // 个人用户的 Tabs
@@ -360,15 +360,22 @@ class CustomerSlider extends Component {
     // 判断 currentId不等于新的 id，mode状态为 create，或者 activePersonalTabs／activeEnterpriseTabs 为空
     const resstPersonalTabs   = id !== currentId || mode === 'create' || activePersonalTabs === '';
     const resstEnterpriseTabs = id !== currentId || mode === 'create' || activeEnterpriseTabs === '';
+    console.log(id, next.currentCustomerInfo.id);
 
     // 判断当前的 id与 nextProps中的 id是否相等，若不相等，则重置 state
     if(id !== next.currentCustomerInfo.id) {
-      this.setState({
-        currentId: id ? id : '',
-        activePersonalTabs: resstPersonalTabs ? 'personalBasicInfo' : activePersonalTabs,
-        activeEnterpriseTabs: resstEnterpriseTabs  ? 'enterpriseBasicInfo' : activeEnterpriseTabs
+      let newState = update(this.state, {
+        currentId: {$set: id ? id : ''},
+        activePersonalTabs: {$set: resstPersonalTabs ? 'personalBasicInfo' : activePersonalTabs},
+        activeEnterpriseTabs: {$set: resstEnterpriseTabs  ? 'enterpriseBasicInfo' : activeEnterpriseTabs}
       })
+      this.setState(newState);
     }
+  }
+
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch(resetCustomerInfo());
   }
 
   render() {
@@ -378,7 +385,7 @@ class CustomerSlider extends Component {
       <div>
 
         <Modal
-          title="Waring"
+          title="警告"
           visible={this.state.modalVisible}
           onOk={this.confirmNotSave}
           onCancel={this.handleCancel}

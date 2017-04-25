@@ -4,6 +4,7 @@
  * 创建者： JU
  * 时间： 17.3.2
  */
+// impo
 
 var Mock = require('mockjs');
 var axios = require('axios');
@@ -125,7 +126,7 @@ module.exports = {
   'GET /asd/system/roles/list': Mock.mock({
     'list|1-100': [{
       'id|+1': 1,
-      'clientName': /(王|张)三/,
+      'clientName': '@name',
       'customCount|1-20': 10,
       'createTime': '2013-12-12',
     }]
@@ -221,6 +222,23 @@ module.exports = {
       'yearIncome':999988,
     },
     'message':'message!!'
+  }),
+
+  //客户工作信息
+  'GET /asd/jobinfo/:id/job':Mock.mock({
+    'code':200,
+    'data':{
+      'businessPrice': 1999,
+      'businessScope': '100',
+      'businessYield':989888888,
+      'certificate':/[0-9]{18}/,
+      'downCompany':'山西省煤矿厂',
+      'id|+1':1,
+      'monthIncome':'29000',
+      'upCompany': '中国企业',
+      'yearIncom':19999999999
+    },
+    'message':' jobinfo message!!'
   }),
 
   //客户基本信息——企业客户
@@ -332,33 +350,6 @@ module.exports = {
       email: /[0-9]{13}@gmail.com/,
       address: '上海 闵行'
     }
-  }),
-
-  'GET /asd/department/:id/base': Mock.mock({
-    code: 200,
-    data: {
-      name: '壶关农商行',
-      category: /总行|分行/,
-      parentDepartment: '壶关农商总行',
-      director: /老(王|黄|张)/,
-      phone: /[0-9]{13}/,
-      address: '上海 闵行'
-    }
-  }),
-
-  'GET /api/common/region/parent/:id': {
-    data: 'asd'
-  },
-
-  'GET /asd/system/users': Mock.mock({
-    code: 200,
-    "data|100": [{
-      name: /(周|吴|郑|王|赵|钱|孙|李)小嘿/,
-      phone: /[0-9]{13}/,
-      post: /职员|行长|分行长/,
-      department: /壶关农商行|长治市分行|壶关县分行/,
-      lastTime: '2012-13-13'
-    }]
   })
 };
 

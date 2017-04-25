@@ -1,5 +1,4 @@
 
-
 import React, { Component } from 'react';
 import {
   Card,
@@ -157,126 +156,6 @@ class AddNewRecordForm extends Component {
 }
 const AddNewRecord = Form.create()(AddNewRecordForm);
 
-// 维护记录
-class MaintainRecord extends Component {
-  render() {
-    return(
-      <div className="maintainrecord">
-        <Timeline>
-          <Timeline.Item >
-            <div className="timeline">
-              <div className="time">
-                <p>2015-09-01</p>
-                <p>14:02:20</p>
-              </div>
-
-
-              <div className="timelinereacod">
-                <section className="edit">
-                  <span>
-                    <span><Icon type="edit" />编辑</span>
-                    <span><Icon type="delete" />删除</span>
-                  </span>
-                </section>
-
-                <section className="record">
-                  <div>张益达</div>
-                  <span>【电话】</span>进行了
-                  <span>1</span>次
-                  <span>【产品到期提醒】</span>维护
-                </section>
-
-                <section className="text">
-                  <Input  type='textarea'
-                          rows={2}
-                          placeholder='介绍理财产品，制定理财计划书，客户下单'/>
-                  <footer>
-                    <span>取消</span>
-                    <Button>保存</Button>
-                  </footer>
-                </section>
-              </div>
-            </div>
-          </Timeline.Item>
-          <Timeline.Item >
-            <div className="timeline">
-              <div className="time">
-                <p>2015-09-01</p>
-                <p>14:02:20</p>
-              </div>
-
-
-              <div className="timelinereacod">
-                <section className="edit">
-                  <span>
-                    <span><Icon type="edit" />编辑</span>
-                    <span><Icon type="delete" />删除</span>
-                  </span>
-                </section>
-
-                <section className="record">
-                  <div>张益达</div>
-                  <span>【电话】</span>进行了
-                  <span>1</span>次
-                  <span>【产品到期提醒】</span>维护
-                </section>
-
-                <section className="text">
-                  <Input  placeholder='介绍理财产品，制定理财计划书，客户下单'/>
-                </section>
-              </div>
-            </div>
-          </Timeline.Item>
-        </Timeline>
-        <Button className="loadmore">加载更多<Icon type="down" /></Button>
-      </div>
-    )
-  }
-}
-
-// 添加人员弹窗
-class AddCrewModal extends Component {
-  state = {
-    confirmLoading: false,
-  };
-
-  handleOk = () => {
-    this.setState({
-      confirmLoading: true,
-    });
-
-    setTimeout(() => {
-      this.props.hide();
-      this.setState({
-        confirmLoading: false,
-      });
-    }, 2000);
-  };
-
-  handleCancel = () => {
-    this.props.hide();
-  };
-
-  render() {
-    const { visible } = this.props;
-    return(
-      <Modal  title="选择人员"
-              visible={visible}
-              onOk={this.handleOk}
-              confirmLoading={this.state.confirmLoading}
-              onCancel={this.handleCancel}>
-
-        <Tabs type='card'>
-          <TabPane tab="职位" key="crewPosition">
-          </TabPane>
-          <TabPane tab="群组" key="crewGroup">
-          </TabPane>
-        </Tabs>
-      </Modal>
-    )
-  }
-}
-
 
 
 //个人信息表单................
@@ -286,7 +165,7 @@ class BasicInfoEdit extends Component{
   } 
   componentWillReceiveProps(next) {
      this.setState({
-        tags:next.eachCustomerInfo.joiner
+        tags:next.eachCompanyInfo.joiner
       })
   }
   inputChange = () => {
@@ -297,8 +176,8 @@ class BasicInfoEdit extends Component{
 
   }
   render() {
-    const {eachCustomerInfo,currentId, createCustomerSuccess} = this.props;
-    console.log(eachCustomerInfo);
+    const {eachCompanyInfo,currentId, createCustomerSuccess} = this.props;
+    console.log(eachCompanyInfo);
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
     
     const tagsitems =  this.state.tags && this.state.tags.map((item,index) => {
@@ -320,7 +199,7 @@ class BasicInfoEdit extends Component{
                     required: true,
                     message: '选择所属机构!'
                   }],
-                  initialValue: eachCustomerInfo.department,
+                  initialValue: eachCompanyInfo.department,
                   onChange: this.inputChange
                 })(
                     <Select
@@ -343,7 +222,7 @@ class BasicInfoEdit extends Component{
                         wrapperCol={{span: 13}}
                         label="客户经理">
                 {getFieldDecorator('manager', {
-                  initialValue: eachCustomerInfo.manager,
+                  initialValue: eachCompanyInfo.manager,
                   onChange: this.inputChange
                 })(
                   <Select
@@ -366,7 +245,7 @@ class BasicInfoEdit extends Component{
                         wrapperCol={{span: 13}}
                         label="所属网格">
                 {getFieldDecorator('grid', {
-                  initialValue: eachCustomerInfo.grid,
+                  initialValue: eachCompanyInfo.grid,
                   onChange: this.inputChange
                 })(
                   <Select
@@ -395,7 +274,7 @@ class BasicInfoEdit extends Component{
                           wrapperCol={{span: 15}}
                           label="注册时间">
                   {getFieldDecorator('registertime', {
-                    initialValue: eachCustomerInfo.registertime,
+                    initialValue: eachCompanyInfo.registertime,
                     onChange: this.inputChange,
                     rules: [{
                     required: true,
@@ -412,7 +291,7 @@ class BasicInfoEdit extends Component{
                           wrapperCol={{span: 15}}
                           label="所属行业">
                   {getFieldDecorator('industry', {
-                    initialValue: eachCustomerInfo.industry,
+                    initialValue: eachCompanyInfo.industry,
                     onChange: this.inputChange,
                     rules: [{
                     required: true,
@@ -430,7 +309,7 @@ class BasicInfoEdit extends Component{
                           wrapperCol={{span: 15}}
                           label="主营业务">
                   {getFieldDecorator('business', {
-                    initialValue: eachCustomerInfo.business,
+                    initialValue: eachCompanyInfo.business,
                     onChange: this.inputChange,
                     rules: [{
                     required: true,
@@ -447,7 +326,7 @@ class BasicInfoEdit extends Component{
                           wrapperCol={{span: 15}}
                           label="年营业额">
                   {getFieldDecorator('yearmoney', {
-                    initialValue: eachCustomerInfo.yearmoney,
+                    initialValue: eachCompanyInfo.yearmoney,
                     onChange: this.inputChange,
                     rules: [{
                     required: true,
@@ -465,7 +344,7 @@ class BasicInfoEdit extends Component{
                           wrapperCol={{span: 15}}
                           label="法人法名">
                   {getFieldDecorator('owner', {
-                    initialValue: eachCustomerInfo.owner,
+                    initialValue: eachCompanyInfo.owner,
                     onChange: this.inputChange,
                     rules: [{
                     required: true,
@@ -482,7 +361,7 @@ class BasicInfoEdit extends Component{
                           wrapperCol={{span: 15}}
                           label="企业电话">
                   {getFieldDecorator('phone', {
-                    initialValue: eachCustomerInfo.phone,
+                    initialValue: eachCompanyInfo.phone,
                     onChange: this.inputChange,
                     rules: [{
                     required: true,
@@ -500,7 +379,7 @@ class BasicInfoEdit extends Component{
                           wrapperCol={{span: 15}}
                           label="员工人数">
                   {getFieldDecorator('people', {
-                    initialValue: eachCustomerInfo.people,
+                    initialValue: eachCompanyInfo.people,
                     onChange: this.inputChange,
                     rules: [{
                     required: true,
@@ -517,7 +396,7 @@ class BasicInfoEdit extends Component{
                           wrapperCol={{span: 15}}
                           label="平均工资">
                   {getFieldDecorator('saliary', {
-                    initialValue: eachCustomerInfo.saliary,
+                    initialValue: eachCompanyInfo.saliary,
                     onChange: this.inputChange,
                     rules: [{
                     required: true,
@@ -536,7 +415,7 @@ class BasicInfoEdit extends Component{
                           wrapperCol={{span: 15}}
                           label="企业住址">
                   {getFieldDecorator('address', {
-                    initialValue: eachCustomerInfo.address,
+                    initialValue: eachCompanyInfo.address,
                     onChange: this.inputChange,
                     rules: [{
                     required: true,
@@ -553,7 +432,7 @@ class BasicInfoEdit extends Component{
                           wrapperCol={{span: 24}}
                           >
                   {getFieldDecorator('addressinfo', {
-                    initialValue: eachCustomerInfo.addressinfo,
+                    initialValue: eachCompanyInfo.addressinfo,
                     onChange: this.inputChange
                   })(
                     <Input />
@@ -596,7 +475,7 @@ class EnterpriseBasicInfo extends Component {
   state = {
     modalVisible: false,
     edited:false,
-    eachCustomerInfo: ''
+    eachCompanyInfo: ''
   }
   componentWillMount(){
       this.getBaseInfo(this.props.currentCustomerInfo.id)
@@ -612,7 +491,7 @@ class EnterpriseBasicInfo extends Component {
       .then((res) => {
           this.setState({
               ...this.state,
-            eachCustomerInfo: res.data.data
+            eachCompanyInfo: res.data.data
           })
       })
   }
@@ -648,36 +527,16 @@ class EnterpriseBasicInfo extends Component {
       hide: this.modalHide
     };
     const {step, mode, currentId} = this.props;
-    const {eachCustomerInfo,edited} = this.state;
+    const {eachCompanyInfo,edited} = this.state;
     return(
-      <div style={{textAlign: 'left'}}>
-
-        <AddCrewModal {...modal}/>
-
         <div className="">
           { mode !== "view" && <BasicInfoListsEdit
                                   currentId={this.props.currentId}
-                                  eachCustomerInfo={this.state.eachCustomerInfo}
+                                  eachCompanyInfo={this.state.eachCompanyInfo}
                                   />}
 
           { mode === "view" && <BasicInfoListsRead />}
-        </div>
-
-        <div className="maintain">
-          <Tabs type="card">
-            <TabPane tab="维护记录" key="basicInfo">
-              <AddNewRecord />
-              <MaintainRecord />
-            </TabPane>
-            <TabPane tab="操作记录" key="familyInfo">
-              2
-            </TabPane>
-            <TabPane tab="修改记录" key="jobInfo">
-              3
-            </TabPane>
-          </Tabs>
-        </div>
-      </div>
+        </div>     
     )
   }
 }
