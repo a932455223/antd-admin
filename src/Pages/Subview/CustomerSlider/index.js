@@ -164,6 +164,12 @@ class CustomerSlider extends Component {
     */
     console.log('%c/ CustomerSlider /_____will mount', 'color: red');
 
+    let newState = update(this.state, {
+      activePersonalTabs: {$set: 'personalBasicInfo'},
+      activeEnterpriseTabs: {$set: 'enterpriseBasicInfo'}
+    })
+    this.setState(newState);
+
     require.ensure([],() => {
       let PersonalBasicInfo = require('../PersonalBasicInfo').default;
       let FamilyInfo = require('../FamilyInfo').default;

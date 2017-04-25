@@ -4,17 +4,21 @@ import { Table, Pagination, Spin, Button, Icon } from 'antd';
 import Dock from 'react-dock';
 import './indexStyle.less';
 
-import { saveCurrentCustomerInfo, createCustomer } from '../../redux/actions/customerAction';
+import { saveCurrentCustomerInfo, createCustomer, resetCustomerInfo } from '../../redux/actions/customerAction';
 
 class TablePage extends Component {
-  // const propTypes = {
+  // static propTypes = {
   //   editDock: PropTypes.object
   // };
 
   state = {
     selectedRowKeys: [], // 被选中的 row
     dockVisible: false, // slide visible
+
+    dockContent: 'CustomerSlider',
     CustomerSlider: '', // 异步加载组件
+    BatchParticipate: '',
+
     currentId: '', // 当前用户的 id
     clientType: '个人客户', // 客户类型
     mode: 'create', // 模式
@@ -29,11 +33,12 @@ class TablePage extends Component {
     // 异步加载 edit component
     require.ensure([],() => {
       let CustomerSlider = require('../../Pages/Subview/CustomerSlider').default;
+      let BatchParticipate = require('../BatchParticipate').default;
 
       setTimeout(() => {
         this.setState({
           CustomerSlider: CustomerSlider,
-          // currentId: info.id
+          BatchParticipate: BatchParticipate
         })
       }, 300)
     }, 'CustomerSlider');
@@ -50,14 +55,10 @@ class TablePage extends Component {
       this.setState({
         batchProcessing: false
       })
-      console.log('disappear');
-    }
-
-    if(selectedRowKeys.length !== 0 && this.state.batchProcessing === false) {
+    } else {
       this.setState({
         batchProcessing: true
       })
-      console.log('show')
     }
   }
 
@@ -67,7 +68,8 @@ class TablePage extends Component {
     const mode = privilege[info.id]['system:update']  ? 'view':'edit';
     dispatch(saveCurrentCustomerInfo(info, mode))
     this.setState({
-        dockVisible: true,
+      dockContent: 'CustomerSlider',
+      dockVisible: true,
     });
   }
 
@@ -109,6 +111,17 @@ class TablePage extends Component {
     })
   }
 
+  // 批量参加
+  batchParticipate = () => {
+    const { dispatch } = this.props;
+    dispatch(resetCustomerInfo());
+
+    this.setState({
+      dockContent: 'BatchParticipate',
+      dockVisible: true
+    })
+  }
+
   render(){
     const { columns, dataSource, loading, pagination } = this.props;
 
@@ -137,7 +150,7 @@ class TablePage extends Component {
       className: 'page',
       defaultCurrent: 1,
       total: pagination.count,
-    //   showSizeChanger: true,
+      // showSizeChanger: true,
       pageSizeOptions: [`${pagination.size}`],
       // showQuickJumper: true,
       onChange: this.props.pageChange,
@@ -169,20 +182,18 @@ class TablePage extends Component {
       visible: this.state.dockVisible
     }
 
+    const batchProps = {
+      closeDock: this.closeDock
+    }
+
     return (
       <div className="tablepage" id="tablePage">
         {this.state.batchProcessing &&
           <div
-            className="batchProcessing"
-            style={this.state.batchProcessing
-              ?
-              {width: 600}
-              :
-              {width: 0}
-            }
+            className={this.state.batchProcessing ? "batchProcessing batchProcessingActive" : "batchProcessing"}
           >
             <Button>批量关注</Button>
-            <Button>批量参与</Button>
+            <Button onClick={this.batchParticipate}>批量参与</Button>
             <Button>批量提醒</Button>
             <Button>取消关注</Button>
             <Button>批量转移</Button>
@@ -210,8 +221,11 @@ class TablePage extends Component {
 
         <div className="slider">
           <Dock {...dockProps}>
-            {this.state.CustomerSlider &&
+            {this.state.dockContent === 'CustomerSlider' && this.state.CustomerSlider &&
               <this.state.CustomerSlider {...sliderProps}/>
+            }
+            {this.state.dockContent === 'BatchParticipate' && this.state.BatchParticipate &&
+              <this.state.BatchParticipate {...batchProps}/>
             }
           </Dock>
         </div>
