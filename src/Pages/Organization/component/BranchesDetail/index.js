@@ -26,10 +26,19 @@ class BranchesDetail extends Component {
     this.props.closeDock()
   }
 
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
+    });
+  };
+
   render() {
     const {getFieldDecorator} = this.props.form;
     return (
-      <Form>
+      <Form onSubmit={this.handleSubmit.bind(this)}>
         <div
           className={classNames('dock-container','departmentDetail')}
           id="branchesDetail"
@@ -48,19 +57,6 @@ class BranchesDetail extends Component {
             </Col>
           </Row>
           <Card
-            title={(
-              <Row>
-                <Col span="18">
-                  <h3>添加组织机构</h3>
-                </Col>
-                <Col span="3">
-                  <Button className="cancel">取消</Button>
-                </Col>
-                <Col span="3">
-                  <Button className="save">保存</Button>
-                </Col>
-              </Row>
-            )}
           >
             <div className="branches-form">
               {/*form*/}
@@ -69,6 +65,10 @@ class BranchesDetail extends Component {
                 items={addDepartmentForForm}
                 containerID="branchesDetail"
               />
+              <div>
+                <Button className="cancel">取消</Button>
+                <Button className="save" htmlType="submit">保存</Button>
+              </div>
             </div>
           </Card>
         </div>

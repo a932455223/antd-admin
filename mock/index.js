@@ -225,22 +225,16 @@ module.exports = {
   }),
 
   //客户工作信息
-  'GET /asd/customer/:id/base':Mock.mock({
+  'GET /asd/customer/:id/job':Mock.mock({
     'code':200,
     'data':{
-      'account|2-3':[{
-        'accNumber':/[0-9]{13}/,
-        'info':/一类账户|二类账户/
-      }],
-      'address': '@city(true)',
-      'age|1-100': 100,
-      'birth':'1990-01-30',
+      'businessPrice': 1999,
+      'businessScope': '100',
+      'businessYield':989888888,
       'certificate':/[0-9]{18}/,
-      'department':'慈溪银行',
-      'grid':'B909',
-      'houseType':'商住',
+      'downCompany':'山西省煤矿厂',
       'id|+1':1,
-      'joiner|2-3':['@name'],
+      'monthIncome':['@name'],
       'manager': '张健钊',
       'marriage|1':true,
       'needLoan|1': true,

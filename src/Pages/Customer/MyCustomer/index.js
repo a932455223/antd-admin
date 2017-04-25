@@ -109,7 +109,7 @@ export default class MyCustomer extends Component {
         title: '客户名称',
         dataIndex: 'name',
         key: 'name',
-        width: '20%'
+        width: '16%'
       },
       {
         title: '客户类别',
@@ -144,20 +144,20 @@ export default class MyCustomer extends Component {
       {
         title: '所属机构',
         key: 'department',
-        width: '20%',
+        width: '24%',
         render: customer => (
           <div className='attention'>
             <p>{customer.department}</p>
             {customer.attention
               ?
-                <a href="#" onClick={this.customerFocus.bind(this, customer.id)}>
-                    <Icon type="heart-o" />
-                    <span>取消关注</span>
-                </a>
-                :
-              <a href="#" onClick={this.customerFocus.bind(this, customer.id)}>
-                <Icon type="heart" />
-                <span>关注</span>
+              <a className="cancel" href="#" onClick={this.customerFocus.bind(this, customer.id)}>
+                  <Icon style={{color: '#a66800'}} type="star" />
+                  <span>取消关注</span>
+              </a>
+              :
+              <a className="focus" href="#" onClick={this.customerFocus.bind(this, customer.id)}>
+                <Icon style={{color: '#ffa102'}} type="star" />
+                <span>关注客户</span>
               </a>
             }
           </div>

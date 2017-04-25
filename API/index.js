@@ -33,6 +33,10 @@ export default {
 
   GET_STAFF_BASE: id => `/asd/staff/${id}/base`,
 
+  GET_DEPARTMENT_BASE: id => `/asd/department/${id}/base`,
+
+  GET_AREA_SELECT: id => `/api/common/region/parent/${id}`,
+
   //=======================================
 
   //==================================================================
@@ -42,6 +46,9 @@ export default {
   GET_DEPARTMENTS: '/asd/departments',
 
   // 组织机构员工列表
-  GET_STAFFS: '/asd/staffs'
+  GET_STAFFS: '/asd/staffs',
+
+  // 用户权限管理 用户列表
+  GET_USERS: '/asd/system/users'
 
 }

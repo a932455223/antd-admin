@@ -1,0 +1,186 @@
+@import './../../../style/iconfont.less';
+@c-gery-border: #d4d4d5;
+@c-gery-bg: #fafafa;
+@c-gery-darken: #d2d2d2;
+@c-blue-grey: #6A819A;
+@c-black: #333333;
+@c-blue-darken: #5c6bc0;
+@c-white: #fff;
+@c-white-two: #d2d2d2;
+@c-cloudy-blue: #cfd8e2;
+@c-grey-blue: #6a819a;
+.a-base(@color) {
+    &:link {
+        color: @color;
+        background-color: transparent;
+    }
+    &:visited {
+        color: @color;
+        background-color: transparent;
+    }
+    &:hover {
+        color: @color;
+        background-color: transparent;
+    }
+    &:active {
+        background-color: transparent;
+        color: @color;
+    }
+}
+.keypersons{
+    display: flex;
+    justify-content:space-between;
+    flex-wrap: wrap;
+    //查看
+    .keyperson-card{
+        border: 1px solid @c-gery-border;
+        width: 49%;
+        margin: 1em 0;
+        min-height: 195px;
+        .ant-row{
+            display: flex;
+            align-items: center;
+        }
+        .ant-card-head {
+            //头部
+            background-color: @c-gery-bg;
+            .ant-card-head-title {
+                //姓名
+                text-align: left;
+                color: @c-black;
+                font-size: 1.2em;
+                font-family: "Microsoft YaHei";
+                font-weight: bold;
+                &:before {
+                    content: '\e696';
+                    font-family: 'iconfont';
+                    color: @c-gery-darken;
+                    margin-right: 0.7em;
+                }
+            }
+        }
+        .ant-card-extra {
+            //编辑删除
+            span{
+                color: @c-blue-grey;
+                cursor: pointer;
+                font-size: 1.2em;
+                margin-left: 0.5em;
+                .iconfont {
+                    font-size: 0.7em;
+                    padding: 0 0.2em;
+                }
+            }
+        }
+        .ant-card-body {
+            .ant-row {
+                padding: 0.4em 0;
+                div {
+                    text-align: left;
+                    &:nth-of-type(2) {
+                        color: #000000;
+                    }
+                }
+            }
+        }
+    }
+    .keyperson-form{
+        width: 49%;
+        .keyperson-card{
+            width:100%;
+        }
+    }
+    .keyperson-add-card {
+        background-color: @c-gery-bg;
+        color: @c-grey-blue;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .ant-card-body{
+            .icon-create{
+                color: @c-cloudy-blue;
+                font-size: 3em;
+                cursor: pointer;
+            }
+            padding-top: 12px;
+            p{
+                font-size: 1.3em;
+
+            }
+        }
+    }
+    //添加
+    .keyperson-card-modify{
+        .ant-card-head {
+            //头部
+            .ant-card-head-title {
+                //头部状态
+                .my-card-title {
+                    display: inline-flex;
+                    width: 100%;
+                    align-items: center;
+                    .ant-input-affix-wrapper {
+                        flex-grow: 1;
+                        color: #000;
+                        .ant-input-prefix {
+                            padding-left: 0.3em;
+                        }
+                        .iconfont {
+                            color: #d2d2d2;
+                        }
+                        .ant-input {
+                            padding-left: 3em;
+                            font-size: 1em;
+                            font-weight: bold;
+                        }
+                    }
+                    .cancel-btn {
+                        color: @c-blue-darken;
+                        padding: 0 1.1em;
+                        border-radius: 0.2em;
+                        font-weight: normal;
+                        font-size: 0.9em;
+                        margin-left: 0.5em;
+                        height: 2.2em;
+                        line-height: 2.2em;
+                        cursor: pointer;
+                    }
+                    .save-btn {
+                        background-color: @c-blue-darken;
+                        color: @c-white;
+                        padding: 0 1.1em;
+                        border-radius: 0.2em;
+                        font-weight: normal;
+                        font-size: 0.9em;
+                        margin-left: 0.5em;
+                        height: 2.2em;
+                        line-height: 2.2em;
+                        cursor: pointer;
+                    }
+                }
+                &:before {
+                    content: ' ';
+                    display: none;
+                }
+            }
+        }
+        .ant-card-extra {
+            //编辑删除
+            a {
+                .iconfont {}
+            }
+        }
+        .ant-card-body {
+            .ant-row {
+                div {
+                    &:nth-of-type(2) {
+                        color:red;
+                    }
+                }
+            }
+            .ant-row{
+                padding: 0.1em 0;
+            }
+        }
+    }
+}

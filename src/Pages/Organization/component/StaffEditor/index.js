@@ -9,6 +9,7 @@ import React, {Component} from "react";
 import {Button, Card, Col, DatePicker, Form, Input, Row, Select} from "antd";
 import classNames from "classnames";
 import axios from "axios";
+import moment from 'moment';
 //=================================================
 import "./less/staffEditor.less";
 import API from "../../../../../API";
@@ -31,6 +32,8 @@ class BranchesEditor extends Component {
   };
 
 
+
+
   componentWillMount() {
     axios.get(API.GET_STAFF_BASE(this.props.id))
       .then(res => {
@@ -48,6 +51,21 @@ class BranchesEditor extends Component {
     this.props.closeDock()
   }
 
+  hasChange(){
+    this.setState({
+      changed: true
+    })
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
+    });
+  };
+
   render() {
     const {getFieldDecorator} = this.props.form;
 
@@ -63,8 +81,12 @@ class BranchesEditor extends Component {
     const baseInfo = this.state.staff.base
 
     return (
-      <Form>
-        <div className={classNames('dock-container', 'staffEditor')} id="staffEditor">
+      <Form onSubmit={this.handleSubmit.bind(this)}>
+        <div
+          className={classNames('dock-container', 'staffEditor')}
+          onKeyDown={this.hasChange.bind(this)}
+          id="staffEditor"
+        >
           <Row className="dock-title">
             <Col span={22}>
               <Row className="avatar">
@@ -98,6 +120,7 @@ class BranchesEditor extends Component {
                   <Button
                     className="save"
                     disabled={this.state.changed ? false : true}
+                    htmlType="submit"
                   >保存</Button>
                 </Col>
               </Row>
@@ -129,6 +152,11 @@ class BranchesEditor extends Component {
                   })(
                     <Select
                       getPopupContainer={ () => document.getElementById('staffEditor')}
+                      onChange={() => {
+                        this.setState({
+                          changed: true
+                        })
+                      }}
                     >
                       <Option value="1">男</Option>
                       <Option value="0">女</Option>
@@ -173,9 +201,16 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('birth', {
                     rules: [{required: false, message: '请选择出生日期!'}],
-                    // initialValue: baseInfo.birth
+                    initialValue: moment(baseInfo.birth)
                   })(
-                    <DatePicker getCalendarContainer={ () => document.getElementById('staffEditor')}/>
+                    <DatePicker
+                      getCalendarContainer={ () => document.getElementById('staffEditor')}
+                      onChange={() => {
+                        this.setState({
+                          changed: true
+                        })
+                      }}
+                    />
                   )}
                 </FormItem>
               </Col>

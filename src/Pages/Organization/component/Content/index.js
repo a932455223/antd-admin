@@ -45,6 +45,7 @@ export default class Branches extends Component {
     let content = document.getElementById('content');
     let thead = document.getElementsByTagName('thead')[0];
 
+    tableScroll.style['height'] = content.offsetHeight - contentTitle.offsetHeight - thead.offsetHeight - 74  + 'px';
     tableScroll.style['max-height'] = content.offsetHeight - contentTitle.offsetHeight - thead.offsetHeight - 74  + 'px';
     tableScroll.style['overflow-y'] = 'auto';
 

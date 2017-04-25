@@ -8,8 +8,10 @@
 import React, {Component} from "react";
 import {Button, Card, Col, Form, Input, Row, Select} from "antd";
 import classNames from 'classnames'
+import axios from 'axios';
 //=================================================
 import "./less/branchesEditor.less";
+import API from '../../../../../API';
 
 
 const FormItem = Form.Item;
@@ -19,13 +21,40 @@ const Option = Select.Option;
 class BranchesEditor extends Component {
 
   state = {
-    changed: false
+    changed: false,
+    department: {}
   };
+
+  componentWillMount(){
+    axios.get(API.GET_DEPARTMENT_BASE(this.props.id))
+      .then( res => {
+        this.setState({
+          department: res.data.data
+        })
+      })
+  }
+
 
   closeDock() {
     console.log('bye bye');
     this.props.closeDock()
   }
+
+  hasChange(){
+    this.setState({
+      changed: true
+    })
+  }
+
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
+    });
+  };
 
   render() {
     const {getFieldDecorator} = this.props.form;
@@ -39,9 +68,16 @@ class BranchesEditor extends Component {
       }
     };
 
+    const departmentInfo = this.state.department;
+
     return (
-      <Form>
-        <div className={classNames('dock-container','departmentEditor')}>
+      <Form onSubmit={this.handleSubmit.bind(this)}>
+        <div
+          className={classNames('dock-container','departmentEditor')}
+          id="departmentEditor"
+          onKeyDown={this.hasChange.bind(this)}
+          ref={ departmentEditor => this.departmentEditor = departmentEditor}
+        >
           <Row className="dock-title">
             <Col span={22}>
               详情
@@ -74,6 +110,7 @@ class BranchesEditor extends Component {
                   <Button
                     className="save"
                     disabled={this.state.changed ? false : true}
+                    htmlType="submit"
                   >保存</Button>
                 </Col>
               </Row>
@@ -84,10 +121,10 @@ class BranchesEditor extends Component {
                 <FormItem
                   label={<span>组织名称</span>}
                   {...formItemLayout}
-
                 >
                   {getFieldDecorator('name', {
                     rules: [{required: true, message: '组织名称!'}],
+                    initialValue: departmentInfo.name
                   })(
                     <Input/>
                   )}
@@ -98,8 +135,9 @@ class BranchesEditor extends Component {
                   label={<span>组织类别</span>}
                   {...formItemLayout}
                 >
-                  {getFieldDecorator('categories', {
+                  {getFieldDecorator('category', {
                     rules: [{required: true, message: '组织类别!'}],
+                    initialValue: departmentInfo.category
                   })(
                     <Input/>
                   )}
@@ -112,8 +150,9 @@ class BranchesEditor extends Component {
                   label={<span>所属组织</span>}
                   {...formItemLayout}
                 >
-                  {getFieldDecorator('asd', {
+                  {getFieldDecorator('parentDepartment', {
                     rules: [{required: true, message: '所属组织!'}],
+                    initialValue: departmentInfo.parentDepartment
                   })(
                     <Input/>
                   )}
@@ -126,6 +165,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('director', {
                     rules: [{required: true, message: '负责人!'}],
+                    initialValue: departmentInfo.director
                   })(
                     <Input/>
                   )}
@@ -140,6 +180,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('phone', {
                     rules: [{required: true, message: '联系电话!'}],
+                    initialValue: departmentInfo.phone
                   })(
                     <Input/>
                   )}
@@ -154,6 +195,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('address', {
                     rules: [{required: true, message: '地址!'}],
+                    initialValue: departmentInfo.address
                   })(
                     <Input/>
                   )}
@@ -163,7 +205,7 @@ class BranchesEditor extends Component {
           </Card>
 
           {/*业务信息*/}
-          <Card className="business" title={<h1>业务信息</h1>}>
+          <Card className="business" title={<h3>业务信息</h3>}>
             <Row>
               <Col span={4}>
                 客户规模：
@@ -192,7 +234,7 @@ class BranchesEditor extends Component {
 
 
           {/*操作日志*/}
-          <Card className="business" title={<h1>查看日志</h1>}>
+          <Card className="business" title={<h3>查看日志</h3>}>
             <Row>
               <Col span={4}>
                 王五
