@@ -21,7 +21,7 @@ const Option = Select.Option;
 import './indexStyle.less';
 import AddMaintainRecordForm from './widget/AddMaintainRecordForm'
 import MaintainRecord from './widget/MaintainRecord'
-
+import SelectStaff from '../../../components/SelectStaff'
 function info(msg,color){
   console.log('%c'+msg,'color:'+color);
 }
@@ -60,17 +60,13 @@ class AddCrewModal extends Component {
     const { visible } = this.props;
     return(
       <Modal  title="选择人员"
-              visible={visible}
+              width="600"
+              height="800"
+              visible={true}
               onOk={this.handleOk}
               confirmLoading={this.state.confirmLoading}
               onCancel={this.handleCancel}>
-
-        <Tabs type='card'>
-          <TabPane tab="职位" key="crewPosition">
-          </TabPane>
-          <TabPane tab="群组" key="crewGroup">
-          </TabPane>
-        </Tabs>
+        <SelectStaff />
       </Modal>
     )
   }
@@ -179,14 +175,14 @@ class BasicInfoEdit extends Component{
                   wrapperCol={{span: 24}}
 
                 >
-                  
+
                   {getFieldDecorator(`info-${k}`, {
                     initialValue:len > index ? eachCustomerInfo.account[index].info : "",
                     onChange: this.inputChange
                   })(
                     <Input placeholder="填写备注信息"/>
                   )}
-                  
+
                   {
                     index === 0
                     ?

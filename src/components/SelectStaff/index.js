@@ -109,62 +109,52 @@ export default class SelectStaff extends Component {
 
     return (
       <div className="select-staff">
-        <Card
-          className="card-body"
-          title={
-            <div className="title">
-              <h3>选择人员</h3>
-              <Icon type="close"/>
-            </div>
-          }
-        >
-          <div className="select-staff-body" id="mainBody">
-            <div>
-              <Tabs defaultActiveKey="1">
-                <TabPane tab={<span>职位</span>} key="1">
-                  <Tree
-                    checkable
-                  >
-                    {this.createTree(this.state.department)}
-                  </Tree>
-                </TabPane>
-                <TabPane tab={<span>群组</span>} key="2">
-                  Tab 2
-                </TabPane>
-              </Tabs>
-            </div>
+        <div className="select-staff-body" id="mainBody">
+          <div>
+            <Tabs defaultActiveKey="1">
+              <TabPane tab={<span>职位</span>} key="1">
+                <Tree
+                  checkable
+                >
+                  {this.createTree(this.state.department)}
+                </Tree>
+              </TabPane>
+              <TabPane tab={<span>群组</span>} key="2">
+                Tab 2
+              </TabPane>
+            </Tabs>
+          </div>
 
 
-            <div>
-              <Table
-                {...tableConf}
-                checkable
-                rowKey={record => record.id}
-                rowSelection={this.rowSelection}
-                scroll={{y: 500}}
-                pagination={{
-                  pageSize:20
-                }}
-              />
-            </div>
+          <div>
+            <Table
+              {...tableConf}
+              checkable
+              rowKey={record => record.id}
+              rowSelection={this.rowSelection}
+              scroll={{y: 500}}
+              pagination={{
+                pageSize:20
+              }}
+            />
           </div>
-          <div className="tags-wrapper">
-            <div className="tags-title">
-              <h3>已选成员</h3>
-              <span>6ren</span>
-            </div>
-            <div>
-              <Tag>Tag 1</Tag>
-              <Tag><a href="https://github.com/ant-design/ant-design/issues/1862">Link</a></Tag>
-              <Tag closable >Tag 2</Tag>
-              <Tag closable >Prevent Default</Tag>
-            </div>
-            <div className="btn-group">
-              <Button>取消</Button>
-              <Button>确认</Button>
-            </div>
+        </div>
+        <div className="tags-wrapper">
+          <div className="tags-title">
+            <h3>已选成员</h3>
+            <span>6ren</span>
           </div>
-        </Card>
+          <div>
+            <Tag>Tag 1</Tag>
+            <Tag><a href="https://github.com/ant-design/ant-design/issues/1862">Link</a></Tag>
+            <Tag closable >Tag 2</Tag>
+            <Tag closable >Prevent Default</Tag>
+          </div>
+          <div className="btn-group">
+            <Button>取消</Button>
+            <Button>确认</Button>
+          </div>
+        </div>
       </div>
     )
   }
