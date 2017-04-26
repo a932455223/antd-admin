@@ -1,0 +1,209 @@
+@import "../../../../../commonStyle/common.less";
+@organization-primary-color: #7A87C6;
+
+.organization {
+  display: flex;
+  flex: auto;
+  flex-direction: column;
+  padding: 16px;
+
+  > div {
+    padding: 0;
+    border-radius: 3px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px 0 #dfdfe1;
+    border: solid 1px #d4d4d5;
+  }
+
+  .ant-tree-title {
+    color: #595959;
+
+    span {
+      i {
+        color: #A0A9D6;
+        margin-right: 3px;
+      }
+    }
+  }
+
+  .ant-layout-sider {
+    padding: 0 15px;
+    background: #FAFAFA;
+    border-right: 1px solid #d4d4d5;
+
+    .ant-tree {
+      li {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .sider-title {
+    height: 63px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #d4d4d5;
+
+    .ant-row:before, .ant-row:after {
+      content: '';
+    }
+
+    h3 {
+      font-size: 16px;
+    }
+
+    button {
+      color: #9FABBA;
+      background: #fafafa;
+      border: 0;
+      font-size: 14px;
+      padding: 0;
+    }
+  }
+
+  .content-title {
+    height: 63px;
+    border-bottom: 1px solid #d4d4d5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+
+  }
+
+  .ant-table-thead {
+
+    th {
+      //display: block;
+      background: #F4F5FA;
+      border-bottom: 1px solid #d4d4d5;
+    }
+
+    th:not(:last-child) {
+      border-right: 1px solid #d4d4d5;
+    }
+  }
+
+  .ant-table-pagination {
+    width: 100%;
+    background: #F4F4F4;
+    margin: 0;
+    padding: 6px 10px 6px 0;
+    float: none;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .ant-card-head {
+    background: #FAFAFA;
+  }
+
+
+
+  .dock-title {
+    font-size: 18px;
+    font-weight: 600;
+
+    span:last-child {
+      font-size: 22px;
+      cursor: pointer;
+      &:hover {
+        color: #f00;
+      }
+    }
+  }
+
+  .dock-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 10px;
+    background: #F4F4F6;
+  }
+
+
+
+
+
+  //保存按钮 | 新建员工
+  .save {
+    background: @organization-primary-color;
+    color: #fff;
+
+
+    &:hover ,&:focus,&:active{
+      border-color: @organization-primary-color;
+      color: #fff;
+    }
+  }
+
+  .ant-btn.disabled:hover,
+  .ant-btn[disabled]:hover,
+  .ant-btn.disabled:focus,
+  .ant-btn[disabled]:focus,
+  .ant-btn.disabled:active,
+  .ant-btn[disabled]:active,
+  .ant-btn.disabled.active,
+  .ant-btn[disabled].active{
+    background-color: #7A87C6;
+    color: #D6D8E8;
+  }
+
+  //取消按钮
+  .cancel {
+    border: 0;
+    background: #FAFAFA;
+    color: RGBA(72, 82, 158, .2);
+    &:hover {
+      color: #333;
+      background-color: #FAFAFA !important;
+    }
+  }
+
+
+  .newStaff{
+    .save;
+    width: 92px;
+    font-size: 14px;
+    padding: 5px 0;
+    line-height: 16px;
+  }
+    //table 分页
+  .ant-table-pagination{
+    border: 17px solid #fff;
+  }
+    //编辑按钮
+  .edit{
+    border: 0;
+    background: #fff;
+    color: #6E8198;
+
+    &:hover{
+      color: #6E8198;
+      background: #fff;
+    }
+  }
+
+
+  .ant-form-item-label{
+    text-align: left;
+  }
+
+  .staffEditor,.departmentEditor{
+    .ant-input{
+      //border: 0;
+    }
+
+    .ant-input:hover{
+      border: 1px solid #d4d4d5;
+    }
+
+    .ant-form-item-required:before{
+      display: none;
+    }
+  }
+}
+

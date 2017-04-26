@@ -133,7 +133,6 @@ module.exports = {
   }),
 
 
-
   'GET /asd/popular/columns': Mock.mock(popularColumns),
   // popular movies data lists
   'GET /asd/movies/popular': Mock.mock(popularMovies),
@@ -162,8 +161,6 @@ module.exports = {
   }),
 
 
-
-
   //用户家庭信息
   'GET /asd/customer/:id/family': Mock.mock({
     'code': 200,
@@ -181,9 +178,9 @@ module.exports = {
   'GET /asd/common/dropdown/list/relation': Mock.mock({
     'code': 200,
     'data': [
-      {'id': 0,'key':'couple','name': '夫妻'},
-      {'id': 1,'key':'borther','name': '兄弟'},
-      {'id': 2,'key':'parent','name': '父子'},
+      {'id': 0, 'key': 'couple', 'name': '夫妻'},
+      {'id': 1, 'key': 'borther', 'name': '兄弟'},
+      {'id': 2, 'key': 'parent', 'name': '父子'},
     ],
     'message': 'ok'
   }),
@@ -195,9 +192,9 @@ module.exports = {
     //   'name': /个体商户|机关单位|企事业单位/,
     // }],
     'data': [
-      {'id': 0,'key':'merchant','name': '个体商户'},
-      {'id': 1,'key':'government','name': '机关单位'},
-      {'id': 2,'key':'business','name': '企事业单位'},
+      {'id': 0, 'key': 'merchant', 'name': '个体商户'},
+      {'id': 1, 'key': 'government', 'name': '机关单位'},
+      {'id': 2, 'key': 'business', 'name': '企事业单位'},
     ],
     'message': 'ok'
   }),
@@ -211,74 +208,74 @@ module.exports = {
   }),
 
   //客户基本信息——个人客户
-  'GET /asd/customer/:id/base':Mock.mock({
-    'code':200,
-    'data':{
-      'account|2-3':[{
-        'accNumber':/[0-9]{13}/,
-        'info':/一类账户|二类账户/
+  'GET /asd/customer/:id/base': Mock.mock({
+    'code': 200,
+    'data': {
+      'account|2-3': [{
+        'accNumber': /[0-9]{13}/,
+        'info': /一类账户|二类账户/
       }],
       'address': '@city(true)',
       'age|1-100': 100,
-      'birth':'1990-01-30',
-      'certificate':/[0-9]{18}/,
-      'department':'慈溪银行',
-      'grid':'B909',
-      'houseType':'商住',
-      'id|+1':1,
-      'joiner|2-3':['@name'],
+      'birth': '1990-01-30',
+      'certificate': /[0-9]{18}/,
+      'department': '慈溪银行',
+      'grid': 'B909',
+      'houseType': '商住',
+      'id|+1': 1,
+      'joiner|2-3': ['@name'],
       'manager': '张健钊',
-      'marriage|1':true,
+      'marriage|1': true,
       'needLoan|1': true,
-      'origin':'上海',
-      'phone':/[0-9]{11}/,
-      'wechat':'zli3049',
-      'withCar|1':true,
-      'withDebt':true,
-      'yearExpense':100,
-      'yearIncome':999988,
+      'origin': '上海',
+      'phone': /[0-9]{11}/,
+      'wechat': 'zli3049',
+      'withCar|1': true,
+      'withDebt': true,
+      'yearExpense': 100,
+      'yearIncome': 999988,
     },
-    'message':'message!!'
+    'message': 'message!!'
   }),
 
   //客户工作信息
-  'GET /asd/jobinfo/:id/base':Mock.mock({
-    'code':200,
-    'data':{
-      'jobclass' : '个体户',
+  'GET /asd/jobinfo/:id/base': Mock.mock({
+    'code': 200,
+    'data': {
+      'jobclass': '个体户',
       'businessPrice': 1999,
       'businessScope': '100',
-      'businessYield':989888888,
-      'certificate':/[0-9]{18}/,
-      'downCompany':'山西省煤矿厂',
-      'id|+1':1,
-      'monthIncome':'29000',
+      'businessYield': 989888888,
+      'certificate': /[0-9]{18}/,
+      'downCompany': '山西省煤矿厂',
+      'id|+1': 1,
+      'monthIncome': '29000',
       'upCompany': '中国企业',
-      'yearIncom':19999999999
+      'yearIncom': 19999999999
     },
-    'message':' jobinfo message!!'
+    'message': ' jobinfo message!!'
   }),
 
   //客户基本信息——企业客户
-  'GET /asd/company/:id/base':Mock.mock({
-    'code':200,
-    'data':{
-      'department':'上海支行',
-      'grid':'C666',
+  'GET /asd/company/:id/base': Mock.mock({
+    'code': 200,
+    'data': {
+      'department': '上海支行',
+      'grid': 'C666',
       'manager': '张健钊',
-      'registertime':'2013/12/12',
+      'registertime': '2013/12/12',
       'industry': '互联网',
       'business': '3219389382900',
-      'yearmoney':'999988799',
-      'owner':'张三',
-      'phone':/[0-9]{11}/,
-      'people':'1000',
-      'saliary':'100000',
-      'address':'山西省-长治市-壶关县',
+      'yearmoney': '999988799',
+      'owner': '张三',
+      'phone': /[0-9]{11}/,
+      'people': '1000',
+      'saliary': '100000',
+      'address': '山西省-长治市-壶关县',
       'addressinfo': '山西省长治市壶关县云台山xxx路xx号',
-      'joiner|2':['@name']
+      'joiner|2': ['@name']
     },
-    'message':'company message!'
+    'message': 'company message!'
   }),
 
   // 组织机构列表 有层级
@@ -290,10 +287,10 @@ module.exports = {
       childDepartment: [{
         id: 2,
         name: '大同市分行'
-      },{
+      }, {
         id: 3,
         name: '晋中市分行'
-      },{
+      }, {
         id: 4,
         name: '长治市分行',
         childDepartment: [{
@@ -302,14 +299,14 @@ module.exports = {
           childDepartment: [{
             id: 6,
             name: "龙泉镇分理处"
-          },{
+          }, {
             id: 7,
             name: "城关镇分理处"
-          },{
+          }, {
             id: 8,
             name: "百尺镇分理处"
           }]
-        },{
+        }, {
           id: 9,
           name: '长治县分行'
         }]
@@ -317,8 +314,66 @@ module.exports = {
     }
 
   }),
+  // 获取产品分类 有层级
+  'GET /asd/product/hierarchy': Mock.mock({
+    code: 200,
+    data: {
+      id: 1,
+      name: '线下产品',
+      childDepartment: [{
+        id: 2,
+        name: '负债类',
+        childDepartment: [
+          {
+            id: 6,
+            name: '活期存款'
+          }, {
+            id: 7,
+            name: '定期存款'
+          },{
+            id: 8,
+            name: '通知存款'
+          }
+        ]
+      }, {
+        id: 3,
+        name: '资产类',
+        childDepartment: [
+          {
+            id: 9,
+            name: '对公贷款'
+          }, {
+            id: 10,
+            name: '个人贷款'
+          }
+        ]
+      }, {
+        id: 4,
+        name: '投资权益类',
+        childDepartment: [
+          {
+            id: 11,
+            name: '理财产品'
+          }, {
+            id: 12,
+            name: '保险产品'
+          },
+          {
+            id: 13,
+            name: '基金产品'
+          }, {
+            id: 14,
+            name: '贵金属产品'
+          }
+        ]
+      }, {
+        id: 5,
+        name: '渠道类'
+      }]
+    }
+  }),
 
-    // 组织机构列表
+  // 组织机构列表
   'GET /asd/departments': Mock.mock({
     code: 200,
     "data|20": [{
@@ -374,18 +429,18 @@ module.exports = {
   //金融业务
   'GET /asd/finance/:id/base': Mock.mock({
     'code': 200,
-    'data|3':[{
-      'project':/金融全家福|黄金商铺一号/,
+    'data|3': [{
+      'project': /金融全家福|黄金商铺一号/,
       'buyDate': '2017／01/01',
       'department': /上海浦发|山西太原/,
       'expireDate': '2018/01/01',
-      'money':8888888,
-      'id|+1':1,
-      'profit':'3.8%'
+      'money': 8888888,
+      'id|+1': 1,
+      'profit': '3.8%'
     }],
-    'message':'finance message!'
+    'message': 'finance message!'
   }),
-  
+
   'GET /asd/department/:id/base': Mock.mock({
     code: 200,
     data: {
@@ -411,7 +466,29 @@ module.exports = {
       department: /壶关农商行|长治市分行|壶关县分行/,
       lastTime: '2012-13-13'
     }]
+  }),
 
+  // 所有产品列表
+  'GET /asd/product/list': Mock.mock({
+    code: 200,
+    "data|100": [{
+      code: /[0-9]{5}/,
+      name: /理财|保险|基金|贵金属/,
+      abbreviation: "@name",
+      classify: '@name  产品',
+      count: /[0-9]{3}/
+    }]
+  }),
+
+  // 产品分类
+  'GET /asd/product/classify/list': Mock.mock({
+    code: 200,
+    "data|14": [{
+      name: /(负债|资产|投资权益|渠道)类/,
+      classify: '线下产品',
+      describe: '多买多赚',
+      count: /[0-9]{3}/
+    }]
   })
 };
 

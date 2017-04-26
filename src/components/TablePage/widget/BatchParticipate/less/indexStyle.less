@@ -1,0 +1,148 @@
+@import "../../../../../commonStyle/common.less";
+@organization-primary-color: #7A87C6;
+
+
+.batchParticipate {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0 auto;
+
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 5px 0;
+
+    border-bottom: 1px solid #e1e2e4;
+
+    p {
+      font-size: 16px;
+    }
+
+    i {
+      font-size: 24px;
+      cursor: pointer;
+    }
+  }
+
+  .hadParticipated {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 10px 0;
+    padding: 8px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px 0 #dfdfe1;
+	  border: solid 1px #d4d4d5;
+  }
+
+  .select-staff-body {
+    display: flex;
+    flex: 1;
+    // min-height: 90vh;
+
+    background-color: #fff;
+    box-shadow: 0 1px 3px 0 #dfdfe1;
+	  border: solid 1px #d4d4d5;
+
+    > div {
+      flex: 1;
+    }
+
+    > div:first-child {
+      flex: 2.5;
+      border-right: 1px solid #ccc;
+
+      + div {
+        flex: 3.5;
+      }
+    }
+
+  }
+
+  .btn-group {
+    padding-top: 13px;
+    text-align: right;
+
+    .ant-btn:hover, .ant-btn:focus {
+      color: #333;
+      background-color: #fff;
+      border-color: #E1E2E4;
+    }
+
+    button {
+      &:hover {
+        box-shadow: 0 1px 3px 0 #dfdfe1;
+      }
+
+      &:first-child {
+        margin-right: 14px;
+
+        + button {
+          color: #fff;
+          background: @organization-primary-color;
+          &:hover, &:focus {
+            color: #fff;
+            background-color: @organization-primary-color;
+            border-color: @organization-primary-color;
+          }
+        }
+      }
+    }
+  }
+
+
+  .ant-tabs-nav {
+    width: 100%;
+  }
+
+  .ant-tabs-nav-scroll {
+    > .ant-tabs-tab {
+      width: 50%;
+    }
+  }
+
+  .ant-tabs-nav .ant-tabs-tab {
+    width: 50%;
+    margin: 0;
+    text-align: center;
+    padding-bottom: 12px;
+  }
+
+  .ant-tree-checkbox, .ant-tree-checkbox-inner {
+    border-radius: 50%;
+  }
+
+  .ant-table-thead > tr > th, .ant-table-tbody > tr > td {
+    padding: 9px;
+  }
+
+  td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ant-table-wrapper {
+    height: 100%;
+  }
+
+  .ant-spin-container {
+    ul {
+      width: 100%;
+      margin: 0;
+      padding: 3px;
+      border: 3px solid #fff;
+      background: #F4F4F4;
+      display: flex;
+      justify-content: flex-end;
+
+      li {
+        margin: 0;
+        margin-right: 5px;
+      }
+    }
+  }
+}

@@ -39,7 +39,6 @@ const AddMaintainRecord = Form.create()(AddMaintainRecordForm);
 const BasicInfoListsEdit = Form.create()(BasicInfoEdit);
 
 
-
 class BasicInfo extends Component {
   state = {
     modalVisible: false,
@@ -119,16 +118,55 @@ class BasicInfo extends Component {
         </div>
 
         <div className="maintain">
-          <Tabs type='card'>
-            <TabPane tab="维护记录" key="basicInfo">
+          <Tabs>
+            <TabPane tab="维护记录" key="basicInfo" className="tab01">
               <AddMaintainRecord />
               <MaintainRecord />
             </TabPane>
-            <TabPane tab="操作记录" key="familyInfo">
-              <p></p>
+            <TabPane tab="操作记录" key="familyInfo" className="tab02">
+              <div className="history">
+                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+
             </TabPane>
-            <TabPane tab="修改记录" key="jobInfo">
-              <p>3</p>
+            <TabPane tab="修改记录" key="jobInfo" className="tab03">
+                <div className="history">
+                <div><span>王祎</span><span> 修改了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 修改了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 修改了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 修改了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 修改了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
             </TabPane>
           </Tabs>
         </div>
