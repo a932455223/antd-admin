@@ -60,5 +60,14 @@ export default {
   GET_ALL_PRODUCT: '/asd/product/list',
 
   // 产品分类列表
-  GET_PRODUCT_CLASSIFY_LIST: '/asd/product/classify/list'
+  GET_PRODUCT_CLASSIFY_LIST: '/asd/product/classify/list',
+
+   // 新增员工
+  POST_ADD_STAFF: '/api/staff',
+
+
+
+  // 下拉菜单信息
+  GET_DROPDOWN: key => `/api/common/dropdown/${key}`
 }
+

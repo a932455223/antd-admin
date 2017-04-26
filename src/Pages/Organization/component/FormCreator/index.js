@@ -55,7 +55,7 @@ export default class FormCreator extends Component {
                         }
                       >
                         {item.options.map((option, index) => {
-                          return <Option value={option.value} key={item.field + index}>{option.text}</Option>
+                          return <Option value={option.id} key={item.field + index}>{option.name}</Option>
                         })}
                       </Select>
                     )}

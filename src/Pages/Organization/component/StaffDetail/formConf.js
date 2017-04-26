@@ -36,12 +36,11 @@ export const baseDataForForm = [
     message: '请填写姓名！',
     formItemLayout: formItemLayoutS,
     field: 'name',
-    defaultValue: 'asd'
   },
   {
     label: '身份证号',
     type: 'input',
-    required: false,
+    required: true,
     message: '请填写身份证！',
     formItemLayout: formItemLayoutS,
     field: 'certificate'
@@ -52,7 +51,7 @@ export const baseDataForForm = [
     required: false,
     message: '请选择性别！',
     formItemLayout: formItemLayoutS,
-    field: 'sex',
+    field: 'gender',
     render: (
       <RadioGroup >
         <Radio value={1}>男</Radio>
@@ -66,7 +65,7 @@ export const baseDataForForm = [
     required: false,
     message: '请选择出生日期！',
     formItemLayout: formItemLayoutS,
-    field: 'birthday'
+    field: 'birth'
   },
 ];
 
@@ -111,14 +110,14 @@ export const connectDataForForm = [
     required: true,
     message: '请选择是否添加用户！',
     formItemLayout: formItemLayout,
-    field: 'add_user',
+    field: 'isUser',
     options: [
       {
-        value: "1",
+        value: true,
         text: '是'
       },
       {
-        value: "0",
+        value: false,
         text: '否'
       }
     ]
@@ -133,18 +132,18 @@ export const eductionDataForForm = [
     required: false,
     message: '请选择学历！',
     formItemLayout: formItemLayout,
-    field: 'diploma',
+    field: 'educationLevel',
     options: [
       {
-        value: "1",
+        value: 1,
         text: '本科'
       },
       {
-        value: "2",
+        value: 2,
         text: '研究生'
       },
       {
-        value: "3",
+        value: 3,
         text: '博士'
       }
     ]
@@ -167,44 +166,44 @@ export const eductionDataForForm = [
   },
   {
     label: '毕业时间',
-    type: 'input',
+    type: 'datePicker',
     required: false,
     message: '请填写毕业时间！',
     formItemLayout: formItemLayout,
-    field: 'graduation_time'
+    field: 'graduationTime'
   },
 ];
 
 
 const treeData = [{
   label: '山西湖光总行',
-  value: '0-0',
-  key: '0-0',
+  value: 1,
+  key: '1',
   children: [{
     label: 'Child Node1',
-    value: '0-0-0',
-    key: '0-0-0',
+    value: 2,
+    key: '2',
   }],
 }, {
   label: 'Node2',
-  value: '0-1',
-  key: '0-1',
+  value: 3,
+  key: '3',
   children: [{
     label: 'Child Node3',
-    value: '0-1-0',
-    key: '0-1-0',
+    value: 4,
+    key: '4',
   }, {
     label: 'Child Node4',
-    value: '0-1-1',
-    key: '0-1-1',
+    value: 5,
+    key: '5',
   }, {
     label: 'Child Node5',
-    value: '0-1-2',
-    key: '0-1-2',
+    value: 6,
+    key: '6',
     children: [{
       label: 'Child Node1',
-      value: '0-0-0-1',
-      key: '0-0-0-3',
+      value: 7,
+      key: '7',
     }],
   }],
 }];
@@ -216,7 +215,7 @@ export const wordDataForForm = [
     required: true,
     message: '请输入工号！',
     formItemLayout: formItemLayout,
-    field: 'jobID'
+    field: 'code'
   },
   {
     label: '目前职位',
@@ -224,18 +223,18 @@ export const wordDataForForm = [
     required: true,
     message: '请选择职位！',
     formItemLayout: formItemLayout,
-    field: 'post',
+    field: 'position',
     options: [{
-      value: "1",
+      value: 1,
       text: '董事长'
     }, {
-      value: "2",
+      value: 2,
       text: '职员'
     }, {
-      value: "3",
+      value: 3,
       text: '行长'
     }, {
-      value: "4",
+      value: 4,
       text: '分行长'
     }]
   },
@@ -245,14 +244,14 @@ export const wordDataForForm = [
     required: false,
     message: '请选择任职状态！',
     formItemLayout: formItemLayout,
-    field: 'state',
+    field: 'jobStatus',
     options: [
       {
-        value: "1",
+        value: 1,
         text: '在职'
       },
       {
-        value: "0",
+        value: 0,
         text: '离职'
       }
     ]
@@ -263,7 +262,7 @@ export const wordDataForForm = [
     required: true,
     message: '请选择所属机构！',
     formItemLayout: formItemLayout,
-    field: 'branches',
+    field: 'departments',
     render: (
       <TreeSelect
         getPopupContainer = { () => document.getElementById('staffDetail')}
@@ -275,10 +274,10 @@ export const wordDataForForm = [
   {
     label: '入职时间',
     type: 'datePicker',
-    require: false,
+    required: true,
     message: '请选择入职时间',
     formItemLayout: formItemLayout,
-    field: 'entry_time',
+    field: 'inductionTime',
   }
 ];
 

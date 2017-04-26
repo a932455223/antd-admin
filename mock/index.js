@@ -493,7 +493,17 @@ module.exports = {
       describe: '多买多赚',
       count: /[0-9]{3}/
     }]
-  })
+  }),
+
+
+  // 新增员工
+  'POST /api/staff': 1,
+
+
+  // 下拉信息
+  'GET /api/common/dropdown/:key': {
+    message: 'err'
+  }
 };
 
 
