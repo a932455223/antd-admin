@@ -55,6 +55,14 @@ const route = (
       }}/>
     </Route>
 
+     <Route path='grids' onEnter={validate} component={App}> 
+         <Route path='list' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/Grids/List').default)
+        }, 'gridsList')
+      }}/>
+    </Route> 
+    
     <Route path='system' onEnter={validate} component={App}>
       <Route path='users' getComponent={(location, cb) => {
         require.ensure([], () => {
