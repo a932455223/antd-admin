@@ -14,29 +14,29 @@ export  default  class MaintainRecord extends Component {
 
 
               <div className="timelinereacod">
-                <section className="edit">
+                <div className="edit">
                   <span>
                     <span><Icon type="edit" />编辑</span>
                     <span><Icon type="delete" />删除</span>
                   </span>
-                </section>
+                </div>
 
-                <section className="record">
+                <div className="record">
                   <div>张益达</div>
                   <span>【电话】</span>进行了
                   <span>1</span>次
                   <span>【产品到期提醒】</span>维护
-                </section>
+                </div>
 
-                <section className="text">
+                <div className="text">
                   <Input  type='textarea'
                           rows={2}
                           value='介绍理财产品，制定理财计划书，客户下单'/>
-                  <footer>
+                  <div className="footerr">
                     <span>取消</span>
                     <Button>保存</Button>
-                  </footer>
-                </section>
+                  </div>
+                </div>
               </div>
             </div>
           </Timeline.Item>

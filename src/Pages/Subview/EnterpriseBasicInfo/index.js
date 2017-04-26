@@ -40,29 +40,29 @@ class MaintainRecord extends Component {
 
 
               <div className="timelinereacod">
-                <section className="edit">
+                <div className="edit">
                   <span>
                     <span><Icon type="edit" />编辑</span>
                     <span><Icon type="delete" />删除</span>
                   </span>
-                </section>
+                </div>
 
-                <section className="record">
+                <div className="record">
                   <div>张益达</div>
                   <span>【电话】</span>进行了
                   <span>1</span>次
                   <span>【产品到期提醒】</span>维护
-                </section>
+                </div>
 
-                <section className="text">
+                <div className="text">
                   <Input  type='textarea'
                           rows={2}
                           value='介绍理财产品，制定理财计划书，客户下单'/>
-                  <footer>
+                  <div className="footerr">
                     <span>取消</span>
                     <Button>保存</Button>
-                  </footer>
-                </section>
+                  </div>
+                </div>
               </div>
             </div>
           </Timeline.Item>
@@ -633,15 +633,53 @@ class EnterpriseBasicInfo extends Component {
 
         <div className="maintain">
           <Tabs type='card'>
-            <TabPane tab="维护记录" key="basicInfo">
+            <TabPane tab="维护记录" key="basicInfo" className="tab01">
               <AddNewRecord />
               <MaintainRecord />
             </TabPane>
-            <TabPane tab="操作记录" key="familyInfo">
-              <p></p>
+            <TabPane tab="操作记录" key="familyInfo" className="tab02">
+              <div className="history">
+                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
             </TabPane>
-            <TabPane tab="修改记录" key="jobInfo">
-              <p>3</p>
+            <TabPane tab="修改记录" key="jobInfo" className="tab03">
+              <div className="history">
+                <div><span>王祎</span><span> 修改了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 修改了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 修改了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 修改了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
+              <div className="history">
+                <div><span>王祎</span><span> 修改了客户手机号 </span></div>
+                <p>2017/03/10 13:40:23</p>
+              </div>
             </TabPane>
           </Tabs>
         </div>

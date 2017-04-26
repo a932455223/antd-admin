@@ -141,6 +141,7 @@
   }
 }
 
+
 .maintain {
   label {
     font-size: 14px;
@@ -156,23 +157,15 @@
     .ant-tabs-bar {
       margin-bottom: 0;
       .ant-tabs-nav-container {
-        overflow: visible;
         height: 50px;
         background: #fafafa;
         border: 1px solid #d4d4d5;
         border-radius: 4px 4px 0 0;
-        .ant-tabs-nav-wrap {
-          overflow: visible;
-        }
-        .ant-tabs-nav-scroll {
-          overflow: visible;
           .ant-tabs-nav {
-            /*position: absolute;*/
             margin-bottom: -1px;
             height: 48px;
-            margin-left: -1px;
+            margin-left: -1px;   
             .ant-tabs-tab {
-              position: static;
               padding: 14px 20px 16px;
               border-right: 1px solid #fafafa;
               border-left: 1px solid #fafafa;
@@ -181,129 +174,126 @@
               margin-right: 0;
             }
             .ant-tabs-tab-active {
+              height: 50px;
               background: #fff;
               color: black;
               border-right: 1px solid #d4d4d5;
-              border-left: 1px solid #d4d4d5;
+              border-left: 1px solid #d4d4d5;  
             }
             .ant-tabs-ink-bar {
               background: #fff;
+              border-left: 1px solid #d4d4d5;  
+              border-right: 1px solid #d4d4d5;
+              display: none;
+              transform: none;
             }
           }
+        }
+      }
+  }
+  .ant-tabs-content > .ant-tabs-tabpane{
+    background: #fff;
+    padding: 30px 20px;
+    border: 1px solid #d4d4d5;
+    border-top: none;
+    border-radius: 0 0 4px 4px ;
+  }
+  .tab01{
+    .addrecord{
+      padding-bottom: 15px;
+      border:1px solid #d4d4d5;
+      border-radius: 4px;
+      &:hover{
+        box-shadow: 0 0 0 #000
+      }
+      .ant-card-head{
+        border:none;
+        i{
+          margin-right: 4px;
+        }
+      }
+      .ant-card-body{
+        padding: 0 24px;
+        .buttons button{
+          padding: 4px 10px;
+          margin-right: 8px;
+        }
+        .buttons .submit{
+          background: #5c6bc0;
+          border:1px solid #5c6bc0;
         }
       }
     }
-    .ant-tabs-content {
-      border: 1px solid #d4d4d5;
-      border-top: none;
-      background: #fff;
-      padding: 15px;
-      border-radius: 0 0 4px 4px;
-      box-shadow: 0 1px 3px 0 #dfdfe1;
-      overflow: hidden;
-      .ant-card-bordered {
-        border: 1px solid #d4d4d5;
-        border-radius: 4px;
-        &:hover {
-          box-shadow: none;
-        }
-        .ant-card-head {
-          border: none;
-          .ant-card-head-title {
-
-          }
-          span i {
-            margin-right: 4px;
-          }
-        }
-        .ant-card-body {
-          padding-top: 0px;
-          .buttons {
-            .submit {
-              background-color: #5c6bc0;
-              border-color: #5c6bc0;
-              padding: 3px 10px;
-              font-weight: normal;
-              margin-right: 8px;
+    ul.ant-timeline{
+      padding:30px 20px;
+      .ant-timeline-item{
+        .ant-timeline-item-content{
+          padding-left: 30px;
+          .timeline{
+            display: flex;
+            justify-content: space-between;
+            .time{
+              color: #999;
             }
-            .cancle {
-              padding: 3px 12px;
-            }
-          }
-        }
-      }
-      ul.ant-timeline {
-        margin-top: 30px;
-        padding-left: 30px;
-        .ant-timeline-item {
-          .ant-timeline-item-content {
-            overflow: hidden;
-            .time {
-              float: left;
-              p {
-                color: #999;
-              }
-            }
-            .timelinereacod {
-              float: right;
-              width: 480px;
-              .edit {
-                position: absolute;
+            .timelinereacod{
+              position: relative;
+              width: 390px;
+              .edit{
+                position:absolute;
                 top: 0;
-                right: 0;
+                right: 4px;
                 color: #5f768f;
-                span {
+                span{
+                  margin-left: 8px;
+                }
+              }
+              .record{
+                margin-bottom: 6px;
+                span{
+                  color: #999;
+                }
+              }
+              .text .footerr{
+                padding: 10px 0;
+                overflow: hidden;
+                float: right;
+                button{
+                  background: #5c6bc0;
                   margin-left: 12px;
-                }
-              }
-              .record {
-                line-height: 28px;
-                color: #999;
-                div {
-                  color: #333;
-                  line-height: 15px;
-                }
-              }
-              .text {
-                background: #f5f5f5;
-                footer {
-                  margin-top: 8px;
-                  float: right;
-                  span {
-                    color: #5c6bc0;
+                  padding: 4px 10px ;
+                  border: 1px solid #5c6bc0;
+                  span{
+                    color: #fff;
                   }
-                  button {
-                    padding: 3px 10px;
-                    background: #5c6bc0;
-                    font-weight: 100;
-                    border: none;
-                    margin-left: 12px;
-                    span {
-                      color: #fff;
-                    }
-                  }
-
                 }
               }
-
             }
           }
+          
         }
       }
-      .loadmore {
-        width: 480px;
-        float: right;
-      }
+    }
+    .loadmore{
+      width: 390px;
+      float: right;
+      margin-right: 20px;
     }
   }
 
-
+}
+.history{
+  width: 100%;
+  padding:15px 4px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px #eaeaea dotted;
 }
 
 .ant-modal-wrap{
   #selectStaff{
     height: 500px;
   }
-}
+} 
+
 
 
