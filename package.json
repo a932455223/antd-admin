@@ -25,6 +25,7 @@
     "cookie-parser": "^1.4.3",
     "css-loader": "^0.26.1",
     "express": "^4.15.2",
+    "express-http-proxy": "^1.0.1",
     "file-loader": "^0.10.1",
     "immutability-helper": "^2.1.2",
     "json-loader": "^0.5.4",

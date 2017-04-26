@@ -509,9 +509,7 @@ module.exports = {
   //   message: 'err'
   // },
 
-  'POST /api/areas': {
-    err: 'asd'
-  },
+
 
 
   'POST /api/demo': {
