@@ -15,3 +15,20 @@ import S from './components/SelectStaff'
 // render(<S/>,document.getElementById('root'));
 
 render(<Root store= {store}/>,document.getElementById('root'));
+
+
+
+// import axios from 'axios';
+
+
+
+// axios.post('/api/areas',{
+// 	areaType:72,
+// 	director:"张三",
+// 	orgId:1,
+// 	text:'fsafds',
+// 	index:1,
+// 	size:10
+// }).then( res => {
+// 	console.log(res)
+// })

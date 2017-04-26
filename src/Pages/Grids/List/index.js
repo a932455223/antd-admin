@@ -35,7 +35,8 @@ export default class GridsList extends Component {
   state = {
     table: {
       loading: true,
-      dataSource: []
+      dataSource: [],
+      currentId:''
     },
     dock: {
       visible: false,
@@ -44,14 +45,17 @@ export default class GridsList extends Component {
   };
 
   componentWillMount() {
-    axios.get(API.GET_SYSTEM_ROLES_LIST)
+    axios.post(API.POST_GRIDS_AREAS)
       .then(res => {
+        console.log(res);
         this.setState({
           table: {
-            dataSource: res.data.list,
+            dataSource: res.data.data.areas,
             loading: false
           }
         })
+
+
       })
   }
 
@@ -67,6 +71,7 @@ export default class GridsList extends Component {
 
   // 表格点击事件
   rowClick(rowData) {
+    console.log(rowData)
     this.setState({
       dock: {
         visible: true,
@@ -126,6 +131,8 @@ export default class GridsList extends Component {
   }
 
   render() {
+    let datasource = this.state.table.dataSource.map((item,index) => ({...item, id:`data-${index}`}));
+    console.dir(datasource);
     const columns = [
       {
         title: '网格名称',
@@ -171,8 +178,8 @@ export default class GridsList extends Component {
       },
       {
         title: '操作',
-        dataIndex: 'action',
-        key: 'action',
+        dataIndex: 'action0',
+        key: 'action0',
         width: '10%',
         render: (text = '编辑', rowData) => {
           return (
@@ -191,7 +198,7 @@ export default class GridsList extends Component {
 
     const tableConf = {
       columns: columns,
-      dataSource: this.state.table.dataSource,
+      dataSource: datasource,
       loading: this.state.table.loading,
       onRowClick: this.rowClick.bind(this)
     };

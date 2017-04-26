@@ -2,103 +2,147 @@
  * Created by jufei on 2017/4/25.
  */
 import React, {Component} from "react";
-import {Button, Card, Input, Table} from "antd";
+import {Button, Card, Input, Table ,Row,Col,Form} from "antd";
 //=====================================================================
 import './less/roleEdit.less';
+const FormItem = Form.item;
 
-export default class RoleEdit extends Component {
+class RoleEdit extends Component {
   state = {};
-
-
   render() {
-    const columns = [{
-      title: '用户编号',
-      dataIndex: 'id',
-      key: 'id',
-      width: '20%'
-    }, {
-      title: '用户名称',
-      dataIndex: 'name',
-      key: 'name',
-      width: '20%'
-    }, {
-      title: '所属机构',
-      dataIndex: 'department',
-      key: 'department',
-      width: '20%'
-    }, {
-      title: '其他角色',
-      dataIndex: 'user',
-      key: 'user',
-      width: '20%'
-    }, {
-      title: '操作',
-      dataIndex: 'action',
-      key: 'action',
-      render: (text, rowData) => {
-        return <Button className="delete">删除</Button>
-      }
-    }];
-
-    const dataSource = [{
-      id: 1,
-      name: 'asd',
-      department: 'asd',
-      user: 'asd'
-    }];
-
-    const tableConf = {
-      columns: columns,
-      dataSource: dataSource
-    };
-
-
+    const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
+    // const { currentId } = this.props;
     return (
-      <div className="role-edit">
+      <div>
+        <div className="title">{this.props.id}</div>
+        <Form>
+          <Row>
+            <Col span={12}>
+              <FormItem labelCol={{span: 8}}
+                        wrapperCol={{span: 15}}
+                        label="网格负责人"
+                        className="idnumber"
+              >
 
-        <div className="role-edit-title">
-          <h3>角色</h3>
-          <span>
-          <Button onClick={this.props.rolePermission.bind(this,this.props.id)}>分配权限</Button>
-          <Button
-            className="save"
-            onClick={() => {
-              alert('保存成功');
-              this.props.close()
-            }}
-          >保存</Button>
-          <Button className="close" onClick={this.props.close}>&times;</Button>
-        </span>
-        </div>
+                {getFieldDecorator('certificate', {
+                  initialValue:"",
+                  onChange: this.inputChange
+                })(
+                  <Input />
+                )}
+              </FormItem>
+            </Col>
 
-        <Card className="base-info">
-          <p>
-            <span>创建人</span>
-            {this.props.id}XX
-          </p>
-          <p>
-            <span>创建时间</span>
-            2012-11-12
-          </p>
-          <p>
-            <span>备注</span>
-            <Input type="textarea"/>
-          </p>
-        </Card>
+            <Col span={12}>
+              <FormItem labelCol={{span: 8,offset:1}}
+                        wrapperCol={{span: 15}}
+                        label="所属机构">
+                {getFieldDecorator('birth', {
+                  initialValue:"" ,
+                  onChange: this.inputChange
+                })(
+                  <Input />
+                )}
+              </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={12} >
+              <FormItem labelCol={{span: 8}}
+                        wrapperCol={{span: 15}}
+                        label="网格类型"
+                        className="idnumber"
+              >
 
-        <Card
-          title={(
-            <p>
-              <h3>包含用户</h3>
-              <Button onClick={this.props.addUser.bind(this,this.props.id)}>添加</Button>
-            </p>
-          )}
-        >
-          <Table {...tableConf}/>
-        </Card>
+                {getFieldDecorator('certificate', {
+                  initialValue:"" ,
+                  onChange: this.inputChange
+                })(
+                  <Input />
+                )}
+              </FormItem>
+            </Col>
+
+            <Col span={12} className="">
+              <FormItem labelCol={{span: 8,offset:1}}
+                        wrapperCol={{span: 15}}
+                        label="网格面积">
+                {getFieldDecorator('birth', {
+                  initialValue:"" ,
+                  onChange: this.inputChange
+                })(
+                  <Input />
+                )}
+              </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={12} className="">
+              <FormItem labelCol={{span: 8}}
+                        wrapperCol={{span: 15}}
+                        label="网格户口数"
+                        className="idnumber"
+              >
+
+                {getFieldDecorator('certificate', {
+                  initialValue:"" ,
+                  onChange: this.inputChange
+                })(
+                  <Input />
+                )}
+              </FormItem>
+            </Col>
+
+            <Col span={12} className="">
+              <FormItem labelCol={{span: 8,offset:1}}
+                        wrapperCol={{span: 15}}
+                        label="网格人口数">
+                {getFieldDecorator('birth', {
+                  initialValue:"" ,
+                  onChange: this.inputChange
+                })(
+                  <Input />
+                )}
+              </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24} className="">
+              <FormItem labelCol={{span: 4}}
+                        wrapperCol={{span: 20}}
+                        label="网格地址"
+                        className="idnumber"
+              >
+
+                {getFieldDecorator('certificate', {
+                  initialValue:"" ,
+                  onChange: this.inputChange
+                })(
+                  <Input />
+                )}
+              </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24} className="">
+              <FormItem labelCol={{span: 4}}
+                        wrapperCol={{span: 20}}
+                        label="网格描述"
+                        className="idnumber"
+              >
+
+                {getFieldDecorator('decorate', {
+                  initialValue:"",
+                  onChange: this.inputChange
+                })(
+                  <Input />
+                )}
+              </FormItem>
+            </Col>
+          </Row>
+        </Form>
       </div>
-    )
-  }
+      )
+  }  
 }
-
-
+export default Form.create()(RoleEdit);

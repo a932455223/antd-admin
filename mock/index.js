@@ -495,6 +495,10 @@ module.exports = {
     }]
   }),
 
+  //网格列表
+  'POST /api/areas':{
+    data:'error'
+  },
 
   // 新增员工
   'POST /api/staff': 1,
