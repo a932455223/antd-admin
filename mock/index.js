@@ -500,9 +500,18 @@ module.exports = {
   'POST /api/staff': 1,
 
 
-  // 下拉信息
-  'GET /api/common/dropdown/:key': {
-    message: 'err'
+  // // 下拉信息
+  // 'GET /api/common/dropdown/:key': {
+  //   message: 'err'
+  // },
+
+  'POST /api/areas': {
+    err: 'asd'
+  },
+
+
+  'POST /api/demo': {
+    err: 'ad'
   }
 };
 

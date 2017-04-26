@@ -10,7 +10,9 @@ var express = require('express'),
   bodyParser = require('body-parser'),
   axios = require('axios'),
   cookieParser = require('cookie-parser'),
-  interfaceCF = require('./proxy/interface');
+  interfaceCF = require('./proxy/interface'),
+ multipart = require('connect-multiparty'),
+  multipartMiddleware = multipart();
 
 colors.setTheme({
   silly: 'rainbow',
@@ -34,8 +36,8 @@ app.use('/', express.static(path.join(__dirname + '/static')));
 
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({extended: true}));
-//
+app.use(bodyParser.urlencoded());
+
 // app.get('/',(req,res) => {
 //   res.sendfile(path.resolve(__dirname, 'static/dist', 'index.html'))
 // });
@@ -76,7 +78,8 @@ if (isDeveloping) {
 }
 
 // const proxyHost = 'http://115.159.58.21:8099/crm';
-const proxyHost = 'http://yeapoo.tunnel.qydev.com/crm';
+const proxyHost ='http://192.168.1.39:8080/crm';
+// const proxyHost ='http://localhost:9999';
 interfaceCF(app,proxyHost);
 
 app.listen(port, (err, success) => {
