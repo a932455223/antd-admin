@@ -67,7 +67,7 @@ export default {
 
 
 
-  // 下拉信息
+  // 下拉菜单信息
   GET_DROPDOWN: key => `/api/common/dropdown/${key}`
 }
 
