@@ -165,12 +165,12 @@ module.exports = {
   'GET /asd/customer/:id/family': Mock.mock({
     'code': 200,
     'data|3': [{
-      'id|+1': 1,
+      'id|+1': 45,
       'name': /张三|李四/,
       'certificate': /[0-9]{15}/,
-      'jobCategory': /个体商户|机关单位/,
+      'jobCategory': /个体商户|外出务工|退休/,
       'phone': /[0-9]{11}/,
-      'relation': /夫妻|父子|兄弟/
+      'relation': /夫妻|父子|父女|母女/
     }],
     'message': '注释'
   }),
