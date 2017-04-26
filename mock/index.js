@@ -457,6 +457,10 @@ module.exports = {
     data: 'asd'
   },
 
+  'GET /api/common/dropdown/:param': {
+    data: 'error'
+  },
+
   'GET /asd/system/users': Mock.mock({
     code: 200,
     "data|100": [{
