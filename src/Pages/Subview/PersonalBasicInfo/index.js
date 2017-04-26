@@ -99,8 +99,10 @@ class BasicInfo extends Component {
     const {step, mode, currentId, customerInfoBeEdit} = this.props;
     const {eachCustomerInfo,edited} = this.state;
     let BasicInfo;
+    let Test;
     if(mode === "view"){
       BasicInfo = <BasicInfoListsRead />
+      Test = <Input />
     }else{
       BasicInfo = <BasicInfoListsEdit
         customerInfoBeEdit={customerInfoBeEdit}
