@@ -75,7 +75,9 @@ if (isDeveloping) {
   routes(app);
 }
 
-interfaceCF(app,'http://115.159.58.21:8099/crm');
+// const proxyHost = 'http://115.159.58.21:8099/crm';
+const proxyHost = 'http://yeapoo.tunnel.qydev.com/crm';
+interfaceCF(app,proxyHost);
 
 app.listen(port, (err, success) => {
   if (err) {
