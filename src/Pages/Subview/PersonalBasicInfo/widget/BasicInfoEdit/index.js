@@ -452,7 +452,7 @@ export default class BasicInfoEdit extends Component{
                 className="marriage"
               >
                 {getFieldDecorator('marriage', {
-                  // initialValue: eachCustomerInfo.marriage,
+                  initialValue: eachCustomerInfo.marriage + '',
                   onChange: this.selectChange
                 })(
                   <Select
