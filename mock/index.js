@@ -458,7 +458,7 @@ module.exports = {
   },
 
   'GET /api/common/dropdown/:param': {
-    data: 'error'
+    error: 'error'
   },
 
   'GET /asd/system/users': Mock.mock({
@@ -495,6 +495,10 @@ module.exports = {
     }]
   }),
 
+  //网格列表
+  'POST /api/areas':{
+    data:'error'
+  },
 
   // 新增员工
   'POST /api/staff': 1,
@@ -505,9 +509,7 @@ module.exports = {
   //   message: 'err'
   // },
 
-  'POST /api/areas': {
-    err: 'asd'
-  },
+
 
 
   'POST /api/demo': {

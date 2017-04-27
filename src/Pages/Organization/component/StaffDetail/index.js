@@ -8,6 +8,7 @@ import React, {Component} from "react";
 import {Button, Card, Col, Form, Icon, Row,Radio,TreeSelect,DatePicker} from "antd";
 import classNames from "classnames";
 import axios from 'axios';
+import qs from 'qs';
 //========================================================================================================
 import FormCreator from "../FormCreator";
 //========================================================================================
@@ -65,9 +66,9 @@ class BranchesDetail extends Component {
           }
           return values;
         })(values);
-
-
-        axios.post(API.POST_ADD_STAFF,data)
+        console.log(data);
+        // axios.post(API.POST_ADD_STAFF,qs.stringify(data),{
+        axios.post('/api/staff',qs.stringify(data))
           .then( res => {
             console.log(res)
           })
@@ -237,32 +238,32 @@ class BranchesDetail extends Component {
     const treeData = [{
       label: '山西湖光总行',
       value: 1,
-      key: '1',
+      key: 1,
       children: [{
         label: 'Child Node1',
         value: 2,
-        key: '2',
+        key: 2,
       }],
     }, {
       label: 'Node2',
       value: 3,
-      key: '3',
+      key: 3,
       children: [{
         label: 'Child Node3',
         value: 4,
-        key: '4',
+        key: 4,
       }, {
         label: 'Child Node4',
         value: 5,
-        key: '5',
+        key: 5,
       }, {
         label: 'Child Node5',
         value: 6,
-        key: '6',
+        key: 6,
         children: [{
           label: 'Child Node1',
           value: 7,
-          key: '7',
+          key: 7,
         }],
       }],
     }];

@@ -47,6 +47,7 @@ export default {
   // 组织机构详情列表
   GET_DEPARTMENTS: '/asd/departments',
 
+
   // 组织机构员工列表
   GET_STAFFS: '/asd/staffs',
 
@@ -64,6 +65,9 @@ export default {
 
    // 新增员工
   POST_ADD_STAFF: '/api/staff',
+
+  //网格列表
+  POST_GRIDS_AREAS : '/api/areas',
 
 
 
