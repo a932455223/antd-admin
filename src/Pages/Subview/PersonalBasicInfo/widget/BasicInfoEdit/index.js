@@ -1,4 +1,5 @@
-import React,{Component} from 'react'
+import React,{Component} from 'react';
+import update from "immutability-helper";
 import {
   Row,
   Col,
@@ -16,6 +17,9 @@ import moment from 'moment';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
+import API from '../../../../../../API';
+import ajax from '../../../../../tools/POSTF';
+
 export default class BasicInfoEdit extends Component{
   state = {
     tags : [],
@@ -31,50 +35,146 @@ export default class BasicInfoEdit extends Component{
         isLeaf: false,
       }
     ],
-    withCar: false,
-    withDebt: false,
-    needLoan: false
+    marriage: {
+      value: false,
+      options: []
+    },
+    houseType: {
+      value: '',
+      options: []
+    },
+    withCar: {
+      value: false,
+      options: []
+    },
+    withDebt: {
+      value: false,
+      options: []
+    },
+    needLoan: {
+      value: false,
+      options: []
+    },
+    carPrice: {
+      options: []
+    },
+    debtAmount: {
+      options: []
+    },
+    loanAmount: {
+      options: []
+    },
+    loanPurpose: {
+      options: []
+    },
+    basicInfoBeEdit: false,
+    detailsInfoBeEdit: false
   }
 
-  componentWillReceiveProps(next) {
-    this.setState({
-      tags: next.eachCustomerInfo.joiner
+  componentWillMount(){
+    const commonDropDownType = [
+      'marriage',
+      'houseType',
+      'withCar',
+      // 'carPrice',
+      'withDebt',
+      // 'debtAmount',
+      'needLoan',
+      // 'loanAmount',
+      // 'loanPurpose'
+    ];
+
+    commonDropDownType.map(item => {
+      ajax.Get(API.GET_COMMON_DROPDOWN(item))
+      .then((res) => {
+        let newState = update(this.state, {
+          [item]: {
+            options: {$set: res.data.data}
+          }
+        })
+        this.setState(newState);
+      })
     })
   }
 
+  componentWillReceiveProps(next) {
+    if(this.props.eachCustomerInfo.id !== next.eachCustomerInfo.id) {
+      let newState = update(this.state, {
+        withCar: {
+          value: {$set: next.eachCustomerInfo.withCar}
+        },
+        withDebt: {
+          value: {$set: next.eachCustomerInfo.withDebt}
+        },
+        needLoan: {
+          value: {$set: next.eachCustomerInfo.needLoan}
+        },
+        tags: {$set: next.eachCustomerInfo.joiner}
+      })
+      this.setState(newState);
+    }
+  }
+
   inputChange = (e) => {
-    console.log('things changed');
-    // const { dispatch } = this.props;
     this.props.customerInfoBeEdit();
-    // dispatch(customerInfoBeEdit())
+    this.setState({
+      basicInfoBeEdit: true,
+      detailsInfoBeEdit: true
+    })
   }
 
   selectChange = () => {
     const { getFieldValue } = this.props.form;
     this.props.customerInfoBeEdit();
+    this.setState({
+      basicInfoBeEdit: true,
+      detailsInfoBeEdit: true
+    })
   };
 
   // with car and show its value
-  showCarValue = () => {
-    this.setState({
-      withCar: true
-    });
+  showCarValue = (carValue) => {
+    // typeof e = String
+    if(carValue === 'true') {
+      this.setState({
+        withCar: true
+      });
+    } else {
+      this.setState({
+        withCar: false
+      });
+    }
+
     this.props.customerInfoBeEdit();
   }
 
   // have debt and show the debt
-  showDebtAmount = () => {
-    this.setState({
-      withDebt: true
-    });
+  showDebtAmount = (debtAmount) => {
+    if(debtAmount === 'true') {
+      this.setState({
+        withDebt: true
+      });
+    } else {
+      this.setState({
+        withDebt: false
+      });
+    }
+
     this.props.customerInfoBeEdit();
   }
 
   // show loan need
-  showLoanNeed = () => {
-    this.setState({
-      needLoan: true
-    });
+  showLoanNeed = (loanNeed) => {
+    if(loanNeed === 'true') {
+      this.setState({
+        needLoan: true
+      });
+    } else {
+      this.setState({
+        needLoan: false
+      });
+    }
+
     this.props.customerInfoBeEdit();
   }
 
@@ -111,8 +211,8 @@ export default class BasicInfoEdit extends Component{
   }
 
   render() {
+    console.dir(this.state);
     const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess} = this.props;
-    console.log(eachCustomerInfo);
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
     // console.log(getFieldsValue())
 
@@ -435,7 +535,11 @@ export default class BasicInfoEdit extends Component{
           <Col span={24} >
             <Col span={4}>
             </Col>
-            <Button type="primary" onClick={createCustomerSuccess}>保存</Button>
+            <Button
+              type="primary"
+              onClick={createCustomerSuccess}
+              disabled={!this.state.basicInfoBeEdit}
+            >保存</Button>
           </Col>
         </Row>
       </Form>
@@ -641,7 +745,7 @@ export default class BasicInfoEdit extends Component{
               >
               {getFieldDecorator('needLoan', {
                 initialValue: eachCustomerInfo.needLoan + '',
-                onChange: this.selectChange
+                onChange: this.showLoanNeed
               })(
                 <Select
                   placeholder="是否负债"
@@ -714,7 +818,11 @@ export default class BasicInfoEdit extends Component{
           <Col span={24} >
             <Col span={4}>
             </Col>
-            <Button type="primary" onClick={createCustomerSuccess}>保存</Button>
+            <Button
+              type="primary"
+              onClick={createCustomerSuccess}
+              disabled={!this.state.detailsInfoBeEdit}
+            >保存</Button>
           </Col>
         </Row>
       </Form>
