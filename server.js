@@ -10,11 +10,10 @@ var express = require('express'),
   bodyParser = require('body-parser'),
   axios = require('axios'),
   cookieParser = require('cookie-parser'),
-  interfaceCF = require('./proxy/interface'),
-  multipart = require('connect-multiparty'),
-  multipartMiddleware = multipart();
+  interfaceCF = require('./proxy/interface');
 var proxy = require('express-http-proxy');
 var qs = require('qs');
+var http = 'http';
 
 colors.setTheme({
   silly: 'rainbow',
@@ -36,9 +35,10 @@ var port = isDeveloping ? 8888 : 9999;
 
 app.use('/', express.static(path.join(__dirname + '/static')));
 
-// app.use(bodyParser.json());
-// app.use(cookieParser());
+app.use(cookieParser());
 // app.use(bodyParser.urlencoded());
+// app.use(bodyParser.json());
+
 
 // app.get('/',(req,res) => {
 //   res.sendfile(path.resolve(__dirname, 'static/dist', 'index.html'))
@@ -91,7 +91,7 @@ app.use('/', proxy(proxyHost, {
     return req.url.indexOf('/api/') === 0;
   },
   proxyReqPathResolver: (req, res) => {
-    console.log('body',qs.stringify(req.body));
+    console.log('body', qs.stringify(req.body));
     console.log('/crm' + require('url').parse(req.url).pathname);
     return '/crm' + require('url').parse(req.url).pathname;
   }
@@ -99,7 +99,6 @@ app.use('/', proxy(proxyHost, {
 
 
 interfaceCF(app);
-
 
 app.listen(port, (err, success) => {
   if (err) {
