@@ -3,7 +3,6 @@
  */
 import React from 'react';
 import {Row,Col,Select} from 'antd';
-import AreaSelect from '../../../../components/AreaSelect';
 
 
 

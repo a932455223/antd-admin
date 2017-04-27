@@ -11,6 +11,11 @@ import "./less/areaSelect.less";
 const Option = Select.Option;
 
 export default class AreaSelect extends Component {
+  constructor(props){
+    super(props);
+    this.onChange = props.onChange;
+  }
+
   state = {
     province: [],
     city: [],
@@ -56,6 +61,8 @@ export default class AreaSelect extends Component {
             city: this.state.value.city,
             county: res.data.data[0].id
           }
+        }, () => {
+          this.onChange(this.state.value)
         });
       })
   }
@@ -82,6 +89,8 @@ export default class AreaSelect extends Component {
           city: this.state.value.city,
           county: res.data.data[0].id
         }
+      },() => {
+        this.onChange(this.state.value)
       })
     })
   }
@@ -97,8 +106,11 @@ export default class AreaSelect extends Component {
             county: res.data.data[0].id
           }
         })
+      },() => {
+        this.onChange(this.state.value)
       })
   }
+
 
   countySelected(value) {
     this.setState({
@@ -107,34 +119,36 @@ export default class AreaSelect extends Component {
         city: this.state.value.city,
         county: value
       }
+    },() => {
+      this.onChange(this.state.value)
     })
   }
 
   render() {
     return (
       <div className="area-select">
-        <Select
-          onChange={this.privinceSelected.bind(this)}
-          value={this.state.value.province}
-          onSelect={(a,b)=> {
-            console.log(a,b)
-          }}
-        >
-          {
-            this.state.province.map(item => {
-              return <Option value={item.id} key={item.id}>{item.name}</Option>
-            })
-          }
-        </Select>
-        <Select
-          onChange={this.citySelected.bind(this)}
-          value={this.state.value.city}
-        >
-          {
-            this.state.city.map(item => {
-              return <Option value={item.id} key={item.id}>{item.name}</Option>
-            })
-          }
+          <Select
+            onChange={this.privinceSelected.bind(this)}
+            value={this.state.value.province}
+            onSelect={(a,b)=> {
+              console.log(a,b)
+            }}
+          >
+            {
+              this.state.province.map(item => {
+                return <Option value={item.id} key={item.id}>{item.name}</Option>
+              })
+            }
+          </Select>
+          <Select
+            onChange={this.citySelected.bind(this)}
+            value={this.state.value.city}
+          >
+            {
+              this.state.city.map(item => {
+                return <Option value={item.id} key={item.id}>{item.name}</Option>
+              })
+            }
         </Select>
         <Select
           onChange={this.countySelected.bind(this)}
