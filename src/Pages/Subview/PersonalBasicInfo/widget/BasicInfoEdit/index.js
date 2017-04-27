@@ -5,17 +5,35 @@ import {
   Icon,
   Form,
   Input,
+  InputNumber,
   Button,
   Tag,
   Select,
+  DatePicker,
+  Cascader
 } from 'antd';
+import moment from 'moment';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-
 export default class BasicInfoEdit extends Component{
   state = {
-    tags : []
+    tags : [],
+    originOptions:[
+      {
+        value: '上海',
+        label: '上海',
+        isLeaf: false,
+      },
+      {
+        value: 'Jiangsu',
+        label: '江苏',
+        isLeaf: false,
+      }
+    ],
+    withCar: false,
+    withDebt: false,
+    needLoan: false
   }
 
   componentWillReceiveProps(next) {
@@ -31,6 +49,35 @@ export default class BasicInfoEdit extends Component{
     // dispatch(customerInfoBeEdit())
   }
 
+  selectChange = () => {
+    const { getFieldValue } = this.props.form;
+    this.props.customerInfoBeEdit();
+  };
+
+  // with car and show its value
+  showCarValue = () => {
+    this.setState({
+      withCar: true
+    });
+    this.props.customerInfoBeEdit();
+  }
+
+  // have debt and show the debt
+  showDebtAmount = () => {
+    this.setState({
+      withDebt: true
+    });
+    this.props.customerInfoBeEdit();
+  }
+
+  // show loan need
+  showLoanNeed = () => {
+    this.setState({
+      needLoan: true
+    });
+    this.props.customerInfoBeEdit();
+  }
+
   remove = (k) => {
     const { form } = this.props;
     // can use data-binding to get
@@ -44,6 +91,8 @@ export default class BasicInfoEdit extends Component{
       keys: keys.filter(key => key !== k)
     });
   }
+
+  // select staff
   selectStaff = ()=>{this.setState({visible:true})}
 
   add = () => {
@@ -56,12 +105,14 @@ export default class BasicInfoEdit extends Component{
       keys: nextKeys,
     });
   }
+
   handleClose = () => {
 
   }
+
   render() {
-    const {eachCustomerInfo, edited, currentId, createCustomerSuccess} = this.props;
-    // console.log(eachCustomerInfo);
+    const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess} = this.props;
+    console.log(eachCustomerInfo);
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
     // console.log(getFieldsValue())
 
@@ -72,8 +123,7 @@ export default class BasicInfoEdit extends Component{
       })
       return selfkeys;
     }
-    getFieldDecorator('keys', { initialValue: kinitialValue() });
-    const keys = getFieldValue('keys');
+
     const formItemLayout = {
       labelCol: {
         sm: { span: 8 }
@@ -82,12 +132,33 @@ export default class BasicInfoEdit extends Component{
         sm: { span: 15 },
       },
     };
+
     const formItemLayoutWithOutLabel = {
       wrapperCol: {
         sm: { span: 15, offset: 8 },
       },
     };
-    const formItems = () => {
+
+    // 日期格式
+    const dateFormat = 'YYYY-MM-DD';
+
+    /* 编辑状态下
+    ** 参与者列表
+    ** 账户表单
+    ** basic info
+    ** details info
+    */
+    const EditParticipate = this.state.tags && this.state.tags.map((item,index) => {
+      return (
+        <Tag key={item} closable="true" afterClose={() => this.handleClose(item)}>
+          {item}
+        </Tag>
+      )
+    })
+
+    getFieldDecorator('keys', { initialValue: kinitialValue() });
+    const keys = getFieldValue('keys');
+    const EditFormItems = () => {
       var len = eachCustomerInfo.account && eachCustomerInfo.account.length;
       var formItemArray = keys.map((k, index) => {
         return (
@@ -109,7 +180,7 @@ export default class BasicInfoEdit extends Component{
                 )}
               </FormItem>
             </Col>
-            <Col span={12} className="addmessage">
+            <Col span={12} className="addMessage">
               <FormItem
                 wrapperCol={{span: 24}}
 
@@ -142,16 +213,10 @@ export default class BasicInfoEdit extends Component{
       });
       return formItemArray;
     }
-    const tagsitems =  this.state.tags && this.state.tags.map((item,index) => {
-        return (
-          <Tag key={item} closable="true" afterClose={() => this.handleClose(item)}>
-            {item}
-          </Tag>
-        )
-      })
-    return (
-      <Form id="mybase" className="basicinfolist">
-        <Row className={currentId === -1 ? "briefinfocreate" : "briefinfoedit"} type="flex" justify="space-between">
+
+    const EditBasicInfo = (
+      <Form id="editMyBase" className="basicInfolist">
+        <Row className={currentId === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
           <Col span={7}>
             <FormItem labelCol={{span: 11}}
                       wrapperCol={{span: 13}}
@@ -169,7 +234,7 @@ export default class BasicInfoEdit extends Component{
                   placeholder="选择所属机构"
                   optionFilterProp="children"
                   filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                  getPopupContainer={() => document.getElementById('mybase')}
+                  getPopupContainer={() => document.getElementById('editMyBase')}
                 >
                   <Option value="jack">慈溪支行</Option>
                   <Option value="lucy">长治支行</Option>
@@ -192,7 +257,7 @@ export default class BasicInfoEdit extends Component{
                   placeholder="选择客户经理"
                   optionFilterProp="children"
                   filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                  getPopupContainer={() => document.getElementById('mybase')}
+                  getPopupContainer={() => document.getElementById('editMyBase')}
                 >
                   <Option value="jack">李小龙</Option>
                   <Option value="lucy">深井冰</Option>
@@ -215,8 +280,7 @@ export default class BasicInfoEdit extends Component{
                   placeholder="选择所属网格"
                   optionFilterProp="children"
                   filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                  getPopupContainer={() => document.getElementById('mybase')}
-
+                  getPopupContainer={() => document.getElementById('editMyBase')}
                 >
                   <Option value="jack">G666</Option>
                   <Option value="lucy">S889</Option>
@@ -227,10 +291,10 @@ export default class BasicInfoEdit extends Component{
           </Col>
         </Row>
 
-        <div className="personinfo">
-          {formItems()}
+        <div className="personInfo">
+          {EditFormItems()}
           <Row>
-            <Col span={12} className={currentId === -1 ? "phonecreate" : "phoneedit"}>
+            <Col span={12} className={currentId === -1 ? "phoneCreate" : "phoneEdit"}>
               <FormItem labelCol={{span: 8}}
                         wrapperCol={{span: 15}}
                         label="手机号：">
@@ -247,7 +311,7 @@ export default class BasicInfoEdit extends Component{
               </FormItem>
             </Col>
 
-            <Col span={12} className={currentId === -1 ? "wechatcreate" : "wechatedit"}>
+            <Col span={12} className={currentId === -1 ? "wechatCreate" : "wechatEdit"}>
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="微信号：">
@@ -262,11 +326,11 @@ export default class BasicInfoEdit extends Component{
           </Row>
 
           <Row>
-            <Col span={12} className={currentId === -1 ? "idcreate" : "idedit"}>
+            <Col span={12} className={currentId === -1 ? "idCreate" : "idEdit"}>
               <FormItem labelCol={{span: 8}}
                         wrapperCol={{span: 15}}
                         label="身份证号："
-                        className="idnumber"
+                        className="idNumber"
               >
 
                 {getFieldDecorator('certificate', {
@@ -278,15 +342,74 @@ export default class BasicInfoEdit extends Component{
               </FormItem>
             </Col>
 
-            <Col span={12} className={currentId === -1 ? "birthcreate" : "birthedit"}>
+            <Col span={12} className={currentId === -1 ? "birthCreate" : "birthEdit"}>
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="生日：">
                 {getFieldDecorator('birth', {
-                  initialValue: eachCustomerInfo.birth,
+                  initialValue: moment(eachCustomerInfo.birth, dateFormat),
+                  onChange: this.selectChange
+                })(
+                  <DatePicker
+                    format={dateFormat}
+                    getCalendarContainer={() => document.getElementById('editMyBase')}
+                  />
+                )}
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={12} className={currentId === -1 ? "originCreate" : "originEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 15}}
+                label="籍贯："
+                className="origin"
+              >
+                {getFieldDecorator('origin', {
+                  initialValue: ['上海'],
+                  onChange: this.selectChange
+                })(
+                  <Cascader
+                    placeholder="请选择客户籍贯"
+                    options={this.state.originOptions}
+                    getPopupContainer={() => document.getElementById('editMyDetails')}
+                  />
+                )}
+              </FormItem>
+            </Col>
+
+            <Col span={12} className={currentId === -1 ? "ageCreate" : "ageEdit"}>
+              <FormItem
+                labelCol={{span: 8, offset: 1}}
+                wrapperCol={{span: 15}}
+                label="年龄："
+                className="age"
+              >
+                {getFieldDecorator('age', {
+                  initialValue: eachCustomerInfo.age,
                   onChange: this.inputChange
                 })(
-                  <Input />
+                  <InputNumber placeholder="客户年龄"/>
+                )}
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={12} className={currentId === -1 ? "addressCreate" : "addressEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 15}}
+                label="家庭住址："
+                className="address"
+              >
+                {getFieldDecorator('address', {
+                  initialValue: eachCustomerInfo.address,
+                  onChange: this.inputChange
+                })(
+                  <Input placeholder="请输入家庭住址"/>
                 )}
               </FormItem>
             </Col>
@@ -298,8 +421,8 @@ export default class BasicInfoEdit extends Component{
                 <span>参与者：</span>
               </Col>
               <Col span={20}>
-                {tagsitems}
-                <span className="addcrewbutton"
+                {EditParticipate}
+                <span className="addCrewButton"
                       onClick={this.selectStaff}>
                     <Icon type="plus-circle-o" />添加人员
                   </span>
@@ -307,7 +430,8 @@ export default class BasicInfoEdit extends Component{
             </Col>
           </Row>
         </div>
-        <Row className="buttonsave">
+
+        <Row className="buttonSave">
           <Col span={24} >
             <Col span={4}>
             </Col>
@@ -315,6 +439,619 @@ export default class BasicInfoEdit extends Component{
           </Col>
         </Row>
       </Form>
+    )
+    const EditDetailsInfo = (
+      <Form id="editMyDetails" className="basicInfolist">
+        <div className="personInfo">
+          <Row>
+            <Col span={12} className={currentId === -1 ? "marriageCreate" : "marriageEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 13}}
+                label="婚姻状况："
+                className="marriage"
+              >
+                {getFieldDecorator('marriage', {
+                  initialValue: eachCustomerInfo.marriage + '',
+                  onChange: this.selectChange
+                })(
+                  <Select
+                    placeholder="请选择婚姻状况"
+                    getPopupContainer={() => document.getElementById('editMyDetails')}
+                  >
+                    <Option value="true">已婚</Option>
+                    <Option value="false">未婚</Option>
+                  </Select>
+                )}
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={12} className={currentId === -1 ? "yearIncomeCreate" : "yearIncomeEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 15}}
+                label="年总收入："
+                className="yearIncome"
+              >
+                {getFieldDecorator('yearIncome', {
+                  initialValue: eachCustomerInfo.yearIncome,
+                  onChange: this.inputChange
+                })(
+                  <Input placeholder="请输入年总收入"/>
+                )}
+              </FormItem>
+            </Col>
+
+            <Col span={12} className={currentId === -1 ? "yearExpenseCreate" : "yearExpenseEdit"}>
+              <FormItem
+                labelCol={{span: 8, offset: 1}}
+                wrapperCol={{span: 15}}
+                label="年总支出："
+                className="yearExpense"
+              >
+                {getFieldDecorator('yearExpense', {
+                  initialValue: eachCustomerInfo.yearExpense,
+                  onChange: this.inputChange
+                })(
+                  <Input placeholder="请输入年总支出"/>
+                )}
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={12} className={currentId === -1 ? "houseTypeCreate" : "houseTypeEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 13}}
+                label="住房："
+                className="houseType"
+              >
+                {getFieldDecorator('houseType', {
+                  initialValue: eachCustomerInfo.houseType,
+                  onChange: this.selectChange
+                })(
+                  <Select
+                    showSearch
+                    placeholder="请选择住房类型"
+                    optionFilterProp="children"
+                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    getPopupContainer={() => document.getElementById('editMyDetails')}
+                  >
+                    <Option value="商住">商住房</Option>
+                    <Option value="自住">普通住宅</Option>
+                  </Select>
+                )}
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={12} className={currentId === -1 ? "withCarCreate" : "withCarEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 13}}
+                label="车辆："
+                className="withCar"
+              >
+                {getFieldDecorator('withCar', {
+                  initialValue: eachCustomerInfo.withCar + '',
+                  onChange: this.showCarValue
+                })(
+                  <Select
+                    placeholder="是否有车"
+                    getPopupContainer={() => document.getElementById('editMyDetails')}
+                  >
+                    <Option value="true">有</Option>
+                    <Option value="false">无</Option>
+                  </Select>
+                )}
+              </FormItem>
+            </Col>
+
+            {this.state.withCar &&
+              <Col span={12} className={currentId === -1 ? "propertyValueCreate" : "propertyValueEdit"}>
+                <FormItem
+                  labelCol={{span: 8, offset: 1}}
+                  wrapperCol={{span: 13}}
+                  label="价值："
+                  className="propertyValue"
+                >
+                  {getFieldDecorator('propertyValue', {
+                    // initialValue: eachCustomerInfo.propertyValue,
+                    onChange: this.selectChange
+                  })(
+                    <Select
+                      showSearch
+                      placeholder="车辆的价值"
+                      optionFilterProp="children"
+                      filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                      getPopupContainer={() => document.getElementById('editMyDetails')}
+                    >
+                      <Option value="normal">15万</Option>
+                      <Option value="middle">15-50万</Option>
+                      <Option value="expensive">50万</Option>
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+            }
+          </Row>
+
+          <Row>
+            <Col span={12} className={currentId === -1 ? "withDebtCreate" : "withDebtEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 13}}
+                label="负债："
+                className="withDebt"
+              >
+                {getFieldDecorator('withDebt', {
+                  initialValue: eachCustomerInfo.withDebt + '',
+                  onChange: this.showDebtAmount
+                })(
+                  <Select
+                    placeholder="是否负债"
+                    getPopupContainer={() => document.getElementById('editMyDetails')}
+                  >
+                    <Option value="true">有</Option>
+                    <Option value="false">无</Option>
+                  </Select>
+                )}
+              </FormItem>
+            </Col>
+
+            {this.state.withDebt &&
+              <Col span={12} className={currentId === -1 ? "withDebtAmountCreate" : "withDebtAmountEdit"}>
+                <FormItem
+                  labelCol={{span: 8, offset: 1}}
+                  wrapperCol={{span: 13}}
+                  label="负债金额："
+                  className="withDebtAmount"
+                >
+                  {getFieldDecorator('withDebtAmount', {
+                    // initialValue: eachCustomerInfo.withDebtAmount,
+                    onChange: this.selectChange
+                  })(
+                    <Select
+                      showSearch
+                      placeholder="负债金额"
+                      optionFilterProp="children"
+                      filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                      getPopupContainer={() => document.getElementById('editMyDetails')}
+                    >
+                      <Option value="little">3万以下</Option>
+                      <Option value="huge">50万以上</Option>
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+            }
+          </Row>
+
+          <Row>
+            <Col span={12} className={currentId === -1 ? "needLoanCreate" : "needLoanEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 13}}
+                label="近期有无信贷需求："
+                className="needLoan"
+              >
+              {getFieldDecorator('needLoan', {
+                initialValue: eachCustomerInfo.needLoan + '',
+                onChange: this.selectChange
+              })(
+                <Select
+                  placeholder="是否负债"
+                  getPopupContainer={() => document.getElementById('editMyDetails')}
+                >
+                  <Option value="true">有</Option>
+                  <Option value="false">无</Option>
+                </Select>
+              )}
+              </FormItem>
+            </Col>
+
+            {this.state.needLoan &&
+              <Col span={12} className={currentId === -1 ? "needLoanAmountCreate" : "needLoanAmountEdit"}>
+                <FormItem
+                  labelCol={{span: 8, offset: 1}}
+                  wrapperCol={{span: 13}}
+                  label="需求金额："
+                  className="needLoanAmount"
+                >
+                  {getFieldDecorator('needLoanAmount', {
+                    // initialValue: eachCustomerInfo.needLoanAmount,
+                    onChange: this.selectChange
+                  })(
+                    <Select
+                      showSearch
+                      placeholder="需求金额"
+                      optionFilterProp="children"
+                      filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                      getPopupContainer={() => document.getElementById('editMyDetails')}
+                    >
+                      <Option value="little">3万</Option>
+                      <Option value="huge">50万</Option>
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+            }
+
+            {this.state.needLoan &&
+              <Col span={12} className={currentId === -1 ? "useOfLoanCreate" : "useOfLoanEdit"}>
+                <FormItem
+                  labelCol={{span: 8}}
+                  wrapperCol={{span: 13}}
+                  label="贷款用途："
+                  className="useOfLoan"
+                >
+                  {getFieldDecorator('useOfLoan', {
+                    // initialValue: eachCustomerInfo.useOfLoan,
+                    onChange: this.selectChange
+                  })(
+                    <Select
+                      showSearch
+                      placeholder="贷款用途"
+                      optionFilterProp="children"
+                      filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                      getPopupContainer={() => document.getElementById('editMyDetails')}
+                    >
+                      <Option value="buyhouseType">买房</Option>
+                      <Option value="buycar">买车</Option>
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+            }
+          </Row>
+        </div>
+
+        <Row className="buttonSave">
+          <Col span={24} >
+            <Col span={4}>
+            </Col>
+            <Button type="primary" onClick={createCustomerSuccess}>保存</Button>
+          </Col>
+        </Row>
+      </Form>
+    )
+    let EditPersonalInfo = (
+      <div>
+        {EditBasicInfo}
+        {EditDetailsInfo}
+      </div>
+    )
+
+    /* 查看状态下
+    ** 参与者列表
+    ** 账户表单
+    ** basic info
+    ** details info
+    */
+    const ViewParticipate = this.state.tags && this.state.tags.map((item, index) => {
+      return (
+        <Tag key={item}>
+          {item}
+        </Tag>
+      )
+    })
+    const ViewFormItems = () => {
+      var len = eachCustomerInfo.account && eachCustomerInfo.account.length;
+      var formItemArray = keys.map((k, index) => {
+        return (
+          <Row key={index}>
+            <Col span={12}>
+              <FormItem
+                label={index === 0 ? '账户' : ''}
+                required={false}
+                key={k}
+                {...(index===0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                className="account"
+              >
+                <span>{len > index ? eachCustomerInfo.account[index].accNumber : ""}</span>
+              </FormItem>
+            </Col>
+            <Col span={12} className="addMessage">
+              <FormItem
+                wrapperCol={{span: 24}}
+              >
+                <span>{len > index ? eachCustomerInfo.account[index].info : ""}</span>
+              </FormItem>
+            </Col>
+          </Row>
+        )
+      });
+      return formItemArray;
+    }
+    const ViewBasicInfo = (
+      <Form className="basicInfolist">
+        <Row className={currentId === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
+          <Col span={7}>
+            <FormItem
+              labelCol={{span: 11}}
+              wrapperCol={{span: 13}}
+              label="所属机构"
+            >
+              <span>{eachCustomerInfo.department}</span>
+            </FormItem>
+          </Col>
+
+          <Col span={7}>
+            <FormItem
+              labelCol={{span: 11}}
+              wrapperCol={{span: 13}}
+              label="客户经理"
+            >
+              <span>{eachCustomerInfo.manager}</span>
+            </FormItem>
+          </Col>
+
+          <Col span={7}>
+            <FormItem
+              labelCol={{span: 11}}
+              wrapperCol={{span: 13}}
+              label="所属网格"
+            >
+              <span>{eachCustomerInfo.grid}</span>
+            </FormItem>
+          </Col>
+        </Row>
+
+        <div className="personInfo">
+          {ViewFormItems()}
+          <Row>
+            <Col span={12} className={currentId === -1 ? "phonecreate" : "phoneedit"}>
+              <FormItem
+                labelCol={{span: 7, offset: 1}}
+                wrapperCol={{span: 15}}
+                label="手机号："
+              >
+                <span>{eachCustomerInfo.phone}</span>
+              </FormItem>
+            </Col>
+
+            <Col span={12} className={currentId === -1 ? "wechatcreate" : "wechatedit"}>
+              <FormItem
+                labelCol={{span: 8,offset: 1}}
+                wrapperCol={{span: 15}}
+                label="微信号："
+              >
+                <span>{eachCustomerInfo.wechat}</span>
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={12} className={currentId === -1 ? "idCreate" : "idEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 15}}
+                label="身份证号："
+                className="idNumber"
+              >
+                <span>{eachCustomerInfo.certificate}</span>
+              </FormItem>
+            </Col>
+
+            <Col span={12} className={currentId === -1 ? "birthCreate" : "birthEdit"}>
+              <FormItem
+                labelCol={{span: 8,offset:1}}
+                wrapperCol={{span: 15}}
+                label="生日："
+              >
+                <span>{eachCustomerInfo.birth}</span>
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={12} className={currentId === -1 ? "originCreate" : "originEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 15}}
+                label="籍贯："
+                className="origin"
+              >
+                <span>{eachCustomerInfo.certificate}</span>
+              </FormItem>
+            </Col>
+
+            <Col span={12} className={currentId === -1 ? "ageCreate" : "ageEdit"}>
+              <FormItem
+                labelCol={{span: 8, offset: 1}}
+                wrapperCol={{span: 15}}
+                label="年龄："
+              >
+                <span>{eachCustomerInfo.birth}</span>
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={12} className={currentId === -1 ? "addressCreate" : "addressEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 15}}
+                label="家庭住址："
+                className="address"
+              >
+                <span>{eachCustomerInfo.certificate}</span>
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Row className="joiners">
+            <Col span={24}>
+              <Col span={4}>
+                <span>参与者：</span>
+              </Col>
+              <Col span={20}>
+                {ViewParticipate}
+              </Col>
+            </Col>
+          </Row>
+        </div>
+      </Form>
+    )
+    const ViewDetailsInfo = (
+      <Form className="basicInfolist">
+        <div className="personInfo">
+          <Row>
+            <Col span={12} className={currentId === -1 ? "marriageCreate" : "marriageEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 15}}
+                label="婚姻状况："
+                className="marriage"
+              >
+                <span>{eachCustomerInfo.marriage}</span>
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={12} className={currentId === -1 ? "yearIncomeCreate" : "yearIncomeEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 15}}
+                label="年总收入："
+                className="yearIncome"
+              >
+                <span>{eachCustomerInfo.certificate}</span>
+              </FormItem>
+            </Col>
+
+            <Col span={12} className={currentId === -1 ? "yearExpenseCreate" : "yearExpenseEdit"}>
+              <FormItem
+                labelCol={{span: 8, offset: 1}}
+                wrapperCol={{span: 15}}
+                label="年总支出："
+                className="yearExpense"
+              >
+                <span>{eachCustomerInfo.certificate}</span>
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={12} className={currentId === -1 ? "houseTypeCreate" : "houseTypeEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 15}}
+                label="住房："
+                className="houseType"
+              >
+                <span>{eachCustomerInfo.certificate}</span>
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={12} className={currentId === -1 ? "withCarCreate" : "withCarEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 15}}
+                label="车辆："
+                className="withCar"
+              >
+                <span>{eachCustomerInfo.certificate}</span>
+              </FormItem>
+            </Col>
+
+            <Col span={12} className={currentId === -1 ? "propertyValueCreate" : "propertyValueEdit"}>
+              <FormItem
+                labelCol={{span: 8, offset: 1}}
+                wrapperCol={{span: 15}}
+                label="价值："
+                className="propertyValue"
+              >
+                <span>{eachCustomerInfo.certificate}</span>
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={12} className={currentId === -1 ? "withDebtCreate" : "withDebtEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 15}}
+                label="负债："
+                className="withDebt"
+              >
+                <span>{eachCustomerInfo.certificate}</span>
+              </FormItem>
+            </Col>
+
+            <Col span={12} className={currentId === -1 ? "withDebtAmountCreate" : "withDebtAmountEdit"}>
+              <FormItem
+                labelCol={{span: 8, offset: 1}}
+                wrapperCol={{span: 15}}
+                label="负债金额："
+                className="withDebtAmount"
+              >
+                <span>{eachCustomerInfo.certificate}</span>
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={12} className={currentId === -1 ? "needLoanCreate" : "needLoanEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 15}}
+                label="近期有无信贷需求："
+                className="needLoan"
+              >
+                <span>{eachCustomerInfo.certificate}</span>
+              </FormItem>
+            </Col>
+
+            <Col span={12} className={currentId === -1 ? "needLoanAmountCreate" : "needLoanAmountEdit"}>
+              <FormItem
+                labelCol={{span: 8, offset: 1}}
+                wrapperCol={{span: 15}}
+                label="需求金额："
+                className="needLoanAmount"
+              >
+                <span>{eachCustomerInfo.certificate}</span>
+              </FormItem>
+            </Col>
+
+            <Col span={12} className={currentId === -1 ? "useOfLoanCreate" : "useOfLoanEdit"}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 15}}
+                label="贷款用途："
+                className="useOfLoan"
+              >
+                <span>{eachCustomerInfo.certificate}</span>
+              </FormItem>
+            </Col>
+          </Row>
+        </div>
+      </Form>
+    )
+    let ViewPersonalInfo = (
+      <div>
+        {ViewBasicInfo}
+        {ViewDetailsInfo}
+      </div>
+    )
+
+    return (
+      <div>
+        {mode && mode !== 'view' &&
+          EditPersonalInfo
+        }
+
+        {mode && mode === 'view' &&
+          ViewPersonalInfo
+        }
+      </div>
     )
   }
 }

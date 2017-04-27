@@ -11,7 +11,7 @@ import NewRole from '../component/NewRole';
 //===============================================================
 import "../style/rolesStyle.less";
 import API from "../../../../API";
-
+import queryString from 'query-string'
 export default class GridsList extends Component {
   constructor(props) {
     super(props);
@@ -45,12 +45,12 @@ export default class GridsList extends Component {
   };
 
   componentWillMount() {
-    axios.get(API.POST_GRIDS_AREAS)
+    axios.post(API.POST_GRIDS_AREAS)
     .then( res => {
-      console.log(res)
+      console.dir(res)
       this.setState({
         table: {
-            dataSource: res.data.data,
+            dataSource: res.data.data.areas,
             loading: false
         }
       })

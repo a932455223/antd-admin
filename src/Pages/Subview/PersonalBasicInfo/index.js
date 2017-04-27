@@ -23,21 +23,10 @@ function info(msg,color){
 }
 
 // 新增维护记录
-
 const AddMaintainRecord = Form.create()(AddMaintainRecordForm);
 
-// 维护记录
-
-
-// 添加人员弹窗
-
-
-
-
 //个人信息表单................
-
 const BasicInfoListsEdit = Form.create()(BasicInfoEdit);
-
 
 class BasicInfo extends Component {
   state = {
@@ -61,7 +50,7 @@ class BasicInfo extends Component {
       .then((res) => {
           this.setState({
               ...this.state,
-            eachCustomerInfo: res.data.data
+              eachCustomerInfo: res.data.data
           })
       })
   }
@@ -80,41 +69,34 @@ class BasicInfo extends Component {
     })
   }
 
-  // handleChange(){
-  //   this.setState({
-  //     edited:true
-  //   })
-  // }
-
   x(next) {
     // console.log(this.props);
     // console.log(next);
   }
 
   render() {
+    const { customerInfoBeEdit } = this.props;
+    const { step, mode, currentId } = this.props.currentCustomerInfo;
+    const { eachCustomerInfo, edited } = this.state;
+
     const modal = {
       visible: this.state.modalVisible,
       hide: this.modalHide
     };
-    const {step, mode, currentId, customerInfoBeEdit} = this.props;
-    const {eachCustomerInfo,edited} = this.state;
-    let BasicInfo;
-    if(mode === "view"){
-      BasicInfo = <BasicInfoListsRead />
-    }else{
-      BasicInfo = <BasicInfoListsEdit
-        customerInfoBeEdit={customerInfoBeEdit}
-        currentId={this.props.currentId}
-        eachCustomerInfo={this.state.eachCustomerInfo}
-      />
+
+    const basicInfoProps = {
+      mode: mode,
+      customerInfoBeEdit: customerInfoBeEdit,
+      currentId: currentId,
+      eachCustomerInfo: this.state.eachCustomerInfo
     }
+
     return(
       <div style={{textAlign: 'left'}}>
-
         <AddCrewModal {...modal}/>
 
         <div className="">
-          { BasicInfo }
+          { <BasicInfoListsEdit {...basicInfoProps}/> }
         </div>
 
         <div className="maintain">
