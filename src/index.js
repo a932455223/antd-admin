@@ -13,8 +13,7 @@ import configStores from "./redux/store";
 // import axios from 'axios';
 // import qs from 'qs';
 const store = configStores();
-// //
-//
+
 render(<Root store={store}/>, document.getElementById('root'));
 
 
