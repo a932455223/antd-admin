@@ -67,7 +67,7 @@ export default {
   POST_ADD_STAFF: '/api/staff',
 
   //网格列表
-  POST_GRIDS_AREAS : '/api/areas',
+  POST_GRIDS_AREAS : '/asd/areas',
 
 
 

@@ -1,94 +1,36 @@
-@organization-primary-color: #7A87C6;
-
-.role-edit {
-  height: 100%;
-
-  .role-edit-title {
-    font-size: 16px;
+.formbox{
+  padding:24px;
+  .role-edit-title{
     display: flex;
+    padding-bottom: 20px;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-
-    span {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      button {
-        margin-right: 15px;
-        line-height: 28px;
-
-      }
+    .title{
+      font-size: 16px;
+      color: #000;
+    }
+    .close{
+      font-size: 18px;
+      border:none;
+      background: none;
     }
   }
-
-  .ant-card:not(:last-child) {
-    margin-bottom: 16px;
-  }
-
-  .ant-card-body {
-    padding: 16px;
-  }
-
-  .base-info {
-    p:not(:last-child) {
-      margin-bottom: 24px;
-    }
-
-    p {
+  .ant-form{
+    background: #fff;
+    border-radius: 4px;
+    box-shadow:  0 1px 3px 0 #dfdfe1;
+    padding: 20px;
+    label{
       font-size: 14px;
-      span {
-        display: inline-block;
-        width: 90px;
-        color: #A7A7A7;
-      }
-
-      &:last-child {
-        display: flex;
-      }
+      color: #999;
     }
   }
-
-  .ant-card-head-title {
-    p {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      h3 {
-        font-size: 14px;
-      }
-    }
-  }
-
-  .delete {
-    border: 0;
-    color: #f00;
-
+  input {
+    font-size: 14px;
+    color: #000;
+    border: 1px solid #fff;
     &:hover {
-      color: #f00;
+      border: 1px solid #d9d9d9;
     }
-  }
-
-  tr:hover .delete {
-    background: #F4F5FA;
-  }
-
-  .close,.close:visited,.close:focus {
-    font-size: 22px;
-    background: #F4F4F6;
-    color: #333;
-    border: 0;
-
-
-    &:hover{
-      color: #f00;
-    }
-  }
-
-  .save,.save:hover,.save:focus,.save:active{
-    background: @organization-primary-color;
-    color: #fff;
+  ;
   }
 }
