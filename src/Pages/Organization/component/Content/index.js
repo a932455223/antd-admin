@@ -21,7 +21,7 @@ const TreeNode = Tree.TreeNode;
 export default class Branches extends Component {
 
   state = {
-    department: {},
+    department: [],
     dock: {
       visible: false,
       children: null
@@ -36,7 +36,7 @@ export default class Branches extends Component {
           department: res.data.data[0]
         })
       }).catch(err => {
-        console.log(err)
+      console.log(err)
     })
   }
 

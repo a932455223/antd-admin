@@ -32,7 +32,7 @@ export default class FormCreator extends Component {
                       rules: [{required: item.required, message: item.message}],
                       initialValue: item.initialValue
                     })(
-                      <Input />
+                      <Input/>
                     )}
                   </FormItem>
                 );

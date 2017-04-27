@@ -99,7 +99,7 @@ app.use('/', proxy(proxyHost, {
     return req.url.indexOf('/api/') === 0;
   },
   proxyReqPathResolver: (req, res) => {
-    console.dir('/crm' + require('url').parse(req.url));
+    console.dir('/crm' + req.url);
     return '/crm' + req.url;
   }
 }));

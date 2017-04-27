@@ -33,7 +33,7 @@ export default class Branches extends Component {
   };
 
   componentWillMount() {
-   // this.getStaffs()
+   this.getStaffs()
   }
 
   // 获取组织列表 表格 数据
@@ -121,6 +121,9 @@ export default class Branches extends Component {
     })
   }
 
+  refresh(){
+
+  }
 
   render() {
     const columns = [

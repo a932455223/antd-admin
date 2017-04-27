@@ -76,7 +76,13 @@ export default class Branches extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: <BranchesDetail closeDock={this.closeDock.bind(this)} id={id}/>
+        children: (
+          <BranchesDetail
+            closeDock={this.closeDock.bind(this)}
+            id={id}
+            refresh={this.refresh.bind(this)}
+          />
+        )
       }
     })
   }
@@ -86,7 +92,12 @@ export default class Branches extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: <BrabchesEditor closeDock={this.closeDock.bind(this)} id={id}/>
+        children: (
+          <BrabchesEditor
+            closeDock={this.closeDock.bind(this)}
+            id={id}
+          />
+        )
       }
     })
   }
@@ -104,6 +115,10 @@ export default class Branches extends Component {
     },() => {
       this.getDepartments()
     })
+  }
+
+  refresh(){
+    this.getDepartments();
   }
 
   render() {
