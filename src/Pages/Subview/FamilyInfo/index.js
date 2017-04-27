@@ -27,7 +27,15 @@ class FamilyInfo extends Component {
     familyList: [],//家庭成员数组
     editFamilyList: [],//输入数据暂存区
     isModify: [],//card编辑状态
-    isAdd:true//添加状态
+    isAdd:true,//添加状态
+    addFamilyValue:{
+      "id":"",
+      "name":"",
+      "certificate":"",
+      "jobCategory":"",
+      "phone":"",
+      "relation":""
+    }//新添加的消息
   };
   //家庭成员数组
   getFamilyInfo = (id) => {
@@ -48,7 +56,7 @@ class FamilyInfo extends Component {
     );
     this.setState(newState)
   };
-  //保存成员信息
+  //保存修改
   saveFamilyValue(index) {
     let newState=update(
       this.state,{familyList:{[index]:{$set:this.state.editFamilyList[index] }}}
@@ -77,6 +85,59 @@ class FamilyInfo extends Component {
     this.setState({
       isAdd:!this.state.isAdd
     });
+  }
+  //添加信息
+  changeAddFamilyValue(key,value){
+    
+    let newState=update(
+      this.state,{addFamilyValue:{[key]:{$set:value}}   }
+    )
+    this.setState(newState)
+  }
+  //保存添加的信息
+  saveAddFamilyValue(){
+    //新添加信息的id
+    let newFamilyId=this.state.editFamilyList.length;
+    let newFamilyValue=update(
+      this.state,{addFamilyValue:{id:{$set:newFamilyId}}}
+    )
+    this.setState(newFamilyValue);
+    setTimeout(()=> {
+      let newState=update(
+        this.state,{editFamilyList:{$push:[this.state.addFamilyValue]},familyList:{$push:[this.state.addFamilyValue]}}
+      )
+      this.setState(newState)
+    }, 0);
+    // console.log(this.state.editFamilyList)
+    setTimeout(()=>{
+      this.setState({
+        addFamilyValue:{
+        "id":"",
+        "name":"",
+        "certificate":"",
+        "jobCategory":"",
+        "phone":"",
+        "relation":""
+        }
+      })
+    },0)
+    this.toggleAdd();
+  }
+  //取消添加的信息
+  cancelAddFamilyValue(){
+    setTimeout(()=>{
+      this.setState({
+        addFamilyValue:{
+        "id":"",
+        "name":"",
+        "certificate":"",
+        "jobCategory":"",
+        "phone":"",
+        "relation":""
+        }
+      })
+    },0)
+    this.toggleAdd();
   }
   componentWillMount() {
     //家庭成员
@@ -144,28 +205,95 @@ class FamilyInfo extends Component {
               <Input
                 prefix={<i className="iconfont icon-customer1"></i>}
                 type="text"
-                ref='name'
                 placeholder='请输入姓名'
+                value={this.state.addFamilyValue.name}
+                onChange={(e) => { this.changeAddFamilyValue('name',e.target.value) }}
               />
               <span
                 className="cancel-btn"
-                onClick={()=>{this.toggleAdd()}}
+                onClick={()=>{this.cancelAddFamilyValue()}}
               >
                 取消
               </span>
               <span
                 className="save-btn"
-                onClick={()=>{this.toggleAdd()}}
+                onClick={()=>{this.saveAddFamilyValue()}}
               >
                 保存
               </span>
             </div>
           }
         >
-            
-        </Card>
+            <Row>
+                <Col span={8}>
+                  <span>关系：</span>
+                </Col>
+                <Col span={16}>
+                  <Select
+                    getPopupContainer={() => document.getElementsByClassName('families')[0]}
+                    defaultValue='请选择关系'
+                    value={this.state.addFamilyValue.relation}
+                    onChange={(e) => { this.changeAddFamilyValue('relation',e)  }}
+                  >
+                    {
+                      this.state.familyRelation.map((rel) => {
+                        return (
+                          <Option value={rel.name} key={rel.id}>{rel.name}</Option >
+                        )
+                      })
+                    }
+                  </Select> 
+                </Col>
+              </Row>
+              <Row>
+                <Col span={8}>
+                  <span>联系方式：</span>
+                </Col>
+                <Col span={16}>
+                  <Input type="text" 
+                    placeholder='请输入联系方式' 
+                    value={this.state.addFamilyValue.phone}
+                    onChange={(e) => { this.changeAddFamilyValue('phone',e.target.value) }}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={8}>
+                  <span>身份证号：</span>
+                </Col>
+                <Col span={16}>
+                  <Input type="text" 
+                    value={this.state.addFamilyValue.certificate} 
+                    placeholder='请输入身份证号'
+                    onChange={(e) => { this.changeAddFamilyValue('certificate',e.target.value) }}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={8}>
+                  <span>工作属性：</span>
+                </Col>
+                <Col span={16}>
+                  <Select
+                    getPopupContainer={() => document.getElementsByClassName('families')[0]}
+                    defaultValue='请选择工作属性'
+                     value={this.state.addFamilyValue.jobCategory} 
+                     onChange={(e) => { this.changeAddFamilyValue('jobCategory',e) }}
+                  >
+                    {
+                      this.state.commonJobCategory.map((job) => {
+                        return (
+                          <Option value={job.name} key={job.id}>{job.name}</Option >
+                        )
+                      })
+                    }
+                  </Select> 
+                </Col>
+              </Row>
+      </Card>
 
     }else{
+      //添加按钮
       addArea=
         <Card  className="family-card family-add-card">
           <i className="iconfont icon-create"  onClick={()=>{this.toggleAdd()}}></i>
