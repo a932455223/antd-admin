@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Button} from "antd";
 import axios from "axios";
+// import {qs} from 'qs'
 //=============================================================
 import RoleEdit from "../component/RoleEdit";
 import Content from "../component/Content";
@@ -10,6 +11,7 @@ import NewRole from '../component/NewRole';
 //===============================================================
 import "../style/rolesStyle.less";
 import API from "../../../../API";
+import ajax from '../../../tools/POSTF'
 
 export default class GridsList extends Component {
   constructor(props) {
@@ -35,8 +37,7 @@ export default class GridsList extends Component {
   state = {
     table: {
       loading: true,
-      dataSource: [],
-      currentId:''
+      dataSource: []
     },
     dock: {
       visible: false,
@@ -45,18 +46,17 @@ export default class GridsList extends Component {
   };
 
   componentWillMount() {
-    axios.post(API.POST_GRIDS_AREAS)
-      .then(res => {
-        console.log(res);
-        this.setState({
-          table: {
+    ajax.Post(API.POST_GRIDS_AREAS,{areaType:72})
+    .then( res => {
+      console.dir(res)
+      this.setState({
+        table: {
             dataSource: res.data.data.areas,
             loading: false
-          }
-        })
-
-
+        }
       })
+    })
+
   }
 
   // 新增角色
@@ -71,7 +71,6 @@ export default class GridsList extends Component {
 
   // 表格点击事件
   rowClick(rowData) {
-    console.log(rowData)
     this.setState({
       dock: {
         visible: true,
@@ -131,8 +130,6 @@ export default class GridsList extends Component {
   }
 
   render() {
-    let datasource = this.state.table.dataSource.map((item,index) => ({...item, id:`data-${index}`}));
-    console.dir(datasource);
     const columns = [
       {
         title: '网格名称',
@@ -198,7 +195,7 @@ export default class GridsList extends Component {
 
     const tableConf = {
       columns: columns,
-      dataSource: datasource,
+      dataSource: this.state.table.dataSource,
       loading: this.state.table.loading,
       onRowClick: this.rowClick.bind(this)
     };

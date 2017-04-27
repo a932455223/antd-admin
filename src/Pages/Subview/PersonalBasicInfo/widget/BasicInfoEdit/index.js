@@ -856,7 +856,7 @@ export default class BasicInfoEdit extends Component{
                 label="籍贯："
                 className="origin"
               >
-                <span>{eachCustomerInfo.certificate}</span>
+                <span>{eachCustomerInfo.origin}</span>
               </FormItem>
             </Col>
 
@@ -866,7 +866,7 @@ export default class BasicInfoEdit extends Component{
                 wrapperCol={{span: 15}}
                 label="年龄："
               >
-                <span>{eachCustomerInfo.birth}</span>
+                <span>{eachCustomerInfo.age}</span>
               </FormItem>
             </Col>
           </Row>
@@ -879,7 +879,7 @@ export default class BasicInfoEdit extends Component{
                 label="家庭住址："
                 className="address"
               >
-                <span>{eachCustomerInfo.certificate}</span>
+                <span>{eachCustomerInfo.address}</span>
               </FormItem>
             </Col>
           </Row>
@@ -908,7 +908,7 @@ export default class BasicInfoEdit extends Component{
                 label="婚姻状况："
                 className="marriage"
               >
-                <span>{eachCustomerInfo.marriage}</span>
+                <span>{eachCustomerInfo.marriage === true ? '已婚' : '未婚'}</span>
               </FormItem>
             </Col>
           </Row>
@@ -921,7 +921,7 @@ export default class BasicInfoEdit extends Component{
                 label="年总收入："
                 className="yearIncome"
               >
-                <span>{eachCustomerInfo.certificate}</span>
+                <span>{eachCustomerInfo.yearIncome}</span>
               </FormItem>
             </Col>
 
@@ -932,7 +932,7 @@ export default class BasicInfoEdit extends Component{
                 label="年总支出："
                 className="yearExpense"
               >
-                <span>{eachCustomerInfo.certificate}</span>
+                <span>{eachCustomerInfo.yearExpense}</span>
               </FormItem>
             </Col>
           </Row>
@@ -945,7 +945,7 @@ export default class BasicInfoEdit extends Component{
                 label="住房："
                 className="houseType"
               >
-                <span>{eachCustomerInfo.certificate}</span>
+                <span>{eachCustomerInfo.houseType}</span>
               </FormItem>
             </Col>
           </Row>
@@ -958,7 +958,7 @@ export default class BasicInfoEdit extends Component{
                 label="车辆："
                 className="withCar"
               >
-                <span>{eachCustomerInfo.certificate}</span>
+                <span>{eachCustomerInfo.withCar === true ? '有' : '无'}</span>
               </FormItem>
             </Col>
 
@@ -969,7 +969,7 @@ export default class BasicInfoEdit extends Component{
                 label="价值："
                 className="propertyValue"
               >
-                <span>{eachCustomerInfo.certificate}</span>
+                <span>{eachCustomerInfo.propertyValue}</span>
               </FormItem>
             </Col>
           </Row>
@@ -982,7 +982,7 @@ export default class BasicInfoEdit extends Component{
                 label="负债："
                 className="withDebt"
               >
-                <span>{eachCustomerInfo.certificate}</span>
+                <span>{eachCustomerInfo.withDebt === true ? '有' : '无'}</span>
               </FormItem>
             </Col>
 
@@ -993,7 +993,7 @@ export default class BasicInfoEdit extends Component{
                 label="负债金额："
                 className="withDebtAmount"
               >
-                <span>{eachCustomerInfo.certificate}</span>
+                <span>{eachCustomerInfo.withDebtAmount}</span>
               </FormItem>
             </Col>
           </Row>
@@ -1006,7 +1006,7 @@ export default class BasicInfoEdit extends Component{
                 label="近期有无信贷需求："
                 className="needLoan"
               >
-                <span>{eachCustomerInfo.certificate}</span>
+                <span>{eachCustomerInfo.needLoan === true ? '有' : '无'}</span>
               </FormItem>
             </Col>
 
@@ -1017,7 +1017,7 @@ export default class BasicInfoEdit extends Component{
                 label="需求金额："
                 className="needLoanAmount"
               >
-                <span>{eachCustomerInfo.certificate}</span>
+                <span>{eachCustomerInfo.needLoanAmount}</span>
               </FormItem>
             </Col>
 
@@ -1028,7 +1028,7 @@ export default class BasicInfoEdit extends Component{
                 label="贷款用途："
                 className="useOfLoan"
               >
-                <span>{eachCustomerInfo.certificate}</span>
+                <span>{eachCustomerInfo.useOfLoan}</span>
               </FormItem>
             </Col>
           </Row>

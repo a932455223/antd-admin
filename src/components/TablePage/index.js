@@ -65,7 +65,7 @@ class TablePage extends Component {
   // 点击某一栏，编辑客户信息
   rowClick = (info) => {
     const { dispatch, privilege } = this.props;
-    const mode = privilege[info.id]['system:update']  ? 'view':'edit';
+    const mode = privilege[info.id]['system:update'] ? 'edit' : 'view';
     dispatch(saveCurrentCustomerInfo(info, mode))
     this.setState({
       dockContent: 'CustomerSlider',

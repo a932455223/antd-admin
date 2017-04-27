@@ -17,9 +17,7 @@ export default class Content extends Component{
       children: null
     }
   };
-
-
-
+  
   initTableScroll(){
     let card = document.getElementById('wrapper');
     let tableScroll = document.getElementsByClassName('ant-table-body')[0];
@@ -44,7 +42,7 @@ export default class Content extends Component{
   }
 
   render(){
-    console.log(this.props.dockConf.visible);
+    console.log(this.props.dockConf.children);
     const dockConfig = {
       position: 'right',
       isVisible: this.props.dockConf.visible,
@@ -72,6 +70,13 @@ export default class Content extends Component{
     )
   }
 }
+
+
+
+
+
+
+
 
 
 

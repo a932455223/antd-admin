@@ -279,7 +279,7 @@ module.exports = {
   }),
 
   // 组织机构列表 有层级
-  'GET /asd/department/hierarchy': Mock.mock({
+  'GET /api/department/hierarchy': Mock.mock({
     "code": 200,
     "data|1-10": {
       "id": 1,
@@ -509,9 +509,26 @@ module.exports = {
   //   message: 'err'
   // },
 
+  // 'POST /api/areas': {
+  //   err: 'asd'
+  // },
 
-
-
+  //网格列表
+  'GET /asd/areas': Mock.mock({
+    'code': 200,
+    'data|30': [{
+      'name': /龙泉镇中心广场|上海浦东新区/,
+      'director': '章三',
+      'orgId': '上海招商银行天山支行',
+      'customCount': '社区网络',
+      'residenceCount': '5000户',
+      'id|+1': 1,
+      'personCount': '10000000人',
+      'address' : '山西省长治市壶关县龙泉镇中心广场区',
+      'remark':'描述～～'
+    }],
+    'message': 'finance message!'
+  }),
   'POST /api/demo': {
     err: 'ad'
   }

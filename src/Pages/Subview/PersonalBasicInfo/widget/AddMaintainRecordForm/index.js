@@ -21,6 +21,7 @@ export  default class AddMaintainRecordForm extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    console.log(this.props);
     return (
       <Card id="maintainRecord"  title={<span>
                       <Icon type="plus-circle-o" />新增维护记录
