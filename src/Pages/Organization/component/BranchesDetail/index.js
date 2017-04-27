@@ -6,20 +6,35 @@
  */
 
 import React, {Component} from "react";
-import {Card, Col, Form, Input, Row, Select,Button} from "antd";
-import classNames from 'classnames';
+import {Button, Card, Col, Form, Row, Select} from "antd";
+import classNames from "classnames";
+import axios from 'axios';
 //=========================================================================
-import FormCreator from '../FormCreator';
+import FormCreator from "../FormCreator";
 //=================================================
 import "./less/branchesDetail.less";
-import {addDepartmentForForm} from './formConf.js';
-
+import {addDepartmentForForm} from "./formConf.js";
+import API from '../../../../../API';
+import ajax from '../../../../tools/POSTF.js'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 
 
 class BranchesDetail extends Component {
+  state = {
+    categoryDropdown: [],
+    parentDepartmentDropDown: []
+  };
+
+  componentWillMount(){
+    ajax.Get(API.GET_ADD_DEPARTMENT_CATEGORIES)
+      .then( res => {
+        this.setState({
+          categoryDropdown: res.data.data
+        })
+      })
+  }
 
   closeDock() {
     console.log('bye bye');
@@ -36,11 +51,106 @@ class BranchesDetail extends Component {
   };
 
   render() {
+    const formItemLayout = {
+      labelCol: {
+        span: 5
+      },
+      wrapperCol: {
+        span: 12
+      }
+    };
+
+
+    const addDepartmentForForm = [
+      {
+        label: '机构名称',
+        type: 'input',
+        required: true,
+        message: '请填写组织机构名称！',
+        formItemLayout: formItemLayout,
+        field: 'name',
+      },
+      {
+        label: '负责人',
+        type: 'input',
+        required: true,
+        message: '请填写组织负责人！',
+        formItemLayout: formItemLayout,
+        field: 'director',
+      },
+      {
+        label: '组织类别',
+        type: 'other',
+        required: true,
+        message: '请选择组织类别！',
+        formItemLayout: formItemLayout,
+        field: 'category',
+        render: (
+          <Select
+            onSelect={(value) => {
+              ajax.Get(API.GET_ADD_DEPARTMENT_PARENT,{
+                level: value
+              }).then( res => {
+                console.log(res)
+              })
+            }}
+          >
+            {
+              this.state.categoryDropdown.map((option,index) => {
+                return <Option value={option.id} key={ option.id + option.name}>{option.name}</Option>
+              })
+            }
+          </Select>
+        )
+      },
+      {
+        label: '所属组织',
+        type: 'select',
+        required: true,
+        message: '请选择所属组织！',
+        formItemLayout: formItemLayout,
+        field: 'parentDepartment',
+        options: this.state.parentDepartmentDropDown
+      },
+      {
+        label: '组织地址',
+        type: 'input',
+        required: true,
+        message: '组织地址！',
+        formItemLayout: formItemLayout,
+        field: 'address',
+      },
+      {
+        label: '联系电话',
+        type: 'input',
+        required: false,
+        message: '请填写组织联系电话！',
+        formItemLayout: formItemLayout,
+        field: 'phone',
+      },
+      {
+        label: '详细地址',
+        type: 'input',
+        required: false,
+        message: '请填写详细地址',
+        formItemLayout: formItemLayout,
+        field: 'fullAddress',
+      },
+      {
+        label: '备注信息',
+        type: 'textarea',
+        required: false,
+        message: '请填写备注',
+        formItemLayout: formItemLayout,
+        field: 'remark',
+      },
+    ];
+
     const {getFieldDecorator} = this.props.form;
     return (
       <Form onSubmit={this.handleSubmit.bind(this)}>
         <div
-          className={classNames('dock-container','departmentDetail')}
+          className={classNames('dock-container', 'departmentDetail')}
           id="branchesDetail"
         >
           <Row className="dock-title">

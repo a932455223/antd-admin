@@ -45,11 +45,11 @@ export default {
 
 
   // 组织机构详情列表
-  GET_DEPARTMENTS: '/asd/departments',
+  GET_DEPARTMENTS: '/api/departments',
 
 
   // 组织机构员工列表
-  GET_STAFFS: '/asd/staffs',
+  GET_STAFFS: '/api/staffs',
 
   // 用户权限管理 用户列表
   GET_USERS: '/asd/system/users',
@@ -76,6 +76,12 @@ export default {
   // 关系下拉菜单
   // GET_DROPDOWN_RELATION:'/asd/common/dropdown/list/relation',
   //工作属性下拉菜单
-  // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory'
+  // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory',
+
+    //新建组织机构  获取组织类别下拉菜单
+  GET_ADD_DEPARTMENT_CATEGORIES: '/api/department/add/dropdown/categories',
+
+  //新建组织机构  获取所属组织下拉菜单
+  GET_ADD_DEPARTMENT_PARENT: '/api/department/add/dropdown/parent'
 }
 

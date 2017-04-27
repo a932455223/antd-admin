@@ -7,38 +7,61 @@
 
 
 import React, {Component} from "react";
-import axios from "axios";
-import {Button,Icon} from "antd";
+import {Button, Icon} from "antd";
 //=========================================================
 import Content from "../component/Content";
 import BranchesDetail from "../component/BranchesDetail";
+import ajax from "../../../tools/POSTF.js";
 //=========================================================
 import API from "../../../../API";
 import BrabchesEditor from "../component/BranchesEditor/index";
 
 export default class Branches extends Component {
   state = {
+    parentId: 1,
     dock: {
       visible: false
     },
     table: {
-      dataSource: []
+      dataSource: [],
+      loading: true
     },
   };
 
 
   componentWillMount() {
-    axios.get(API.GET_DEPARTMENTS)
+    this.getDepartments();
+  }
+
+  // 获取组织列表 表格 数据
+  getDepartments(index = 1){
+    this.setState({
+      table: {
+        ...this.state.table,
+        loading: true
+      }
+    });
+    ajax.Post(API.GET_DEPARTMENTS, {
+      index: index,
+      parentId: this.state.parentId,
+      size: 10
+    })
       .then(res => {
+        console.log(res.data.data.departments);
         this.setState({
           table: {
-            dataSource: res.data.data
+            ...this.state.table,
+            dataSource: res.data.data.departments,
+            loading: false
           }
         })
-      })
+      }).catch(err => {
+      console.log(err)
+    })
   }
 
 
+  // 关闭dick
   closeDock() {
     this.setState({
       dock: {
@@ -47,6 +70,8 @@ export default class Branches extends Component {
     })
   }
 
+
+  // 展示dock
   showDock(id) {
     this.setState({
       dock: {
@@ -56,6 +81,7 @@ export default class Branches extends Component {
     })
   }
 
+  // 表格 行 点击事件
   tableClick(id) {
     this.setState({
       dock: {
@@ -65,7 +91,23 @@ export default class Branches extends Component {
     })
   }
 
+  // 表格分页点击事件
+  tableChange(pagination) {
+    console.log(pagination)
+  }
+
+  // 树 选择事件
+  treeChange(selectKey) {
+    console.log(selectKey);
+    this.setState({
+      parentId: parseInt(selectKey[0])
+    },() => {
+      this.getDepartments()
+    })
+  }
+
   render() {
+
     const columns = [
       {
         title: '组织名称',
@@ -106,7 +148,7 @@ export default class Branches extends Component {
           return (
             <div>
               <Button className="edit">
-                <Icon type="edit" />
+                <Icon type="edit"/>
                 {text}
               </Button>
             </div>
@@ -126,12 +168,18 @@ export default class Branches extends Component {
       children: this.state.dock.children
     };
 
+    const treeConf = {
+      onSelect: this.treeChange.bind(this)
+    };
+
     const tableConf = {
       columns: columns,
       dataSource: this.state.table.dataSource,
-      rowClick: this.tableClick.bind(this)
+      rowClick: this.tableClick.bind(this),
+      onChange: this.tableChange.bind(this),
+      loading: this.state.table.loading
     };
 
-    return <Content actionBarConf={actionBarConf} dockConf={dockConf} tableConf={tableConf}/>
+    return <Content actionBarConf={actionBarConf} dockConf={dockConf} tableConf={tableConf} treeConf={treeConf}/>
   }
 }
