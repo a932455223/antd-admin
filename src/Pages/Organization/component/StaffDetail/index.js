@@ -5,17 +5,18 @@
  * 时间： 17.3.2
  */
 import React, {Component} from "react";
-import {Button, Card, Col, Form, Icon, Row,Radio,TreeSelect,DatePicker} from "antd";
+import {Button, Card, Col, Form, Icon, Row,Radio,TreeSelect,DatePicker,Select} from "antd";
 import classNames from "classnames";
 import axios from 'axios';
 import qs from 'qs';
 //========================================================================================================
 import FormCreator from "../FormCreator";
-import {POSTF} from '../../../../tools/POSTF.js';
+import ajax from '../../../../tools/POSTF.js';
 //========================================================================================
 import "./less/staffDetail.less";
 import API from '../../../../../API';
 const RadioGroup = Radio.Group;
+const Option = Select.Option;
 
 
 
@@ -24,11 +25,12 @@ class BranchesDetail extends Component {
   state = {
     bankJobCategory: [],
     jobStatus: [],
-    educationLevel: []
+    educationLevel: [],
+    parentDepartmentDropDown: []
   };
 
   componentWillMount(){
-    axios.get(API.GET_DROPDOWN('bankJobCategory'))
+    axios.get(API.GET_COMMON_DROPDOWN('bankJobCategory'))
       .then(res => {
         this.setState({
           ...this.state,
@@ -36,7 +38,7 @@ class BranchesDetail extends Component {
         })
       });
 
-    axios.get(API.GET_DROPDOWN('jobStatus'))
+    axios.get(API.GET_COMMON_DROPDOWN('jobStatus'))
       .then(res => {
         this.setState({
           ...this.state,
@@ -44,7 +46,14 @@ class BranchesDetail extends Component {
         })
       });
 
-    axios.get(API.GET_DROPDOWN('educationLevel'))
+    axios.get(API.GET_STAFF_ADD_DEPARTMENT)
+      .then( res => {
+        this.setState({
+          parentDepartmentDropDown: res.data.data
+        })
+      });
+
+    axios.get(API.GET_COMMON_DROPDOWN('educationLevel'))
       .then(res => {
         this.setState({
           ...this.state,
@@ -65,14 +74,22 @@ class BranchesDetail extends Component {
         const data = ((values) => {
           for(let key in values){
             if(typeof values[key] === 'object' && Object.keys(values[key]).includes('_d')){
-              values[key] = values[key].toString();
+              values[key] = values[key].format('YYYY-MM-DD');
+            }else if(values[key] === undefined){
+              delete values[key]
             }
           }
+          console.log(values);
           return values;
         })(values);
-        POSTF(API.POST_ADD_STAFF,data)
+        ajax.Post(API.POST_ADD_STAFF,data)
           .then( res => {
             console.log(res)
+            console.log('MESSAGE',res.data.message);
+            if(res.data.message === 'OK'){
+              alert('添加成功');
+              this.closeDock()
+            }
           })
           .catch( err => {
             console.log(err)
@@ -129,8 +146,8 @@ class BranchesDetail extends Component {
         field: 'gender',
         render: (
           <RadioGroup >
-            <Radio value={1}>男</Radio>
-            <Radio value={0}>女</Radio>
+            <Radio value={75}>男</Radio>
+            <Radio value={76}>女</Radio>
           </RadioGroup>
         )
       },
@@ -305,11 +322,15 @@ class BranchesDetail extends Component {
         formItemLayout: formItemLayout,
         field: 'departments',
         render: (
-          <TreeSelect
-            getPopupContainer = { () => document.getElementById('staffDetail')}
-            treeData={treeData}
-            multiple={true}
-          />
+          <Select
+            mode="multiple"
+          >
+            {
+              this.state.parentDepartmentDropDown.map( item => {
+                return <Option value={item.id} key={item.id + item.name}>{item.name}</Option>
+              })
+            }
+          </Select>
         )
       },
       {

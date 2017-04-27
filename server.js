@@ -82,8 +82,16 @@ if (isDeveloping) {
 //   // next();
 // })
 
-const proxyHost = '115.159.58.21:8099';
-// const proxyHost = 'http://192.168.1.39:8080/crm';
+let log = (req,res,next) => {
+  console.log('log',req.url);
+  next();
+};
+
+
+app.use(log)
+
+// const proxyHost = '115.159.58.21:8099';
+const proxyHost = 'http://192.168.1.39:8080';
 // const proxyHost = 'http://localhost:9999';
 
 app.use('/', proxy(proxyHost, {
@@ -91,14 +99,14 @@ app.use('/', proxy(proxyHost, {
     return req.url.indexOf('/api/') === 0;
   },
   proxyReqPathResolver: (req, res) => {
-    console.log('body', qs.stringify(req.body));
-    console.log('/crm' + require('url').parse(req.url).pathname);
-    return '/crm' + require('url').parse(req.url).pathname;
+    console.dir('/crm' + require('url').parse(req.url));
+    return '/crm' + req.url;
   }
 }));
 
 
 interfaceCF(app);
+
 
 app.listen(port, (err, success) => {
   if (err) {

@@ -8,14 +8,14 @@
 import React, {Component} from "react";
 import {Button, Card, Col, Form, Row, Select} from "antd";
 import classNames from "classnames";
-import axios from 'axios';
 //=========================================================================
 import FormCreator from "../FormCreator";
+import AreaSelect from '../../../../components/AreaSelect';
 //=================================================
 import "./less/branchesDetail.less";
 import {addDepartmentForForm} from "./formConf.js";
-import API from '../../../../../API';
-import ajax from '../../../../tools/POSTF.js'
+import API from "../../../../../API";
+import ajax from "../../../../tools/POSTF.js";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -27,9 +27,9 @@ class BranchesDetail extends Component {
     parentDepartmentDropDown: []
   };
 
-  componentWillMount(){
+  componentWillMount() {
     ajax.Get(API.GET_ADD_DEPARTMENT_CATEGORIES)
-      .then( res => {
+      .then(res => {
         this.setState({
           categoryDropdown: res.data.data
         })
@@ -46,6 +46,10 @@ class BranchesDetail extends Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        ajax.Post(API.POST_DEPARTMENT,values)
+          .then( res => {
+            console.log(res)
+          })
       }
     });
   };
@@ -88,15 +92,17 @@ class BranchesDetail extends Component {
         render: (
           <Select
             onSelect={(value) => {
-              ajax.Get(API.GET_ADD_DEPARTMENT_PARENT,{
+              ajax.Get(API.GET_ADD_DEPARTMENT_PARENT, {
                 level: value
-              }).then( res => {
-                console.log(res)
+              }).then(res => {
+                this.setState({
+                  parentDepartmentDropDown: res.data.data
+                })
               })
             }}
           >
             {
-              this.state.categoryDropdown.map((option,index) => {
+              this.state.categoryDropdown.map((option, index) => {
                 return <Option value={option.id} key={ option.id + option.name}>{option.name}</Option>
               })
             }
@@ -105,20 +111,36 @@ class BranchesDetail extends Component {
       },
       {
         label: '所属组织',
-        type: 'select',
-        required: true,
+        type: 'other',
+        required: false,
         message: '请选择所属组织！',
         formItemLayout: formItemLayout,
         field: 'parentDepartment',
-        options: this.state.parentDepartmentDropDown
+        render: (
+          <Select>
+            {
+              this.state.parentDepartmentDropDown.map(item => {
+                return <Option value={item.id} key={item.name + item.id}>{item.name}</Option>
+              })
+            }
+          </Select>
+        )
       },
       {
         label: '组织地址',
-        type: 'input',
-        required: true,
+        type: 'other',
+        required: false,
         message: '组织地址！',
         formItemLayout: formItemLayout,
         field: 'address',
+        initialValue: {
+          province: 2,
+          city: 52,
+          county: 500,
+        },
+        render: (
+          <AreaSelect/>
+        )
       },
       {
         label: '联系电话',

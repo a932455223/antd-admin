@@ -2,7 +2,8 @@
  * Created by jufei on 2017/4/27.
  */
 import axios from 'axios';
-import qs from 'query-string';
+// import qs from 'query-string';
+import qs from 'qs';
 
 
 // export const POSTF = (url,data) => {
@@ -13,11 +14,15 @@ import qs from 'query-string';
 
 
  const Post = (url,data) => {
-  return  axios.post(url,qs.stringify(data))
+  return  axios.post(url,qs.stringify(data,{
+    arrayFormat: 'brackets'
+  }))
 };
 
 const Get = (url,data) => {
-  return  axios.get(url,qs.stringify(data))
+  return  axios.get(url,{
+    params: data
+  })
 }
 
 const Put = (url,data) => {

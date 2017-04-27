@@ -78,10 +78,16 @@ export default {
   //工作属性下拉菜单
   // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory',
 
+  // 添加组织机构
+  POST_DEPARTMENT: '/api/department',
+
     //新建组织机构  获取组织类别下拉菜单
   GET_ADD_DEPARTMENT_CATEGORIES: '/api/department/add/dropdown/categories',
 
   //新建组织机构  获取所属组织下拉菜单
-  GET_ADD_DEPARTMENT_PARENT: '/api/department/add/dropdown/parent'
+  GET_ADD_DEPARTMENT_PARENT: '/api/department/add/dropdown/parent',
+
+  // 新增员工 所属组织机构下拉菜单
+  GET_STAFF_ADD_DEPARTMENT: '/api/staff/add/departments'
 }
 
