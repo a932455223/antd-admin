@@ -19,6 +19,7 @@ const Option = Select.Option;
 class editFamily extends Component{
 
 }
+
 class FamilyInfo extends Component {
   state = {
     familyRelation: [],//家庭成员关系
@@ -26,6 +27,7 @@ class FamilyInfo extends Component {
     familyList: [],//家庭成员数组
     editFamilyList: [],//输入数据暂存区
     isModify: [],//card编辑状态
+    isAdd:true//添加状态
   };
   //家庭成员数组
   getFamilyInfo = (id) => {
@@ -41,33 +43,26 @@ class FamilyInfo extends Component {
   }
   //修改成员信息
   changeFamilyValue=(index, key, value)=>{
-    // let list = this.state.editFamilyList.map(function (item, i) {
-    //   if (i === index) {
-    //     item[key] = value;
-    //   }
-    //   return item;
-    // })
-    // this.setState({
-    //   editFamilyList: list
-    // })
-    // let newList=update(this.state,{editFamilyList:1:{[key]:{$set:[value]}});
-    console.dir(this.state);
-    console.log(index,key,value);
+    let newState=update(
+      this.state,{editFamilyList:{[index]:{[key]:{$set:value}}}}
+    );
+    this.setState(newState)
+  };
+  //保存成员信息
+  saveFamilyValue(index) {
+    let newState=update(
+      this.state,{familyList:{[index]:{$set:this.state.editFamilyList[index] }}}
+    );
+    this.setState(newState);
+    this.toggleEdit(index);
   };
   //取消修改
   cancelFamilyValue=(index)=>{
-    let list = this.state.editFamilyList.map((item, i) => {
-      if (index === i) {
-        return _.cloneDeep(this.state.familyList[index]);
-      }
-      return item;
-    })
-    this.setState({
-      editFamilyList: list
-    })
-    setTimeout(() => {
-      this.toggleEdit(index);
-    }, 100)
+    let newState=update(
+      this.state,{editFamilyList:{[index]:{$set:this.state.familyList[index] }}}
+    );
+    this.setState(newState);
+    this.toggleEdit(index)
   };
   //查看和修改状态切换
   toggleEdit=(index)=>{
@@ -77,13 +72,29 @@ class FamilyInfo extends Component {
       isModify: isModify
     })
   };
+  //添加状态切换
+  toggleAdd = () => {
+    this.setState({
+      isAdd:!this.state.isAdd
+    });
+  }
   componentWillMount() {
     //家庭成员
     this.getFamilyInfo(this.props.currentId);
     //成员关系下拉菜单,api接口
-    axios.get(api.GET_DROPDOWN('familyRelation'))
+    // axios.get(api.GET_DROPDOWN('familyRelation'))
+    // .then((data) => {
+    //   console.log(data,"ddasdasdf")
+    //   if (data.status === 200 && data.statusText === 'OK' && data.data) {
+    //     let familyRelation = data.data.data;
+    //     console.log(familyRelation)
+    //     this.setState({
+    //       familyRelation: familyRelation
+    //     })
+    //   }
+    // })
+    axios.get(api.GET_DROPDOWN_RELATION)
     .then((data) => {
-      console.log(data,"ddasdasdf")
       if (data.status === 200 && data.statusText === 'OK' && data.data) {
         let familyRelation = data.data.data;
         console.log(familyRelation)
@@ -92,8 +103,18 @@ class FamilyInfo extends Component {
         })
       }
     })
-    //工作属性下拉菜单
-    axios.get(api.GET_DROPDOWN('commonJobCategory'))
+    //工作属性下拉菜单,api接口
+    // axios.get(api.GET_DROPDOWN('commonJobCategory'))
+    // .then((data) => {
+    //   if (data.status === 200 && data.statusText === 'OK' && data.data) {
+    //     let commonJobCategory = data.data.data;
+    //     console.log(commonJobCategory)
+    //     this.setState({
+    //       commonJobCategory: commonJobCategory
+    //     })
+    //   }
+    // })
+    axios.get(api.GET_DROPDOWN_JOB)
     .then((data) => {
       if (data.status === 200 && data.statusText === 'OK' && data.data) {
         let commonJobCategory = data.data.data;
@@ -104,11 +125,6 @@ class FamilyInfo extends Component {
       }
     })
   }
-
-  componentWillUnMount(){
-    console.log('FamilyInfo Will UnMount.')
-  }
-
   componentWillReceiveProps(newProps){
     console.log('FamilyInfo will receive props.')
     this.getFamilyInfo(newProps.currentId)
@@ -118,6 +134,44 @@ class FamilyInfo extends Component {
   };
 
   render() {
+    let addArea;
+    if(this.state.isAdd){
+      addArea=
+      <Card
+          className="family-card family-card-modify"
+          title={
+            <div className="my-card-title">
+              <Input
+                prefix={<i className="iconfont icon-customer1"></i>}
+                type="text"
+                ref='name'
+                placeholder='请输入姓名'
+              />
+              <span
+                className="cancel-btn"
+                onClick={()=>{this.toggleAdd()}}
+              >
+                取消
+              </span>
+              <span
+                className="save-btn"
+                onClick={()=>{this.toggleAdd()}}
+              >
+                保存
+              </span>
+            </div>
+          }
+        >
+            
+        </Card>
+
+    }else{
+      addArea=
+        <Card  className="family-card family-add-card">
+          <i className="iconfont icon-create"  onClick={()=>{this.toggleAdd()}}></i>
+          <p>新建家庭关系</p>
+        </Card>
+    }
     return (
       <div className="families">
         {
@@ -260,8 +314,11 @@ class FamilyInfo extends Component {
                 )
               }
           })
-          
         }
+        {
+          addArea
+        }
+        
       </div>
     )
   }

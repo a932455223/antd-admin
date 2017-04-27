@@ -68,6 +68,10 @@ export default {
 
 
   // 下拉菜单信息
-  GET_DROPDOWN: key => `/api/common/dropdown/${key}`
+  GET_DROPDOWN: key => `/api/common/dropdown/${key}`,
+  // 关系下拉菜单
+  GET_DROPDOWN_RELATION:'/asd/common/dropdown/list/relation',
+  //工作属性下拉菜单
+  GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory'
 }
 
