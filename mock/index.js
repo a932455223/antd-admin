@@ -457,9 +457,9 @@ module.exports = {
     data: 'asd'
   },
 
-  'GET /api/common/dropdown/:param': {
-    error: 'error'
-  },
+  // 'GET /api/common/dropdown/:param': {
+  //   error: 'error'
+  // },
 
   'GET /asd/system/users': Mock.mock({
     code: 200,
