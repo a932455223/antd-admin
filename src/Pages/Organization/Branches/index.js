@@ -24,7 +24,8 @@ export default class Branches extends Component {
     },
     table: {
       dataSource: [],
-      loading: true
+      loading: true,
+      total: 100
     },
   };
 
@@ -44,7 +45,7 @@ export default class Branches extends Component {
     ajax.Post(API.GET_DEPARTMENTS, {
       index: index,
       parentId: this.state.parentId,
-      size: 10
+      size: 20
     })
       .then(res => {
         console.log(res.data.data.departments);
@@ -52,7 +53,8 @@ export default class Branches extends Component {
           table: {
             ...this.state.table,
             dataSource: res.data.data.departments,
-            loading: false
+            loading: false,
+            count: res.data.data.pagination.count
           }
         })
       }).catch(err => {
@@ -95,6 +97,7 @@ export default class Branches extends Component {
         children: (
           <BrabchesEditor
             closeDock={this.closeDock.bind(this)}
+            refresh={this.refresh.bind(this)}
             id={id}
           />
         )
@@ -105,6 +108,7 @@ export default class Branches extends Component {
   // 表格分页点击事件
   tableChange(pagination) {
     console.log(pagination)
+    this.getDepartments(pagination.current)
   }
 
   // 树 选择事件
@@ -122,6 +126,8 @@ export default class Branches extends Component {
   }
 
   render() {
+
+    console.log(this.state.table.dataSource)
 
     const columns = [
       {
@@ -144,14 +150,14 @@ export default class Branches extends Component {
       },
       {
         title: '存款规模',
-        dataIndex: 'depositCount',
-        key: 'depositCount',
+        dataIndex: 'deposit',
+        key: 'deposit',
         width: '16%'
       },
       {
         title: '贷款规模',
-        dataIndex: 'loanCount',
-        key: 'loanCount',
+        dataIndex: 'loan',
+        key: 'loan',
         width: '16%'
       },
       {
@@ -192,7 +198,11 @@ export default class Branches extends Component {
       dataSource: this.state.table.dataSource,
       rowClick: this.tableClick.bind(this),
       onChange: this.tableChange.bind(this),
-      loading: this.state.table.loading
+      loading: this.state.table.loading,
+      pagination: {
+        total: this.state.table.count,
+        pageSize: 20
+      }
     };
 
     return <Content actionBarConf={actionBarConf} dockConf={dockConf} tableConf={tableConf} treeConf={treeConf}/>

@@ -33,7 +33,7 @@ export default {
   GET_FINANCE_BASE: id => `/asd/finance/${id}/base`,
 
 
-  GET_STAFF_BASE: id => `/asd/staff/${id}/base`,
+  GET_STAFF_BASE: id => `/api/staff/${id}/editInfo`,
 
   GET_DEPARTMENT_BASE: id => `/asd/department/${id}/base`,
 

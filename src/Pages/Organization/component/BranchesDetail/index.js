@@ -65,8 +65,10 @@ class BranchesDetail extends Component {
           .then( res => {
             if(res.data.message === "OK"){
               alert('新建成功');
-              this.props.closeDock();
               this.props.refresh();
+              this.props.closeDock();
+            }else {
+              alert(res.data.message)
             }
           })
       }
