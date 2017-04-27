@@ -11,7 +11,8 @@ import NewRole from '../component/NewRole';
 //===============================================================
 import "../style/rolesStyle.less";
 import API from "../../../../API";
-import queryString from 'query-string'
+import ajax from '../../../tools/POSTF'
+
 export default class GridsList extends Component {
   constructor(props) {
     super(props);
@@ -45,7 +46,7 @@ export default class GridsList extends Component {
   };
 
   componentWillMount() {
-    axios.post(API.POST_GRIDS_AREAS)
+    ajax.Post(API.POST_GRIDS_AREAS,{areaType:72})
     .then( res => {
       console.dir(res)
       this.setState({
