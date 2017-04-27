@@ -2,6 +2,7 @@ import React,{Component} from 'react'
 import {Timeline,Button,Icon,Input} from 'antd'
 export  default  class MaintainRecord extends Component {
   render() {
+    console.log(this.props)
     return(
       <div className="maintainrecord">
         <Timeline>

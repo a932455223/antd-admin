@@ -91,6 +91,10 @@ class BasicInfo extends Component {
       eachCustomerInfo: this.state.eachCustomerInfo
     }
 
+    const maintainRecordProps = {
+      mode: mode
+    }
+
     return(
       <div style={{textAlign: 'left'}}>
         <AddCrewModal {...modal}/>
@@ -102,8 +106,10 @@ class BasicInfo extends Component {
         <div className="maintain">
           <Tabs>
             <TabPane tab="维护记录" key="basicInfo" className="tab01">
-              <AddMaintainRecord />
-              <MaintainRecord />
+              {mode && mode !== 'view' &&
+                <AddMaintainRecord />
+              }
+              <MaintainRecord {...maintainRecordProps}/>
             </TabPane>
             <TabPane tab="操作记录" key="familyInfo" className="tab02">
               <div className="history">
