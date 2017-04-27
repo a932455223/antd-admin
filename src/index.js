@@ -10,9 +10,10 @@ import {render} from "react-dom";
 import Root from "./containers/Root.dev";
 import configStores from "./redux/store";
 // import $ from "jquery";
-// import axios from 'axios';
-// import qs from 'qs';
+import axios from 'axios';
+import qs from 'qs';
 const store = configStores();
+//
 
 render(<Root store={store}/>, document.getElementById('root'));
 

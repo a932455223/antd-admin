@@ -11,10 +11,14 @@ import axios from 'axios';
 import qs from 'qs';
 //========================================================================================================
 import FormCreator from "../FormCreator";
+import {POSTF} from '../../tools/POSTF.js';
 //========================================================================================
 import "./less/staffDetail.less";
 import API from '../../../../../API';
 const RadioGroup = Radio.Group;
+
+
+
 
 class BranchesDetail extends Component {
   state = {
@@ -66,9 +70,7 @@ class BranchesDetail extends Component {
           }
           return values;
         })(values);
-        console.log(data);
-        // axios.post(API.POST_ADD_STAFF,qs.stringify(data),{
-        axios.post('/api/staff',qs.stringify(data))
+        POSTF(API.POST_ADD_STAFF,data)
           .then( res => {
             console.log(res)
           })
