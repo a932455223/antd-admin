@@ -2,19 +2,33 @@
  * Created by jufei on 2017/4/25.
  */
 import React, {Component} from "react";
-import {Button, Card, Input, Table ,Row,Col,Form} from "antd";
+import {Button, Card, Input, Table , Row, Col, Form} from "antd";
 //=====================================================================
 import './less/roleEdit.less';
-const FormItem = Form.item;
+const FormItem = Form.Item;
 
-class RoleEdit extends Component {
-  state = {};
+class RoleEditF extends Component {
+  inputChange = ()=> {
+
+  }
+
+  componentWillMount() {
+    console.log('RoleEditF will mount')
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('RoleEditF will receive')
+    
+  }
   render() {
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
-    // const { currentId } = this.props;
+    const {id} = this.props;
     return (
-      <div>
-        <div className="title">{this.props.id}</div>
+      <div className="formbox">
+        <div className="role-edit-title">
+          <div className="title">山西银行{this.props.id}</div>
+          <Button className="close" onClick={this.props.close}>&times;</Button>
+        </div>
         <Form>
           <Row>
             <Col span={12}>
@@ -140,9 +154,46 @@ class RoleEdit extends Component {
               </FormItem>
             </Col>
           </Row>
+          <Row className="buttonsave">
+            <Col span={24} >
+              <Col span={4}>
+              </Col>
+              <Button type="primary" >保存</Button>
+            </Col>
+          </Row>
         </Form>
+        <div>
+           <h1>操作记录</h1>
+           <div className="history">
+              <div><span>王祎</span><span> 修改了客户手机号 </span></div>
+              <p>2017/03/10 13:40:23</p>
+            </div>
+            <div className="history">
+              <div><span>王祎</span><span> 修改了客户手机号 </span></div>
+              <p>2017/03/10 13:40:23</p>
+            </div>
+            <div className="history">
+              <div><span>王祎</span><span> 修改了客户手机号 </span></div>
+              <p>2017/03/10 13:40:23</p>
+            </div>
+            <div className="history">
+              <div><span>王祎</span><span> 修改了客户手机号 </span></div>
+              <p>2017/03/10 13:40:23</p>
+            </div>
+            <div className="history">
+              <div><span>王祎</span><span> 修改了客户手机号 </span></div>
+              <p>2017/03/10 13:40:23</p>
+            </div>
+        </div>
       </div>
       )
   }  
 }
-export default Form.create()(RoleEdit);
+const RoleEdit = Form.create()(RoleEditF);
+
+
+
+export default RoleEdit;
+
+
+

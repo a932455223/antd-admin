@@ -10,7 +10,7 @@ export default {
   // 用户与权限 角色 列表
   GET_SYSTEM_ROLES_LIST: '/asd/system/roles/list',
 
-  GET_DEPARTMENT_HIERARCHY: '/asd/department/hierarchy',
+  GET_DEPARTMENT_HIERARCHY: '/api/department/hierarchy',
 
   POST_CUSTOMER_PRIVILEGE:'/asd/privilege/customer',
   //===========dropDown option========================================

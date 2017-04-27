@@ -6,7 +6,7 @@
  */
 
 import React, {Component} from "react";
-import {Button, Col, Layout, Row, Table, Tree,Icon ,Card} from "antd";
+import {Button, Col, Icon, Layout, Table, Tree} from "antd";
 import axios from "axios";
 import Dock from "react-dock";
 //======================================================
@@ -32,54 +32,54 @@ export default class Branches extends Component {
   componentWillMount() {
     axios.get(API.GET_DEPARTMENT_HIERARCHY)
       .then(res => {
+        console.log(res.data.data[0])
         this.setState({
-          department: res.data.data
+          department: res.data.data[0]
         })
       })
   }
 
-  initTableScroll(){
+  initTableScroll() {
     let sider = document.getElementById('organizationSider');
     let tableScroll = document.getElementsByClassName('ant-table-body')[0];
     let contentTitle = document.getElementById('contentTitle');
     let content = document.getElementById('content');
     let thead = document.getElementsByTagName('thead')[0];
 
-    tableScroll.style['height'] = content.offsetHeight - contentTitle.offsetHeight - thead.offsetHeight - 74  + 'px';
-    tableScroll.style['max-height'] = content.offsetHeight - contentTitle.offsetHeight - thead.offsetHeight - 74  + 'px';
+    tableScroll.style['height'] = content.offsetHeight - contentTitle.offsetHeight - thead.offsetHeight - 74 + 'px';
+    tableScroll.style['max-height'] = content.offsetHeight - contentTitle.offsetHeight - thead.offsetHeight - 74 + 'px';
     tableScroll.style['overflow-y'] = 'auto';
 
     sider.style.width = '260px';
     sider.style.flex = '0 0 260px';
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.initTableScroll();
-    addEventListener('resize',this.initTableScroll)
+    addEventListener('resize', this.initTableScroll)
   }
 
-  componentDidUpdate(){
+  componentDidUpdate() {
     this.initTableScroll();
   }
 
-  componentWillUnmount(){
-    removeEventListener('resize',this.initTableScroll)
+  componentWillUnmount() {
+    removeEventListener('resize', this.initTableScroll)
   }
 
   createTree(data) {
-    if (data.childDepartment) {
+    if (data.childDepartments && data.childDepartments.length !== 0) {
+      console.log(data.name,data.id)
       return (
-        <TreeNode title={<span><Icon type="folder-open" />{data.name}</span>} id={data.id} key={data.id}>
+        <TreeNode title={<span><Icon type="folder-open"/>{data.name}</span>} id={data.id} key={data.id}>
           {
-            data.childDepartment.map(childrenDepartment => {
-              return (
-                this.createTree(childrenDepartment)
-              )
+            data.childDepartments.map(childrenDepartment => {
+              return this.createTree(childrenDepartment)
             })
           }
         </TreeNode>  )
     } else {
-      return <TreeNode title={<span><Icon type="folder-open" />{data.name}</span>} id={data.id} key={data.id}/>
+      return <TreeNode title={<span><Icon type="folder-open"/>{data.name}</span>} id={data.id} key={data.id}/>
     }
   }
 
@@ -92,9 +92,6 @@ export default class Branches extends Component {
       }
     })
   }
-
-
-
 
 
   render() {
@@ -111,19 +108,19 @@ export default class Branches extends Component {
       <div className="organization">
         {/*<ActionBar  {...this.props.actionBarConf}/>*/}
         <Layout>
-          <Sider style={{width: "260px", flex:" 0 0 260px"}}
-            id="organizationSider"
+          <Sider style={{width: "260px", flex: " 0 0 260px"}}
+                 id="organizationSider"
           >
             <div className="sider-title">
-                <h3>组织机构</h3>
-                {                   this.props.actionBarConf.parent === 'department' &&
-                  (
-                    <Button onClick={this.props.actionBarConf.newClick.bind(this, 'department')}>
-                      <Icon type="plus" />
-                      新增机构
-                    </Button>
-                  )
-                }
+              <h3>组织机构</h3>
+              {                   this.props.actionBarConf.parent === 'department' &&
+              (
+                <Button onClick={this.props.actionBarConf.newClick.bind(this, 'department')}>
+                  <Icon type="plus"/>
+                  新增机构
+                </Button>
+              )
+              }
             </div>
             <Tree
               defaultExpandAll={true}
@@ -143,7 +140,7 @@ export default class Branches extends Component {
                     onClick={this.props.actionBarConf.newClick.bind(this)}
                     className="newStaff"
                   >
-                    <Icon type="plus" />
+                    <Icon type="plus"/>
                     新增员工
                   </Button>
                 }

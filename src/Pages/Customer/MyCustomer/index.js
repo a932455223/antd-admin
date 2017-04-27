@@ -11,9 +11,7 @@ import TablePage from '../../../components/TablePage';
 import CustomerFilter from '../../../components/CustomerFilter';
 import './less/myCustomerStyle.less';
 import './indexStyle.less';
-
-import queryString from 'query-string'
-
+import ajax from '../../../tools/POSTF'
 
 export default class MyCustomer extends Component {
   state = {
@@ -59,7 +57,7 @@ export default class MyCustomer extends Component {
   componentWillMount() {
     console.log('%c/ myCustomer /_____will mount', 'color: red');
     // 请求表头数据
-    axios.get('/asd/popular/columns')
+    ajax.Get('/asd/popular/columns')
     .then((data) => {
       if(data.status === 200 && data.statusText === 'OK' && data.data) {
         this.setState({
@@ -72,7 +70,7 @@ export default class MyCustomer extends Component {
   }
 
   getCustomers = (params) => {
-      axios.get(API.GET_CUSTOMERS+'?'+queryString.stringify(params||{page:1}))
+      ajax.Get(API.GET_CUSTOMERS,params||{page:1})
           .then((json) => {
               // 将数据存入私有的 state中
               this.setState({
