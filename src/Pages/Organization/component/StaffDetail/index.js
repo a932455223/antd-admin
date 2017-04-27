@@ -11,7 +11,7 @@ import axios from 'axios';
 import qs from 'qs';
 //========================================================================================================
 import FormCreator from "../FormCreator";
-import {POSTF} from '../../tools/POSTF.js';
+import {POSTF} from '../../../../tools/POSTF.js';
 //========================================================================================
 import "./less/staffDetail.less";
 import API from '../../../../../API';

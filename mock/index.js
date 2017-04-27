@@ -279,7 +279,7 @@ module.exports = {
   }),
 
   // 组织机构列表 有层级
-  'GET /asd/department/hierarchy': Mock.mock({
+  'GET /api/department/hierarchy': Mock.mock({
     "code": 200,
     "data|1-10": {
       "id": 1,
