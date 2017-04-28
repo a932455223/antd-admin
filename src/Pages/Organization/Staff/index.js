@@ -29,7 +29,9 @@ export default class Branches extends Component {
     table: {
       dataSource: [],
       loading: true,
-      total: 100
+      count: 100,
+      size: 15,
+      index: 1
     }
   };
 
@@ -46,13 +48,14 @@ export default class Branches extends Component {
       }
     });
     ajax.Get(API.GET_STAFFS, {
-      index: index,
+      index: this.state.table.index,
       departmentId: this.state.parentId,
-      size: 20
+      size: this.state.table.size
     }).then(res => {
       this.setState({
         table: {
           ...this.state.table,
+          count: res.data.data.pagination.count,
           dataSource: res.data.data.staffs,
           loading: false
         }
@@ -131,7 +134,13 @@ export default class Branches extends Component {
   // 表格分页点击事件
   tableChange(pagination) {
     console.log(pagination);
-    this.getStaffs(pagination.current)
+    this.setState({
+      table: {
+        ...this.state.table,
+        index: pagination.current
+      }
+    },this.getStaffs)
+
   }
 
   // 树 选择事件
@@ -220,7 +229,8 @@ export default class Branches extends Component {
       loading: this.state.table.loading,
       pagination: {
         total: this.state.table.count,
-        pageSize: 20
+        pageSize: this.state.table.size,
+        current: this.state.table.index
       }
     };
 

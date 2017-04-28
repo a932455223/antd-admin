@@ -1,18 +1,18 @@
 export default {
 
-/*===============================GET=======================================*/
+  /*===============================GET=======================================*/
   // 客户列表
   GET_CUSTOMERS: '/asd/customers',
   //客户家庭信息
-  GET_CUSTOMERS_FAMILY:function(id){
-    return "/asd/customer/"+id+"/family";
+  GET_CUSTOMERS_FAMILY: function (id) {
+    return "/asd/customer/" + id + "/family";
   },
   // 用户与权限 角色 列表
   GET_SYSTEM_ROLES_LIST: '/asd/system/roles/list',
 
   GET_DEPARTMENT_HIERARCHY: '/api/department/hierarchy',
 
-  POST_CUSTOMER_PRIVILEGE:'/asd/privilege/customer',
+  POST_CUSTOMER_PRIVILEGE: '/asd/privilege/customer',
   //===========dropDown option========================================
   GET_SYSTEM_SLIDER_BAR: '/asd/common/dropdown/list/system',
   GET_CUSTOMER_SLIDER_BAR: '/asd/common/dropdown/list/customer',
@@ -21,19 +21,21 @@ export default {
 
   GET_RELATION_SLIDER_BAR: '/asd/common/dropdown/list/relation',
   GET_JOBCATEGORY_SLIDER_BAR: '/asd/common/dropdown/list/jobCategory',
-    //==================================================================
+  //==================================================================
 
 
 
 
   GET_CUSTOMER_BASE: id =>  `/api/customer/${id}/base`,
   GET_JOBINFO_BASE: id =>  `/asd/jobinfo/${id}/base`,
+  GET_CUSTOMER_BASE: id => `/asd/customer/${id}/base`,
+  GET_JOBINFO_BASE: id => `/asd/jobinfo/${id}/base`,
 
   GET_COMPANY_BASE: id => `/asd/company/${id}/base`,
   GET_FINANCE_BASE: id => `/asd/finance/${id}/base`,
 
 
-  GET_STAFF_BASE: id => `/api/staff/${id}/editInfo`,
+  GET_STAFF_BASE: id => `/api/staff/${id}/baseInfo`,
 
   GET_DEPARTMENT_BASE: id => `/asd/department/${id}/base`,
 
@@ -63,11 +65,11 @@ export default {
   // 产品分类列表
   GET_PRODUCT_CLASSIFY_LIST: '/asd/product/classify/list',
 
-   // 新增员工
+  // 新增员工
   POST_ADD_STAFF: '/api/staff',
 
   //网格列表
-  POST_GRIDS_AREAS : '/api/areas',
+  POST_GRIDS_AREAS: '/api/areas',
 
   //网格列表id
   GET_GRIDS_ID : id => `/api/area/${id}`,
@@ -88,7 +90,7 @@ export default {
   // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory'
 
   //======================================登录相关==================================
-    //获取验证码图片 
+    //获取验证码图片
     GET_CAPTCHA:'/api/captcha',
 
   // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory',
@@ -96,7 +98,7 @@ export default {
   // 添加组织机构
   POST_DEPARTMENT: '/api/department',
 
-    //新建组织机构  获取组织类别下拉菜单
+  //新建组织机构  获取组织类别下拉菜单
   GET_ADD_DEPARTMENT_CATEGORIES: '/api/department/add/dropdown/categories',
 
 
@@ -107,5 +109,18 @@ export default {
   GET_STAFF_ADD_DEPARTMENT: '/api/staff/add/departments',
 
   // 组织机构详情
-  GET_DEPARTMENT_DETAIL: id => `/api/department/${id}`
+  GET_DEPARTMENT_DETAIL: id => `/api/department/${id}`,
+
+  // 修改员工信息
+  PUT_STAFF: id => `/api/staff/${id}`,
+
+  // 组织机构修改
+  PUT_DEPARTMENT: id => `/api/department/${id}`,
+
+  // 直属上级下拉
+  GET_STAFF_LEADERS: '/api/staff/leaders',
+
+  // 员工业务信息
+  GET_STAFF_BUSSINESS_INFO: id => `/staff/${id}/businessInfo`
 }
+
