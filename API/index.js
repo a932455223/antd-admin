@@ -84,6 +84,13 @@ export default {
   // 关系下拉菜单
   // GET_DROPDOWN_RELATION:'/asd/common/dropdown/list/relation',
   //工作属性下拉菜单
+
+  // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory'
+
+  //======================================登录相关==================================
+    //获取验证码图片 
+    GET_CAPTCHA:'/api/captcha',
+
   // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory',
 
   // 添加组织机构
@@ -91,6 +98,7 @@ export default {
 
     //新建组织机构  获取组织类别下拉菜单
   GET_ADD_DEPARTMENT_CATEGORIES: '/api/department/add/dropdown/categories',
+
 
   //新建组织机构  获取所属组织下拉菜单
   GET_ADD_DEPARTMENT_PARENT: '/api/department/add/dropdown/parent',
