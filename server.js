@@ -88,10 +88,10 @@ let log = (req,res,next) => {
 };
 
 
-app.use(log)
+app.use(log);
 
-// const proxyHost = '115.159.58.21:8099';
-const proxyHost = 'http://192.168.1.39:8080';
+const proxyHost = '115.159.58.21:8099';
+// const proxyHost = 'http://192.168.1.39:8080';
 // const proxyHost = 'http://localhost:9999';
 
 app.use('/', proxy(proxyHost, {
@@ -99,7 +99,7 @@ app.use('/', proxy(proxyHost, {
     return req.url.indexOf('/api/') === 0;
   },
   proxyReqPathResolver: (req, res) => {
-    console.dir('/crm' + require('url').parse(req.url));
+    console.dir('/crm' + req.url);
     return '/crm' + req.url;
   }
 }));

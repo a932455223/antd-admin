@@ -88,7 +88,10 @@ class BranchesDetail extends Component {
             console.log('MESSAGE',res.data.message);
             if(res.data.message === 'OK'){
               alert('添加成功');
-              this.closeDock()
+              this.closeDock();
+              this.props.refresh()
+            }else {
+              alert(res.data.message)
             }
           })
           .catch( err => {

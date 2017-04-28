@@ -45,10 +45,31 @@ class BranchesDetail extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
-        ajax.Post(API.POST_DEPARTMENT,values)
+        const data = ((values) => {
+          for(let key in values){
+           if(values[key] === undefined){
+              delete values[key]
+            }
+          }
+          return values;
+        })(values);
+
+        let province = document.getElementsByClassName('area-select-province')[0].getElementsByClassName('ant-select-selection-selected-value')[0].title;
+        let city = document.getElementsByClassName('area-select-city')[0].getElementsByClassName('ant-select-selection-selected-value')[0].title;
+        let county = document.getElementsByClassName('area-select-county')[0].getElementsByClassName('ant-select-selection-selected-value')[0].title;
+        let detailAddress = document.getElementById('fullAddress').value;
+
+        data.address = `${province} ${city} ${county} ${detailAddress}`;
+        console.log('Received values of form: ', data);
+        ajax.Post(API.POST_DEPARTMENT,data)
           .then( res => {
-            console.log(res)
+            if(res.data.message === "OK"){
+              alert('新建成功');
+              this.props.refresh();
+              this.props.closeDock();
+            }else {
+              alert(res.data.message)
+            }
           })
       }
     });
@@ -129,7 +150,7 @@ class BranchesDetail extends Component {
       {
         label: '组织地址',
         type: 'other',
-        required: false,
+        required: true,
         message: '组织地址！',
         formItemLayout: formItemLayout,
         field: 'address',
@@ -143,20 +164,20 @@ class BranchesDetail extends Component {
         )
       },
       {
+        label: '详细地址',
+        type: 'input',
+        required: true,
+        message: '请填写详细地址',
+        formItemLayout: formItemLayout,
+        field: 'fullAddress',
+      },
+      {
         label: '联系电话',
         type: 'input',
         required: false,
         message: '请填写组织联系电话！',
         formItemLayout: formItemLayout,
         field: 'phone',
-      },
-      {
-        label: '详细地址',
-        type: 'input',
-        required: false,
-        message: '请填写详细地址',
-        formItemLayout: formItemLayout,
-        field: 'fullAddress',
       },
       {
         label: '备注信息',

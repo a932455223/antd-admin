@@ -32,18 +32,24 @@ class BranchesEditor extends Component {
   };
 
 
-
-
   componentWillMount() {
-    axios.get(API.GET_STAFF_BASE(this.props.id))
+    this.getStaffInfo();
+    console.log(this.props.id)
+  }
+
+  componentWillReceiveProps(nextProps){
+    this.getStaffInfo(nextProps.id)
+  }
+
+  getStaffInfo(id = this.props.id){
+    axios.get(API.GET_STAFF_BASE(id))
       .then(res => {
         this.setState({
           staff: {
             base: res.data.data
           }
-        });
-      });
-    console.log(this.props.id)
+        })
+      })
   }
 
   closeDock() {
@@ -146,9 +152,9 @@ class BranchesEditor extends Component {
                   label={<span>性别</span>}
                   {...formItemLayout}
                 >
-                  {getFieldDecorator('sex', {
+                  {getFieldDecorator('gender', {
                     rules: [{required: false, message: '请选择性别!'}],
-                    initialValue: baseInfo.sex
+                    initialValue: baseInfo.gender
                   })(
                     <Select
                       getPopupContainer={ () => document.getElementById('staffEditor')}
@@ -158,8 +164,8 @@ class BranchesEditor extends Component {
                         })
                       }}
                     >
-                      <Option value="1">男</Option>
-                      <Option value="0">女</Option>
+                      <Option value={56}>男</Option>
+                      <Option value={57}>女</Option>
                     </Select>
                   )}
                 </FormItem>
@@ -168,12 +174,12 @@ class BranchesEditor extends Component {
             <Row>
               <Col span={12}>
                 <FormItem
-                  label={<span>证件类型</span>}
+                  label={<span>证件号码</span>}
                   {...formItemLayout}
                 >
-                  {getFieldDecorator('certificateType', {
-                    rules: [{required: false, message: '请填写证件类型!'}],
-                    initialValue: baseInfo.certificateType
+                  {getFieldDecorator('certificateNo', {
+                    rules: [{required: true, message: '请填写证件号码!'}],
+                    initialValue: baseInfo.certificateNo
                   })(
                     <Input/>
                   )}
@@ -181,12 +187,12 @@ class BranchesEditor extends Component {
               </Col>
               <Col span={12}>
                 <FormItem
-                  label={<span>证件号码</span>}
+                  label={<span>家庭住址</span>}
                   {...formItemLayout}
                 >
-                  {getFieldDecorator('certificate', {
-                    rules: [{required: true, message: '请填写证件号码!'}],
-                    initialValue: baseInfo.certificate
+                  {getFieldDecorator('address', {
+                    rules: [{required: false, message: '请填写家庭住址!'}],
+                    initialValue: baseInfo.address
                   })(
                     <Input/>
                   )}
@@ -256,21 +262,7 @@ class BranchesEditor extends Component {
                 </FormItem>
               </Col>
             </Row>
-            <Row>
-              <Col span={12}>
-                <FormItem
-                  label={<span>家庭住址</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('address', {
-                    rules: [{required: false, message: '请填写家庭住址!'}],
-                    initialValue: baseInfo.address
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
+
           </Card>
 
           {/*业务信息*/}
@@ -297,6 +289,62 @@ class BranchesEditor extends Component {
               </Col>
               <Col span={20}>
                 ￥17840129571305310
+              </Col>
+            </Row>
+          </Card>
+
+          {/*工作信息*/}
+          <Card className="business" title={<h3>业务信息</h3>}>
+            <Row>
+              <Col span={4}>
+                所属机构：
+              </Col>
+              <Col span={20}>
+                {baseInfo.departmentIds}
+              </Col>
+            </Row>
+            <Row>
+              <Col span={4}>
+                工号：
+              </Col>
+              <Col span={8}>
+                {baseInfo.jobNumber}
+              </Col>
+              <Col span={4}>
+                任职状态：
+              </Col>
+              <Col span={8}>
+                {baseInfo.jobStatus}
+              </Col>
+            </Row>
+            <Row>
+              <Col span={4}>
+                职位：
+              </Col>
+              <Col span={8}>
+                {baseInfo.jobCategory}
+              </Col>
+              <Col span={4}>
+                直属上级：
+              </Col>
+              <Col span={8}>
+                {baseInfo.leader}
+              </Col>
+            </Row>
+            <Row>
+              <Col span={4}>
+                任职时间：
+              </Col>
+              <Col span={20}>
+                {baseInfo.inductionTime}
+              </Col>
+            </Row>
+            <Row>
+              <Col span={4}>
+                调岗记录：
+              </Col>
+              <Col span={20}>
+                {baseInfo.departmentIds}
               </Col>
             </Row>
           </Card>

@@ -25,7 +25,8 @@ export default class Branches extends Component {
     dock: {
       visible: false,
       children: null
-    }
+    },
+    refresh: false
   };
 
 
@@ -36,7 +37,7 @@ export default class Branches extends Component {
           department: res.data.data[0]
         })
       }).catch(err => {
-        console.log(err)
+      console.log(err)
     })
   }
 
@@ -67,6 +68,18 @@ export default class Branches extends Component {
   componentWillUnmount() {
     removeEventListener('resize', this.initTableScroll)
   }
+
+  componentWillReceiveProps(){
+    axios.get(API.GET_DEPARTMENT_HIERARCHY)
+      .then(res => {
+        this.setState({
+          department: res.data.data[0]
+        })
+      })
+  }
+
+
+
 
   createTree(data) {
     if (data.childDepartments && data.childDepartments.length !== 0) {
@@ -123,7 +136,7 @@ export default class Branches extends Component {
               }
             </div>
             <Tree
-              defaultExpandAll={true}
+              defaultExpandAll="true"
               onSelect={this.props.treeConf.onSelect}
             >
               {this.createTree(this.state.department)}
@@ -156,6 +169,7 @@ export default class Branches extends Component {
               rowKey={record => record.id}
               scroll={{y: 1}}
               loading={this.props.tableConf.loading}
+              pagination={this.props.tableConf.pagination}
             />
           </Content>
         </Layout>

@@ -33,7 +33,7 @@ export default {
   GET_FINANCE_BASE: id => `/asd/finance/${id}/base`,
 
 
-  GET_STAFF_BASE: id => `/asd/staff/${id}/base`,
+  GET_STAFF_BASE: id => `/api/staff/${id}/editInfo`,
 
   GET_DEPARTMENT_BASE: id => `/asd/department/${id}/base`,
 
@@ -88,5 +88,8 @@ export default {
   GET_ADD_DEPARTMENT_PARENT: '/api/department/add/dropdown/parent',
 
   // 新增员工 所属组织机构下拉菜单
-  GET_STAFF_ADD_DEPARTMENT: '/api/staff/add/departments'
+  GET_STAFF_ADD_DEPARTMENT: '/api/staff/add/departments',
+
+  // 组织机构详情
+  GET_DEPARTMENT_DETAIL: id => `/api/department/${id}`
 }

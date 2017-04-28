@@ -28,12 +28,13 @@ export default class Branches extends Component {
     },
     table: {
       dataSource: [],
-      loading: true
+      loading: true,
+      total: 100
     }
   };
 
   componentWillMount() {
-   // this.getStaffs()
+   this.getStaffs()
   }
 
   // 获取组织列表 表格 数据
@@ -43,11 +44,11 @@ export default class Branches extends Component {
         ...this.state.table,
         loading: true
       }
-    })
-    ajax.Post(API.GET_STAFFS, {
+    });
+    ajax.Get(API.GET_STAFFS, {
       index: index,
-      parentId: this.state.parentId,
-      size: 10
+      departmentId: this.state.parentId,
+      size: 20
     }).then(res => {
       this.setState({
         table: {
@@ -56,8 +57,6 @@ export default class Branches extends Component {
           loading: false
         }
       })
-    }).catch(err => {
-      console.log(err)
     })
   }
 
@@ -73,7 +72,13 @@ export default class Branches extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: <StaffDetail closeDock={this.closeDock.bind(this)} id={id}/>
+        children:(
+          <StaffDetail
+            closeDock={this.closeDock.bind(this)}
+            refresh={this.refresh.bind(this)}
+            id={id}
+          />
+        )
       }
     })
   }
@@ -83,14 +88,26 @@ export default class Branches extends Component {
       this.setState({
         dock: {
           visible: true,
-          children: <BranchesDetail id="-1" closeDock={this.closeDock.bind(this)}/>
+          children: (
+            <BranchesDetail
+              id="-1"
+              closeDock={this.closeDock.bind(this)}
+              refresh={this.refresh.bind(this)}
+            />
+          )
         }
       })
     } else {
       this.setState({
         dock: {
           visible: true,
-          children: <StaffDetail id="-1" closeDock={this.closeDock.bind(this)}/>
+          children: (
+            <StaffDetail
+              id="-1"
+              closeDock={this.closeDock.bind(this)}
+              refresh={this.refresh.bind(this)}
+            />
+          )
         }
       })
     }
@@ -100,14 +117,21 @@ export default class Branches extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: <StaffEditor id={id} closeDock={this.closeDock.bind(this)}/>
+        children:(
+          <StaffEditor
+            id={id}
+            closeDock={this.closeDock.bind(this)}
+            refresh={this.refresh.bind(this)}
+          />
+        )
       }
     })
   }
 
   // 表格分页点击事件
   tableChange(pagination) {
-    console.log(pagination)
+    console.log(pagination);
+    this.getStaffs(pagination.current)
   }
 
   // 树 选择事件
@@ -116,13 +140,18 @@ export default class Branches extends Component {
     this.setState({
       parentId: parseInt(selectKey[0])
     }, () => {
-      console.log(this.state)
-      // this.getStaffs()
+      console.log(this.state);
+      this.getStaffs()
     })
   }
 
+  refresh(){
+    this.getStaffs()
+  }
 
   render() {
+    console.log(this.state.table.dataSource)
+
     const columns = [
       {
         title: '员工姓名',
@@ -188,7 +217,11 @@ export default class Branches extends Component {
       dataSource: this.state.table.dataSource,
       rowClick: this.tableClick.bind(this),
       onChange: this.tableChange.bind(this),
-      loading: this.state.table.loading
+      loading: this.state.table.loading,
+      pagination: {
+        total: this.state.table.count,
+        pageSize: 20
+      }
     };
 
     const treeConf = {

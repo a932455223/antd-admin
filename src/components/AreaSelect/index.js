@@ -133,6 +133,7 @@ export default class AreaSelect extends Component {
             onSelect={(a,b)=> {
               console.log(a,b)
             }}
+            className="area-select-province"
           >
             {
               this.state.province.map(item => {
@@ -143,6 +144,7 @@ export default class AreaSelect extends Component {
           <Select
             onChange={this.citySelected.bind(this)}
             value={this.state.value.city}
+            className="area-select-city"
           >
             {
               this.state.city.map(item => {
@@ -153,6 +155,7 @@ export default class AreaSelect extends Component {
         <Select
           onChange={this.countySelected.bind(this)}
           value={this.state.value.county}
+          className="area-select-county"
         >
           {
             this.state.county.map(item => {
