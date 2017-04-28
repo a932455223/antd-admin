@@ -23,11 +23,13 @@ class Login extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      loading: false
+      loading: false,
+      captchaImg:"",
     }
   }
-  componentWillMount(){
-  }
+   componentWillMount(){
+     this.getCaptcha();
+   }
   componentWillReceiveProps(nextProps) {
     const error = nextProps.loginErrors;
     const isLoggingIn = nextProps.loggingIn;
@@ -55,10 +57,19 @@ class Login extends React.Component {
       this.context.router.replace('/home');
     }
   }
-  getCaptcha(){
-    return(
-      <img src={api.GET_CAPTCHA}/>
-    )
+  getCaptcha=()=>{
+    // axios.get(api.GET_CAPTCHA)
+    // .then((data) => {
+    //   if (data.status === 200 && data.statusText === 'OK' && data.data) {
+    //     this.setState({
+    //       captchaImg: data
+    //     })
+    //   }
+    // })
+    this.setState({
+      captchaImg:<img src={[api.GET_CAPTCHA]} />
+    })
+
   }
   handleSubmit (e) {
     e.preventDefault();
@@ -71,19 +82,17 @@ class Login extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        axios.post(api.POST_LOGIN,values)
+        .then((data)=>{
+            console.log(data)
+        })
       }
     });
-    console.log()
+
   }
 
   render () {
     const { getFieldDecorator } = this.props.form
-    // this.getCaptcha();
-    // setTimeout(()=> {
-    //   console.log("0000",this.state.captcthaImg);
-      
-    // }, 100);
-    // constructor.log(this.state.captchaImg)
     return (
       // <Row className="login-row" type="flex" jeustify="space-around" align="middle">
       //   <Col span="8">
@@ -107,18 +116,18 @@ class Login extends React.Component {
       // </Row>
 
       <div className="loginpagebc">
-        {this.getCaptcha()}
-         {/*`/api/common/dropdown/${key}`*/}
+        {this.state.captchaImg} 
+        <div onClick={this.getCaptcha}>点击更换</div>
         <div className="loginpage">
         <div className="img"></div>
         <div className="loginbox">
           <h1>登陆精准营销系统</h1>
-          <Form onSubmit="this.handleSubmit">
+          <Form onSubmit={(e)=>{this.handleSubmit(e)}}>
               <FormItem labelCol={{span: 24}}
                         wrapperCol={{span: 24}}
                         label="用户名"
                         className="user">
-                {getFieldDecorator('uesr', {
+                {getFieldDecorator('phone', {
                   onChange: this.dateChange
                 })(
                   <Input  placeholder="请输入用户名" size="large"/>
@@ -153,7 +162,7 @@ class Login extends React.Component {
               </FormItem>
               <FormItem 
                className="button">
-                <Button type="primary" htmlType="button" size="large">登陆</Button>
+                <Button type="primary" htmlType="submit"  size="large">登陆</Button>
               </FormItem>
           </Form>
         </div>

@@ -137,7 +137,7 @@ class FamilyInfo extends Component {
   }
   //删除信息
   deleteFamilyValue(index){
-    let newState=update(
+    let nezwState=update(
       this.state,{
         editFamilyList:{$splice:[[index,1]] },
         familyList:{$splice:[[index,1]] },

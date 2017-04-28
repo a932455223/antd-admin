@@ -82,7 +82,8 @@ export default {
   //======================================登录相关==================================
     //获取验证码图片 
     GET_CAPTCHA:'/api/captcha',
-
+    //登陆
+    POST_LOGIN:'/api/login',
   // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory',
 
   // 添加组织机构

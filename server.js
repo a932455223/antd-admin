@@ -35,7 +35,7 @@ var port = isDeveloping ? 8888 : 9999;
 
 app.use('/', express.static(path.join(__dirname + '/static')));
 
-app.use(cookieParser());
+// app.use(cookieParser());
 // app.use(bodyParser.urlencoded());
 // app.use(bodyParser.json());
 
