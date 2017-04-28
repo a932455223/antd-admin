@@ -3,9 +3,9 @@ import { Form, Input, Button, Row, Col, Icon, notification, Card} from 'antd'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { login } from '../../redux/actions/auth'
-
+import axios from 'axios';
+import api from './../../../API'
 const FormItem = Form.Item
-
 import './login.less'
 
 const propTypes = {
@@ -26,7 +26,8 @@ class Login extends React.Component {
       loading: false
     }
   }
-
+  componentWillMount(){
+  }
   componentWillReceiveProps(nextProps) {
     const error = nextProps.loginErrors;
     const isLoggingIn = nextProps.loggingIn;
@@ -54,20 +55,37 @@ class Login extends React.Component {
       this.context.router.replace('/home');
     }
   }
-
+  getCaptcha(){
+    return(
+      <img src={api.GET_CAPTCHA}/>
+    )
+  }
   handleSubmit (e) {
     e.preventDefault();
-    this.setState({
-      loading: true
+    // this.setState({
+    //   loading: true
+    // });
+    // const data = this.props.form.getFieldsValue()
+    
+    // this.props.login(data.user, data.password)
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
     });
-    const data = this.props.form.getFieldsValue()
-    this.props.login(data.user, data.password)
+    console.log()
   }
 
   render () {
     const { getFieldDecorator } = this.props.form
+    // this.getCaptcha();
+    // setTimeout(()=> {
+    //   console.log("0000",this.state.captcthaImg);
+      
+    // }, 100);
+    // constructor.log(this.state.captchaImg)
     return (
-      // <Row className="login-row" type="flex" justify="space-around" align="middle">
+      // <Row className="login-row" type="flex" jeustify="space-around" align="middle">
       //   <Col span="8">
       //     <Form layout="horizontal" onSubmit={this.handleSubmit.bind(this)} className="login-form">
       //       <h2 className="logo"><span>logo</span></h2>
@@ -89,11 +107,13 @@ class Login extends React.Component {
       // </Row>
 
       <div className="loginpagebc">
+        {this.getCaptcha()}
+         {/*`/api/common/dropdown/${key}`*/}
         <div className="loginpage">
         <div className="img"></div>
         <div className="loginbox">
           <h1>登陆精准营销系统</h1>
-          <Form>
+          <Form onSubmit="this.handleSubmit">
               <FormItem labelCol={{span: 24}}
                         wrapperCol={{span: 24}}
                         label="用户名"
@@ -133,7 +153,7 @@ class Login extends React.Component {
               </FormItem>
               <FormItem 
                className="button">
-                <Button type="primary" htmlType="submit" size="large">登陆</Button>
+                <Button type="primary" htmlType="button" size="large">登陆</Button>
               </FormItem>
           </Form>
         </div>
