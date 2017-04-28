@@ -6,17 +6,19 @@
  */
 
 
-import { combineReducers } from 'redux';
-import navPath from './navPathReducer';
-import auth from './authReducer';
-import common from './commonReducer';
-import customer from './customerReducer';
+import {combineReducers} from "redux";
+import navPath from "./navPathReducer";
+import auth from "./authReducer";
+import common from "./commonReducer";
+import customer from "./customerReducer";
+import dropdown from './dropdownReducer';
 
 const reducers = combineReducers({
-    navPath: navPath,
-    auth: auth,
-    common: common,
-    customer: customer
+  navPath: navPath,
+  auth: auth,
+  common: common,
+  customer: customer,
+  dropdown: dropdown
 });
 
 export default reducers;

@@ -3,7 +3,7 @@
  */
 
 import React, {Component} from "react";
-import {Button, Card, Form, Input, Select, Tabs} from "antd";
+import {Button, Card, Form, Input, Select, Tabs, Icon,Row} from "antd";
 //============================================================
 import RolePermission from '../RolePermission';
 //================================================
@@ -48,43 +48,43 @@ class NewRole extends Component {
         span: 6
       },
       wrapperCol: {
-        span: 14
+        span: 16
       }
     };
 
 
     return (
-      <div className="new-role">
-        <div className="new-role-title">
-          <h3>{this.state.roleName}</h3>
-          <span>
-            {this.state.formGroupVisible && <Button onClick={this.save.bind(this)}>保存</Button>}
-            <Button
-              className="close"
-              onClick={this.props.close}
-            >&times;</Button>
-          </span>
-        </div>
-
-        <Card
+      <div className="newcreate">
+        <div style={{clear:'both'}}></div>
+        <Card className="new-role" 
           style={{display: this.state.formGroupVisible ? 'none' : 'block'}}
+          className="cardbox"
         >
-          <Form onSubmit={this.saveUsername} className="edit-rolename">
+          {/*<div className="newroletitle">
+            <h3>{this.state.roleName}</h3>
+            <span>
+              {this.state.formGroupVisible && <Button onClick={this.save.bind(this)}>保存</Button>}
+              
+            </span>
+          </div>     */}
+          <Row>
+          <Form onSubmit={this.saveUsername} className="editrolename">
             <FormItem
-              label={<span>用户姓名</span>}
+              label={<span style={{fontSize:'14px'}}>输入网格名称</span>}
               {...formItemLayout}
             >
               {getFieldDecorator('username', {
-                rules: [{required: true, message: '用户姓名不得为空!'}],
+                rules: [{required: true, message: '网格名称不得为空!'}],
               })(
-                <Input/>
+                <Input />
               )}
             </FormItem>
             <Button htmlType="submit">确认新建</Button>
           </Form>
+          </Row>
         </Card>
         {
-          this.state.formGroupVisible && <RolePermission/>
+          this.state.formGroupVisible && <RolePermission ajaxFaFun={this.props.ajaxFaFun} roleName={this.state.roleName} close={this.props.close} />
         }
       </div>
     )
