@@ -7,13 +7,14 @@ import {Button, Card, Input, Table , Row, Col, Form, Icon} from "antd";
 import './less/roleEdit.less';
 import API from "../../../../../API";
 import ajax from '../../../../tools/POSTF'
+import update from 'immutability-helper'
 const FormItem = Form.Item;
 
 class RoleEditF extends Component {
   state ={
     area : ""
   }
-  inputChange = ()=> {
+  inputChange = (e)=> {
     // const id = this.props.id;
     // const { getFieldsValue} = this.props.form;
     // const FieldsValue = getFieldsValue();
@@ -22,14 +23,15 @@ class RoleEditF extends Component {
     // .then(res => {
     //   console.log("put. ok")
     // })
-
+    let newState = update(this.state,{area:{[e.target.name]:{$set:e.target.value}}})
+    this.setState(newState)
   }
 
   handleChange = () => {
     const id = this.props.id;
     const { getFieldsValue} = this.props.form;
     const FieldsValue = getFieldsValue();
-    console.log(FieldsValue);   
+    console.log(FieldsValue);
     ajax.Put(API.PUT_API_AREA(id),FieldsValue)
     .then(() => {
       console.log("put. ok");
@@ -45,7 +47,7 @@ class RoleEditF extends Component {
     if (nextProps.id !== this.props.id ){
       this.ajaxFun(nextProps.id)
     }
-    
+
   }
 
   ajaxFun = (id) => {
@@ -57,7 +59,7 @@ class RoleEditF extends Component {
       })
     })
    }
-  
+
   render() {
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
     const {id } = this.props;
@@ -67,17 +69,11 @@ class RoleEditF extends Component {
         <Form>
           <Row className="fristrow">
             <Col span={12} className="fristcol">
-              <FormItem 
+              <FormItem
                         wrapperCol={{span: 20}}
                         className="idnumber"
               >
-
-                {getFieldDecorator('name', {
-                  initialValue:area.name ,
-                  onChange: this.inputChange
-                })(
-                  <Input />
-                )}
+              <Input name="name" value={area.name} onChange={this.inputChange}/>
               </FormItem>
             </Col>
           <Icon
@@ -95,13 +91,7 @@ class RoleEditF extends Component {
                         label="网格负责人"
                         className="idnumber"
               >
-
-                {getFieldDecorator('director', {
-                  initialValue:area.director,
-                  onChange: this.inputChange
-                })(
-                  <Input />
-                )}
+              <Input name="director" value={area.director} onChange={this.inputChange}/>
               </FormItem>
             </Col>
 
@@ -221,7 +211,7 @@ class RoleEditF extends Component {
               <Button type="primary" onClick={this.handleChange}>保存</Button>
             </Col>
           </Row>
-        
+
         <div>
            <h1>操作记录</h1>
            <div className="recordbox">
@@ -249,13 +239,10 @@ class RoleEditF extends Component {
         </div>
       </div>
       )
-  }  
+  }
 }
 const RoleEdit = Form.create()(RoleEditF);
 
 
 
 export default RoleEdit;
-
-
-
