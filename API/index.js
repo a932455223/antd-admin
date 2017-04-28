@@ -26,7 +26,7 @@ export default {
 
 
 
-  GET_CUSTOMER_BASE: id =>  `/asd/customer/${id}/base`,
+  GET_CUSTOMER_BASE: id =>  `/api/customer/${id}/base`,
   GET_JOBINFO_BASE: id =>  `/asd/jobinfo/${id}/base`,
 
   GET_COMPANY_BASE: id => `/asd/company/${id}/base`,
@@ -90,4 +90,3 @@ export default {
   // 新增员工 所属组织机构下拉菜单
   GET_STAFF_ADD_DEPARTMENT: '/api/staff/add/departments'
 }
-

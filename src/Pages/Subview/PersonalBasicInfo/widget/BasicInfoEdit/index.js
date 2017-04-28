@@ -35,37 +35,43 @@ export default class BasicInfoEdit extends Component{
         isLeaf: false,
       }
     ],
-    marriage: {
-      value: false,
-      options: []
-    },
-    houseType: {
-      value: '',
-      options: []
-    },
-    withCar: {
-      value: false,
-      options: []
-    },
-    withDebt: {
-      value: false,
-      options: []
-    },
-    needLoan: {
-      value: false,
-      options: []
-    },
-    carPrice: {
-      options: []
-    },
-    debtAmount: {
-      options: []
-    },
-    loanAmount: {
-      options: []
-    },
-    loanPurpose: {
-      options: []
+    dropdown: {
+      marryStatus: {
+        value: '',
+        options: []
+      },
+      houseType: {
+        value: '',
+        options: []
+      },
+      withCar: {
+        value: '',
+        options: []
+      },
+      // withDebt: {
+      //   value: '',
+      //   options: []
+      // },
+      // needLoan: {
+      //   value: '',
+      //   options: []
+      // },
+      // carPrice: {
+      //   value: '',
+      //   options: []
+      // },
+      // debtAmount: {
+      //   value: '',
+      //   options: []
+      // },
+      // loanAmount: {
+      //   value: '',
+      //   options: []
+      // },
+      // loanPurpose: {
+      //   value: '',
+      //   options: []
+      // },
     },
     basicInfoBeEdit: false,
     detailsInfoBeEdit: false
@@ -73,13 +79,13 @@ export default class BasicInfoEdit extends Component{
 
   componentWillMount(){
     const commonDropDownType = [
-      'marriage',
+      'marryStatus',
       'houseType',
       'withCar',
       // 'carPrice',
-      'withDebt',
+      // 'withDebt',
       // 'debtAmount',
-      'needLoan',
+      // 'needLoan',
       // 'loanAmount',
       // 'loanPurpose'
     ];
@@ -88,10 +94,13 @@ export default class BasicInfoEdit extends Component{
       ajax.Get(API.GET_COMMON_DROPDOWN(item))
       .then((res) => {
         let newState = update(this.state, {
-          [item]: {
-            options: {$set: res.data.data}
+          dropdown: {
+            [item]: {
+              options: {$set: res.data.data}
+            }
           }
         })
+
         this.setState(newState);
       })
     })
@@ -100,15 +109,15 @@ export default class BasicInfoEdit extends Component{
   componentWillReceiveProps(next) {
     if(this.props.eachCustomerInfo.id !== next.eachCustomerInfo.id) {
       let newState = update(this.state, {
-        withCar: {
-          value: {$set: next.eachCustomerInfo.withCar}
-        },
-        withDebt: {
-          value: {$set: next.eachCustomerInfo.withDebt}
-        },
-        needLoan: {
-          value: {$set: next.eachCustomerInfo.needLoan}
-        },
+        // withCar: {
+        //   value: {$set: next.eachCustomerInfo.withCar}
+        // },
+        // withDebt: {
+        //   value: {$set: next.eachCustomerInfo.withDebt}
+        // },
+        // needLoan: {
+        //   value: {$set: next.eachCustomerInfo.needLoan}
+        // },
         tags: {$set: next.eachCustomerInfo.joiner}
       })
       this.setState(newState);
@@ -206,19 +215,17 @@ export default class BasicInfoEdit extends Component{
     });
   }
 
-  handleClose = () => {
-
-  }
+  handleClose = () => {}
 
   render() {
-    console.dir(this.state);
     const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess} = this.props;
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
+    const { marryStatus, houseType, withCar } = this.state.dropdown;
     // console.log(getFieldsValue())
 
     const kinitialValue = function(){
       var selfkeys = [];
-      eachCustomerInfo.account && eachCustomerInfo.account.map((item ,index) => {
+      eachCustomerInfo.accounts && eachCustomerInfo.accounts.map((item ,index) => {
         selfkeys.push(`row-${index}`);
       })
       return selfkeys;
@@ -259,7 +266,7 @@ export default class BasicInfoEdit extends Component{
     getFieldDecorator('keys', { initialValue: kinitialValue() });
     const keys = getFieldValue('keys');
     const EditFormItems = () => {
-      var len = eachCustomerInfo.account && eachCustomerInfo.account.length;
+      var len = eachCustomerInfo.accounts && eachCustomerInfo.accounts.length;
       var formItemArray = keys.map((k, index) => {
         return (
           <Row key={index}>
@@ -269,11 +276,11 @@ export default class BasicInfoEdit extends Component{
                 required={false}
                 key={k}
                 {...(index===0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                className="account"
+                className="accounts"
               >
                 {getFieldDecorator(`names-${k}`, {
                   validateTrigger: ['onChange', 'onBlur'],
-                  initialValue:len > index ? eachCustomerInfo.account[index].accNumber : "",
+                  initialValue:len > index ? eachCustomerInfo.accounts[index].accountNo : "",
 
                 })(
                   <Input placeholder="填写账号信息"  />
@@ -287,7 +294,7 @@ export default class BasicInfoEdit extends Component{
               >
 
                 {getFieldDecorator(`info-${k}`, {
-                  initialValue:len > index ? eachCustomerInfo.account[index].info : "",
+                  initialValue:len > index ? eachCustomerInfo.accounts[index].remark : "",
                   onChange: this.inputChange
                 })(
                   <Input placeholder="填写备注信息"/>
@@ -548,23 +555,24 @@ export default class BasicInfoEdit extends Component{
       <Form id="editMyDetails" className="basicInfolist">
         <div className="personInfo">
           <Row>
-            <Col span={12} className={currentId === -1 ? "marriageCreate" : "marriageEdit"}>
+            <Col span={12} className={currentId === -1 ? "marryStatusCreate" : "marryStatusEdit"}>
               <FormItem
                 labelCol={{span: 8}}
                 wrapperCol={{span: 13}}
                 label="婚姻状况："
-                className="marriage"
+                className="marryStatus"
               >
-                {getFieldDecorator('marriage', {
-                  initialValue: eachCustomerInfo.marriage + '',
+                {getFieldDecorator('marryStatus', {
+                  initialValue: eachCustomerInfo.marryStatus + '',
                   onChange: this.selectChange
                 })(
                   <Select
                     placeholder="请选择婚姻状况"
                     getPopupContainer={() => document.getElementById('editMyDetails')}
                   >
-                    <Option value="true">已婚</Option>
-                    <Option value="false">未婚</Option>
+                    {marryStatus && marryStatus.options.map(marryItem =>
+                      <Option key={marryItem.id} value={marryItem.id + ''}>{marryItem.name}</Option>
+                    )}
                   </Select>
                 )}
               </FormItem>
@@ -614,7 +622,7 @@ export default class BasicInfoEdit extends Component{
                 className="houseType"
               >
                 {getFieldDecorator('houseType', {
-                  initialValue: eachCustomerInfo.houseType,
+                  initialValue: eachCustomerInfo.houseType + '',
                   onChange: this.selectChange
                 })(
                   <Select
@@ -624,8 +632,9 @@ export default class BasicInfoEdit extends Component{
                     filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                     getPopupContainer={() => document.getElementById('editMyDetails')}
                   >
-                    <Option value="商住">商住房</Option>
-                    <Option value="自住">普通住宅</Option>
+                    {houseType && houseType.options.map(houseTypeItem =>
+                      <Option key={houseTypeItem.id} value={houseTypeItem.id + ''}>{houseTypeItem.name}</Option>
+                    )}
                   </Select>
                 )}
               </FormItem>
@@ -648,8 +657,9 @@ export default class BasicInfoEdit extends Component{
                     placeholder="是否有车"
                     getPopupContainer={() => document.getElementById('editMyDetails')}
                   >
-                    <Option value="true">有</Option>
-                    <Option value="false">无</Option>
+                    {withCar && withCar.options.map(withCarItem =>
+                      <Option key={withCarItem.id} value={withCarItem.id + ''}>{withCarItem.name}</Option>
+                    )}
                   </Select>
                 )}
               </FormItem>
@@ -684,6 +694,7 @@ export default class BasicInfoEdit extends Component{
             }
           </Row>
 
+          {/*
           <Row>
             <Col span={12} className={currentId === -1 ? "withDebtCreate" : "withDebtEdit"}>
               <FormItem
@@ -734,7 +745,9 @@ export default class BasicInfoEdit extends Component{
               </Col>
             }
           </Row>
+          */}
 
+          {/*
           <Row>
             <Col span={12} className={currentId === -1 ? "needLoanCreate" : "needLoanEdit"}>
               <FormItem
@@ -812,8 +825,10 @@ export default class BasicInfoEdit extends Component{
               </Col>
             }
           </Row>
+          */}
         </div>
 
+        {/*
         <Row className="buttonSave">
           <Col span={24} >
             <Col span={4}>
@@ -825,12 +840,13 @@ export default class BasicInfoEdit extends Component{
             >保存</Button>
           </Col>
         </Row>
+        */}
       </Form>
     )
     let EditPersonalInfo = (
       <div>
-        {EditBasicInfo}
-        {EditDetailsInfo}
+      {EditBasicInfo}
+      {EditDetailsInfo}
       </div>
     )
 
@@ -848,7 +864,7 @@ export default class BasicInfoEdit extends Component{
       )
     })
     const ViewFormItems = () => {
-      var len = eachCustomerInfo.account && eachCustomerInfo.account.length;
+      var len = eachCustomerInfo.accounts && eachCustomerInfo.accounts.length;
       var formItemArray = keys.map((k, index) => {
         return (
           <Row key={index}>
@@ -858,16 +874,16 @@ export default class BasicInfoEdit extends Component{
                 required={false}
                 key={k}
                 {...(index===0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                className="account"
+                className="accounts"
               >
-                <span>{len > index ? eachCustomerInfo.account[index].accNumber : ""}</span>
+                <span>{len > index ? eachCustomerInfo.accounts[index].accountNo : ""}</span>
               </FormItem>
             </Col>
             <Col span={12} className="addMessage">
               <FormItem
                 wrapperCol={{span: 24}}
               >
-                <span>{len > index ? eachCustomerInfo.account[index].info : ""}</span>
+                <span>{len > index ? eachCustomerInfo.accounts[index].remark : ""}</span>
               </FormItem>
             </Col>
           </Row>

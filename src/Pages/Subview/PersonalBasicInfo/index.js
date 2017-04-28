@@ -6,6 +6,7 @@ import {
  } from 'antd';
 import axios from 'axios';
 import API from '../../../../API';
+import ajax from '../../../tools/POSTF';
 import { connect } from 'react-redux';
 import { createCustomerSuccess, customerInfoBeEdit } from '../../../redux/actions/customerAction';
 const TabPane = Tabs.TabPane;
@@ -46,7 +47,7 @@ class BasicInfo extends Component {
 
 
   getBaseInfo = (id) => {
-      axios.get(API.GET_CUSTOMER_BASE(id))
+      ajax.Get(API.GET_CUSTOMER_BASE(id))
       .then((res) => {
           this.setState({
               ...this.state,
@@ -69,16 +70,16 @@ class BasicInfo extends Component {
     })
   }
 
-  x(next) {
+  // x(next) {
     // console.log(this.props);
     // console.log(next);
-  }
+  // }
 
   render() {
     const { customerInfoBeEdit } = this.props;
     const { step, mode, currentId } = this.props.currentCustomerInfo;
     const { eachCustomerInfo, edited } = this.state;
-
+    
     const modal = {
       visible: this.state.modalVisible,
       hide: this.modalHide
@@ -87,8 +88,8 @@ class BasicInfo extends Component {
     const basicInfoProps = {
       mode: mode,
       customerInfoBeEdit: customerInfoBeEdit,
-      currentId: currentId,
-      eachCustomerInfo: this.state.eachCustomerInfo
+      currentId: eachCustomerInfo.id,
+      eachCustomerInfo: eachCustomerInfo
     }
 
     const maintainRecordProps = {
