@@ -57,6 +57,7 @@ const FormItem = Form.Item;
               >
 
                 {getFieldDecorator('director', {
+                  // initialValue:this.props.roleName ,
                   onChange: this.inputChange
                 })(
                   <Input placeholder="请填写网格负责人"/>

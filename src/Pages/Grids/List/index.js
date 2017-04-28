@@ -32,6 +32,7 @@ export default class GridsList extends Component {
           }}
           rolePermission={this.rolePermission.bind(this,id,mode)}
           addUser={this.addUser.bind(this)}
+          ajaxFaFun = {this.ajaxFaFun}
         />
       )
   }

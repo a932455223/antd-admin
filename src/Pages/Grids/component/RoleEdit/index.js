@@ -14,7 +14,27 @@ class RoleEditF extends Component {
     area : ""
   }
   inputChange = ()=> {
+    // const id = this.props.id;
+    // const { getFieldsValue} = this.props.form;
+    // const FieldsValue = getFieldsValue();
+    // console.log(FieldsValue);
+    // ajax.Put(API.PUT_API_AREA(id),FieldsValue)
+    // .then(res => {
+    //   console.log("put. ok")
+    // })
 
+  }
+
+  handleChange = () => {
+    const id = this.props.id;
+    const { getFieldsValue} = this.props.form;
+    const FieldsValue = getFieldsValue();
+    console.log(FieldsValue);   
+    ajax.Put(API.PUT_API_AREA(id),FieldsValue)
+    .then(() => {
+      console.log("put. ok");
+      // this.props.ajaxFaFun()
+    })
   }
 
   componentWillMount() {
@@ -198,7 +218,7 @@ class RoleEditF extends Component {
             <Col span={24} >
               <Col span={4}>
               </Col>
-              <Button type="primary" >保存</Button>
+              <Button type="primary" onClick={this.handleChange}>保存</Button>
             </Col>
           </Row>
         

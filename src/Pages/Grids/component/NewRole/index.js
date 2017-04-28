@@ -45,7 +45,7 @@ class NewRole extends Component {
     const {getFieldDecorator} = this.props.form;
     const formItemLayout = {
       labelCol: {
-        span: 5
+        span: 6
       },
       wrapperCol: {
         span: 16
@@ -87,7 +87,7 @@ class NewRole extends Component {
           </Form>
         </Card>
         {
-          this.state.formGroupVisible && <RolePermission ajaxFaFun={this.ajaxFaFun} roleName={this.state.roleName} onClick={this.props.close} />
+          this.state.formGroupVisible && <RolePermission ajaxFaFun={this.props.ajaxFaFun} roleName={this.state.roleName} onClick={this.props.close} />
         }
       </div>
     )

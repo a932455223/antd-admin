@@ -75,6 +75,9 @@ export default {
   //新增网格
  POST_API_AREA : "/api/area",
 
+ //编辑网格
+ PUT_API_AREA : id => `/api/area/${id}`,
+
 
   // 下拉菜单信息
   GET_COMMON_DROPDOWN: key => `/api/common/dropdown/${key}`,
