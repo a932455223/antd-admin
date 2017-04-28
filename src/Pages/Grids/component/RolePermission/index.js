@@ -25,7 +25,7 @@ const FormItem = Form.Item;
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
     return (
     	<div className="formbox" >
-        <Form>
+        <Form className="formboxsub">
         	<Row className="fristrow">
             <Col span={12} className="fristcol">
               <FormItem 
@@ -46,8 +46,9 @@ const FormItem = Form.Item;
               onClick={this.props.close}
               type="close"
               style={{fontSize:"24px",cursor:"pointer"}}
-            />
+            />   
         </Row>
+        <div className="bgrow">
           <Row>
             <Col span={12}>
               <FormItem labelCol={{span: 8}}
@@ -165,6 +166,7 @@ const FormItem = Form.Item;
               </FormItem>
             </Col>
           </Row>
+          </div>
          </Form>
          <Row className="buttonsave">
             <Col span={24} >

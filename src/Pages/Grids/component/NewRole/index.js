@@ -3,7 +3,7 @@
  */
 
 import React, {Component} from "react";
-import {Button, Card, Form, Input, Select, Tabs, Icon} from "antd";
+import {Button, Card, Form, Input, Select, Tabs, Icon,Row} from "antd";
 //============================================================
 import RolePermission from '../RolePermission';
 //================================================
@@ -61,18 +61,20 @@ class NewRole extends Component {
           type="close"
           style={{fontSize:"24px",cursor:"pointer"}}
         />
-        <Card className="new-role"
+        <div style={{clear:'both'}}></div>
+        <Card className="new-role" 
           style={{display: this.state.formGroupVisible ? 'none' : 'block'}}
           className="cardbox"
         >
-          <div className="new-role-title">
+          {/*<div className="newroletitle">
             <h3>{this.state.roleName}</h3>
             <span>
               {this.state.formGroupVisible && <Button onClick={this.save.bind(this)}>保存</Button>}
               
             </span>
-          </div>
-          <Form onSubmit={this.saveUsername} className="edit-rolename">
+          </div>     */}
+          <Row>
+          <Form onSubmit={this.saveUsername} className="editrolename">
             <FormItem
               label={<span style={{fontSize:'14px'}}>输入网格名称</span>}
               {...formItemLayout}
@@ -85,6 +87,7 @@ class NewRole extends Component {
             </FormItem>
             <Button htmlType="submit">确认新建</Button>
           </Form>
+          </Row>
         </Card>
         {
           this.state.formGroupVisible && <RolePermission ajaxFaFun={this.props.ajaxFaFun} roleName={this.state.roleName} onClick={this.props.close} />

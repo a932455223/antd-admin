@@ -33,22 +33,22 @@ class RoleEditF extends Component {
     ajax.Put(API.PUT_API_AREA(id),FieldsValue)
     .then(() => {
       console.log("put. ok");
-      // this.props.ajaxFaFun()
+      this.props.ajaxFaFun()
     })
   }
 
   componentWillMount() {
-    this.ajaxFun(this.props.id)
+    this.getGridData(this.props.id)
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.id !== this.props.id ){
-      this.ajaxFun(nextProps.id)
+      this.getGridData(nextProps.id)
     }
     
   }
 
-  ajaxFun = (id) => {
+  getGridData = (id) => {
     ajax.Get(API.GET_GRIDS_ID(id))
     .then(res => {
       console.log(res)
@@ -90,7 +90,7 @@ class RoleEditF extends Component {
         <div className="ant-form-white">
           <Row>
             <Col span={12}>
-              <FormItem labelCol={{span: 8}}
+              <FormItem  labelCol={{span: 8}}
                         wrapperCol={{span: 15}}
                         label="网格负责人"
                         className="idnumber"
