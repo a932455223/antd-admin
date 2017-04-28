@@ -25,18 +25,20 @@ export default class Branches extends Component {
     dock: {
       visible: false,
       children: null
-    }
+    },
+    refresh: false
   };
 
 
   componentWillMount() {
     axios.get(API.GET_DEPARTMENT_HIERARCHY)
       .then(res => {
-        console.log(res.data.data[0])
         this.setState({
           department: res.data.data[0]
         })
-      })
+      }).catch(err => {
+      console.log(err)
+    })
   }
 
   initTableScroll() {
@@ -67,9 +69,20 @@ export default class Branches extends Component {
     removeEventListener('resize', this.initTableScroll)
   }
 
+  componentWillReceiveProps(){
+    axios.get(API.GET_DEPARTMENT_HIERARCHY)
+      .then(res => {
+        this.setState({
+          department: res.data.data[0]
+        })
+      })
+  }
+
+
+
+
   createTree(data) {
     if (data.childDepartments && data.childDepartments.length !== 0) {
-      console.log(data.name,data.id)
       return (
         <TreeNode title={<span><Icon type="folder-open"/>{data.name}</span>} id={data.id} key={data.id}>
           {
@@ -123,7 +136,8 @@ export default class Branches extends Component {
               }
             </div>
             <Tree
-              defaultExpandAll={true}
+              defaultExpandAll="true"
+              onSelect={this.props.treeConf.onSelect}
             >
               {this.createTree(this.state.department)}
             </Tree>
@@ -147,12 +161,15 @@ export default class Branches extends Component {
               </Col>
             </div>
             <Table
+              onChange={this.props.tableConf.onChange}
               {...this.props.tableConf}
               onRowClick={(rowData) => {
                 this.props.tableConf.rowClick(rowData.id)
               }}
               rowKey={record => record.id}
               scroll={{y: 1}}
+              loading={this.props.tableConf.loading}
+              pagination={this.props.tableConf.pagination}
             />
           </Content>
         </Layout>

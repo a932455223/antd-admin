@@ -26,14 +26,14 @@ export default {
 
 
 
-  GET_CUSTOMER_BASE: id =>  `/asd/customer/${id}/base`,
+  GET_CUSTOMER_BASE: id =>  `/api/customer/${id}/base`,
   GET_JOBINFO_BASE: id =>  `/asd/jobinfo/${id}/base`,
 
   GET_COMPANY_BASE: id => `/asd/company/${id}/base`,
   GET_FINANCE_BASE: id => `/asd/finance/${id}/base`,
 
 
-  GET_STAFF_BASE: id => `/asd/staff/${id}/base`,
+  GET_STAFF_BASE: id => `/api/staff/${id}/editInfo`,
 
   GET_DEPARTMENT_BASE: id => `/asd/department/${id}/base`,
 
@@ -45,11 +45,11 @@ export default {
 
 
   // 组织机构详情列表
-  GET_DEPARTMENTS: '/asd/departments',
+  GET_DEPARTMENTS: '/api/departments',
 
 
   // 组织机构员工列表
-  GET_STAFFS: '/asd/staffs',
+  GET_STAFFS: '/api/staffs',
 
   // 用户权限管理 用户列表
   GET_USERS: '/asd/system/users',
@@ -76,6 +76,7 @@ export default {
   // 关系下拉菜单
   // GET_DROPDOWN_RELATION:'/asd/common/dropdown/list/relation',
   //工作属性下拉菜单
+
   // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory'
 
   //======================================登录相关==================================
@@ -83,3 +84,21 @@ export default {
     GET_CAPTCHA:'/api/captcha',
 }
 
+  // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory',
+
+  // 添加组织机构
+  POST_DEPARTMENT: '/api/department',
+
+    //新建组织机构  获取组织类别下拉菜单
+  GET_ADD_DEPARTMENT_CATEGORIES: '/api/department/add/dropdown/categories',
+
+
+  //新建组织机构  获取所属组织下拉菜单
+  GET_ADD_DEPARTMENT_PARENT: '/api/department/add/dropdown/parent',
+
+  // 新增员工 所属组织机构下拉菜单
+  GET_STAFF_ADD_DEPARTMENT: '/api/staff/add/departments',
+
+  // 组织机构详情
+  GET_DEPARTMENT_DETAIL: id => `/api/department/${id}`
+}

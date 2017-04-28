@@ -278,42 +278,42 @@ module.exports = {
     'message': 'company message!'
   }),
 
-  // 组织机构列表 有层级
-  'GET /api/department/hierarchy': Mock.mock({
-    "code": 200,
-    "data|1-10": {
-      "id": 1,
-      "name": '山西壶关农商总行',
-      childDepartment: [{
-        id: 2,
-        name: '大同市分行'
-      }, {
-        id: 3,
-        name: '晋中市分行'
-      }, {
-        id: 4,
-        name: '长治市分行',
-        childDepartment: [{
-          id: 5,
-          name: '壶关县分行',
-          childDepartment: [{
-            id: 6,
-            name: "龙泉镇分理处"
-          }, {
-            id: 7,
-            name: "城关镇分理处"
-          }, {
-            id: 8,
-            name: "百尺镇分理处"
-          }]
-        }, {
-          id: 9,
-          name: '长治县分行'
-        }]
-      }]
-    }
-
-  }),
+  // // 组织机构列表 有层级
+  // 'GET /api/department/hierarchy': Mock.mock({
+  //   "code": 200,
+  //   "data|1-10": {
+  //     "id": 1,
+  //     "name": '山西壶关农商总行',
+  //     childDepartment: [{
+  //       id: 2,
+  //       name: '大同市分行'
+  //     }, {
+  //       id: 3,
+  //       name: '晋中市分行'
+  //     }, {
+  //       id: 4,
+  //       name: '长治市分行',
+  //       childDepartment: [{
+  //         id: 5,
+  //         name: '壶关县分行',
+  //         childDepartment: [{
+  //           id: 6,
+  //           name: "龙泉镇分理处"
+  //         }, {
+  //           id: 7,
+  //           name: "城关镇分理处"
+  //         }, {
+  //           id: 8,
+  //           name: "百尺镇分理处"
+  //         }]
+  //       }, {
+  //         id: 9,
+  //         name: '长治县分行'
+  //       }]
+  //     }]
+  //   }
+  //
+  // }),
   // 获取产品分类 有层级
   'GET /asd/product/hierarchy': Mock.mock({
     code: 200,
@@ -453,9 +453,9 @@ module.exports = {
     }
   }),
 
-  'GET /api/common/region/parent/:id': {
-    data: 'asd'
-  },
+  // 'GET /api/common/region/parent/:id': {
+  //   data: 'asd'
+  // },
 
   // 'GET /api/common/dropdown/:param': {
   //   error: 'error'
@@ -495,13 +495,13 @@ module.exports = {
     }]
   }),
 
-  //网格列表
-  'POST /api/areas':{
-    data:'error'
-  },
+  // //网格列表
+  // 'POST /api/areas':{
+  //   data:'error'
+  // },
 
   // 新增员工
-  'POST /api/staff': 1,
+  // 'POST /api/staff': 1,
 
 
   // // 下拉信息
@@ -529,9 +529,9 @@ module.exports = {
     }],
     'message': 'finance message!'
   }),
-  'POST /api/demo': {
-    err: 'ad'
-  }
+  // 'POST /api/demo': {
+  //   err: 'ad'
+  // }
 };
 
 

@@ -21,19 +21,28 @@ const Option = Select.Option;
 class BranchesEditor extends Component {
 
   state = {
+    id: this.props.id,
     changed: false,
     department: {}
   };
 
-  componentWillMount(){
-    axios.get(API.GET_DEPARTMENT_BASE(this.props.id))
+  componentDidMount(){
+    this.getDepartmnent()
+  }
+
+  componentWillReceiveProps(nextProps){
+    this.getDepartmnent(nextProps.id)
+  }
+
+  getDepartmnent(id = this.props.id){
+    axios.get(API.GET_DEPARTMENT_DETAIL(id))
       .then( res => {
+        console.log(res);
         this.setState({
           department: res.data.data
         })
       })
   }
-
 
   closeDock() {
     console.log('bye bye');
@@ -152,7 +161,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('parentDepartment', {
                     rules: [{required: true, message: '所属组织!'}],
-                    initialValue: departmentInfo.parentDepartment
+                    initialValue: departmentInfo.parentOrg
                   })(
                     <Input/>
                   )}
@@ -211,7 +220,7 @@ class BranchesEditor extends Component {
                 客户规模：
               </Col>
               <Col span={20}>
-                30000
+                {this.state.department.customerCount}
               </Col>
             </Row>
             <Row>
@@ -219,7 +228,7 @@ class BranchesEditor extends Component {
                 存款规模：
               </Col>
               <Col span={20}>
-                ￥124819539
+                ￥{this.state.department.depositCount}
               </Col>
             </Row>
             <Row>
@@ -227,7 +236,7 @@ class BranchesEditor extends Component {
                 贷款规模：
               </Col>
               <Col span={20}>
-                ￥17840129571305310
+                ￥{this.state.department.loanCount}
               </Col>
             </Row>
           </Card>

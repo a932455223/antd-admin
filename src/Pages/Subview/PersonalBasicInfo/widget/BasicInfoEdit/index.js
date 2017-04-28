@@ -1,4 +1,5 @@
-import React,{Component} from 'react'
+import React,{Component} from 'react';
+import update from "immutability-helper";
 import {
   Row,
   Col,
@@ -16,6 +17,9 @@ import moment from 'moment';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
+import API from '../../../../../../API';
+import ajax from '../../../../../tools/POSTF';
+
 export default class BasicInfoEdit extends Component{
   state = {
     tags : [],
@@ -31,50 +35,155 @@ export default class BasicInfoEdit extends Component{
         isLeaf: false,
       }
     ],
-    withCar: false,
-    withDebt: false,
-    needLoan: false
+    dropdown: {
+      marryStatus: {
+        value: '',
+        options: []
+      },
+      houseType: {
+        value: '',
+        options: []
+      },
+      withCar: {
+        value: '',
+        options: []
+      },
+      // withDebt: {
+      //   value: '',
+      //   options: []
+      // },
+      // needLoan: {
+      //   value: '',
+      //   options: []
+      // },
+      // carPrice: {
+      //   value: '',
+      //   options: []
+      // },
+      // debtAmount: {
+      //   value: '',
+      //   options: []
+      // },
+      // loanAmount: {
+      //   value: '',
+      //   options: []
+      // },
+      // loanPurpose: {
+      //   value: '',
+      //   options: []
+      // },
+    },
+    basicInfoBeEdit: false,
+    detailsInfoBeEdit: false
   }
 
-  componentWillReceiveProps(next) {
-    this.setState({
-      tags: next.eachCustomerInfo.joiner
+  componentWillMount(){
+    const commonDropDownType = [
+      'marryStatus',
+      'houseType',
+      'withCar',
+      // 'carPrice',
+      // 'withDebt',
+      // 'debtAmount',
+      // 'needLoan',
+      // 'loanAmount',
+      // 'loanPurpose'
+    ];
+
+    commonDropDownType.map(item => {
+      ajax.Get(API.GET_COMMON_DROPDOWN(item))
+      .then((res) => {
+        let newState = update(this.state, {
+          dropdown: {
+            [item]: {
+              options: {$set: res.data.data}
+            }
+          }
+        })
+
+        this.setState(newState);
+      })
     })
   }
 
+  componentWillReceiveProps(next) {
+    if(this.props.eachCustomerInfo.id !== next.eachCustomerInfo.id) {
+      let newState = update(this.state, {
+        // withCar: {
+        //   value: {$set: next.eachCustomerInfo.withCar}
+        // },
+        // withDebt: {
+        //   value: {$set: next.eachCustomerInfo.withDebt}
+        // },
+        // needLoan: {
+        //   value: {$set: next.eachCustomerInfo.needLoan}
+        // },
+        tags: {$set: next.eachCustomerInfo.joiner}
+      })
+      this.setState(newState);
+    }
+  }
+
   inputChange = (e) => {
-    console.log('things changed');
-    // const { dispatch } = this.props;
     this.props.customerInfoBeEdit();
-    // dispatch(customerInfoBeEdit())
+    this.setState({
+      basicInfoBeEdit: true,
+      detailsInfoBeEdit: true
+    })
   }
 
   selectChange = () => {
     const { getFieldValue } = this.props.form;
     this.props.customerInfoBeEdit();
+    this.setState({
+      basicInfoBeEdit: true,
+      detailsInfoBeEdit: true
+    })
   };
 
   // with car and show its value
-  showCarValue = () => {
-    this.setState({
-      withCar: true
-    });
+  showCarValue = (carValue) => {
+    // typeof e = String
+    if(carValue === 'true') {
+      this.setState({
+        withCar: true
+      });
+    } else {
+      this.setState({
+        withCar: false
+      });
+    }
+
     this.props.customerInfoBeEdit();
   }
 
   // have debt and show the debt
-  showDebtAmount = () => {
-    this.setState({
-      withDebt: true
-    });
+  showDebtAmount = (debtAmount) => {
+    if(debtAmount === 'true') {
+      this.setState({
+        withDebt: true
+      });
+    } else {
+      this.setState({
+        withDebt: false
+      });
+    }
+
     this.props.customerInfoBeEdit();
   }
 
   // show loan need
-  showLoanNeed = () => {
-    this.setState({
-      needLoan: true
-    });
+  showLoanNeed = (loanNeed) => {
+    if(loanNeed === 'true') {
+      this.setState({
+        needLoan: true
+      });
+    } else {
+      this.setState({
+        needLoan: false
+      });
+    }
+
     this.props.customerInfoBeEdit();
   }
 
@@ -106,19 +215,17 @@ export default class BasicInfoEdit extends Component{
     });
   }
 
-  handleClose = () => {
-
-  }
+  handleClose = () => {}
 
   render() {
     const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess} = this.props;
-    console.log(eachCustomerInfo);
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
+    const { marryStatus, houseType, withCar } = this.state.dropdown;
     // console.log(getFieldsValue())
 
     const kinitialValue = function(){
       var selfkeys = [];
-      eachCustomerInfo.account && eachCustomerInfo.account.map((item ,index) => {
+      eachCustomerInfo.accounts && eachCustomerInfo.accounts.map((item ,index) => {
         selfkeys.push(`row-${index}`);
       })
       return selfkeys;
@@ -159,7 +266,7 @@ export default class BasicInfoEdit extends Component{
     getFieldDecorator('keys', { initialValue: kinitialValue() });
     const keys = getFieldValue('keys');
     const EditFormItems = () => {
-      var len = eachCustomerInfo.account && eachCustomerInfo.account.length;
+      var len = eachCustomerInfo.accounts && eachCustomerInfo.accounts.length;
       var formItemArray = keys.map((k, index) => {
         return (
           <Row key={index}>
@@ -169,11 +276,11 @@ export default class BasicInfoEdit extends Component{
                 required={false}
                 key={k}
                 {...(index===0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                className="account"
+                className="accounts"
               >
                 {getFieldDecorator(`names-${k}`, {
                   validateTrigger: ['onChange', 'onBlur'],
-                  initialValue:len > index ? eachCustomerInfo.account[index].accNumber : "",
+                  initialValue:len > index ? eachCustomerInfo.accounts[index].accountNo : "",
 
                 })(
                   <Input placeholder="填写账号信息"  />
@@ -187,7 +294,7 @@ export default class BasicInfoEdit extends Component{
               >
 
                 {getFieldDecorator(`info-${k}`, {
-                  initialValue:len > index ? eachCustomerInfo.account[index].info : "",
+                  initialValue:len > index ? eachCustomerInfo.accounts[index].remark : "",
                   onChange: this.inputChange
                 })(
                   <Input placeholder="填写备注信息"/>
@@ -435,7 +542,11 @@ export default class BasicInfoEdit extends Component{
           <Col span={24} >
             <Col span={4}>
             </Col>
-            <Button type="primary" onClick={createCustomerSuccess}>保存</Button>
+            <Button
+              type="primary"
+              onClick={createCustomerSuccess}
+              disabled={!this.state.basicInfoBeEdit}
+            >保存</Button>
           </Col>
         </Row>
       </Form>
@@ -444,23 +555,24 @@ export default class BasicInfoEdit extends Component{
       <Form id="editMyDetails" className="basicInfolist">
         <div className="personInfo">
           <Row>
-            <Col span={12} className={currentId === -1 ? "marriageCreate" : "marriageEdit"}>
+            <Col span={12} className={currentId === -1 ? "marryStatusCreate" : "marryStatusEdit"}>
               <FormItem
                 labelCol={{span: 8}}
                 wrapperCol={{span: 13}}
                 label="婚姻状况："
-                className="marriage"
+                className="marryStatus"
               >
-                {getFieldDecorator('marriage', {
-                  initialValue: eachCustomerInfo.marriage + '',
+                {getFieldDecorator('marryStatus', {
+                  initialValue: eachCustomerInfo.marryStatus + '',
                   onChange: this.selectChange
                 })(
                   <Select
                     placeholder="请选择婚姻状况"
                     getPopupContainer={() => document.getElementById('editMyDetails')}
                   >
-                    <Option value="true">已婚</Option>
-                    <Option value="false">未婚</Option>
+                    {marryStatus && marryStatus.options.map(marryItem =>
+                      <Option key={marryItem.id} value={marryItem.id + ''}>{marryItem.name}</Option>
+                    )}
                   </Select>
                 )}
               </FormItem>
@@ -510,7 +622,7 @@ export default class BasicInfoEdit extends Component{
                 className="houseType"
               >
                 {getFieldDecorator('houseType', {
-                  initialValue: eachCustomerInfo.houseType,
+                  initialValue: eachCustomerInfo.houseType + '',
                   onChange: this.selectChange
                 })(
                   <Select
@@ -520,8 +632,9 @@ export default class BasicInfoEdit extends Component{
                     filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                     getPopupContainer={() => document.getElementById('editMyDetails')}
                   >
-                    <Option value="商住">商住房</Option>
-                    <Option value="自住">普通住宅</Option>
+                    {houseType && houseType.options.map(houseTypeItem =>
+                      <Option key={houseTypeItem.id} value={houseTypeItem.id + ''}>{houseTypeItem.name}</Option>
+                    )}
                   </Select>
                 )}
               </FormItem>
@@ -544,8 +657,9 @@ export default class BasicInfoEdit extends Component{
                     placeholder="是否有车"
                     getPopupContainer={() => document.getElementById('editMyDetails')}
                   >
-                    <Option value="true">有</Option>
-                    <Option value="false">无</Option>
+                    {withCar && withCar.options.map(withCarItem =>
+                      <Option key={withCarItem.id} value={withCarItem.id + ''}>{withCarItem.name}</Option>
+                    )}
                   </Select>
                 )}
               </FormItem>
@@ -580,6 +694,7 @@ export default class BasicInfoEdit extends Component{
             }
           </Row>
 
+          {/*
           <Row>
             <Col span={12} className={currentId === -1 ? "withDebtCreate" : "withDebtEdit"}>
               <FormItem
@@ -630,7 +745,9 @@ export default class BasicInfoEdit extends Component{
               </Col>
             }
           </Row>
+          */}
 
+          {/*
           <Row>
             <Col span={12} className={currentId === -1 ? "needLoanCreate" : "needLoanEdit"}>
               <FormItem
@@ -641,7 +758,7 @@ export default class BasicInfoEdit extends Component{
               >
               {getFieldDecorator('needLoan', {
                 initialValue: eachCustomerInfo.needLoan + '',
-                onChange: this.selectChange
+                onChange: this.showLoanNeed
               })(
                 <Select
                   placeholder="是否负债"
@@ -708,21 +825,28 @@ export default class BasicInfoEdit extends Component{
               </Col>
             }
           </Row>
+          */}
         </div>
 
+        {/*
         <Row className="buttonSave">
           <Col span={24} >
             <Col span={4}>
             </Col>
-            <Button type="primary" onClick={createCustomerSuccess}>保存</Button>
+            <Button
+              type="primary"
+              onClick={createCustomerSuccess}
+              disabled={!this.state.detailsInfoBeEdit}
+            >保存</Button>
           </Col>
         </Row>
+        */}
       </Form>
     )
     let EditPersonalInfo = (
       <div>
-        {EditBasicInfo}
-        {EditDetailsInfo}
+      {EditBasicInfo}
+      {EditDetailsInfo}
       </div>
     )
 
@@ -740,7 +864,7 @@ export default class BasicInfoEdit extends Component{
       )
     })
     const ViewFormItems = () => {
-      var len = eachCustomerInfo.account && eachCustomerInfo.account.length;
+      var len = eachCustomerInfo.accounts && eachCustomerInfo.accounts.length;
       var formItemArray = keys.map((k, index) => {
         return (
           <Row key={index}>
@@ -750,16 +874,16 @@ export default class BasicInfoEdit extends Component{
                 required={false}
                 key={k}
                 {...(index===0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                className="account"
+                className="accounts"
               >
-                <span>{len > index ? eachCustomerInfo.account[index].accNumber : ""}</span>
+                <span>{len > index ? eachCustomerInfo.accounts[index].accountNo : ""}</span>
               </FormItem>
             </Col>
             <Col span={12} className="addMessage">
               <FormItem
                 wrapperCol={{span: 24}}
               >
-                <span>{len > index ? eachCustomerInfo.account[index].info : ""}</span>
+                <span>{len > index ? eachCustomerInfo.accounts[index].remark : ""}</span>
               </FormItem>
             </Col>
           </Row>
