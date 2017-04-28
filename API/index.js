@@ -78,6 +78,9 @@ export default {
  //编辑网格
  PUT_API_AREA : id => `/api/area/${id}`,
 
+ //获取网格所属机构dropdown
+ GET_ADD_DEPARTMENT : '/api/areas/add/departments',
+
 
   // 下拉菜单信息
   GET_COMMON_DROPDOWN: key => `/api/common/dropdown/${key}`,

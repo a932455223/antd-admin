@@ -55,12 +55,6 @@ class NewRole extends Component {
 
     return (
       <div className="newcreate">
-      <Icon
-          className="close"
-          onClick={this.props.close}
-          type="close"
-          style={{fontSize:"24px",cursor:"pointer"}}
-        />
         <div style={{clear:'both'}}></div>
         <Card className="new-role" 
           style={{display: this.state.formGroupVisible ? 'none' : 'block'}}
@@ -82,7 +76,7 @@ class NewRole extends Component {
               {getFieldDecorator('username', {
                 rules: [{required: true, message: '网格名称不得为空!'}],
               })(
-                <Input/>
+                <Input />
               )}
             </FormItem>
             <Button htmlType="submit">确认新建</Button>
@@ -90,7 +84,7 @@ class NewRole extends Component {
           </Row>
         </Card>
         {
-          this.state.formGroupVisible && <RolePermission ajaxFaFun={this.props.ajaxFaFun} roleName={this.state.roleName} onClick={this.props.close} />
+          this.state.formGroupVisible && <RolePermission ajaxFaFun={this.props.ajaxFaFun} roleName={this.state.roleName} close={this.props.close} />
         }
       </div>
     )

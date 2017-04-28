@@ -19,9 +19,6 @@ const FormItem = Form.Item;
 	    )
  	}
   render(){
-    // return (
-    //   <h1 onClick={this.props.mode === 'edit' ? this.props.backRoleEdit : this.props.close}>角色权限分配</h1>
-    // )
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
     return (
     	<div className="formbox" >

@@ -2,17 +2,20 @@
  * Created by jufei on 2017/4/25.
  */
 import React, {Component} from "react";
-import {Button, Card, Input, Table , Row, Col, Form, Icon} from "antd";
+import {Button, Card, Input, Table , Row, Col, Form, Icon, Select} from "antd";
 //=====================================================================
 import './less/roleEdit.less';
 import API from "../../../../../API";
 import ajax from '../../../../tools/POSTF'
 import update from 'immutability-helper'
 const FormItem = Form.Item;
+const Option = Select.Option;
+
 
 class RoleEditF extends Component {
   state ={
-    area : ""
+    area : "",
+    orgNameDropDown : ""
   }
   inputChange = (e)=> {
     // const id = this.props.id;
@@ -32,7 +35,7 @@ class RoleEditF extends Component {
     const { getFieldsValue} = this.props.form;
     const FieldsValue = getFieldsValue();
     console.log(FieldsValue);
-    ajax.Put(API.PUT_API_AREA(id),FieldsValue)
+    ajax.Put(API.PUT_API_AREA(id),this.state.area)
     .then(() => {
       console.log("put. ok");
       this.props.ajaxFaFun()
@@ -40,7 +43,8 @@ class RoleEditF extends Component {
   }
 
   componentWillMount() {
-    this.getGridData(this.props.id)
+    this.getGridData(this.props.id);
+    this.getorgNameDropDown();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -60,10 +64,20 @@ class RoleEditF extends Component {
     })
    }
 
+   getorgNameDropDown = () => {
+    ajax.Get(API.GET_ADD_DEPARTMENT)
+    .then(res => {
+      console.log(res,1212)
+      this.setState({
+        orgNameDropDown : res.data.data
+      })
+    })
+   }
+
   render() {
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
     const {id } = this.props;
-    const {area} = this.state;
+    const {area, orgNameDropDown} = this.state;
     return (
       <div className="formbox">
         <Form>
@@ -99,12 +113,22 @@ class RoleEditF extends Component {
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="所属机构">
-                {getFieldDecorator('orgName', {
-                  initialValue:area.orgName ,
-                  onChange: this.inputChange
-                })(
-                  <Input />
-                )}
+                <Input name="orgName" value={area.orgName} onChange={this.inputChange} />  
+              {/* <Select
+                    showSearch
+                    name="orgName"
+                    defaultValue={area.orgName}
+                    onChange={this.inputChange}
+                    optionFilterProp="children"
+                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    getPopupContainer={() => document.getElementById('editMyBase')}
+                  > 
+                    { orgNameDropDown && orgNameDropDown.map((item, index) => {
+                      return (
+                        <Option value={item.name} key={item.name}>{item.name}</Option>
+                        )
+                    })}
+                  </Select>   */}
               </FormItem>
             </Col>
           </Row>
@@ -115,13 +139,7 @@ class RoleEditF extends Component {
                         label="网格类型"
                         className="idnumber"
               >
-
-                {getFieldDecorator('gridType', {
-                  initialValue:area.gridType ,
-                  onChange: this.inputChange
-                })(
-                  <Input />
-                )}
+                  <Input name="gridType" value={area.gridType} onChange={this.inputChange} />
               </FormItem>
             </Col>
 
@@ -129,12 +147,7 @@ class RoleEditF extends Component {
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="网格面积">
-                {getFieldDecorator('landArea', {
-                  initialValue:area.landArea ,
-                  onChange: this.inputChange
-                })(
-                  <Input />
-                )}
+                  <Input name="landArea" value={area.landArea} onChange={this.inputChange} />
               </FormItem>
             </Col>
           </Row>
@@ -145,13 +158,7 @@ class RoleEditF extends Component {
                         label="网格户口数"
                         className="idnumber"
               >
-
-                {getFieldDecorator('residenceCount', {
-                  initialValue:area.residenceCount ,
-                  onChange: this.inputChange
-                })(
-                  <Input />
-                )}
+                  <Input name="residenceCount" value={area.residenceCount} onChange={this.inputChange} />
               </FormItem>
             </Col>
 
@@ -159,12 +166,7 @@ class RoleEditF extends Component {
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="网格人口数">
-                {getFieldDecorator('personCount', {
-                  initialValue:area.personCount ,
-                  onChange: this.inputChange
-                })(
-                  <Input />
-                )}
+                  <Input name="personCount" value={area.personCount} onChange={this.inputChange} />
               </FormItem>
             </Col>
           </Row>
@@ -175,13 +177,7 @@ class RoleEditF extends Component {
                         label="网格地址"
                         className="idnumber"
               >
-
-                {getFieldDecorator('address', {
-                  initialValue:area.address ,
-                  onChange: this.inputChange
-                })(
-                  <Input />
-                )}
+                  <Input name="address" value={area.address} onChange={this.inputChange} />
               </FormItem>
             </Col>
           </Row>
@@ -192,13 +188,7 @@ class RoleEditF extends Component {
                         label="网格描述"
                         className="idnumber"
               >
-
-                {getFieldDecorator('remark', {
-                  initialValue:area.remark,
-                  onChange: this.inputChange
-                })(
-                  <Input />
-                )}
+                  <Input name="remark" value={area.remark} onChange={this.inputChange}/>
               </FormItem>
             </Col>
           </Row>
