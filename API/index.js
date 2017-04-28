@@ -125,6 +125,6 @@ export default {
   GET_STAFF_LEADERS: '/api/staff/leaders',
 
   // 员工业务信息
-  GET_STAFF_BUSSINESS_INFO: id => `/staff/${id}/businessInfo`
+  GET_STAFF_BUSSINESS_INFO: id => `/api/staff/${id}/businessInfo`
 }
 

@@ -9,16 +9,16 @@ import React, {Component} from "react";
 import {Button, Card, Col, DatePicker, Form, Input, Row, Select} from "antd";
 import classNames from "classnames";
 import axios from "axios";
-import moment from 'moment';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import moment from "moment";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 //=================================================
-import {getDropdown} from '../../../../redux/actions/dropdownActions.js';
+import {getDropdown} from "../../../../redux/actions/dropdownActions.js";
 //==================================================
 import "./less/staffEditor.less";
-import * as actionTypes from '../../../../redux/actionTypes/dropdownActions';
+import * as actionTypes from "../../../../redux/actionTypes/dropdownActions";
 import API from "../../../../../API";
-import ajax from '../../../../tools/POSTF.js';
+import ajax from "../../../../tools/POSTF.js";
 
 
 const FormItem = Form.Item;
@@ -28,16 +28,16 @@ const Option = Select.Option;
 class BranchesEditor extends Component {
   constructor(props) {
     super(props);
-    this.actions = bindActionCreators(Object.assign({},{
+    this.actions = bindActionCreators(Object.assign({}, {
       getDropdown
-    }),props.dispatch)
+    }), props.dispatch)
   }
 
   state = {
     staff: {
       base: {}
     },
-    parentDepartmentDropDown:[],
+    parentDepartmentDropDown: [],
     changed: false,
     leadersDropdown: [],
     business: {
@@ -52,15 +52,15 @@ class BranchesEditor extends Component {
   componentWillMount() {
     this.getStaffInfo();
     ajax.Get(API.GET_STAFF_LEADERS)
-      .then( res => {
+      .then(res => {
         this.setState({
           leadersDropdown: res.data.data
         })
       })
-    this.actions.getDropdown('gender',actionTypes.GENDER);
-    this.actions.getDropdown('jobStatus',actionTypes.JOB_STATUS);
-    this.actions.getDropdown('bankJobCategory',actionTypes.JOB_CATEGORY);
-    this.actions.getDropdown('educationLevel',actionTypes.EDUCATION_LEVEL);
+    this.actions.getDropdown('gender', actionTypes.GENDER);
+    this.actions.getDropdown('jobStatus', actionTypes.JOB_STATUS);
+    this.actions.getDropdown('bankJobCategory', actionTypes.JOB_CATEGORY);
+    this.actions.getDropdown('educationLevel', actionTypes.EDUCATION_LEVEL);
     // this.actions.getDropdown('gender',actionTypes.GENDER);
     console.log(this.props.id);
     ajax.Get(API.GET_STAFF_BUSSINESS_INFO(this.props.id))
@@ -71,21 +71,20 @@ class BranchesEditor extends Component {
       })
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     this.getStaffInfo(nextProps.id)
 
     ajax.Get(API.GET_STAFF_ADD_DEPARTMENT)
-      .then( res => {
+      .then(res => {
         this.setState({
           parentDepartmentDropDown: res.data.data
         })
       });
 
 
-
   }
 
-  getStaffInfo(id = this.props.id){
+  getStaffInfo(id = this.props.id) {
     axios.get(API.GET_STAFF_BASE(id))
       .then(res => {
         this.setState({
@@ -97,13 +96,12 @@ class BranchesEditor extends Component {
   }
 
 
-
   closeDock() {
     console.log('bye bye');
     this.props.closeDock()
   }
 
-  hasChange(){
+  hasChange() {
     this.setState({
       changed: true
     })
@@ -113,42 +111,36 @@ class BranchesEditor extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log(values)
+        console.log('start',values)
         const data = ((values) => {
-          // for(let key in values){
-          //   if(typeof values[key] === 'object' && Object.keys(values[key]).includes('_d')){
-          //     values[key] = values[key].format('YYYY-MM-DD');
-          //   }else if(values[key] === undefined){
-          //     delete values[key]
-          //   }
-          // }
-          for(let key in values){
-            if(values[key] === undefined || values[key] === null){
+          for (let key in values) {
+            // if (typeof values[key] === 'object' && Object.keys(values[key]).includes('_d')) {
+            //   values[key] = values[key].format('YYYY-MM-DD');
+            // }
+            if (values[key] === undefined || values[key] === null) {
               delete values[key]
             }
           }
-          console.log('dataaaaaaaa',values);
+
+          console.log('dataaaaaaaa', values);
           return values;
         })(values);
 
-        ajax.Put(API.PUT_STAFF(this.props.id),data)
-          .then( res => {
+        ajax.Put(API.PUT_STAFF(this.props.id), data)
+          .then(res => {
             alert(res.data.message);
-            if(res.message === 'OK'){
+            if (res.message === 'OK') {
               this.props.refresh()
             }
           })
-      }else {
+      } else {
       }
     });
   };
 
 
-
   render() {
-
     const {getFieldDecorator} = this.props.form;
-
     const formItemLayout = {
       labelCol: {
         span: 6
@@ -160,7 +152,7 @@ class BranchesEditor extends Component {
 
     const baseInfo = this.state.staff.base;
     const {business} = this.state;
-    console.log('business',business);
+
 
     return (
       <Form onSubmit={this.handleSubmit.bind(this)}>
@@ -230,13 +222,13 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('gender', {
                     rules: [{required: false, message: '请选择性别!'}],
-                    initialValue: this.props.dropdown.gender.id
+                    initialValue: baseInfo.gender && baseInfo.gender.id
                   })(
                     <Select
                       getPopupContainer={ () => document.getElementById('staffEditor')}
                     >
                       {
-                        this.props.dropdown.gender.map( item => {
+                        this.props.dropdown.gender.map(item => {
                           return <Option value={item.id} key={item.id}>{item.name}</Option>
                         })
                       }
@@ -281,7 +273,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('birth', {
                     rules: [{required: false, message: '请选择出生日期!'}],
-                    // initialValue: moment(baseInfo.birth)
+                    initialValue: baseInfo.birth && moment(baseInfo.birth)
                   })(
                     <DatePicker
                       getCalendarContainer={ () => document.getElementById('staffEditor')}
@@ -329,7 +321,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('address', {
                     rules: [{required: false, message: '请填写家庭住址!'}],
-                    // initialValue: baseInfo.address
+                    initialValue: baseInfo.address
                   })(
                     <Input/>
                   )}
@@ -386,7 +378,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('departments', {
                     rules: [{required: false, message: '所属机构!'}],
-                    // initialValue: baseInfo.certificateNo
+                    initialValue: baseInfo.departments && baseInfo.departments.id
                   })(
                     <Select
                       mode="multiple"
@@ -398,7 +390,7 @@ class BranchesEditor extends Component {
                       }}
                     >
                       {
-                        this.state.parentDepartmentDropDown.map( item => {
+                        this.state.parentDepartmentDropDown.map(item => {
                           return <Option value={item.id} key={item.id}>{item.name}</Option>
                         })
                       }
@@ -413,7 +405,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('inductionTime', {
                     rules: [{required: false, message: '所属机构!'}],
-                    // initialValue: baseInfo.inductionTime
+                    initialValue: baseInfo.inductionTime && moment(baseInfo.inductionTime)
                   })(
                     <DatePicker
                       onChange={() => {
@@ -447,7 +439,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('jobStatus', {
                     rules: [{required: false, message: '任职状态!'}],
-                    // initialValue: baseInfo.jobStatus && baseInfo.jobStatus.id
+                    initialValue: baseInfo.jobStatus && baseInfo.jobStatus.id
                   })(
                     <Select
                       getPopupContainer={ () => document.getElementById('staffEditor')}
@@ -458,7 +450,7 @@ class BranchesEditor extends Component {
                       }}
                     >
                       {
-                        this.props.dropdown.jobStatus.map( item => {
+                        this.props.dropdown.jobStatus.map(item => {
                           return <Option id={item.id} key={item.id}>{item.name}</Option>
                         })
                       }
@@ -475,6 +467,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('jobCategory', {
                     rules: [{required: false, message: '职位!'}],
+                    initialValue: baseInfo.jobCategory && baseInfo.jobCategory.id
                   })(
                     <Select
                       getPopupContainer={ () => document.getElementById('staffEditor')}
@@ -485,7 +478,7 @@ class BranchesEditor extends Component {
                       }}
                     >
                       {
-                        this.props.dropdown.jobCategory.map( item => {
+                        this.props.dropdown.jobCategory.map(item => {
                           return <Option value={item.id} key={item.id}>{item.name}</Option>
                         })
                       }
@@ -500,7 +493,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('leader', {
                     rules: [{required: false, message: '所属机构!'}],
-                    // initialValue: baseInfo.leader
+                    initialValue: baseInfo.leader && baseInfo.leader.id
                   })(
                     <Select
                       getPopupContainer={ () => document.getElementById('staffEditor')}
@@ -511,7 +504,7 @@ class BranchesEditor extends Component {
                       }}
                     >
                       {
-                        this.state.leadersDropdown.map( item => {
+                        this.state.leadersDropdown.map(item => {
                           return <Option value={item.id} key={item.id}>{item.name}</Option>
                         })
                       }
@@ -546,7 +539,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('educationLevel', {
                     rules: [{required: false, message: '学历!'}],
-                    // initialValue: baseInfo.certificateNo
+                    initialValue: baseInfo.educationLevel && baseInfo.educationLevel.id
                   })(
                     <Select
                       getPopupContainer={ () => document.getElementById('staffEditor')}
@@ -557,7 +550,7 @@ class BranchesEditor extends Component {
                       }}
                     >
                       {
-                        this.props.dropdown.educationLevel.map( item => {
+                        this.props.dropdown.educationLevel.map(item => {
                           return <Option value={item.id} key={item.id}>{item.name}</Option>
                         })
                       }
@@ -572,7 +565,7 @@ class BranchesEditor extends Component {
                 >
                   {getFieldDecorator('major', {
                     rules: [{required: false, message: '专业!'}],
-                    // initialValue: baseInfo.inductionTime
+                    initialValue: baseInfo.major
                   })(
                     <Input/>
                   )}
@@ -586,8 +579,8 @@ class BranchesEditor extends Component {
                   {...formItemLayout}
                 >
                   {getFieldDecorator('school', {
-                    rules: [{required: false, message: '所属机构!'}],
-                    // initialValue: baseInfo.certificateNo
+                    rules: [{required: false, message: '毕业院校!'}],
+                    initialValue: baseInfo.school
                   })(
                     <Input/>
                   )}
@@ -599,10 +592,10 @@ class BranchesEditor extends Component {
                   {...formItemLayout}
                 >
                   {getFieldDecorator('graduationTime', {
-                    rules: [{required: false, message: '专业!'}],
-                    // initialValue: baseInfo.inductionTime
+                    rules: [{required: false, message: '毕业时间!'}],
+                    initialValue: baseInfo.graduationTime && moment(baseInfo.graduationTime)
                   })(
-                    <DatePicker  onChange={() => {
+                    <DatePicker onChange={() => {
                       this.setState({
                         changed: true
                       })
@@ -612,7 +605,6 @@ class BranchesEditor extends Component {
               </Col>
             </Row>
           </Card>
-
 
 
           {/*操作日志*/}

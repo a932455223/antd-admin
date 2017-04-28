@@ -3,7 +3,8 @@ import { Form, Input, Button, Row, Col, Icon, notification, Card} from 'antd'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { login } from '../../redux/actions/auth'
-import axios from 'axios';
+// import axios from 'axios';
+import ajax from '../../tools/POSTF.js';
 import api from './../../../API'
 const FormItem = Form.Item
 import './login.less'
@@ -77,12 +78,12 @@ class Login extends React.Component {
     //   loading: true
     // });
     // const data = this.props.form.getFieldsValue()
-    
+
     // this.props.login(data.user, data.password)
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        axios.post(api.POST_LOGIN,values)
+        ajax.Post(api.POST_LOGIN,values)
         .then((data)=>{
             console.log(data)
         })
@@ -116,7 +117,7 @@ class Login extends React.Component {
       // </Row>
 
       <div className="loginpagebc">
-        {this.state.captchaImg} 
+        {this.state.captchaImg}
         <div onClick={this.getCaptcha}>点击更换</div>
         <div className="loginpage">
         <div className="img"></div>
@@ -160,7 +161,7 @@ class Login extends React.Component {
                   </Col>
                 </Row>
               </FormItem>
-              <FormItem 
+              <FormItem
                className="button">
                 <Button type="primary" htmlType="submit"  size="large">登陆</Button>
               </FormItem>

@@ -149,7 +149,6 @@ export default class Branches extends Component {
     this.setState({
       parentId: parseInt(selectKey[0])
     }, () => {
-      console.log(this.state);
       this.getStaffs()
     })
   }
@@ -159,7 +158,6 @@ export default class Branches extends Component {
   }
 
   render() {
-    console.log(this.state.table.dataSource)
 
     const columns = [
       {

@@ -96,6 +96,7 @@ const proxyHost = '115.159.58.21:8099';
 
 app.use('/', proxy(proxyHost, {
   filter: (req, res) => {
+    console.log(req.headers.cookie)
     return req.url.indexOf('/api/') === 0;
   },
   proxyReqPathResolver: (req, res) => {
