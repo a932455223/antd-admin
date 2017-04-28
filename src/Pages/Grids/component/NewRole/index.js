@@ -3,7 +3,7 @@
  */
 
 import React, {Component} from "react";
-import {Button, Card, Form, Input, Select, Tabs} from "antd";
+import {Button, Card, Form, Input, Select, Tabs, Icon} from "antd";
 //============================================================
 import RolePermission from '../RolePermission';
 //================================================
@@ -45,37 +45,40 @@ class NewRole extends Component {
     const {getFieldDecorator} = this.props.form;
     const formItemLayout = {
       labelCol: {
-        span: 6
+        span: 5
       },
       wrapperCol: {
-        span: 14
+        span: 16
       }
     };
 
 
     return (
-      <div className="new-role">
-        <div className="new-role-title">
-          <h3>{this.state.roleName}</h3>
-          <span>
-            {this.state.formGroupVisible && <Button onClick={this.save.bind(this)}>保存</Button>}
-            <Button
-              className="close"
-              onClick={this.props.close}
-            >&times;</Button>
-          </span>
-        </div>
-
-        <Card
+      <div className="newcreate">
+      <Icon
+          className="close"
+          onClick={this.props.close}
+          type="close"
+          style={{fontSize:"24px",cursor:"pointer"}}
+        />
+        <Card className="new-role"
           style={{display: this.state.formGroupVisible ? 'none' : 'block'}}
+          className="cardbox"
         >
+          <div className="new-role-title">
+            <h3>{this.state.roleName}</h3>
+            <span>
+              {this.state.formGroupVisible && <Button onClick={this.save.bind(this)}>保存</Button>}
+              
+            </span>
+          </div>
           <Form onSubmit={this.saveUsername} className="edit-rolename">
             <FormItem
-              label={<span>用户姓名</span>}
+              label={<span style={{fontSize:'14px'}}>输入网格名称</span>}
               {...formItemLayout}
             >
               {getFieldDecorator('username', {
-                rules: [{required: true, message: '用户姓名不得为空!'}],
+                rules: [{required: true, message: '网格名称不得为空!'}],
               })(
                 <Input/>
               )}
@@ -84,7 +87,7 @@ class NewRole extends Component {
           </Form>
         </Card>
         {
-          this.state.formGroupVisible && <RolePermission/>
+          this.state.formGroupVisible && <RolePermission ajaxFaFun={this.ajaxFaFun} roleName={this.state.roleName} onClick={this.props.close} />
         }
       </div>
     )

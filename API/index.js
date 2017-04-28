@@ -69,6 +69,11 @@ export default {
   //网格列表
   POST_GRIDS_AREAS : '/api/areas',
 
+  //网格列表id
+  GET_GRIDS_ID : id => `/api/area/${id}`,
+
+  //新增网格
+ POST_API_AREA : "/api/area",
 
 
   // 下拉菜单信息

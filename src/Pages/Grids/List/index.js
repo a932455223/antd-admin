@@ -12,11 +12,14 @@ import NewRole from '../component/NewRole';
 import "../style/rolesStyle.less";
 import API from "../../../../API";
 import ajax from '../../../tools/POSTF'
-
+import update from 'immutability-helper'
 export default class GridsList extends Component {
   constructor(props) {
     super(props);
-    this.roleEdit = (id,mode) => {
+  
+  }
+
+  roleEdit = (id,mode) => {
       return (
         <RoleEdit
           id={id}
@@ -31,7 +34,6 @@ export default class GridsList extends Component {
           addUser={this.addUser.bind(this)}
         />
       )
-    }
   }
 
   state = {
@@ -43,12 +45,18 @@ export default class GridsList extends Component {
       visible: false,
       children: null
     }
+
   };
 
   componentWillMount() {
+   this.ajaxFaFun();
+  }
+
+  ajaxFaFun =() => {
+    this.setState(update(this.state,{table:{loading:{$set:true}}}))
+    console.log('refresh.')
     ajax.Post(API.POST_GRIDS_AREAS,{areaType:72})
     .then( res => {
-      console.dir(res)
       this.setState({
         table: {
             dataSource: res.data.data.areas,
@@ -56,7 +64,6 @@ export default class GridsList extends Component {
         }
       })
     })
-
   }
 
   // 新增角色
@@ -64,10 +71,14 @@ export default class GridsList extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: <NewRole close={this.close.bind(this)}/>
+        children: <NewRole close={this.close.bind(this)}  ajaxFaFun={this.ajaxFaFun}/>
       }
     });
   }
+
+
+    
+
 
   // 表格点击事件
   rowClick(rowData) {
@@ -77,6 +88,7 @@ export default class GridsList extends Component {
         children: this.roleEdit(rowData.id,'edit')
       }
     });
+   
   }
 
   close() {
@@ -145,14 +157,14 @@ export default class GridsList extends Component {
       },
       {
         title: '所属机构',
-        dataIndex: 'orgId',
-        key: 'orgId',
+        dataIndex: 'orgName',
+        key: 'orgName',
         width: '12%'
       },
       {
         title: '网格类型',
-        dataIndex: 'customCount',
-        key: 'customCount',
+        dataIndex: 'gridType',
+        key: 'gridType',
         width: '10%'
       },
       {

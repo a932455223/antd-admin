@@ -2,34 +2,72 @@
  * Created by jufei on 2017/4/25.
  */
 import React, {Component} from "react";
-import {Button, Card, Input, Table , Row, Col, Form} from "antd";
+import {Button, Card, Input, Table , Row, Col, Form, Icon} from "antd";
 //=====================================================================
 import './less/roleEdit.less';
+import API from "../../../../../API";
+import ajax from '../../../../tools/POSTF'
 const FormItem = Form.Item;
 
 class RoleEditF extends Component {
+  state ={
+    area : ""
+  }
   inputChange = ()=> {
 
   }
 
   componentWillMount() {
-    console.log('RoleEditF will mount')
+    this.ajaxFun(this.props.id)
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('RoleEditF will receive')
+    if (nextProps.id !== this.props.id ){
+      this.ajaxFun(nextProps.id)
+    }
     
   }
+
+  ajaxFun = (id) => {
+    ajax.Get(API.GET_GRIDS_ID(id))
+    .then(res => {
+      console.log(res)
+      this.setState({
+        area : res.data.data
+      })
+    })
+   }
+  
   render() {
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
-    const {id} = this.props;
+    const {id } = this.props;
+    const {area} = this.state;
     return (
       <div className="formbox">
-        <div className="role-edit-title">
-          <div className="title">山西银行{this.props.id}</div>
-          <Button className="close" onClick={this.props.close}>&times;</Button>
-        </div>
         <Form>
+          <Row className="fristrow">
+            <Col span={12} className="fristcol">
+              <FormItem 
+                        wrapperCol={{span: 20}}
+                        className="idnumber"
+              >
+
+                {getFieldDecorator('name', {
+                  initialValue:area.name ,
+                  onChange: this.inputChange
+                })(
+                  <Input />
+                )}
+              </FormItem>
+            </Col>
+          <Icon
+              className="close"
+              onClick={this.props.close}
+              type="close"
+              style={{fontSize:"24px",cursor:"pointer"}}
+            />
+        </Row>
+        <div className="ant-form-white">
           <Row>
             <Col span={12}>
               <FormItem labelCol={{span: 8}}
@@ -38,8 +76,8 @@ class RoleEditF extends Component {
                         className="idnumber"
               >
 
-                {getFieldDecorator('certificate', {
-                  initialValue:"",
+                {getFieldDecorator('director', {
+                  initialValue:area.director,
                   onChange: this.inputChange
                 })(
                   <Input />
@@ -51,8 +89,8 @@ class RoleEditF extends Component {
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="所属机构">
-                {getFieldDecorator('birth', {
-                  initialValue:"" ,
+                {getFieldDecorator('orgName', {
+                  initialValue:area.orgName ,
                   onChange: this.inputChange
                 })(
                   <Input />
@@ -68,8 +106,8 @@ class RoleEditF extends Component {
                         className="idnumber"
               >
 
-                {getFieldDecorator('certificate', {
-                  initialValue:"" ,
+                {getFieldDecorator('gridType', {
+                  initialValue:area.gridType ,
                   onChange: this.inputChange
                 })(
                   <Input />
@@ -81,8 +119,8 @@ class RoleEditF extends Component {
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="网格面积">
-                {getFieldDecorator('birth', {
-                  initialValue:"" ,
+                {getFieldDecorator('landArea', {
+                  initialValue:area.landArea ,
                   onChange: this.inputChange
                 })(
                   <Input />
@@ -98,8 +136,8 @@ class RoleEditF extends Component {
                         className="idnumber"
               >
 
-                {getFieldDecorator('certificate', {
-                  initialValue:"" ,
+                {getFieldDecorator('residenceCount', {
+                  initialValue:area.residenceCount ,
                   onChange: this.inputChange
                 })(
                   <Input />
@@ -111,8 +149,8 @@ class RoleEditF extends Component {
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="网格人口数">
-                {getFieldDecorator('birth', {
-                  initialValue:"" ,
+                {getFieldDecorator('personCount', {
+                  initialValue:area.personCount ,
                   onChange: this.inputChange
                 })(
                   <Input />
@@ -128,8 +166,8 @@ class RoleEditF extends Component {
                         className="idnumber"
               >
 
-                {getFieldDecorator('certificate', {
-                  initialValue:"" ,
+                {getFieldDecorator('address', {
+                  initialValue:area.address ,
                   onChange: this.inputChange
                 })(
                   <Input />
@@ -145,8 +183,8 @@ class RoleEditF extends Component {
                         className="idnumber"
               >
 
-                {getFieldDecorator('decorate', {
-                  initialValue:"",
+                {getFieldDecorator('remark', {
+                  initialValue:area.remark,
                   onChange: this.inputChange
                 })(
                   <Input />
@@ -154,6 +192,8 @@ class RoleEditF extends Component {
               </FormItem>
             </Col>
           </Row>
+          </div>
+          </Form>
           <Row className="buttonsave">
             <Col span={24} >
               <Col span={4}>
@@ -161,9 +201,10 @@ class RoleEditF extends Component {
               <Button type="primary" >保存</Button>
             </Col>
           </Row>
-        </Form>
+        
         <div>
            <h1>操作记录</h1>
+           <div className="recordbox">
            <div className="history">
               <div><span>王祎</span><span> 修改了客户手机号 </span></div>
               <p>2017/03/10 13:40:23</p>
@@ -183,6 +224,7 @@ class RoleEditF extends Component {
             <div className="history">
               <div><span>王祎</span><span> 修改了客户手机号 </span></div>
               <p>2017/03/10 13:40:23</p>
+            </div>
             </div>
         </div>
       </div>
