@@ -8,7 +8,7 @@
 
 import React, {Component} from "react";
 import axios from "axios";
-import {Button,Icon} from "antd";
+import {Button, Icon} from "antd";
 //========================================
 import StaffDetail from "../component/StaffDetail";
 import StaffEditor from "../component/StaffEditor";
@@ -16,28 +16,48 @@ import BranchesDetail from "../component/BranchesDetail";
 //==================================================
 import Content from "../component/Content";
 import API from "../../../../API";
+import ajax from "../../../tools/POSTF.js";
 
 
 export default class Branches extends Component {
   state = {
+    parentId: 1,
     dock: {
       visible: false,
       // children: <StaffEditor id="id" closeDock={this.closeDock.bind(this)}/>
     },
     table: {
-      dataSource: []
+      dataSource: [],
+      loading: true,
+      total: 100
     }
   };
 
   componentWillMount() {
-    axios.get(API.GET_STAFFS)
-      .then(res => {
-        this.setState({
-          table: {
-            dataSource: res.data.data.staffs
-          }
-        });
+   this.getStaffs()
+  }
+
+  // 获取组织列表 表格 数据
+  getStaffs(index = 1) {
+    this.setState({
+      table: {
+        ...this.state.table,
+        loading: true
+      }
+    });
+    ajax.Get(API.GET_STAFFS, {
+      index: index,
+      departmentId: this.state.parentId,
+      size: 20
+    }).then(res => {
+      this.setState({
+        table: {
+          ...this.state.table,
+          dataSource: res.data.data.staffs,
+          loading: false
+        }
       })
+    })
   }
 
   closeDock() {
@@ -52,7 +72,13 @@ export default class Branches extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: <StaffDetail closeDock={this.closeDock.bind(this)} id={id}/>
+        children:(
+          <StaffDetail
+            closeDock={this.closeDock.bind(this)}
+            refresh={this.refresh.bind(this)}
+            id={id}
+          />
+        )
       }
     })
   }
@@ -62,14 +88,26 @@ export default class Branches extends Component {
       this.setState({
         dock: {
           visible: true,
-          children: <BranchesDetail id="-1" closeDock={this.closeDock.bind(this)}/>
+          children: (
+            <BranchesDetail
+              id="-1"
+              closeDock={this.closeDock.bind(this)}
+              refresh={this.refresh.bind(this)}
+            />
+          )
         }
       })
     } else {
       this.setState({
         dock: {
           visible: true,
-          children: <StaffDetail id="-1" closeDock={this.closeDock.bind(this)}/>
+          children: (
+            <StaffDetail
+              id="-1"
+              closeDock={this.closeDock.bind(this)}
+              refresh={this.refresh.bind(this)}
+            />
+          )
         }
       })
     }
@@ -79,14 +117,41 @@ export default class Branches extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: <StaffEditor id={id} closeDock={this.closeDock.bind(this)}/>
+        children:(
+          <StaffEditor
+            id={id}
+            closeDock={this.closeDock.bind(this)}
+            refresh={this.refresh.bind(this)}
+          />
+        )
       }
     })
   }
 
+  // 表格分页点击事件
+  tableChange(pagination) {
+    console.log(pagination);
+    this.getStaffs(pagination.current)
+  }
 
+  // 树 选择事件
+  treeChange(selectKey) {
+    console.log(selectKey);
+    this.setState({
+      parentId: parseInt(selectKey[0])
+    }, () => {
+      console.log(this.state);
+      this.getStaffs()
+    })
+  }
+
+  refresh(){
+    this.getStaffs()
+  }
 
   render() {
+    console.log(this.state.table.dataSource)
+
     const columns = [
       {
         title: '员工姓名',
@@ -127,7 +192,7 @@ export default class Branches extends Component {
           return (
             <div>
               <Button className="edit">
-                <Icon type="edit" />
+                <Icon type="edit"/>
                 {text}
               </Button>
             </div>
@@ -150,9 +215,19 @@ export default class Branches extends Component {
     const tableConf = {
       columns: columns,
       dataSource: this.state.table.dataSource,
-      rowClick: this.tableClick.bind(this)
+      rowClick: this.tableClick.bind(this),
+      onChange: this.tableChange.bind(this),
+      loading: this.state.table.loading,
+      pagination: {
+        total: this.state.table.count,
+        pageSize: 20
+      }
     };
 
-    return <Content actionBarConf={actionBarConf} dockConf={dockConf} tableConf={tableConf}/>
+    const treeConf = {
+      onSelect: this.treeChange.bind(this)
+    };
+
+    return <Content actionBarConf={actionBarConf} dockConf={dockConf} tableConf={tableConf} treeConf={treeConf}/>
   }
 }

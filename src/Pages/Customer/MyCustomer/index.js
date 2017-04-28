@@ -84,8 +84,15 @@ export default class MyCustomer extends Component {
               let permission = customers.map((cstm) => ({customerId:cstm.id,permission:['system:update']}))
               axios.post(API.POST_CUSTOMER_PRIVILEGE,permission)
                   .then((rest) => {
+                      // 将id 抽取到数据上一级
+                      const privilegeArray = rest.data.data.reduce((pre,next) => {
+                        pre[next.id] = next;
+                        return pre;
+                      },[]);
+
+                      // 扁平化数据内部结构
                       this.setState({
-                          privilege: rest.data.data.map(item => ({[item.id]:item.permissions}))
+                          privilege: privilegeArray.map(item => item.permissions)
                       })
                   })
           })
@@ -99,8 +106,7 @@ export default class MyCustomer extends Component {
 
 
   render() {
-    const { customers, pagination, loading, columnsLists,privilege } = this.state;
-
+    const { customers, pagination, loading, columnsLists, privilege } = this.state;
     // 渲染 Table表格的表头数据
     const columns = [
       {
