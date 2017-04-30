@@ -1,24 +1,47 @@
 .formbox{
-  padding:24px;
+  padding:24px 0;
+  .idnumber{
+    margin-bottom: 8px;
+  }
+
+  .fristcol input{
+    font-size: 20px;
+    background: #f4f4f6;
+    border:1px solid #f4f4f6;
+    outline: none;
+    float: left;
+    &:hover {
+      border: 1px solid #f4f4f6;
+    }
+    &:focus{
+      border: 1px solid #f4f4f6;
+      box-shadow: 0 0 0 0;
+    };
+  }
+  i{
+    float: right;
+    padding-right: 10px;
+  }
   .role-edit-title{
     display: flex;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     justify-content: space-between;
     .title{
-      font-size: 16px;
+      font-size: 18px;
       color: #000;
     }
     .close{
-      font-size: 18px;
+      font-size: 24px;
       border:none;
       background: none;
     }
   }
-  .ant-form{
+  .ant-form-white{
+    border:1px solid #d4d4d5;
     background: #fff;
-    border-radius: 4px;
-    box-shadow:  0 1px 3px 0 #dfdfe1;
-    padding: 20px;
+    border-radius: 4px 4px 0 0;
+    padding: 20px 20px 0 20px;
+    border-bottom: none;
     label{
       font-size: 14px;
       color: #999;
@@ -33,4 +56,37 @@
     }
   ;
   }
+  .buttonsave{
+    background: #fafafa;
+    padding: 12px 40px;
+    box-shadow:  0 1px 3px 0 #dfdfe1;
+    border:1px solid #d4d4d5;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+  }
+
+  h1{
+        margin-top: 18px;
+        font-size: 20px;
+        font-weight: normal;
+        line-height: 40px;
+        color: #000;
+        margin-left: 7px;
+  }
+
+  .recordbox{
+    background: #fff;
+    box-shadow:  0 1px 3px 0 #dfdfe1;
+    border:1px solid #d4d4d5;
+    border-radius: 4px;
+    padding: 20px;
+
+  .history{
+    width: 100%;
+    padding:15px 4px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px #eaeaea dotted;
+  }
+}
 }

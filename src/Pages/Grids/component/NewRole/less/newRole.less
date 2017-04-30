@@ -1,42 +1,40 @@
-.new-role{
-  .new-role-title{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 16px;
-    margin-bottom: 16px;
-
-    >span{
-      display: flex;
-
-      button{
-        line-height: 26px;
-        margin-left: 15px;
-      }
-
-      button.close{
-        border: 0;
-        background: #F4F4F6;
-        font-size: 22px;
-        font-weight: 600;
-
-        &:hover,&:focus,&:active{
-          color: #f00;
-        }
-      }
+.newcreate{
+  background: #f4f4f6;
+  padding-top: 24px;
+  .ant-card-body{
+  	padding: 0;
+  }
+  i{
+    float: right;
+    margin-right: 10px;
+  }
+  .cardbox{
+  	margin-top: 15px;
+    background: #f4f4f6;
+    border:none;
+    background: #fff;
+  	padding: 30px 20px;
+  	border-radius: 4px;
+  	border: 1px solid #d4d4d5;
+    &:hover{
+    	box-shadow: 0 0 0 0;
     }
   }
-
-  .edit-rolename{
-    display: flex;
-    justify-content: space-between;
-
-    .ant-form-item{
-      margin-bottom: 0;
-    }
-
-    > div{
-      flex: auto;
-    }
+  .editrolename{
+  	display: flex;
+  	justify-content: space-between;
+  	.ant-row{
+  		margin-bottom: 0;
+  		width: 80%;
+  	}
   }
+  .formbox{
+  	.bgrow{
+  		background: #fff;
+	  	padding: 20px;
+	  	border:1px solid #d4d4d5;
+	  	border-radius: 4px 4px 0 0;	
+  	}	
+  }
+
 }

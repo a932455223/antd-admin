@@ -9,6 +9,7 @@ import React, {Component} from "react";
 import {Button, Card, Col, Form, Input, Row, Select} from "antd";
 import classNames from 'classnames'
 import axios from 'axios';
+import ajax from '../../../../tools/POSTF.js';
 //=================================================
 import "./less/branchesEditor.less";
 import API from '../../../../../API';
@@ -23,15 +24,28 @@ class BranchesEditor extends Component {
   state = {
     id: this.props.id,
     changed: false,
-    department: {}
+    department: {},
+    categoryDropdown: [],
+    parentDepartmentDropDown: []
   };
+
+  componentWillMount(){
+    ajax.Get(API.GET_ADD_DEPARTMENT_CATEGORIES)
+      .then(res => {
+        console.log('=======================',res);
+        this.setState({
+          categoryDropdown: res.data.data
+        })
+      })
+  }
 
   componentDidMount(){
     this.getDepartmnent()
   }
 
   componentWillReceiveProps(nextProps){
-    this.getDepartmnent(nextProps.id)
+    this.getDepartmnent(nextProps.id);
+
   }
 
   getDepartmnent(id = this.props.id){
@@ -60,12 +74,25 @@ class BranchesEditor extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        for(let k in values){
+          if(values[k] === undefined || values[k] === null){
+            delete values[k]
+          }
+        }
         console.log('Received values of form: ', values);
+        ajax.Put(API.PUT_DEPARTMENT(this.props.id),values)
+          .then( res => {
+            alert(res.data.message);
+            if(res.data.message === 'OK'){
+              this.props.refresh()
+            }
+          })
       }
     });
   };
 
   render() {
+    console.log(this.state)
     const {getFieldDecorator} = this.props.form;
 
     const formItemLayout = {
@@ -78,6 +105,7 @@ class BranchesEditor extends Component {
     };
 
     const departmentInfo = this.state.department;
+    console.log('departmentInfo',departmentInfo);
 
     return (
       <Form onSubmit={this.handleSubmit.bind(this)}>
@@ -132,36 +160,8 @@ class BranchesEditor extends Component {
                   {...formItemLayout}
                 >
                   {getFieldDecorator('name', {
-                    rules: [{required: true, message: '组织名称!'}],
+                    rules: [{required: false, message: '组织名称!'}],
                     initialValue: departmentInfo.name
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={12}>
-                <FormItem
-                  label={<span>组织类别</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('category', {
-                    rules: [{required: true, message: '组织类别!'}],
-                    initialValue: departmentInfo.category
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <FormItem
-                  label={<span>所属组织</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('parentDepartment', {
-                    rules: [{required: true, message: '所属组织!'}],
-                    initialValue: departmentInfo.parentOrg
                   })(
                     <Input/>
                   )}
@@ -173,10 +173,61 @@ class BranchesEditor extends Component {
                   {...formItemLayout}
                 >
                   {getFieldDecorator('director', {
-                    rules: [{required: true, message: '负责人!'}],
+                    rules: [{required: false, message: '负责人!'}],
                     initialValue: departmentInfo.director
                   })(
                     <Input/>
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12}>
+                <FormItem
+                  label={<span>组织类别</span>}
+                  {...formItemLayout}
+                >
+                  {getFieldDecorator('category', {
+                    rules: [{required: false, message: '组织类别!'}],
+                    // initialValue: departmentInfo.category
+                  })(
+                    <Select
+                      onSelect={(value) => {
+                        ajax.Get(API.GET_ADD_DEPARTMENT_PARENT, {
+                          level: value
+                        }).then(res => {
+                          this.setState({
+                            parentDepartmentDropDown: res.data.data
+                          })
+                        })
+                      }}
+                    >
+                      {
+                        this.state.categoryDropdown.map((option, index) => {
+                          return <Option value={option.id} key={ option.id + option.name}>{option.name}</Option>
+                        })
+                      }
+                    </Select>
+                  )}
+                </FormItem>
+
+              </Col>
+              <Col span={12}>
+                <FormItem
+                  label={<span>所属组织</span>}
+                  {...formItemLayout}
+                >
+                  {getFieldDecorator('parentDepartment', {
+                    rules: [{required: false, message: '所属组织!'}],
+                    // initialValue: departmentInfo.parentOrg
+                  })(
+                    <Select>
+                      {
+                        this.state.parentDepartmentDropDown.map(item => {
+                          return <Option value={item.id} key={item.name + item.id}>{item.name}</Option>
+                        })
+                      }
+                    </Select>
                   )}
                 </FormItem>
               </Col>
@@ -188,7 +239,7 @@ class BranchesEditor extends Component {
                   {...formItemLayout}
                 >
                   {getFieldDecorator('phone', {
-                    rules: [{required: true, message: '联系电话!'}],
+                    rules: [{required: false, message: '联系电话!'}],
                     initialValue: departmentInfo.phone
                   })(
                     <Input/>
@@ -203,7 +254,7 @@ class BranchesEditor extends Component {
                   {...formItemLayout}
                 >
                   {getFieldDecorator('address', {
-                    rules: [{required: true, message: '地址!'}],
+                    rules: [{required: false, message: '地址!'}],
                     initialValue: departmentInfo.address
                   })(
                     <Input/>

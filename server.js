@@ -35,7 +35,7 @@ var port = isDeveloping ? 8888 : 9999;
 
 app.use('/', express.static(path.join(__dirname + '/static')));
 
-app.use(cookieParser());
+// app.use(cookieParser());
 // app.use(bodyParser.urlencoded());
 // app.use(bodyParser.json());
 
@@ -96,6 +96,7 @@ const proxyHost = '115.159.58.21:8099';
 
 app.use('/', proxy(proxyHost, {
   filter: (req, res) => {
+    console.log(req.headers.cookie)
     return req.url.indexOf('/api/') === 0;
   },
   proxyReqPathResolver: (req, res) => {

@@ -3,9 +3,10 @@ import { Form, Input, Button, Row, Col, Icon, notification, Card} from 'antd'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { login } from '../../redux/actions/auth'
-
+// import axios from 'axios';
+import ajax from '../../tools/POSTF.js';
+import api from './../../../API'
 const FormItem = Form.Item
-
 import './login.less'
 
 const propTypes = {
@@ -23,10 +24,13 @@ class Login extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      loading: false
+      loading: false,
+      captchaImg:"",
     }
   }
-
+   componentWillMount(){
+     this.getCaptcha();
+   }
   componentWillReceiveProps(nextProps) {
     const error = nextProps.loginErrors;
     const isLoggingIn = nextProps.loggingIn;
@@ -54,20 +58,44 @@ class Login extends React.Component {
       this.context.router.replace('/home');
     }
   }
+  getCaptcha=()=>{
+    // axios.get(api.GET_CAPTCHA)
+    // .then((data) => {
+    //   if (data.status === 200 && data.statusText === 'OK' && data.data) {
+    //     this.setState({
+    //       captchaImg: data
+    //     })
+    //   }
+    // })
+    this.setState({
+      captchaImg:<img src={[api.GET_CAPTCHA]} />
+    })
 
+  }
   handleSubmit (e) {
     e.preventDefault();
-    this.setState({
-      loading: true
+    // this.setState({
+    //   loading: true
+    // });
+    // const data = this.props.form.getFieldsValue()
+
+    // this.props.login(data.user, data.password)
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+        ajax.Post(api.POST_LOGIN,values)
+        .then((data)=>{
+            console.log(data)
+        })
+      }
     });
-    const data = this.props.form.getFieldsValue()
-    this.props.login(data.user, data.password)
+
   }
 
   render () {
     const { getFieldDecorator } = this.props.form
     return (
-      // <Row className="login-row" type="flex" justify="space-around" align="middle">
+      // <Row className="login-row" type="flex" jeustify="space-around" align="middle">
       //   <Col span="8">
       //     <Form layout="horizontal" onSubmit={this.handleSubmit.bind(this)} className="login-form">
       //       <h2 className="logo"><span>logo</span></h2>
@@ -89,16 +117,18 @@ class Login extends React.Component {
       // </Row>
 
       <div className="loginpagebc">
+        {this.state.captchaImg}
+        <div onClick={this.getCaptcha}>点击更换</div>
         <div className="loginpage">
         <div className="img"></div>
         <div className="loginbox">
           <h1>登陆精准营销系统</h1>
-          <Form>
+          <Form onSubmit={(e)=>{this.handleSubmit(e)}}>
               <FormItem labelCol={{span: 24}}
                         wrapperCol={{span: 24}}
                         label="用户名"
                         className="user">
-                {getFieldDecorator('uesr', {
+                {getFieldDecorator('phone', {
                   onChange: this.dateChange
                 })(
                   <Input  placeholder="请输入用户名" size="large"/>
@@ -131,9 +161,9 @@ class Login extends React.Component {
                   </Col>
                 </Row>
               </FormItem>
-              <FormItem 
+              <FormItem
                className="button">
-                <Button type="primary" htmlType="submit" size="large">登陆</Button>
+                <Button type="primary" htmlType="submit"  size="large">登陆</Button>
               </FormItem>
           </Form>
         </div>

@@ -16,10 +16,6 @@ import update from 'immutability-helper';
 import { connect } from 'react-redux';
 const FormItem = Form.Item;
 const Option = Select.Option;
-class editFamily extends Component{
-
-}
-
 class FamilyInfo extends Component {
   state = {
     familyRelation: [],//家庭成员关系
@@ -139,13 +135,31 @@ class FamilyInfo extends Component {
     },0)
     this.toggleAdd();
   }
+  //删除信息
+  deleteFamilyValue(index){
+    let nezwState=update(
+      this.state,{
+        editFamilyList:{$splice:[[index,1]] },
+        familyList:{$splice:[[index,1]] },
+      }
+    )
+    this.setState(newState)
+  }
   componentWillMount() {
     //家庭成员
     this.getFamilyInfo(this.props.currentId);
     //成员关系下拉菜单,api接口
-    // axios.get(api.GET_DROPDOWN('familyRelation'))
+    axios.get(api.GET_COMMON_DROPDOWN('familyRelation'))
+    .then((data) => {
+      if (data.status === 200 && data.statusText === 'OK' && data.data) {
+        let familyRelation = data.data.data;
+        this.setState({
+          familyRelation: familyRelation
+        })
+      }
+    })
+    // axios.get(api.GET_DROPDOWN_RELATION)
     // .then((data) => {
-    //   console.log(data,"ddasdasdf")
     //   if (data.status === 200 && data.statusText === 'OK' && data.data) {
     //     let familyRelation = data.data.data;
     //     console.log(familyRelation)
@@ -154,42 +168,51 @@ class FamilyInfo extends Component {
     //     })
     //   }
     // })
-    axios.get(api.GET_DROPDOWN_RELATION)
+    //工作属性下拉菜单,api接口
+    axios.get(api.GET_COMMON_DROPDOWN('commonJobCategory'))
+    .then((data) => {
+      if (data.status === 200 && data.statusText === 'OK' && data.data) {
+        let commonJobCategory = data.data.data;
+        this.setState({
+          commonJobCategory: commonJobCategory
+        })
+      }
+    })
+  //   axios.get(api.GET_DROPDOWN_JOB)
+  //   .then((data) => {
+  //     if (data.status === 200 && data.statusText === 'OK' && data.data) {
+  //       let commonJobCategory = data.data.data;
+  //       console.log(commonJobCategory)
+  //       this.setState({
+  //         commonJobCategory: commonJobCategory
+  //       })
+  //     }
+  //   })
+  }
+  componentWillReceiveProps(newProps){
+    this.getFamilyInfo(newProps.currentId);
+     this.getFamilyInfo(this.props.currentId);
+    //成员关系下拉菜单,api接口
+    axios.get(api.GET_COMMON_DROPDOWN('familyRelation'))
     .then((data) => {
       if (data.status === 200 && data.statusText === 'OK' && data.data) {
         let familyRelation = data.data.data;
-        console.log(familyRelation)
         this.setState({
           familyRelation: familyRelation
         })
       }
     })
-    //工作属性下拉菜单,api接口
-    // axios.get(api.GET_DROPDOWN('commonJobCategory'))
-    // .then((data) => {
-    //   if (data.status === 200 && data.statusText === 'OK' && data.data) {
-    //     let commonJobCategory = data.data.data;
-    //     console.log(commonJobCategory)
-    //     this.setState({
-    //       commonJobCategory: commonJobCategory
-    //     })
-    //   }
-    // })
-    axios.get(api.GET_DROPDOWN_JOB)
+    axios.get(api.GET_COMMON_DROPDOWN('commonJobCategory'))
     .then((data) => {
       if (data.status === 200 && data.statusText === 'OK' && data.data) {
         let commonJobCategory = data.data.data;
-        console.log(commonJobCategory)
         this.setState({
           commonJobCategory: commonJobCategory
         })
       }
     })
   }
-  componentWillReceiveProps(newProps){
-    console.log('FamilyInfo will receive props.')
-    this.getFamilyInfo(newProps.currentId)
-  }
+  
   constructor(props) {
     super(props);
   };
@@ -314,7 +337,7 @@ class FamilyInfo extends Component {
                     extra={
                       <div>
                         <a href="javascript:void(0);" onClick={(e) => { this.toggleEdit(i) }}><i className="iconfont icon-edit"></i>编辑</a>
-                        <a href="#"><i className="iconfont icon-delete"></i>删除</a>
+                        <a href="#" onClick={()=>{this.deleteFamilyValue(i)}}><i className="iconfont icon-delete"></i>删除</a>
                       </div>
                     }
                   >

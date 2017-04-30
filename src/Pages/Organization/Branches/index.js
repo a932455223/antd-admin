@@ -25,7 +25,9 @@ export default class Branches extends Component {
     table: {
       dataSource: [],
       loading: true,
-      total: 100
+      total: 100,
+      size: 15,
+      index: 1
     },
   };
 
@@ -35,7 +37,7 @@ export default class Branches extends Component {
   }
 
   // 获取组织列表 表格 数据
-  getDepartments(index = 1){
+  getDepartments(){
     this.setState({
       table: {
         ...this.state.table,
@@ -43,12 +45,11 @@ export default class Branches extends Component {
       }
     });
     ajax.Post(API.GET_DEPARTMENTS, {
-      index: index,
+      index: this.state.table.index,
       parentId: this.state.parentId,
-      size: 20
+      size: this.state.table.size
     })
       .then(res => {
-        console.log(res.data.data.departments);
         this.setState({
           table: {
             ...this.state.table,
@@ -107,8 +108,13 @@ export default class Branches extends Component {
 
   // 表格分页点击事件
   tableChange(pagination) {
-    console.log(pagination)
-    this.getDepartments(pagination.current)
+    console.log(pagination);
+    this.setState({
+      table: {
+        ...this.state.table,
+        index: pagination.current
+      }
+    },this.getDepartments)
   }
 
   // 树 选择事件
@@ -201,7 +207,8 @@ export default class Branches extends Component {
       loading: this.state.table.loading,
       pagination: {
         total: this.state.table.count,
-        pageSize: 20
+        pageSize: this.state.table.size,
+        current: this.state.table.index
       }
     };
 

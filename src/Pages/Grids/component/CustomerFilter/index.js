@@ -94,7 +94,7 @@ class CustomerFilter extends Component {
             style={{float: 'right'}}
             onClick={this.props.newClick}
           >
-            新增{this.props.mode === 'role' ? "角色" : '用户' }
+            新建
           </Button>
       	</div>
 
