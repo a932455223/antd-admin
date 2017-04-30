@@ -90,7 +90,7 @@ export default class Branches extends Component {
               return this.createTree(childrenDepartment)
             })
           }
-        </TreeNode>  )
+        </TreeNode>)
     } else {
       return <TreeNode title={<span><Icon type="folder-open"/>{data.name}</span>} id={data.id} key={data.id}/>
     }
@@ -116,6 +116,13 @@ export default class Branches extends Component {
       zIndex: 100
     };
 
+    let tree = Object.keys(this.state.department).length > 0 ? (<Tree
+      defaultExpandedKeys={[this.state.department.id.toString()]}
+      onSelect={this.props.treeConf.onSelect}
+    >
+      {this.createTree(this.state.department)}
+    </Tree>)
+      : null
 
     return (
       <div className="organization">
@@ -135,12 +142,7 @@ export default class Branches extends Component {
               )
               }
             </div>
-            <Tree
-              defaultExpandAll="true"
-              onSelect={this.props.treeConf.onSelect}
-            >
-              {this.createTree(this.state.department)}
-            </Tree>
+            {tree}
           </Sider>
           <Content id="content">
             <div className="content-title" id="contentTitle">

@@ -62,7 +62,6 @@ class BranchesEditor extends Component {
     this.actions.getDropdown('bankJobCategory', actionTypes.JOB_CATEGORY);
     this.actions.getDropdown('educationLevel', actionTypes.EDUCATION_LEVEL);
     // this.actions.getDropdown('gender',actionTypes.GENDER);
-    console.log(this.props.id);
     ajax.Get(API.GET_STAFF_BUSSINESS_INFO(this.props.id))
       .then(res => {
         this.setState({
@@ -152,13 +151,28 @@ class BranchesEditor extends Component {
 
     const baseInfo = this.state.staff.base;
     const {business} = this.state;
-
+    const Gender = getFieldDecorator('gender', {
+      rules: [{required: false, message: '请选择性别!'}],
+      initialValue: baseInfo.gender && baseInfo.gender.id
+    })(
+      <Select
+        placeholder="请选择性别"
+        getPopupContainer={ () => document.getElementById('staffEditor')}
+      >
+        {
+          this.props.dropdown.gender.map(item => {
+            return <Option value={item.id} key={item.id}>{item.name}</Option>
+          })
+        }
+      </Select>
+        :
+        null
+    );
 
     return (
       <Form onSubmit={this.handleSubmit.bind(this)}>
         <div
           className={classNames('dock-container', 'staffEditor')}
-          onKeyDown={this.hasChange.bind(this)}
           id="staffEditor"
         >
           <Row className="dock-title">
@@ -220,20 +234,7 @@ class BranchesEditor extends Component {
                   label={<span>性别</span>}
                   {...formItemLayout}
                 >
-                  {getFieldDecorator('gender', {
-                    rules: [{required: false, message: '请选择性别!'}],
-                    initialValue: baseInfo.gender && baseInfo.gender.id
-                  })(
-                    <Select
-                      getPopupContainer={ () => document.getElementById('staffEditor')}
-                    >
-                      {
-                        this.props.dropdown.gender.map(item => {
-                          return <Option value={item.id} key={item.id}>{item.name}</Option>
-                        })
-                      }
-                    </Select>
-                  )}
+                  {Gender}
                 </FormItem>
               </Col>
             </Row>
