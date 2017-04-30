@@ -70,6 +70,8 @@ class BasicInfo extends Component {
     })
   }
 
+  // 修改
+
   // x(next) {
     // console.log(this.props);
     // console.log(next);
@@ -77,9 +79,9 @@ class BasicInfo extends Component {
 
   render() {
     const { customerInfoBeEdit } = this.props;
-    const { step, mode, currentId } = this.props.currentCustomerInfo;
+    const { step, mode, currentId, beEdited } = this.props.currentCustomerInfo;
     const { eachCustomerInfo, edited } = this.state;
-    
+
     const modal = {
       visible: this.state.modalVisible,
       hide: this.modalHide
@@ -87,6 +89,7 @@ class BasicInfo extends Component {
 
     const basicInfoProps = {
       mode: mode,
+      beEdited: beEdited,
       customerInfoBeEdit: customerInfoBeEdit,
       currentId: eachCustomerInfo.id,
       eachCustomerInfo: eachCustomerInfo

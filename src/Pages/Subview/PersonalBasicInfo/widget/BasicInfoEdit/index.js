@@ -30,7 +30,7 @@ export default class BasicInfoEdit extends Component{
         isLeaf: false,
       },
       {
-        value: 'Jiangsu',
+        value: '江苏南通',
         label: '江苏',
         isLeaf: false,
       }
@@ -48,46 +48,50 @@ export default class BasicInfoEdit extends Component{
         value: '',
         options: []
       },
-      // withDebt: {
-      //   value: '',
-      //   options: []
-      // },
-      // needLoan: {
-      //   value: '',
-      //   options: []
-      // },
-      // carPrice: {
-      //   value: '',
-      //   options: []
-      // },
-      // debtAmount: {
-      //   value: '',
-      //   options: []
-      // },
-      // loanAmount: {
-      //   value: '',
-      //   options: []
-      // },
-      // loanPurpose: {
-      //   value: '',
-      //   options: []
-      // },
+      carPrice: {
+        value: '',
+        options: []
+      },
+      withDebt: {
+        value: '',
+        options: []
+      },
+      debtAmount: {
+        value: '',
+        options: []
+      },
+      needLoan: {
+        value: '',
+        options: []
+      },
+      loanAmount: {
+        value: '',
+        options: []
+      },
+      loanPurpose: {
+        value: '',
+        options: []
+      },
     },
-    basicInfoBeEdit: false,
-    detailsInfoBeEdit: false
+    InfoBeEdited: {
+      basicInfoBeEdit: false,
+      detailsInfoBeEdit: false
+    },
+    certificate: ''
   }
 
   componentWillMount(){
+    console.log('key will mount');
     const commonDropDownType = [
       'marryStatus',
       'houseType',
       'withCar',
-      // 'carPrice',
-      // 'withDebt',
-      // 'debtAmount',
-      // 'needLoan',
-      // 'loanAmount',
-      // 'loanPurpose'
+      'carPrice',
+      'withDebt',
+      'debtAmount',
+      'needLoan',
+      'loanAmount',
+      'loanPurpose'
     ];
 
     commonDropDownType.map(item => {
@@ -107,38 +111,112 @@ export default class BasicInfoEdit extends Component{
   }
 
   componentWillReceiveProps(next) {
+    console.log('will recieve props');
     if(this.props.eachCustomerInfo.id !== next.eachCustomerInfo.id) {
+      const commonDropDownType = [
+        'marryStatus',
+        'houseType',
+        'withCar',
+        'carPrice',
+        'withDebt',
+        'debtAmount',
+        'needLoan',
+        'loanAmount',
+        'loanPurpose'
+      ];
+
+
+      commonDropDownType.map(item => {
+        let newState = update(this.state, {
+          dropdown: {
+            [item]: {
+              value: {$set: next.eachCustomerInfo[item]}
+            },
+          }
+        })
+
+        // 将 newState赋值给原先的 state
+        return this.state = newState;
+
+        if(item === commonDropDownType[commonDropDownType.length - 1]) {
+          this.setState(newState);
+        }
+      })
+
       let newState = update(this.state, {
-        // withCar: {
-        //   value: {$set: next.eachCustomerInfo.withCar}
-        // },
-        // withDebt: {
-        //   value: {$set: next.eachCustomerInfo.withDebt}
-        // },
-        // needLoan: {
-        //   value: {$set: next.eachCustomerInfo.needLoan}
-        // },
         tags: {$set: next.eachCustomerInfo.joiner}
       })
-      this.setState(newState);
+
+      this.setState(newState)
     }
+
+    // 重置 InfoBeEdited
+    if(!next.beEdited) {
+      this.resetInfoBeEdited();
+    }
+  };
+
+  // 重置 button的状态
+  resetInfoBeEdited = () => {
+    let newState = update(this.state, {
+      InfoBeEdited: {
+        $set: {
+          basicInfoBeEdit: false,
+          detailsInfoBeEdit: false,
+        }
+      }
+    })
+    this.setState(newState)
   }
 
-  inputChange = (e) => {
-    this.props.customerInfoBeEdit();
-    this.setState({
-      basicInfoBeEdit: true,
-      detailsInfoBeEdit: true
+  // basic 输入框内容被修改了
+  inputBasicInfoChange = (e) => {
+    if(!this.props.beEdited) {
+      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    }
+    let newState = update(this.state, {
+      InfoBeEdited: {
+        basicInfoBeEdit: {$set: true}
+      }
     })
+    this.setState(newState)
   }
 
-  selectChange = () => {
-    const { getFieldValue } = this.props.form;
-    this.props.customerInfoBeEdit();
-    this.setState({
-      basicInfoBeEdit: true,
-      detailsInfoBeEdit: true
+  // basic 选择框内容被修改了
+  selectBasicInfoChange = () => {
+    if(!this.props.beEdited) {
+      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    }
+    let newState = update(this.state, {
+      InfoBeEdited: {
+        basicInfoBeEdit: {$set: true}
+      }
     })
+    this.setState(newState)
+  };
+
+  inputDetailsInfoChange = (e) => {
+    if(!this.props.beEdited) {
+      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    }
+    let newState = update(this.state, {
+      InfoBeEdited: {
+        detailsInfoBeEdit: {$set: true}
+      }
+    })
+    this.setState(newState)
+  }
+
+  selectDetailsInfoChange = () => {
+    if(!this.props.beEdited) {
+      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    }
+    let newState = update(this.state, {
+      InfoBeEdited: {
+        detailsInfoBeEdit: {$set: true}
+      }
+    })
+    this.setState(newState)
   };
 
   // with car and show its value
@@ -218,10 +296,11 @@ export default class BasicInfoEdit extends Component{
   handleClose = () => {}
 
   render() {
-    const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess} = this.props;
-    const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
-    const { marryStatus, houseType, withCar } = this.state.dropdown;
-    // console.log(getFieldsValue())
+    const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess, beEdited} = this.props;
+    const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue} = this.props.form;
+    const { marryStatus, houseType, withCar, carPrice, withDebt, debtAmount, needLoan, loanAmount, loanPurpose } = this.state.dropdown;
+
+    // console.log(beEdited);
 
     const kinitialValue = function(){
       var selfkeys = [];
@@ -257,8 +336,8 @@ export default class BasicInfoEdit extends Component{
     */
     const EditParticipate = this.state.tags && this.state.tags.map((item,index) => {
       return (
-        <Tag key={item} closable="true" afterClose={() => this.handleClose(item)}>
-          {item}
+        <Tag key={item.id} closable="true" afterClose={() => this.handleClose(item)}>
+          {item.name}
         </Tag>
       )
     })
@@ -281,7 +360,7 @@ export default class BasicInfoEdit extends Component{
                 {getFieldDecorator(`names-${k}`, {
                   validateTrigger: ['onChange', 'onBlur'],
                   initialValue:len > index ? eachCustomerInfo.accounts[index].accountNo : "",
-
+                  onChange: this.inputBasicInfoChange
                 })(
                   <Input placeholder="填写账号信息"  />
                 )}
@@ -295,7 +374,7 @@ export default class BasicInfoEdit extends Component{
 
                 {getFieldDecorator(`info-${k}`, {
                   initialValue:len > index ? eachCustomerInfo.accounts[index].remark : "",
-                  onChange: this.inputChange
+                  onChange: this.inputBasicInfoChange
                 })(
                   <Input placeholder="填写备注信息"/>
                 )}
@@ -321,7 +400,7 @@ export default class BasicInfoEdit extends Component{
       return formItemArray;
     }
 
-    const EditBasicInfo = (
+    const EditBasicInfo = () => (
       <Form id="editMyBase" className="basicInfolist">
         <Row className={currentId === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
           <Col span={7}>
@@ -334,7 +413,7 @@ export default class BasicInfoEdit extends Component{
                   message: '选择所属机构!'
                 }],
                 initialValue: eachCustomerInfo.department,
-                onChange: this.inputChange
+                onChange: this.inputBasicInfoChange
               })(
                 <Select
                   showSearch
@@ -357,7 +436,7 @@ export default class BasicInfoEdit extends Component{
                       label="客户经理">
               {getFieldDecorator('manager', {
                 initialValue: eachCustomerInfo.manager,
-                onChange: this.inputChange
+                onChange: this.inputDetailsInfoChange
               })(
                 <Select
                   showSearch
@@ -380,7 +459,7 @@ export default class BasicInfoEdit extends Component{
                       label="所属网格">
               {getFieldDecorator('grid', {
                 initialValue: eachCustomerInfo.grid,
-                onChange: this.inputChange
+                onChange: this.inputDetailsInfoChange
               })(
                 <Select
                   showSearch
@@ -406,8 +485,8 @@ export default class BasicInfoEdit extends Component{
                         wrapperCol={{span: 15}}
                         label="手机号：">
                 {getFieldDecorator('phone', {
-                  initialValue: eachCustomerInfo.wechat,
-                  onChange: this.inputChange,
+                  initialValue: eachCustomerInfo.phone,
+                  onChange: this.inputBasicInfoChange,
                   rules: [{
                     required: true,
                     message: '请填写手机号'
@@ -424,7 +503,7 @@ export default class BasicInfoEdit extends Component{
                         label="微信号：">
                 {getFieldDecorator('wechat', {
                   initialValue: eachCustomerInfo.wechat,
-                  onChange: this.inputChange
+                  onChange: this.inputBasicInfoChange
                 })(
                   <Input />
                 )}
@@ -442,7 +521,7 @@ export default class BasicInfoEdit extends Component{
 
                 {getFieldDecorator('certificate', {
                   initialValue: eachCustomerInfo.certificate,
-                  onChange: this.inputChange
+                  onChange: this.inputBasicInfoChange
                 })(
                   <Input />
                 )}
@@ -455,7 +534,7 @@ export default class BasicInfoEdit extends Component{
                         label="生日：">
                 {getFieldDecorator('birth', {
                   initialValue: moment(eachCustomerInfo.birth, dateFormat),
-                  onChange: this.selectChange
+                  onChange: this.selectBasicInfoChange
                 })(
                   <DatePicker
                     format={dateFormat}
@@ -475,8 +554,8 @@ export default class BasicInfoEdit extends Component{
                 className="origin"
               >
                 {getFieldDecorator('origin', {
-                  initialValue: ['上海'],
-                  onChange: this.selectChange
+                  initialValue: [eachCustomerInfo.origin],
+                  onChange: this.selectBasicInfoChange
                 })(
                   <Cascader
                     placeholder="请选择客户籍贯"
@@ -496,7 +575,7 @@ export default class BasicInfoEdit extends Component{
               >
                 {getFieldDecorator('age', {
                   initialValue: eachCustomerInfo.age,
-                  onChange: this.inputChange
+                  onChange: this.inputBasicInfoChange
                 })(
                   <InputNumber placeholder="客户年龄"/>
                 )}
@@ -514,7 +593,7 @@ export default class BasicInfoEdit extends Component{
               >
                 {getFieldDecorator('address', {
                   initialValue: eachCustomerInfo.address,
-                  onChange: this.inputChange
+                  onChange: this.inputBasicInfoChange
                 })(
                   <Input placeholder="请输入家庭住址"/>
                 )}
@@ -545,7 +624,7 @@ export default class BasicInfoEdit extends Component{
             <Button
               type="primary"
               onClick={createCustomerSuccess}
-              disabled={!this.state.basicInfoBeEdit}
+              disabled={!this.state.InfoBeEdited.basicInfoBeEdit}
             >保存</Button>
           </Col>
         </Row>
@@ -563,8 +642,8 @@ export default class BasicInfoEdit extends Component{
                 className="marryStatus"
               >
                 {getFieldDecorator('marryStatus', {
-                  initialValue: eachCustomerInfo.marryStatus + '',
-                  onChange: this.selectChange
+                  initialValue:  marryStatus.value + '',
+                  onChange: this.selectDetailsInfoChange
                 })(
                   <Select
                     placeholder="请选择婚姻状况"
@@ -589,7 +668,7 @@ export default class BasicInfoEdit extends Component{
               >
                 {getFieldDecorator('yearIncome', {
                   initialValue: eachCustomerInfo.yearIncome,
-                  onChange: this.inputChange
+                  onChange: this.inputDetailsInfoChange
                 })(
                   <Input placeholder="请输入年总收入"/>
                 )}
@@ -605,7 +684,7 @@ export default class BasicInfoEdit extends Component{
               >
                 {getFieldDecorator('yearExpense', {
                   initialValue: eachCustomerInfo.yearExpense,
-                  onChange: this.inputChange
+                  onChange: this.inputDetailsInfoChange
                 })(
                   <Input placeholder="请输入年总支出"/>
                 )}
@@ -622,8 +701,8 @@ export default class BasicInfoEdit extends Component{
                 className="houseType"
               >
                 {getFieldDecorator('houseType', {
-                  initialValue: eachCustomerInfo.houseType + '',
-                  onChange: this.selectChange
+                  initialValue: houseType.value + '',
+                  onChange: this.selectDetailsInfoChange
                 })(
                   <Select
                     showSearch
@@ -650,8 +729,8 @@ export default class BasicInfoEdit extends Component{
                 className="withCar"
               >
                 {getFieldDecorator('withCar', {
-                  initialValue: eachCustomerInfo.withCar + '',
-                  onChange: this.showCarValue
+                  initialValue: withCar.value + '',
+                  onChange: this.selectDetailsInfoChange
                 })(
                   <Select
                     placeholder="是否有车"
@@ -665,7 +744,7 @@ export default class BasicInfoEdit extends Component{
               </FormItem>
             </Col>
 
-            {this.state.withCar &&
+            {eachCustomerInfo.withCar === 19 &&
               <Col span={12} className={currentId === -1 ? "propertyValueCreate" : "propertyValueEdit"}>
                 <FormItem
                   labelCol={{span: 8, offset: 1}}
@@ -674,8 +753,8 @@ export default class BasicInfoEdit extends Component{
                   className="propertyValue"
                 >
                   {getFieldDecorator('propertyValue', {
-                    // initialValue: eachCustomerInfo.propertyValue,
-                    onChange: this.selectChange
+                    initialValue: carPrice.value + '',
+                    onChange: this.selectDetailsInfoChange
                   })(
                     <Select
                       showSearch
@@ -684,9 +763,9 @@ export default class BasicInfoEdit extends Component{
                       filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                       getPopupContainer={() => document.getElementById('editMyDetails')}
                     >
-                      <Option value="normal">15万</Option>
-                      <Option value="middle">15-50万</Option>
-                      <Option value="expensive">50万</Option>
+                      {carPrice && carPrice.options.map(carPriceItem =>
+                        <Option key={carPriceItem.id} value={carPriceItem.id + ''}>{carPriceItem.name}</Option>
+                      )}
                     </Select>
                   )}
                 </FormItem>
@@ -694,7 +773,6 @@ export default class BasicInfoEdit extends Component{
             }
           </Row>
 
-          {/*
           <Row>
             <Col span={12} className={currentId === -1 ? "withDebtCreate" : "withDebtEdit"}>
               <FormItem
@@ -704,21 +782,22 @@ export default class BasicInfoEdit extends Component{
                 className="withDebt"
               >
                 {getFieldDecorator('withDebt', {
-                  initialValue: eachCustomerInfo.withDebt + '',
-                  onChange: this.showDebtAmount
+                  initialValue: withDebt.value + '',
+                  onChange: this.selectDetailsInfoChange
                 })(
                   <Select
                     placeholder="是否负债"
                     getPopupContainer={() => document.getElementById('editMyDetails')}
                   >
-                    <Option value="true">有</Option>
-                    <Option value="false">无</Option>
+                    {withDebt && withDebt.options.map(withDebtItem =>
+                      <Option key={withDebtItem.id} value={withDebtItem.id + ''}>{withDebtItem.name}</Option>
+                    )}
                   </Select>
                 )}
               </FormItem>
             </Col>
 
-            {this.state.withDebt &&
+            {eachCustomerInfo.withDebt &&
               <Col span={12} className={currentId === -1 ? "withDebtAmountCreate" : "withDebtAmountEdit"}>
                 <FormItem
                   labelCol={{span: 8, offset: 1}}
@@ -727,8 +806,8 @@ export default class BasicInfoEdit extends Component{
                   className="withDebtAmount"
                 >
                   {getFieldDecorator('withDebtAmount', {
-                    // initialValue: eachCustomerInfo.withDebtAmount,
-                    onChange: this.selectChange
+                    initialValue: debtAmount.value + '',
+                    onChange: this.selectDetailsInfoChange
                   })(
                     <Select
                       showSearch
@@ -737,17 +816,16 @@ export default class BasicInfoEdit extends Component{
                       filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                       getPopupContainer={() => document.getElementById('editMyDetails')}
                     >
-                      <Option value="little">3万以下</Option>
-                      <Option value="huge">50万以上</Option>
+                      {debtAmount && debtAmount.options.map(debtAmountItem =>
+                        <Option key={debtAmountItem.id} value={debtAmountItem.id + ''}>{debtAmountItem.name}</Option>
+                      )}
                     </Select>
                   )}
                 </FormItem>
               </Col>
             }
           </Row>
-          */}
 
-          {/*
           <Row>
             <Col span={12} className={currentId === -1 ? "needLoanCreate" : "needLoanEdit"}>
               <FormItem
@@ -757,21 +835,22 @@ export default class BasicInfoEdit extends Component{
                 className="needLoan"
               >
               {getFieldDecorator('needLoan', {
-                initialValue: eachCustomerInfo.needLoan + '',
-                onChange: this.showLoanNeed
+                initialValue: needLoan.value + '',
+                onChange: this.selectDetailsInfoChange
               })(
                 <Select
                   placeholder="是否负债"
                   getPopupContainer={() => document.getElementById('editMyDetails')}
                 >
-                  <Option value="true">有</Option>
-                  <Option value="false">无</Option>
+                  {needLoan && needLoan.options.map(needLoanItem =>
+                    <Option key={needLoanItem.id} value={needLoanItem.id + ''}>{needLoanItem.name}</Option>
+                  )}
                 </Select>
               )}
               </FormItem>
             </Col>
 
-            {this.state.needLoan &&
+            {eachCustomerInfo.needLoan &&
               <Col span={12} className={currentId === -1 ? "needLoanAmountCreate" : "needLoanAmountEdit"}>
                 <FormItem
                   labelCol={{span: 8, offset: 1}}
@@ -780,8 +859,8 @@ export default class BasicInfoEdit extends Component{
                   className="needLoanAmount"
                 >
                   {getFieldDecorator('needLoanAmount', {
-                    // initialValue: eachCustomerInfo.needLoanAmount,
-                    onChange: this.selectChange
+                    initialValue: loanAmount.value + '',
+                    onChange: this.selectDetailsInfoChange
                   })(
                     <Select
                       showSearch
@@ -790,15 +869,16 @@ export default class BasicInfoEdit extends Component{
                       filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                       getPopupContainer={() => document.getElementById('editMyDetails')}
                     >
-                      <Option value="little">3万</Option>
-                      <Option value="huge">50万</Option>
+                      {loanAmount && loanAmount.options.map(loanAmountItem =>
+                        <Option key={loanAmountItem.id} value={loanAmountItem.id + ''}>{loanAmountItem.name}</Option>
+                      )}
                     </Select>
                   )}
                 </FormItem>
               </Col>
             }
 
-            {this.state.needLoan &&
+            {eachCustomerInfo.needLoan &&
               <Col span={12} className={currentId === -1 ? "useOfLoanCreate" : "useOfLoanEdit"}>
                 <FormItem
                   labelCol={{span: 8}}
@@ -807,8 +887,8 @@ export default class BasicInfoEdit extends Component{
                   className="useOfLoan"
                 >
                   {getFieldDecorator('useOfLoan', {
-                    // initialValue: eachCustomerInfo.useOfLoan,
-                    onChange: this.selectChange
+                    initialValue: loanPurpose.value + '',
+                    onChange: this.selectDetailsInfoChange
                   })(
                     <Select
                       showSearch
@@ -817,35 +897,33 @@ export default class BasicInfoEdit extends Component{
                       filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                       getPopupContainer={() => document.getElementById('editMyDetails')}
                     >
-                      <Option value="buyhouseType">买房</Option>
-                      <Option value="buycar">买车</Option>
+                      {loanPurpose && loanPurpose.options.map(loanPurposeItem =>
+                        <Option key={loanPurposeItem.id} value={loanPurposeItem.id + ''}>{loanPurposeItem.name}</Option>
+                      )}
                     </Select>
                   )}
                 </FormItem>
               </Col>
             }
           </Row>
-          */}
         </div>
 
-        {/*
         <Row className="buttonSave">
           <Col span={24} >
             <Col span={4}>
             </Col>
             <Button
               type="primary"
-              onClick={createCustomerSuccess}
-              disabled={!this.state.detailsInfoBeEdit}
+              onClick={this.fillCustomerDetailsInfo}
+              disabled={!this.state.InfoBeEdited.detailsInfoBeEdit}
             >保存</Button>
           </Col>
         </Row>
-        */}
       </Form>
     )
     let EditPersonalInfo = (
       <div>
-      {EditBasicInfo}
+      {EditBasicInfo()}
       {EditDetailsInfo}
       </div>
     )
