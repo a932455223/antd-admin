@@ -209,23 +209,10 @@ class CustomerSlider extends Component {
   saveEditInfo = () => {
     const { beEdited } = this.props.currentCustomerInfo;
     if(beEdited) {
-      let newState = update(this.state, {modalVisible: {$set: true}})
-      this.setState(newState);
+      this.props.onlyModalClose();
     } else {
       this.props.closeDock();
     }
-  }
-
-  confirmNotSave = (e) => {
-    let newState = update(this.state, {modalVisible: {$set: false}})
-    this.setState(newState);
-
-    this.props.closeDock();
-  }
-
-  handleCancel = (e) => {
-    let newState = update(this.state, {modalVisible: {$set: false}})
-    this.setState(newState);
   }
 
   // 个人用户 Tabs切换事件
@@ -389,16 +376,6 @@ class CustomerSlider extends Component {
 
     return(
       <div>
-
-        <Modal
-          title="警告"
-          visible={this.state.modalVisible}
-          onOk={this.confirmNotSave}
-          onCancel={this.handleCancel}
-          okText="放弃保存"
-        >
-          <p>您已更新了该客户的信息，是否需要保存？</p>
-        </Modal>
         <div className={styles.header}>
           <div>
             <div className={styles.img}>
