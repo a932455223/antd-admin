@@ -19,6 +19,9 @@ import "./less/staffEditor.less";
 import * as actionTypes from "../../../../redux/actionTypes/dropdownActions";
 import API from "../../../../../API";
 import ajax from "../../../../tools/POSTF.js";
+import BaseInoForm from './Forms/StaffBaseForm'
+import JobInfoForm from './Forms/JobInfoForm'
+import EducationInfoForm from './Forms/EducationInfoForm'
 
 
 const FormItem = Form.Item;
@@ -140,7 +143,7 @@ class BranchesEditor extends Component {
 
 
   render() {
-    const {getFieldDecorator} = this.props.form;
+    // const {getFieldDecorator} = this.props.form;
     const formItemLayout = {
       labelCol: {
         span: 6
@@ -152,26 +155,9 @@ class BranchesEditor extends Component {
 
     const baseInfo = this.state.staff.base;
     const {business} = this.state;
-    const Gender = getFieldDecorator('gender', {
-      rules: [{required: false, message: '请选择性别!'}],
-      initialValue: baseInfo.gender && baseInfo.gender.id
-    })(
-      <Select
-        placeholder="请选择性别"
-        getPopupContainer={ () => document.getElementById('staffEditor')}
-      >
-        {
-          this.props.dropdown.gender.map(item => {
-            return <Option value={item.id} key={item.id}>{item.name}</Option>
-          })
-        }
-      </Select>
-        :
-        null
-    );
+
 
     return (
-      <Form onSubmit={this.handleSubmit.bind(this)}>
         <div
           className={classNames('dock-container', 'staffEditor')}
           id="staffEditor"
@@ -193,146 +179,7 @@ class BranchesEditor extends Component {
             </Col>
           </Row>
           {/*组织信息*/}
-          <Card
-            title={(
-              <Row>
-                <Col span="18">
-                  <h3>个人档案</h3>
-                </Col>
-                <Col span="3">
-                  <Button
-                    className="cancel"
-                    disabled={this.state.changed ? false : true}
-                  >取消</Button>
-                </Col>
-                <Col span="3">
-                  <Button
-                    className="save"
-                    disabled={this.state.changed ? false : true}
-                    htmlType="submit"
-                  >保存</Button>
-                </Col>
-              </Row>
-            )}
-          >
-            <Row>
-              <Col span={12}>
-                <FormItem
-                  label={<span>姓名</span>}
-                  {...formItemLayout}
-
-                >
-                  {getFieldDecorator('name', {
-                    rules: [{required: false, message: '请填写员工名称!'}],
-                    initialValue: baseInfo.name
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={12}>
-                <FormItem
-                  label={<span>性别</span>}
-                  {...formItemLayout}
-                >
-                  {Gender}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <FormItem
-                  label={<span>证件号码</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('certificateNo', {
-                    rules: [{required: false, message: '请填写证件号码!'}],
-                    initialValue: baseInfo.certificateNo
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={12}>
-                <FormItem
-                  label={<span>邮箱</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('email', {
-                    rules: [{required: false, message: '请输入邮箱!'}],
-                    initialValue: baseInfo.email
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <FormItem
-                  label={<span>出生日期</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('birth', {
-                    rules: [{required: false, message: '请选择出生日期!'}],
-                    initialValue: baseInfo.birth && moment(baseInfo.birth)
-                  })(
-                    <DatePicker
-                      getCalendarContainer={ () => document.getElementById('staffEditor')}
-                      onChange={() => {
-                        this.setState({
-                          changed: true
-                        })
-                      }}
-                    />
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={12}>
-                <FormItem
-                  label={<span>手机</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('phone', {
-                    rules: [{required: false, message: '请填写手机号码!'}],
-                    initialValue: baseInfo.phone
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <FormItem
-                  label={<span>微信号</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('wechat', {
-                    rules: [{required: false, message: '请输入微信号!'}],
-                    initialValue: baseInfo.wechat
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={12}>
-                <FormItem
-                  label={<span>家庭住址</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('address', {
-                    rules: [{required: false, message: '请填写家庭住址!'}],
-                    initialValue: baseInfo.address
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-              </Col>
-
-            </Row>
-
-          </Card>
+          <BaseInoForm baseInfo/>
 
           {/*业务信息*/}
           <Card className="business" title={<h3>业务信息</h3>}>
@@ -371,242 +218,10 @@ class BranchesEditor extends Component {
           </Card>
 
           {/*工作信息*/}
-          <Card title={<h3>工作信息</h3>}>
-            <Row>
-              <Col span={12}>
-                <FormItem
-                  label={<span>所属机构</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('departments', {
-                    rules: [{required: false, message: '所属机构!'}],
-                    initialValue: baseInfo.departments && baseInfo.departments.id
-                  })(
-                    <Select
-                      mode="multiple"
-                      getPopupContainer={ () => document.getElementById('staffEditor')}
-                      onChange={() => {
-                        this.setState({
-                          changed: true
-                        })
-                      }}
-                    >
-                      {
-                        this.state.parentDepartmentDropDown.map(item => {
-                          return <Option value={item.id.toString()} key={item.id}>{item.name}</Option>
-                        })
-                      }
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={12}>
-                <FormItem
-                  label={<span>任职时间</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('inductionTime', {
-                    rules: [{required: false, message: '所属机构!'}],
-                    initialValue: baseInfo.inductionTime && moment(baseInfo.inductionTime)
-                  })(
-                    <DatePicker
-                      onChange={() => {
-                        this.setState({
-                          changed: true
-                        })
-                      }}
-                    />
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <FormItem
-                  label={<span>工号</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('jobNumber', {
-                    rules: [{required: false, message: '所属机构!'}],
-                    initialValue: baseInfo.jobNumber
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={12}>
-                <FormItem
-                  label={<span>任职状态</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('jobStatus', {
-                    rules: [{required: false, message: '任职状态!'}],
-                    initialValue: baseInfo.jobStatus && baseInfo.jobStatus.id
-                  })(
-                    <Select
-                      getPopupContainer={ () => document.getElementById('staffEditor')}
-                      onChange={() => {
-                        this.setState({
-                          changed: true
-                        })
-                      }}
-                    >
-                      {
-                        this.props.dropdown.jobStatus.map(item => {
-                          return <Option id={item.id} key={item.id}>{item.name}</Option>
-                        })
-                      }
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <FormItem
-                  label={<span>职位</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('jobCategory', {
-                    rules: [{required: false, message: '职位!'}],
-                    initialValue: baseInfo.jobCategory && baseInfo.jobCategory.id
-                  })(
-                    <Select
-                      getPopupContainer={ () => document.getElementById('staffEditor')}
-                      onChange={() => {
-                        this.setState({
-                          changed: true
-                        })
-                      }}
-                    >
-                      {
-                        this.props.dropdown.jobCategory.map(item => {
-                          return <Option value={item.id} key={item.id}>{item.name}</Option>
-                        })
-                      }
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={12}>
-                <FormItem
-                  label={<span>直属上级</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('leader', {
-                    rules: [{required: false, message: '所属机构!'}],
-                    initialValue: baseInfo.leader && baseInfo.leader.id
-                  })(
-                    <Select
-                      getPopupContainer={ () => document.getElementById('staffEditor')}
-                      onChange={() => {
-                        this.setState({
-                          changed: true
-                        })
-                      }}
-                    >
-                      {
-                        this.state.leadersDropdown.map(item => {
-                          return <Option value={item.id} key={item.id}>{item.name}</Option>
-                        })
-                      }
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <FormItem
-                label={<span>调岗记录</span>}
-                labelCol={{span: 3}}
-                wrapperCol={{span: 7}}
-              >
-                {getFieldDecorator('asd', {
-                  rules: [{required: false, message: '调岗记录!'}],
-                  // initialValue: baseInfo.leader
-                })(
-                  <Input/>
-                )}
-              </FormItem>
-            </Row>
-          </Card>
+        {/*<JobInfoForm/>*/}
 
           {/*教育经历*/}
-          <Card title={<h3>教育经历</h3>}>
-            <Row>
-              <Col span={12}>
-                <FormItem
-                  label={<span>学历</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('educationLevel', {
-                    rules: [{required: false, message: '学历!'}],
-                    initialValue: baseInfo.educationLevel && baseInfo.educationLevel.id
-                  })(
-                    <Select
-                      getPopupContainer={ () => document.getElementById('staffEditor')}
-                      onChange={() => {
-                        this.setState({
-                          changed: true
-                        })
-                      }}
-                    >
-                      {
-                        this.props.dropdown.educationLevel.map(item => {
-                          return <Option value={item.id} key={item.id}>{item.name}</Option>
-                        })
-                      }
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={12}>
-                <FormItem
-                  label={<span>专业</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('major', {
-                    rules: [{required: false, message: '专业!'}],
-                    initialValue: baseInfo.major
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <FormItem
-                  label={<span>毕业院校</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('school', {
-                    rules: [{required: false, message: '毕业院校!'}],
-                    initialValue: baseInfo.school
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={12}>
-                <FormItem
-                  label={<span>毕业时间</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('graduationTime', {
-                    rules: [{required: false, message: '毕业时间!'}],
-                    initialValue: baseInfo.graduationTime && moment(baseInfo.graduationTime)
-                  })(
-                    <DatePicker onChange={() => {
-                      this.setState({
-                        changed: true
-                      })
-                    }}/>
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-          </Card>
+      {/*<EducationInfoForm/>*/}
 
 
           {/*操作日志*/}
@@ -627,7 +242,6 @@ class BranchesEditor extends Component {
             </Row>
           </Card>
         </div>
-      </Form>
     )
   }
 }
@@ -638,4 +252,5 @@ function mapStateToProps(store) {
   }
 }
 
-export default connect(mapStateToProps)(Form.create()(BranchesEditor))
+// export default connect(mapStateToProps)(Form.create()(BranchesEditor))
+export default connect()(BranchesEditor)
