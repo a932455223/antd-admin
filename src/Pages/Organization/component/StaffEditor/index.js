@@ -20,6 +20,7 @@ import * as actionTypes from "../../../../redux/actionTypes/dropdownActions";
 import API from "../../../../../API";
 import ajax from "../../../../tools/POSTF.js";
 import BaseInoForm from './Forms/StaffBaseForm'
+import update from 'immutability-helper'
 import JobInfoForm from './Forms/JobInfoForm'
 import EducationInfoForm from './Forms/EducationInfoForm'
 
@@ -54,7 +55,7 @@ class BranchesEditor extends Component {
 
   componentWillMount() {
     console.log('baseEditor will mount.')
-    this.getStaffInfo();
+    this.getStaffInfo(this.props.id);
     ajax.Get(API.GET_STAFF_LEADERS)
       .then(res => {
         this.setState({
@@ -75,6 +76,7 @@ class BranchesEditor extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log('staffEditor will receive props.')
     this.getStaffInfo(nextProps.id)
 
     ajax.Get(API.GET_STAFF_ADD_DEPARTMENT)
@@ -87,17 +89,44 @@ class BranchesEditor extends Component {
 
   }
 
-  getStaffInfo(id = this.props.id) {
+  getStaffInfo(id) {
     axios.get(API.GET_STAFF_BASE(id))
       .then(res => {
+        let staffBase = res.data.data;
         this.setState({
           staff: {
-            base: res.data.data
+            base: {
+              name:{
+                value:staffBase.name
+              },
+              certificateNo:{
+                value:staffBase.certificateNo
+              },
+              email:{
+                value:staffBase.email
+              },
+              birth:{
+                value:staffBase.birth ? moment(staffBase.birth):null
+              },
+              phone:{
+                value:staffBase.phone
+              },
+              wechat:{
+                value:staffBase.wechat
+              },
+              address:{
+                value:staffBase.address || ''
+              }
+            }
           }
         })
       })
   }
 
+  baseInfoChange = (chagnedField) => {
+    let newState = update(this.state,{staff:{base:{$set:{...this.state.staff.base,...chagnedField}}}})
+    this.setState(newState);
+  }
 
   closeDock() {
     console.log('bye bye');
@@ -166,7 +195,7 @@ class BranchesEditor extends Component {
             <Col span={22}>
               <Row className="avatar">
                 <div></div>
-                <p>{baseInfo.name ? baseInfo.name : null}</p>
+                <p>{baseInfo.name ? baseInfo.name.value : null}</p>
               </Row>
             </Col>
             <Col span={2}>
@@ -179,8 +208,7 @@ class BranchesEditor extends Component {
             </Col>
           </Row>
           {/*组织信息*/}
-          <BaseInoForm baseInfo/>
-
+          <BaseInoForm onChange={this.baseInfoChange} baseInfo={baseInfo}/>
           {/*业务信息*/}
           <Card className="business" title={<h3>业务信息</h3>}>
             <Row>

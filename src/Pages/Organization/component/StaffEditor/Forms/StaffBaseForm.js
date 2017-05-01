@@ -199,4 +199,39 @@ function mapStateToProps(store) {
   }
 }
 
-export default connect(mapStateToProps)(Form.create()(StaffBaseForm));
+
+function mapPropsToFields(props){
+  const {baseInfo} = props;
+  return {
+    name:{
+      ...baseInfo.name
+    },
+    certificateNo:{
+      ...baseInfo.certificateNo
+    },
+    email:{
+      ...baseInfo.email
+    },
+    birth:{
+      ...baseInfo.birth
+    },
+    phone:{
+      ...baseInfo.phone
+    },
+    wechat:{
+      ...baseInfo.wechat
+    },
+    address:{
+      ...baseInfo.address
+    }
+
+  }
+}
+
+function onFieldsChange(props,changedFields){
+  props.onChange(changedFields)
+}
+export default connect(mapStateToProps)(Form.create({
+  onFieldsChange,
+  mapPropsToFields
+})(StaffBaseForm));
