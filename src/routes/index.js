@@ -55,14 +55,14 @@ const route = (
       }}/>
     </Route>
 
-     <Route path='grids' onEnter={validate} component={App}> 
+     <Route path='grids' onEnter={validate} component={App}>
          <Route path='list' getComponent={(location, cb) => {
         require.ensure([], () => {
           cb(null, require('../Pages/Grids/List').default)
         }, 'gridsList')
       }}/>
-    </Route> 
-    
+    </Route>
+
     <Route path='system' onEnter={validate} component={App}>
       <Route path='users' getComponent={(location, cb) => {
         require.ensure([], () => {
@@ -99,6 +99,18 @@ const route = (
         }, 'classify')
       }}/>
     </Route>
+    <Route path="demos/form1" getComponent={(location,cb)=>{
+      require.ensure([],()=>{
+        cb(null,require('../Pages/Demos/Form/Form1').default)
+      })
+    }}>
+    </Route>
+    <Route path="demos/form2" getComponent={(location,cb)=>{
+      require.ensure([],()=>{
+        cb(null,require('../Pages/Demos/Form/Form2').default)
+      })
+    }}>
+
     <Route path='login' getComponent={(location, cb) => {
       require.ensure([], () => {
         cb(null, require('../Pages/Login/login').default)
