@@ -50,6 +50,7 @@ class BranchesEditor extends Component {
 
 
   componentWillMount() {
+    console.log('baseEditor will mount.')
     this.getStaffInfo();
     ajax.Get(API.GET_STAFF_LEADERS)
       .then(res => {
@@ -392,7 +393,7 @@ class BranchesEditor extends Component {
                     >
                       {
                         this.state.parentDepartmentDropDown.map(item => {
-                          return <Option value={item.id} key={item.id}>{item.name}</Option>
+                          return <Option value={item.id.toString()} key={item.id}>{item.name}</Option>
                         })
                       }
                     </Select>

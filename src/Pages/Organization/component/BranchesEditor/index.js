@@ -204,7 +204,7 @@ class BranchesEditor extends Component {
                     >
                       {
                         this.state.categoryDropdown.map((option, index) => {
-                          return <Option value={option.id} key={ option.id + option.name}>{option.name}</Option>
+                          return <Option value={option.id.toString()} key={ option.id + option.name}>{option.name}</Option>
                         })
                       }
                     </Select>
@@ -224,7 +224,7 @@ class BranchesEditor extends Component {
                     <Select>
                       {
                         this.state.parentDepartmentDropDown.map(item => {
-                          return <Option value={item.id} key={item.name + item.id}>{item.name}</Option>
+                          return <Option value={item.id.toString()} key={item.name + item.id}>{item.name}</Option>
                         })
                       }
                     </Select>
