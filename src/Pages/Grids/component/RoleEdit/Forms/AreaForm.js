@@ -16,7 +16,7 @@ class AreaForm extends Component{
                         className="idnumber"
 
               >
-              <Input/>
+             <span>{this.props.form.getFieldValue('name')}</span>
               </FormItem>
             </Col>
           <Icon
@@ -77,7 +77,7 @@ class AreaForm extends Component{
                         className="idnumber"
               >
               {
-              	getFieldDecorator('orgName')(
+              	getFieldDecorator('gridType')(
               		<Input/>
               		)
               }
