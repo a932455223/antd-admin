@@ -31,10 +31,12 @@ class LoginForm extends Component{
 }
 const CustomizedForm = Form.create({
   onFieldsChange(props, changedFields) {
-    props.onChange(changedFields);
+    console.log(props, changedFields)
+    var aa = props.onChange(changedFields);
+    console.log(aa);
   },
   mapPropsToFields(props) {
-    console.log('map triggered.')
+    console.log('map triggered.',props)
     return {
       username: {
         ...props.username
@@ -45,8 +47,10 @@ const CustomizedForm = Form.create({
     };
   },
   onValuesChange(_, values) {
+    console.log(_, values)
   },
 })(LoginForm);
+
 
 class Demo extends Component {
   state = {
@@ -60,6 +64,7 @@ class Demo extends Component {
     },
   };
   handleFormChange = (changedFields) => {
+    console.log(changedFields);
     this.setState({
       fields: { ...this.state.fields, ...changedFields },
     });
