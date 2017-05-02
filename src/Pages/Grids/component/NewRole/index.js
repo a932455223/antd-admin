@@ -67,6 +67,12 @@ class NewRole extends Component {
               
             </span>
           </div>     */}
+          <Icon
+              className="closenew"
+              onClick={this.props.close}
+              type="close"
+              style={{fontSize:"24px",cursor:"pointer"}}
+            />   
           <Row>
           <Form onSubmit={this.saveUsername} className="editrolename">
             <FormItem

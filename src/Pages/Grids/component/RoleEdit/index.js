@@ -14,7 +14,7 @@ const Option = Select.Option;
 
 
 class RoleEditF extends Component {
-  state ={
+  state = {
     area : "",
     orgNameDropDown : ""
   }
@@ -50,6 +50,7 @@ class RoleEditF extends Component {
   getGridData = (id) => {
     ajax.Get(API.GET_GRIDS_ID(id))
     .then(res => {
+      res.data.data.orgId = res.data.data.orgId.toString()
       this.setState({
         area : this.transformData(res.data.data)
       })
@@ -59,7 +60,6 @@ class RoleEditF extends Component {
    getorgNameDropDown = () => {
     ajax.Get(API.GET_ADD_DEPARTMENT)
     .then(res => {
-      console.log(res,1212)
       this.setState({
         orgNameDropDown : res.data.data
       })
@@ -83,8 +83,8 @@ class RoleEditF extends Component {
     const {id } = this.props;
     const {area, orgNameDropDown} = this.state;
     return (
-      <div className="formbox">
-        <AreaForm area={area} onChange={this.handleFormChange} close={this.props.close}/>
+      <div id="RoleEdit" className="formbox">
+        <AreaForm area={area} onChange={this.handleFormChange} close={this.props.close} orgNameDropDown={orgNameDropDown}/>
           <Row className="buttonsave">
             <Col span={24} >
               <Col span={4}>

@@ -5,8 +5,13 @@ const Option = Select.Option;
 
 class AreaForm extends Component{
 
+	orgIdChange = (value)=>{
+
+	}
+
 	render(){
-		 const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
+		 const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched , getFieldValue} = this.props.form;
+		 const {orgNameDropDown} = this.props;
 		return (
 		<Form>
           <Row className="fristrow">
@@ -14,9 +19,8 @@ class AreaForm extends Component{
               <FormItem
                         wrapperCol={{span: 20}}
                         className="idnumber"
-
               >
-             <span>{this.props.form.getFieldValue('name')}</span>
+             <span className="gridname">{getFieldValue('name')}</span>
               </FormItem>
             </Col>
           <Icon
@@ -35,37 +39,36 @@ class AreaForm extends Component{
                         className="idnumber"
               >
               {
-              	getFieldDecorator('director')(
-              		<Input/>
-              		)
+                getFieldDecorator('director')(
+                  <Input/>
+                  )
               }
+              	
               </FormItem>
             </Col>
 
             <Col span={12}>
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
-                        label="所属机构">
-                 {
-                 	getFieldDecorator('orgName')(
-              		<Input/>
-              		)
-                 }
-              {/* <Select
-                    showSearch
-                    name="orgName"
-                    defaultValue={area.orgName}
-                    onChange={this.inputChange}
-                    optionFilterProp="children"
-                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    getPopupContainer={() => document.getElementById('editMyBase')}
-                  > 
-                    { orgNameDropDown && orgNameDropDown.map((item, index) => {
-                      return (
-                        <Option value={item.name} key={item.name}>{item.name}</Option>
-                        )
-                    })}
-                  </Select>   */}
+                        label="所属机构"
+                        >
+                {	
+                 	orgNameDropDown.length > 0 ? getFieldDecorator('orgId',{
+                 		rules: [{ message: '请选择所属机构' , whitespace:"ture"}],
+                 		onChange:this.orgIdChange
+                 	})(
+              		<Select
+	                    getPopupContainer={() => document.getElementById('RoleEdit')}
+                      className="selectorgId"
+	                  > 
+	                  	{
+	                   		
+	                  		orgNameDropDown.map((item,index)=>(<Option key={item.id.toString()} value={item.id.toString()}>{item.name}</Option>))
+	                  	}
+	                </Select>  
+              		):null
+                }
+               	
               </FormItem>
             </Col>
           </Row>
@@ -89,7 +92,9 @@ class AreaForm extends Component{
                         wrapperCol={{span: 15}}
                         label="网格面积">
               {
-              	getFieldDecorator('landArea')(
+              	getFieldDecorator('landArea',{
+                  rules: [{pattern:/^\d+$/, message: "请填写数字"}],
+                })(
               		<Input/>
               		)
               }
@@ -104,7 +109,9 @@ class AreaForm extends Component{
                         className="idnumber"
               >
               {
-              	getFieldDecorator('residenceCount')(
+              	getFieldDecorator('residenceCount',{
+                  rules: [{pattern:/\d+/, message: "请填写数字"}],
+                })(
               		<Input/>
               		)
               }
@@ -116,7 +123,9 @@ class AreaForm extends Component{
                         wrapperCol={{span: 15}}
                         label="网格人口数">
                		{
-               			getFieldDecorator('personCount')(
+               			getFieldDecorator('personCount',{
+                      rules: [{pattern:/\d+/, message: "请填写数字"}],
+                    })(
               				<Input/>
               				)
                		}
@@ -159,7 +168,6 @@ class AreaForm extends Component{
 }
 
 function mapPropsToFields(props){
-	console.dir(props.area)
 	return {
 		name:{
 		...props.area.name
@@ -167,8 +175,8 @@ function mapPropsToFields(props){
 	director:{
 		...props.area.director
 	},
-	orgName:{
-		...props.area.orgName
+	orgId:{
+		...props.area.orgId
 	},
 	gridType:{
 		...props.area.gridType

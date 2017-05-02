@@ -12,7 +12,6 @@ const FormItem = Form.Item;
  	onHandleChange = () => {
  		const { getFieldsValue} = this.props.form;
  		const FieldsValue = getFieldsValue();
- 		console.log(FieldsValue);
  		ajax.Post(API.POST_API_AREA,FieldsValue)
 	    .then(
 	    	this.props.ajaxFaFun
@@ -34,7 +33,7 @@ const FormItem = Form.Item;
                   initialValue:this.props.roleName ,
                   onChange: this.inputChange
                 })(
-                  <Input />
+                  <span className="newrolename">{this.props.roleName}</span>
                 )}
               </FormItem>
             </Col>

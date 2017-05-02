@@ -3,7 +3,34 @@
   .idnumber{
     margin-bottom: 8px;
   }
+  .gridname{
+     margin-top: 18px;
+      font-size: 20px;
+      font-weight: normal;
+      line-height: 40px;
+      color: #000;
+      margin-left: 7px;
+  }
 
+  .selectorgId .ant-select-selection{
+    border: 1px solid #fff;
+    &:hover{
+      border: 1px solid #d9d9d9;
+    };
+    &:hover .ant-select-arrow:before{
+      display: block;
+      transition: all 0.3s;
+    };
+    .ant-select-selection-selected-value{
+      font-size: 14px;
+      color: #000;
+    }
+    .ant-select-arrow:before{
+      display: none;
+      transition: all 0.3s;
+    }
+
+  }
   .fristcol input{
     font-size: 20px;
     background: #f4f4f6;
