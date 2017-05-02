@@ -97,6 +97,8 @@ export default {
     GET_CAPTCHA:'/api/captcha',
     //登陆
     POST_LOGIN:'/api/login',
+    //注销登陆
+    GET_LOGOUT:'/api/logout',
   // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory',
 
   // 添加组织机构

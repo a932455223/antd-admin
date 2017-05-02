@@ -1,4 +1,6 @@
-import api from 'axios'
+// import api from 'axios'
+import ajax from '../../tools/POSTF.js';
+import apiRoute from './../../../API';
 
 export const FETCH_PROFILE_PENDING = 'FETCH_PROFILE_PENDING';
 export const FETCH_PROFILE_SUCCESS = 'FETCH_PROFILE_SUCCESS';
@@ -24,26 +26,45 @@ export function fetchProfile() {
     }
 }
 
-export function login(user, password) {
-  return {
-      type: 'LOGIN',
-      payload: {
-        promise: api.put('/login', {
-          data: {
-            user: user,
-            password: password
-          }
-        })
-      }
+// export function login(user, password) {
+//   return {
+//       type: 'LOGIN',
+//       payload: {
+//         promise: api.put('/login', {
+//           data: {
+//             user: user,
+//             password: password
+//           }
+//         })
+//       }
+//   }
+// }
+export function login(values){
+  return (dispatch)=>{
+    dispatch({type:LOGIN_PENDING});
+    return ajax.Post(apiRoute.POST_LOGIN,values)
+      .then(res=>{
+        console.log(res);
+        dispatch({type:LOGIN_SUCCESS,payload:{data:{uid:values.phone,name:'ljw'}}})
+      })
   }
 }
 
-export function logout() {
+// export function logout() {
 
-    return {
-        type: 'LOGOUT',
-        payload: {
-          promise: api.get('/logout')
-        }
-    }
+//     return {
+//         type: 'LOGOUT',
+//         payload: {
+//           promise: api.get('/logout')
+//         }
+//     }
+// }
+export function logout(){
+  return(dispatch)=>{
+      return ajax.Get(apiRoute.GET_LOGOUT)
+        .then(res=>{
+            console.log(res+"louout");
+            dispatch({type:LOGOUT_SUCCESS});
+        })
+  }
 }
