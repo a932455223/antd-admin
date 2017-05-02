@@ -97,6 +97,28 @@ const userMenu = (
         联系我们
       </a>
     </Menu.Item>
+    <Menu.Item key="6">
+      <Link to='/login'>
+        <a target="_blank" rel="noopener noreferrer" href="javascript:void(0)">
+          退出
+        </a>
+      </Link>
+    </Menu.Item>
+  </Menu>
+);
+const workMenu = (
+  <Menu className="workMenu">
+
+    <Menu.Item key="0">
+      <Link to=''>
+        目标管理
+      </Link>
+    </Menu.Item>
+    <Menu.Item key="1">
+      <Link to=''>
+        日程管理
+      </Link>
+    </Menu.Item>
   </Menu>
 );
 const moreMenu = (
@@ -155,9 +177,15 @@ class TopHeader extends React.Component {
               </Link>
             </Menu.Item>
             <Menu.Item key="workplace">
-              <Link to='/organization/staff'>
-                工作台<Icon type="down" />
-              </Link>
+              <Dropdown
+                overlay={workMenu}
+                placement="bottomCenter"
+              >
+                <a className="ant-dropdown-link" href="#">
+                  工作台<Icon type="down" />
+                </a>
+              </Dropdown>
+
             </Menu.Item>
             <Menu.Item key="roles">
               <Link to='/system/roles'>
@@ -176,11 +204,11 @@ class TopHeader extends React.Component {
               </Dropdown>
 
             </Menu.Item>
-            <Menu.Item key="sound">
+            {/*<Menu.Item key="sound">
               <Link to='/login'>
                 <Icon type="logout" />登出
               </Link>
-            </Menu.Item>
+            </Menu.Item>*/}
           </Menu>
           <div className="right-menu">
 
@@ -204,7 +232,7 @@ class TopHeader extends React.Component {
             </Dropdown>
             <Dropdown
               overlay={userMenu}
-              placement="bottomRight"
+              placement="bottomLeft"
             >
               <Link className="user-menu">
                 金伟达<Icon type="down" />

@@ -3,11 +3,13 @@ import {
   Tabs,
   Form,
   Select,
- } from 'antd';
+} from 'antd';
+import moment from 'moment';
 import axios from 'axios';
+import update from "immutability-helper";
+import { connect } from 'react-redux';
 import API from '../../../../API';
 import ajax from '../../../tools/POSTF';
-import { connect } from 'react-redux';
 import { createCustomerSuccess, customerInfoBeEdit } from '../../../redux/actions/customerAction';
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
@@ -15,9 +17,14 @@ const Option = Select.Option;
 import './indexStyle.less';
 import AddMaintainRecordForm from './widget/AddMaintainRecordForm'
 import MaintainRecord from './widget/MaintainRecord'
+
+import ViewBriefBasicInfo from './widget/Form/ViewBriefBasicInfo'
+import ViewDetailsBasicInfo from './widget/Form/ViewDetailsBasicInfo'
+import EditBriefBasicInfo from './widget/Form/EditBriefBasicInfo'
+import EditDetailsBasicInfo from './widget/Form/EditDetailsBasicInfo'
+
 import BasicInfoEdit from './widget/BasicInfoEdit'
 import AddCrewModal from './widget/AddCrewModal'
-
 
 function info(msg,color){
   console.log('%c'+msg,'color:'+color);
@@ -27,33 +34,91 @@ function info(msg,color){
 const AddMaintainRecord = Form.create()(AddMaintainRecordForm);
 
 //个人信息表单................
-const BasicInfoListsEdit = Form.create()(BasicInfoEdit);
-
 class BasicInfo extends Component {
   state = {
     modalVisible: false,
-    edited:false,
-    eachCustomerInfo: ''
-  }
-  componentWillMount(){
-      info('basicInfo will mount')
-      this.getBaseInfo(this.props.currentCustomerInfo.id)
-  }
-
-  componentWillReceiveProps(next){
-    info('basicInfo will receive props.')
-      this.getBaseInfo(next.currentCustomerInfo.id);
-  }
-
-
-  getBaseInfo = (id) => {
-      ajax.Get(API.GET_CUSTOMER_BASE(id))
-      .then((res) => {
-          this.setState({
-              ...this.state,
-              eachCustomerInfo: res.data.data
-          })
-      })
+    edited: false,
+    eachCustomerInfo: '',
+    briefInfo: {
+      department: {
+        value: '',
+        options: []
+      },
+      manager: {
+        value: '',
+        options: []
+      },
+      grid: {
+        value: '',
+        options: []
+      },
+      phone: {
+        value: ''
+      },
+      wechat: {
+        value: ''
+      },
+      certificate: {
+        value: ''
+      },
+      birth: {
+        value: null
+      },
+      origin: {
+        value: []
+      },
+      age: {
+        value: ''
+      },
+      address: {
+        value: ''
+      },
+      tags: [],
+    },
+    detailsInfo: {
+      yearIncome: {
+        value: ''
+      },
+      yearExpense: {
+        value: ''
+      },
+      marryStatus: {
+        value: '',
+        options: []
+      },
+      houseType: {
+        value: '',
+        options: []
+      },
+      withCar: {
+        value: '',
+        options: []
+      },
+      carPrice: {
+        value: '',
+        options: []
+      },
+      withDebt: {
+        value: '',
+        options: []
+      },
+      debtAmount: {
+        value: '',
+        options: []
+      },
+      needLoan: {
+        value: '',
+        options: []
+      },
+      loanAmount: {
+        value: '',
+        options: []
+      },
+      loanPurpose: {
+        value: '',
+        options: []
+      },
+    }
   }
 
   // modal Show
@@ -70,17 +135,193 @@ class BasicInfo extends Component {
     })
   }
 
-  // 修改
+  componentWillMount(){
+    info('basicInfo will mount');
+    this.getBaseInfo(this.props.currentCustomerInfo.id);
 
-  // x(next) {
-    // console.log(this.props);
-    // console.log(next);
-  // }
+    const commonDropDownType = [
+      'marryStatus',
+      'houseType',
+      'withCar',
+      'carPrice',
+      'withDebt',
+      'debtAmount',
+      'needLoan',
+      'loanAmount',
+      'loanPurpose'
+    ];
+
+    commonDropDownType.map(item => {
+      ajax.Get(API.GET_COMMON_DROPDOWN(item))
+      .then((res) => {
+        let newState = update(this.state, {
+          detailsInfo: {
+            [item]: {
+              options: {$set: res.data.data}
+            }
+          }
+        })
+
+        this.setState(newState);
+      })
+    })
+  }
+
+  componentWillReceiveProps(next){
+    info('basicInfo will receive props.');
+    // 当前的客户 id发生变化时，或者当前用户的信息 beEdited === true时，重置 state
+    const { id, beEdited} = this.props.currentCustomerInfo;
+    if(id !== next.currentCustomerInfo.id || beEdited === true) {
+      this.getBaseInfo(next.currentCustomerInfo.id);
+    }
+  }
+
+  // 获取客户基本信息
+  getBaseInfo = (id) => {
+    ajax.Get(API.GET_CUSTOMER_BASE(4))
+    .then((res) => {
+      // console.log(res.data.data);
+      const dateFormat = 'YYYY-MM-DD'; // 日期格式
+      const commonDropDownType = [
+        'marryStatus',
+        'houseType',
+        'withCar',
+        'carPrice',
+        'withDebt',
+        'debtAmount',
+        'needLoan',
+        'loanAmount',
+        'loanPurpose'
+      ];
+      commonDropDownType.map(item => {
+        let newState = update(this.state, {
+          detailsInfo: {
+            [item]: {
+              value: {$set: res.data.data[item] + ''}
+            },
+          }
+        })
+
+        // 将 newState赋值给原先的 state
+        return this.state = newState;
+
+        if(item === commonDropDownType[commonDropDownType.length - 1]) {
+          this.setState(newState);
+        }
+      })
+
+      let newState = update(this.state, {
+        briefInfo: {
+          department: {
+            value: {$set: res.data.data.department + ''}
+          },
+          manager: {
+            value: {$set: res.data.data.manager + ''}
+          },
+          grid: {
+            value: {$set: res.data.data.grid + ''}
+          },
+          phone: {
+            value: {$set: res.data.data.phone}
+          },
+          wechat: {
+            value: {$set: res.data.data.wechat}
+          },
+          certificate: {
+            value: {$set: res.data.data.certificate}
+          },
+          birth: {
+            value: {$set: moment(res.data.data.birth, dateFormat)}
+          },
+          origin: {
+            value: {$set: [res.data.data.origin]}
+          },
+          age: {
+            value: {$set: res.data.data.age}
+          },
+          address: {
+            value: {$set: res.data.data.address}
+          },
+          tags: {$push: res.data.data.joiners}
+        },
+        detailsInfo: {
+          yearIncome: {
+            value: {
+              $set: res.data.data.yearIncome
+            }
+          },
+          yearExpense: {
+            value: {
+              $set: res.data.data.yearExpense
+            }
+          },
+        },
+        eachCustomerInfo: {$set: res.data.data}
+      });
+      this.setState(newState);
+    })
+
+    // 所属机构
+    ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
+    .then((res) => {
+      let newState = update(this.state, {
+        briefInfo: {
+          department: {
+            options: {$set: res.data.data},
+          }
+        },
+      });
+      this.setState(newState);
+    })
+
+    // 所属客户经理
+    ajax.Get(API.GET_DEPARTMENT_STAFFS(1))
+    .then((res) => {
+      let newState = update(this.state, {
+        briefInfo: {
+          manager: {
+            options: {$set: res.data.data},
+          }
+        },
+      });
+      this.setState(newState);
+    })
+
+    ajax.Get(API.GET_DEPARTMENT_AREAS(1))
+    .then((res) => {
+      let newState = update(this.state, {
+        briefInfo: {
+          grid: {
+            options: {$set: res.data.data},
+          }
+        },
+      });
+      this.setState(newState);
+    })
+  }
+
+  handleFormChange = (changedFields) => {
+    let newState = update(this.state,{
+      briefInfo: {
+        $set: {
+          ...this.state.briefInfo,
+          ...changedFields
+        }
+      },
+      detailsInfo: {
+        $set: {
+          ...this.state.detailsInfo,
+          ...changedFields
+        }
+      }
+    })
+    this.setState(newState);
+  }
 
   render() {
     const { customerInfoBeEdit } = this.props;
     const { step, mode, currentId, beEdited } = this.props.currentCustomerInfo;
-    const { eachCustomerInfo, edited } = this.state;
+    const { eachCustomerInfo, edited, detailsInfo, briefInfo } = this.state;
 
     const modal = {
       visible: this.state.modalVisible,
@@ -88,7 +329,6 @@ class BasicInfo extends Component {
     };
 
     const basicInfoProps = {
-      mode: mode,
       beEdited: beEdited,
       customerInfoBeEdit: customerInfoBeEdit,
       currentId: eachCustomerInfo.id,
@@ -104,7 +344,33 @@ class BasicInfo extends Component {
         <AddCrewModal {...modal}/>
 
         <div className="">
-          { <BasicInfoListsEdit {...basicInfoProps}/> }
+          {mode && mode === 'view' &&
+            <div>
+              <ViewBriefBasicInfo
+                briefInfo={briefInfo}
+                {...basicInfoProps}
+              />
+              <ViewDetailsBasicInfo
+                detailsInfo={detailsInfo}
+                {...basicInfoProps}
+              />
+            </div>
+          }
+
+          {mode && mode !== 'view' &&
+            <div>
+              <EditBriefBasicInfo
+                briefInfo={briefInfo}
+                {...basicInfoProps}
+                onChange={this.handleFormChange}
+              />
+              <EditDetailsBasicInfo
+                detailsInfo={detailsInfo}
+                {...basicInfoProps}
+                onChange={this.handleFormChange}
+              />
+            </div>
+          }
         </div>
 
         <div className="maintain">
@@ -169,7 +435,6 @@ class BasicInfo extends Component {
 
 
 const mapStateToProps = (store) => {
-  // console.log(store)
   return {
     currentCustomerInfo: store.customer.currentCustomerInfo
   }

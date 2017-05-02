@@ -5,8 +5,9 @@ export default {
   GET_CUSTOMERS: '/asd/customers',
   //客户家庭信息
   GET_CUSTOMERS_FAMILY: function (id) {
-    return "/asd/customer/" + id + "/family";
+    return "/api/customer/individual/" + id + "/families"
   },
+  // customer/individual/:customerId/families
   // 用户与权限 角色 列表
   GET_SYSTEM_ROLES_LIST: '/asd/system/roles/list',
 
@@ -23,12 +24,16 @@ export default {
   GET_JOBCATEGORY_SLIDER_BAR: '/asd/common/dropdown/list/jobCategory',
   //==================================================================
 
+  // 新增客户
+  POST_CUSTOMER_INDIVIDUAL_BASE: '/api/customer/individual/base',
 
+  GET_DEPARTMENT_AREAS: id => `/api/department/${id}/areas`,
+  GET_CUSTOMER_DEPARTMENT: '/api/customer/add/departments/noHierarchy',
+  GET_DEPARTMENT_STAFFS: id => `/api/department/${id}/staffs`,
 
-
-  GET_CUSTOMER_BASE: id =>  `/api/customer/${id}/base`,
-  GET_JOBINFO_BASE: id =>  `/asd/jobinfo/${id}/base`,
-  GET_CUSTOMER_BASE: id => `/asd/customer/${id}/base`,
+  GET_CUSTOMER_BASE: id =>  `/api/customer/individual/${id}/base`, // 客户基本信息
+  GET_JOBINFO_BASE: id =>  `/asd/jobinfo/${id}/base`, // 客户工作信息
+  // GET_CUSTOMER_BASE: id => `/asd/customer/${id}/base`,
   GET_JOBINFO_BASE: id => `/asd/jobinfo/${id}/base`,
 
   GET_COMPANY_BASE: id => `/asd/company/${id}/base`,
@@ -127,4 +132,3 @@ export default {
   // 员工业务信息
   GET_STAFF_BUSSINESS_INFO: id => `/api/staff/${id}/businessInfo`
 }
-
