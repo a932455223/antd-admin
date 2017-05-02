@@ -5,7 +5,7 @@ export default {
   GET_CUSTOMERS: '/asd/customers',
   //客户家庭信息
   GET_CUSTOMERS_FAMILY: function (id) {
-    return "／api/customer/individual/" + id + "/families"
+    return "/api/customer/individual/" + id + "/families"
   },
   // customer/individual/:customerId/families
   // 用户与权限 角色 列表
