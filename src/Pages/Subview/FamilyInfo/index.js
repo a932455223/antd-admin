@@ -24,7 +24,7 @@ class FamilyInfo extends Component {
   }
   //家庭成员数组
   getFamilyInfo = (id) => {
-    axios.get(api.GET_CUSTOMERS_FAMILY(id))
+    axios.get(api.GET_CUSTOMERS_FAMILY(4))
     .then((data) => {
         // let familyList = data.data.data;
         // let editFamilyList = _.cloneDeep(familyList);
@@ -32,28 +32,28 @@ class FamilyInfo extends Component {
         //   familyList: familyList,
         //   editFamilyList: editFamilyList
         // });
-        this.setState({
-          familyList:data.data.data,
-          isModify:[]
-        })
-        setTimeout(()=>{
-          console.log(this.state.familyList);
-        },0)
-
+        // this.setState({
+        //   familyList:data.data.data,
+        //   isModify:[]
+        // })
+        // setTimeout(()=>{
+        //   console.log(this.state.familyList);
+        // },0)
+        console.log(data);
     })
   }
   componentWillMount() {
     console.log("======","familyinfo willmount ")
-
-    // this.getFamilyInfo(this.props.currentId);
+    console.log(this.props.currentId);
+    this.getFamilyInfo(this.props.currentId);
   }
   componentWillReceiveProps(newProps){
     console.log("======","familyinfo receive props")
-    // console.log(newProps.currentId);
-    // console.log(this.props.currentId);
-    if(nextProps.currentId!==this.props.currentId){
-      //重置数据
-    }
+    console.log(newProps.currentId);
+    console.log(this.props.currentId);
+    // if(nextProps.currentId!==this.props.currentId){
+    //   //重置数据
+    // }
   }
   
   constructor(props) {
