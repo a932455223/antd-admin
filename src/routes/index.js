@@ -110,7 +110,7 @@ const route = (
         cb(null,require('../Pages/Demos/Form/Form2').default)
       })
     }}>
-
+    </Route>  
     <Route path='login' getComponent={(location, cb) => {
       require.ensure([], () => {
         cb(null, require('../Pages/Login/login').default)
