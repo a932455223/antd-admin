@@ -23,11 +23,8 @@ import ViewDetailsBasicInfo from './widget/Form/ViewDetailsBasicInfo'
 import EditBriefBasicInfo from './widget/Form/EditBriefBasicInfo'
 import EditDetailsBasicInfo from './widget/Form/EditDetailsBasicInfo'
 
-
 import BasicInfoEdit from './widget/BasicInfoEdit'
-
 import AddCrewModal from './widget/AddCrewModal'
-
 
 function info(msg,color){
   console.log('%c'+msg,'color:'+color);
@@ -75,7 +72,8 @@ class BasicInfo extends Component {
       },
       address: {
         value: ''
-      }
+      },
+      tags: [],
     },
     detailsInfo: {
       yearIncome: {
@@ -182,6 +180,7 @@ class BasicInfo extends Component {
   getBaseInfo = (id) => {
     ajax.Get(API.GET_CUSTOMER_BASE(4))
     .then((res) => {
+      // console.log(res.data.data);
       const dateFormat = 'YYYY-MM-DD'; // 日期格式
       const commonDropDownType = [
         'marryStatus',
@@ -242,7 +241,8 @@ class BasicInfo extends Component {
           },
           address: {
             value: {$set: res.data.data.address}
-          }
+          },
+          tags: {$push: res.data.data.joiners}
         },
         detailsInfo: {
           yearIncome: {
@@ -346,8 +346,14 @@ class BasicInfo extends Component {
         <div className="">
           {mode && mode === 'view' &&
             <div>
-              <ViewBriefBasicInfo {...basicInfoProps}/>
-              <ViewDetailsBasicInfo {...basicInfoProps}/>
+              <ViewBriefBasicInfo
+                briefInfo={briefInfo}
+                {...basicInfoProps}
+              />
+              <ViewDetailsBasicInfo
+                detailsInfo={detailsInfo}
+                {...basicInfoProps}
+              />
             </div>
           }
 

@@ -171,8 +171,7 @@ class EditBriefBasicInfoForm extends Component{
                   <Input placeholder="填写备注信息"/>
                 )}
 
-                {
-                  index === 0
+                {index === 0
                     ?
                     <i
                       className="dynamic-add-button iconfont"

@@ -12,42 +12,48 @@ const FormItem = Form.Item;
 
 class ViewBriefBasicInfoForm extends Component{
   state = {
-    departmentName: ''
+    department: '',
+    manager: '',
+    grid: '',
+    tags: []
   }
 
   componentWillMount(){
-    console.log('key will mount');
+    // console.log('key will mount');
+    this.getFiledsName();
   }
 
   componentWillReceiveProps(next) {
-    console.log('personalBasicInfo will recieve props');
-    // this.getDepartmentName();
+    // console.log('personalBasicInfo will recieve props');
+    // if(this.props.currentId !== next.currentId) {
+      this.getFiledsName();
+    // }
   };
 
-  // 获取部门信息
-  getDepartmentName = () => {
-    const { department } = this.props.briefInfo;
-
-    // 将 id抽取到数据上一级
-    if(department.options.length > 0 && department.value) {
-      let goalDepartment = department.options.map((item) => {
-        if(item.id == department.value){
-          this.setState({
-            department: item.name
-          });
-        }
-      });
-      // console.log(goalDepartment);
-      // this.setState({
-      //   department: ''
-      // });
+  // 获取信息
+  getFiledsName = () => {
+    const { briefInfo } = this.props;
+    // 遍历对象
+    for (const key of Object.keys(briefInfo)) {
+      // console.log(briefInfo[key]);
+      if(briefInfo[key].options && briefInfo[key].options.length > 0 && briefInfo[key].value) {
+        let goalDepartment = briefInfo[key].options.find((item) => item.id == briefInfo[key].value);
+        // 把对应的值打进去
+        this.setState({
+          [key]: goalDepartment.name
+        })
+      }
     }
+
+    this.setState({
+      tags: briefInfo.tags && briefInfo.tags
+    })
   }
 
   render() {
     const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess, beEdited} = this.props;
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    const { department, manager, grid } = this.props.briefInfo;
+    const { department, manager, grid, phone, wechat, certificate, address } = this.props.briefInfo;
 
     const formItemLayout = {
       labelCol: {
@@ -65,8 +71,8 @@ class ViewBriefBasicInfoForm extends Component{
 
     const ViewParticipate = this.state.tags && this.state.tags.map((item, index) => {
       return (
-        <Tag key={item}>
-          {item}
+        <Tag key={item.id}>
+          {item.name}
         </Tag>
       )
     })
@@ -119,7 +125,7 @@ class ViewBriefBasicInfoForm extends Component{
               wrapperCol={{span: 13}}
               label="所属机构"
             >
-              <span>{this.state.departmentName}</span>
+              <span>{this.state.department}</span>
             </FormItem>
           </Col>
 
@@ -129,7 +135,7 @@ class ViewBriefBasicInfoForm extends Component{
               wrapperCol={{span: 13}}
               label="客户经理"
             >
-              <span>{eachCustomerInfo.manager}</span>
+              <span>{this.state.manager}</span>
             </FormItem>
           </Col>
 
@@ -139,7 +145,7 @@ class ViewBriefBasicInfoForm extends Component{
               wrapperCol={{span: 13}}
               label="所属网格"
             >
-              <span>{eachCustomerInfo.grid}</span>
+              <span>{this.state.grid}</span>
             </FormItem>
           </Col>
         </Row>
@@ -153,7 +159,7 @@ class ViewBriefBasicInfoForm extends Component{
                 wrapperCol={{span: 15}}
                 label="手机号："
               >
-                <span>{eachCustomerInfo.phone}</span>
+                <span>{phone && phone.value}</span>
               </FormItem>
             </Col>
 
@@ -163,7 +169,7 @@ class ViewBriefBasicInfoForm extends Component{
                 wrapperCol={{span: 15}}
                 label="微信号："
               >
-                <span>{eachCustomerInfo.wechat}</span>
+                <span>{wechat.value}</span>
               </FormItem>
             </Col>
           </Row>
@@ -174,9 +180,9 @@ class ViewBriefBasicInfoForm extends Component{
                 labelCol={{span: 8}}
                 wrapperCol={{span: 15}}
                 label="身份证号："
-                className="idNumber"
+                className="certificate"
               >
-                <span>{eachCustomerInfo.certificate}</span>
+                <span>{certificate.value}</span>
               </FormItem>
             </Col>
 
@@ -215,14 +221,14 @@ class ViewBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={12} className={currentId === -1 ? "addressCreate" : "addressEdit"}>
+            <Col span={24} className={currentId === -1 ? "addressCreate" : "addressEdit"}>
               <FormItem
-                labelCol={{span: 8}}
-                wrapperCol={{span: 15}}
+                labelCol={{span: 4}}
+                wrapperCol={{span: 19}}
                 label="家庭住址："
                 className="address"
               >
-                <span>{eachCustomerInfo.address}</span>
+                <span>{address.value}</span>
               </FormItem>
             </Col>
           </Row>
