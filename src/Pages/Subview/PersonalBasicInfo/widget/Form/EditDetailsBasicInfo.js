@@ -26,11 +26,11 @@ class EditDetailsBasicInfoForm extends Component{
   }
 
   componentWillMount(){
-    console.log('key will mount');
+    // console.log('key will mount');
   }
 
   componentWillReceiveProps(next) {
-    console.log('personalBasicInfo will recieve props');
+    // console.log('personalBasicInfo will recieve props');
 
     // 重置 InfoBeEdited
     if(!next.beEdited) {
@@ -41,18 +41,25 @@ class EditDetailsBasicInfoForm extends Component{
     }
   };
 
+  // 监听 inputChange事件
   inputDetailsInfoChange = (e) => {
-    let newState = update(this.state, {
-      detailsInfoBeEdit: {$set: true}
-    })
-    this.setState(newState)
+    // 当 id 不等于负一时，内容修改激活保存按钮
+    if(this.props.id !== -1) {
+      let newState = update(this.state, {
+        detailsInfoBeEdit: {$set: true}
+      })
+      this.setState(newState)
+    }
   }
 
+  // 监听 selectChange事件
   selectDetailsInfoChange = () => {
-    let newState = update(this.state, {
-      detailsInfoBeEdit: {$set: true}
-    })
-    this.setState(newState)
+    if(this.props.id !== -1) {
+      let newState = update(this.state, {
+        detailsInfoBeEdit: {$set: true}
+      })
+      this.setState(newState)
+    }
   };
 
   // with car and show its value
@@ -271,7 +278,7 @@ class EditDetailsBasicInfoForm extends Component{
                       filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                       getPopupContainer={() => document.getElementById('editMyDetails')}
                     >
-                      {carPrice && carPrice.options.map(carPriceItem =>
+                      {carPrice && carPrice.options && carPrice.options.map(carPriceItem =>
                         <Option key={carPriceItem.id} value={carPriceItem.id + ''}>{carPriceItem.name}</Option>
                       )}
                     </Select>

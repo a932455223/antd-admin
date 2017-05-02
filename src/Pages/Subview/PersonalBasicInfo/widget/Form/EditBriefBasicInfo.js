@@ -38,14 +38,19 @@ class EditBriefBasicInfoForm extends Component{
   }
 
   componentWillMount(){
-    console.log('key will mount');
+    // console.log('key will mount');
   }
 
   componentWillReceiveProps(next) {
-    console.log('personalBasicInfo will recieve props');
+    // console.log('personalBasicInfo will recieve props');
+    const { getFieldValue } = next.form;
+
+    if(next.id !== -1 || (getFieldValue('phone') !== '' && getFieldValue('department') !== '')) {
+      this.inputBasicInfoChange();
+    }
 
     // 重置 InfoBeEdited
-    if(!next.beEdited) {
+    if(!next.beEdited || getFieldValue('phone') === '' || getFieldValue('department') === '') {
       let newState = update(this.state, {
         basicInfoBeEdit: {$set: false}
       })
@@ -97,10 +102,21 @@ class EditBriefBasicInfoForm extends Component{
     });
   }
 
+  handleClose = () => {
+    if(!this.props.beEdited) {
+      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    }
+
+    let newState = update(this.state, {
+      basicInfoBeEdit: {$set: true}
+    })
+    this.setState(newState)
+  }
+
   render() {
     const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess, beEdited} = this.props;
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue} = this.props.form;
-    const { department, manager, grid } = this.props.briefInfo;
+    const { department, manager, grid, tags } = this.props.briefInfo;
 
     const kinitialValue = function(){
       var selfkeys = [];
@@ -128,9 +144,9 @@ class EditBriefBasicInfoForm extends Component{
     /* 编辑状态下
     ** basic info
     */
-    const EditParticipate = this.state.tags && this.state.tags.map((item,index) => {
+    const EditParticipate = tags && tags.map((item,index) => {
       return (
-        <Tag key={item.id} closable="true" afterClose={() => this.handleClose(item)}>
+        <Tag key={`${item.id}${index}`} closable="true" afterClose={() => this.handleClose(item)}>
           {item.name}
         </Tag>
       )
@@ -269,7 +285,7 @@ class EditBriefBasicInfoForm extends Component{
         </Row>
 
         <div className="personInfo">
-          {EditFormItems()}
+        {EditFormItems()}
           <Row>
             <Col span={12} className={currentId === -1 ? "phoneCreate" : "phoneEdit"}>
               <FormItem labelCol={{span: 8}}
@@ -308,7 +324,7 @@ class EditBriefBasicInfoForm extends Component{
                 labelCol={{span: 8}}
                 wrapperCol={{span: 15}}
                 label="身份证号："
-                className="idNumber"
+                className="certificate"
               >
 
                 {getFieldDecorator('certificate', {
