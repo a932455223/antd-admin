@@ -51,7 +51,7 @@ class RoleEditF extends Component {
     ajax.Get(API.GET_GRIDS_ID(id))
     .then(res => {
       this.setState({
-        area : res.data.data
+        area : this.transformData(res.data.data)
       })
     })
    }
@@ -67,23 +67,24 @@ class RoleEditF extends Component {
    }
 
    handleFormChange = (changedFields)=>{
-    let newState = update(this.state,{area:{...this.state.area,...changedFields}})
-      this.setState(newState);
+    let newState = update(this.state,{area:{$set:{...this.state.area,...changedFields}}})
+    console.dir(newState)
+    this.setState(newState);
    }
+
+   transformData = (obj)=>{
+    return Object.keys(obj).reduce(function(pre,key){
+      pre[key] = {value:obj[key]}
+      return pre;
+    },{}) 
+   }
+
   render() {
-    const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
     const {id } = this.props;
     const {area, orgNameDropDown} = this.state;
-
-    let areaForm = Object.keys(area).reduce(function(pre,key){
-      pre.key = {value:area[key]}
-      return pre;
-    },{})
-
-    console.dir(areaForm);
     return (
       <div className="formbox">
-        <AreaForm area={areaForm} onChange={this.handleFormChange}/>
+        <AreaForm area={area} onChange={this.handleFormChange} close={this.props.close}/>
           <Row className="buttonsave">
             <Col span={24} >
               <Col span={4}>
@@ -121,8 +122,5 @@ class RoleEditF extends Component {
       )
   }
 }
-const RoleEdit = Form.create()(RoleEditF);
 
-
-
-export default RoleEdit;
+export default RoleEditF;
