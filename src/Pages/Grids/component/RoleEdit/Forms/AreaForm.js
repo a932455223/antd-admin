@@ -1,5 +1,7 @@
 import React, {Component} from "react";
 import {Button, Card, Input, Table , Row, Col, Form, Icon, Select} from "antd";
+import API from "../../../../../../API";
+import ajax from '../../../../../tools/POSTF'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -8,11 +10,24 @@ class AreaForm extends Component{
 	orgIdChange = (value)=>{
 
 	}
+  handleChange = () => {
+    const id = this.props.id;
+    const { getFieldsValue} = this.props.form;
+    const FieldsValue = getFieldsValue();
+    console.log(FieldsValue);
+    const FieldsValueAll = {...FieldsValue, ...{name:this.props.area.name.value}}
+    ajax.Put(API.PUT_API_AREA(id),FieldsValueAll)
+    .then(() => {
+      console.log("put. ok");
+      this.props.ajaxFaFun()
+    })
+  }
 
 	render(){
 		 const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched , getFieldValue} = this.props.form;
 		 const {orgNameDropDown} = this.props;
 		return (
+      <div>
 		<Form>
           <Row className="fristrow">
             <Col span={12} className="fristcol">
@@ -20,7 +35,7 @@ class AreaForm extends Component{
                         wrapperCol={{span: 20}}
                         className="idnumber"
               >
-             <span className="gridname">{getFieldValue('name')}</span>
+             <span className="gridname">{this.props.area.name &&  this.props.area.name.value}</span>
               </FormItem>
             </Col>
           <Icon
@@ -163,7 +178,15 @@ class AreaForm extends Component{
             </Col>
           </Row>
           </div>
-          </Form>)
+          </Form>
+          <Row className="buttonsave">
+            <Col span={24} >
+              <Col span={4}>
+              </Col>
+              <Button type="primary" onClick={this.handleChange}>保存</Button>
+            </Col>
+          </Row>
+          </div>)
 	}
 }
 
