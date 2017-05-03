@@ -118,6 +118,8 @@ class EditBriefBasicInfoForm extends Component{
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue} = this.props.form;
     const { department, manager, grid, tags } = this.props.briefInfo;
 
+    console.log(department);
+
     const kinitialValue = function(){
       var selfkeys = [];
       eachCustomerInfo.accounts && eachCustomerInfo.accounts.map((item ,index) => {
@@ -229,7 +231,7 @@ class EditBriefBasicInfoForm extends Component{
                   filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                   getPopupContainer={() => document.getElementById('editMyBase')}
                 >
-                  {department && department.options.map(departmentItem =>
+                  {department && department.options && department.options.map(departmentItem =>
                     <Option key={departmentItem.id} value={departmentItem.id + ''}>{departmentItem.name}</Option>
                   )}
                 </Select>
