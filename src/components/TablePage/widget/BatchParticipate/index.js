@@ -4,6 +4,7 @@
 import React, {Component} from "react";
 import {Card, Col, Icon, Row, Table, Tabs, Tree,Tag, Button, message} from "antd";
 import axios from "axios";
+import ajax from '../../../../tools/POSTF';
 //=============================================+
 import "./less/indexStyle.less";
 import API from "../../../../../API";
@@ -21,18 +22,16 @@ export default class BatchParticipate extends Component {
     }
   };
 
-
   componentWillMount() {
-    axios.get(API.GET_DEPARTMENT_HIERARCHY)
+    ajax.Get(API.GET_CUSTOMER_ADD_DEPARTMENT_HIERARCHY)
       .then(res => {
         this.setState({
-          department: res.data.data
+          department: res.data.data[0]
         })
       });
-
-
-    axios.get(API.GET_STAFFS)
-      .then( res => {
+    //
+    ajax.Get(API.GET_STAFFS, {departmentId: 1})
+      .then(res => {
         this.setState({
           table: {
             dataSource: res.data.data.staffs
@@ -42,13 +41,13 @@ export default class BatchParticipate extends Component {
   }
 
   createTree(data) {
-    if (data.childDepartment) {
+    if (data && data.childDepartments) {
       return (
         <TreeNode title={<span>{data.name}</span>} id={data.id} key={data.id}>
           {
-            data.childDepartment.map(childrenDepartment => {
+            data.childDepartments.map(childDepartments => {
               return (
-                this.createTree(childrenDepartment)
+                this.createTree(childDepartments)
               )
             })
           }
@@ -96,9 +95,9 @@ export default class BatchParticipate extends Component {
   }
 
   // 卸载方法
-  componentWillUnmount(){
-    removeEventListener('resize', this.initTableScroll)
-  }
+  // componentWillUnmount(){
+  //   removeEventListener('resize', this.initTableScroll)
+  // }
 
   saveEditInfo = () => {
     this.props.closeDock();

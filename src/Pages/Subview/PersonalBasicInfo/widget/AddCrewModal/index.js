@@ -1,5 +1,6 @@
 import React,{Component} from 'react'
-import axios from "axios"
+import axios from "axios";
+import ajax from '../../../../../tools/POSTF';
 import API from "../../../../../../API";
 import {
   Modal,
@@ -19,14 +20,14 @@ export default class AddCrewModal extends Component {
   };
 
   componentWillMount() {
-    axios.get(API.GET_DEPARTMENT_HIERARCHY)
+    ajax.Get(API.GET_DEPARTMENT_HIERARCHY)
       .then(res => {
         this.setState({
           department: res.data.data
         })
       });
 
-    axios.get(API.GET_STAFFS)
+    ajax.Get(API.GET_STAFFS, {departmentId: 1})
       .then(res => {
         this.setState({
           table: {

@@ -13,6 +13,8 @@ export default {
 
   GET_DEPARTMENT_HIERARCHY: '/api/department/hierarchy',
 
+  GET_CUSTOMER_ADD_DEPARTMENT_HIERARCHY: '/api/customer/add/departments/hierarchy',
+
   POST_CUSTOMER_PRIVILEGE: '/asd/privilege/customer',
   //===========dropDown option========================================
   GET_SYSTEM_SLIDER_BAR: '/asd/common/dropdown/list/system',
