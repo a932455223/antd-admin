@@ -34,7 +34,9 @@ class EditBriefBasicInfoForm extends Component{
         isLeaf: false,
       }
     ],
-    basicInfoBeEdit: false
+    basicInfoBeEdit: false,
+    phone: '',
+    department: ''
   }
 
   componentWillMount(){
@@ -44,10 +46,16 @@ class EditBriefBasicInfoForm extends Component{
   componentWillReceiveProps(next) {
     // console.log('personalBasicInfo will recieve props');
     const { getFieldValue } = next.form;
+    //
+    // if(next.id !== -1 || (getFieldValue('phone') !== '' && getFieldValue('department') !== '')) {
+    //
+    // }
 
-    if(next.id !== -1 || (getFieldValue('phone') !== '' && getFieldValue('department') !== '')) {
-      this.inputBasicInfoChange();
-    }
+    // this.setState({
+    //   id: next.id,
+    //   phone: getFieldValue('phone'),
+    //   department: getFieldValue('department')
+    // })
 
     // 重置 InfoBeEdited
     if(!next.beEdited || getFieldValue('phone') === '' || getFieldValue('department') === '') {
@@ -59,7 +67,7 @@ class EditBriefBasicInfoForm extends Component{
   };
 
   // basic 输入框内容被修改了
-  inputBasicInfoChange = (e) => {
+  inputBasicInfoChange = () => {
     let newState = update(this.state, {
       basicInfoBeEdit: {$set: true}
     })
@@ -113,12 +121,15 @@ class EditBriefBasicInfoForm extends Component{
     this.setState(newState)
   }
 
+  updateInfo = (briefInfo) => {
+    const { addNewCustomer } = this.props;
+    addNewCustomer(briefInfo);
+  }
+
   render() {
     const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess, beEdited} = this.props;
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue} = this.props.form;
     const { department, manager, grid, tags } = this.props.briefInfo;
-
-    console.log(department);
 
     const kinitialValue = function(){
       var selfkeys = [];
@@ -220,9 +231,9 @@ class EditBriefBasicInfoForm extends Component{
                 rules: [{
                   required: true,
                   message: '选择所属机构!'
-                }],
+              }],
                 // initialValue: eachCustomerInfo.department,
-                onChange: this.inputBasicInfoChange
+                onChange: this.selectBasicInfoChange
               })(
                 <Select
                   showSearch
@@ -245,7 +256,7 @@ class EditBriefBasicInfoForm extends Component{
                       label="客户经理">
               {getFieldDecorator('manager', {
                 // initialValue: eachCustomerInfo.manager,
-                onChange: this.inputDetailsInfoChange
+                onChange: this.selectBasicInfoChange
               })(
                 <Select
                   showSearch
@@ -268,7 +279,7 @@ class EditBriefBasicInfoForm extends Component{
                       label="所属网格">
               {getFieldDecorator('grid', {
                 // initialValue: eachCustomerInfo.grid,
-                onChange: this.inputDetailsInfoChange
+                onChange: this.selectBasicInfoChange
               })(
                 <Select
                   showSearch
@@ -433,7 +444,7 @@ class EditBriefBasicInfoForm extends Component{
             </Col>
             <Button
               type="primary"
-              onClick={createCustomerSuccess}
+              onClick={this.updateInfo.bind(this, getFieldsValue())}
               disabled={!this.state.basicInfoBeEdit}
             >保存</Button>
           </Col>

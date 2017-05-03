@@ -39,6 +39,8 @@ class BasicInfo extends Component {
     modalVisible: false,
     edited: false,
     eachCustomerInfo: '',
+    updateBriefInfo: {},
+    updateDetailsInfo: {},
     briefInfo: {
       department: {
         value: '',
@@ -334,6 +336,13 @@ class BasicInfo extends Component {
     }
   }
 
+  // 新建客户
+  addNewCustomer = (briefInfo) => {
+    this.setState({
+      updateBriefInfo: briefInfo
+    });
+  }
+
   handleFormChange = (changedFields) => {
     let newState = update(this.state,{
       briefInfo: {
@@ -355,7 +364,7 @@ class BasicInfo extends Component {
   render() {
     const { customerInfoBeEdit } = this.props;
     const { step, mode, id, beEdited } = this.props.currentCustomerInfo;
-    const { eachCustomerInfo, edited, detailsInfo, briefInfo } = this.state;
+    const { eachCustomerInfo, edited, detailsInfo, briefInfo, updateBriefInfo } = this.state;
 
     const modal = {
       visible: this.state.modalVisible,
@@ -363,6 +372,7 @@ class BasicInfo extends Component {
     };
 
     const basicInfoProps = {
+      addNewCustomer: this.addNewCustomer,
       beEdited: beEdited,
       customerInfoBeEdit: customerInfoBeEdit,
       id: id,
