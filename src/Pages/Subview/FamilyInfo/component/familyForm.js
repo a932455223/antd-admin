@@ -23,9 +23,18 @@ class familyForm extends Component{
     componentWillReceiveProps(newProps){
         // console.log(this.props)
     }
-     handleChange(value) {
-  console.log(`selected ${value}`);
-}
+    findDropDownItem(value,dropDownType){
+        return this.props[dropDownType].filter((item)=>{
+            let bool;
+            Object.getOwnPropertyNames(item).
+                forEach((val, idx, array)=> {
+                    if(item[val]==value){
+                        bool=true;
+                    }
+                });
+            return bool;
+        })[0];
+    }
     render(){
         const { getFieldDecorator } = this.props.form;
         return (
@@ -52,11 +61,34 @@ class familyForm extends Component{
                         </div>
                     }
                 >
-                <FormItem>
+                <Row>
+                    <Col span={8}>
+                    <span>关系：</span>
+                    </Col>
+                    <Col span={16}>
+                        <Select 
+                            
+                        >
+                            {
+                                this.props.familyRelation.map((rel) => {
+                                    return (
+                                        <Option 
+                                            value={rel.id.toString()}
+                                            key={rel.id.toString()}
+                                        >
+                                            {rel.name}
+                                        </Option >
+                                    )
+                                })
+                            }
+                        </Select>
+                    </Col>
+                </Row>
+                {/*<FormItem>
                 {getFieldDecorator('relation', {
                     rules: [{ required: true, message: 'relation is required!' }],
                 })(<Input />)}
-                </FormItem>
+                </FormItem>*/}
                     {/*<Row>
                         <Col span={8}>
                         <span>关系：</span>

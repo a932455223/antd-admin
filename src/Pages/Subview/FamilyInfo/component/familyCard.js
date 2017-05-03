@@ -20,7 +20,9 @@ export default class familyCard extends Component{
         
     }
     componentWillReceiveProps(){
-        console.log("receivvvvvvvvvvvvve")
+        // console.log(
+    //    this.findDropDownItem(61,'commonJobCategory'));
+    //    console.log(this.props.commonJobCategory);
     }
     findDropDownItem(value,dropDownType){
         return this.props[dropDownType].filter((item)=>{
@@ -83,7 +85,7 @@ export default class familyCard extends Component{
                         工作属性：
                     </Col>
                     <Col span={16}>
-                        {/*{this.findDropDownItem(this.props.item.jobCategory.value,'commonJobCategory').name}*/}
+                        {this.findDropDownItem(this.props.item.jobCategory.value,'commonJobCategory').name}
                     </Col>
                 </Row>
             </Card>
