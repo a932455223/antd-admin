@@ -3,6 +3,7 @@ import {Button, Card, Input, Table , Row, Col, Form, Icon, Select} from "antd";
 import API from "../../../../../../API";
 import ajax from '../../../../../tools/POSTF'
 import Reg from "../../../../../tools/Reg"
+import { Modal } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -13,6 +14,9 @@ class AreaForm extends Component{
 	}
 
   state = {
+	  provinceText:'',
+    cityText:'',
+    regionText:'',
     province:[],
     city:[],
     region:[]
@@ -30,6 +34,17 @@ class AreaForm extends Component{
 
 
   componentWillReceiveProps(nextProps){
+
+    if(this.props.id !== nextProps.id && nextProps.area !==''){
+      let arry = nextProps.area.address.value.split(' ')
+
+      this.setState({
+        provinceText:arry[0],
+        cityText:arry[1],
+        regionText:arry[2]
+      })
+
+    }
 
     if((this.props.area ==='' && nextProps.area !=='') || (nextProps.area !== '' && this.props.area !=='' && nextProps.area.city.value !==this.props.area.city.value)){
       if(nextProps.area.province.value !==undefined){
@@ -49,8 +64,6 @@ class AreaForm extends Component{
           city:res.data.data
         })
       })
-
-
   }
 
   handleProvinceChange = (value)=>{
@@ -69,22 +82,56 @@ class AreaForm extends Component{
       })
   }
 
-  handleChange = () => {
+  handleSubmit = () => {
     const id = this.props.id;
-    const { getFieldsValue} = this.props.form;
+    const { getFieldsValue , getFieldValue} = this.props.form;
     const FieldsValue = getFieldsValue();
-    console.log(FieldsValue);
-    const FieldsValueAll = {...FieldsValue, ...{name:this.props.area.name.value}}
-    ajax.Put(API.PUT_API_AREA(id),FieldsValueAll)
-    .then(() => {
-      console.log("put. ok");
-      this.props.getTableData()
-    })
+    const pid = getFieldValue('province')
+    const cid = getFieldValue('city')
+    const rid = getFieldValue('region')
+    if(pid === undefined || cid === undefined || rid === undefined){
+      Modal.error({
+        content:'请仔细检查您填写的地址'
+      })
+    }else{
+      const province = this.state.province.find(item => item.id == pid).name
+      const city = this.state.city.find(item => item.id == cid).name
+      const region = this.state.region.find(item => item.id == rid).name
+      let address = province +' '+ city +' '+region + ' ' + getFieldValue('addressDetail')
+      FieldsValue.address = address
+      delete FieldsValue.city
+      delete FieldsValue.province
+      delete FieldsValue.region
+
+      const FieldsValueAll = {...FieldsValue, ...{name:this.props.area.name.value}}
+      console.dir(FieldsValueAll)
+      ajax.Put(API.PUT_API_AREA(id),FieldsValueAll)
+        .then(() => {
+          console.log("put. ok");
+          this.props.getTableData()
+        })
+    }
   }
 
 	render(){
 		 const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched , getFieldValue} = this.props.form;
 		 const {orgNameDropDown} = this.props;
+
+		 const Address = <Row>
+       <Col span={24} className="">
+         <FormItem labelCol={{span: 4}}
+                   wrapperCol={{span: 20}}
+                   label="网格地址"
+                   className="idnumber"
+         >
+           {
+             getFieldDecorator('address')(
+               <Input/>
+             )
+           }
+         </FormItem>
+       </Col>
+     </Row>;
 
     const Province = getFieldDecorator('province')(
       <Select
@@ -135,6 +182,30 @@ class AreaForm extends Component{
         <div className="ant-form-white">
           <Row>
             <Col span={12}>
+              <FormItem labelCol={{span: 8,offset:1}}
+                        wrapperCol={{span: 15}}
+                        label="所属机构"
+              >
+                {
+                  orgNameDropDown.length > 0 ? getFieldDecorator('orgId',{
+                    rules: [{ message: '请选择所属机构' , whitespace:"ture"}],
+                    onChange:this.orgIdChange
+                  })(
+                    <Select
+                      getPopupContainer={() => document.getElementById('RoleEdit')}
+                      className="selectorgId"
+                    >
+                      {
+                        orgNameDropDown.map((item,index)=>(<Option key={item.id.toString()} value={item.id.toString()}>{item.name}</Option>))
+                      }
+                    </Select>
+                  ):null
+                }
+
+              </FormItem>
+            </Col>
+
+            <Col span={12}>
               <FormItem  labelCol={{span: 8}}
                         wrapperCol={{span: 15}}
                         label="网格负责人"
@@ -142,37 +213,16 @@ class AreaForm extends Component{
               >
               {
                 getFieldDecorator('director')(
-                  <Input/>
+                 <Select>
+                   {[1,2,3,4,5,6,7].map((item,index)=>(<Option key={item.toString()}>{item}</Option>))}
+                 </Select>
                   )
               }
 
               </FormItem>
             </Col>
 
-            <Col span={12}>
-              <FormItem labelCol={{span: 8,offset:1}}
-                        wrapperCol={{span: 15}}
-                        label="所属机构"
-                        >
-                {
-                 	orgNameDropDown.length > 0 ? getFieldDecorator('orgId',{
-                 		rules: [{ message: '请选择所属机构' , whitespace:"ture"}],
-                 		onChange:this.orgIdChange
-                 	})(
-              		<Select
-	                    getPopupContainer={() => document.getElementById('RoleEdit')}
-                      className="selectorgId"
-	                  >
-	                  	{
 
-	                  		orgNameDropDown.map((item,index)=>(<Option key={item.id.toString()} value={item.id.toString()}>{item.name}</Option>))
-	                  	}
-	                </Select>
-              		):null
-                }
-
-              </FormItem>
-            </Col>
           </Row>
           <Row>
             <Col span={12} >
@@ -234,21 +284,7 @@ class AreaForm extends Component{
               </FormItem>
             </Col>
           </Row>
-          <Row>
-            <Col span={24} className="">
-              <FormItem labelCol={{span: 4}}
-                        wrapperCol={{span: 20}}
-                        label="网格地址"
-                        className="idnumber"
-              >
-              	{
-               			getFieldDecorator('address')(
-              				<Input/>
-              				)
-               	}
-              </FormItem>
-            </Col>
-          </Row>
+
           <Row gutter={8}>
             <Col span={9}>
               <FormItem
@@ -311,7 +347,7 @@ class AreaForm extends Component{
             <Col span={24} >
               <Col span={4}>
               </Col>
-              <Button type="primary" onClick={this.handleChange}>保存</Button>
+              <Button type="primary" onClick={this.handleSubmit}>保存</Button>
             </Col>
           </Row>
           </div>)
@@ -319,7 +355,6 @@ class AreaForm extends Component{
 }
 
 function mapPropsToFields(props){
-  console.dir(props.area)
 	return {
 		name:{
 		...props.area.name

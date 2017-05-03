@@ -50,6 +50,8 @@ class FamilyInfo extends Component {
             return pre;
           },{})
         });
+
+        console.dir(newFamilyList)
         this.setState({
           familyList:newFamilyList,
           isModify:new Array(newFamilyList.length).fill(false),
@@ -110,7 +112,7 @@ class FamilyInfo extends Component {
       console.log('重置数据')
     }
   }
-  
+
   constructor(props) {
     super(props);
   };
@@ -118,10 +120,10 @@ class FamilyInfo extends Component {
     const loading=this.state.isLoading?(<div>loading</div>):"";
     /*const familyCards=(
       <div className="familyCards">
-        <AddFamilyCard /> 
+        <AddFamilyCard />
       </div>
     );*/
-    
+
     return(
       <div className="families">
         {loading}
@@ -132,10 +134,10 @@ class FamilyInfo extends Component {
               this.state.familyList.map((item,index)=>{
                 if(this.state.isModify[index]){
                   return(
-                    <FamilyForm  
-                      toggleEdit={this.toggleEdit} 
-                      key={item.id.value.toString()} 
-                      {...item} 
+                    <FamilyForm
+                      toggleEdit={this.toggleEdit}
+                      key={item.id.value.toString()}
+                      {...item}
                       onChange={(e)=>{this.handleFormChange(index,e)}}
                       index={index}
                       familyRelation={this.state.familyRelation}
@@ -144,20 +146,20 @@ class FamilyInfo extends Component {
                   )
                 }else{
                   return(
-                    <FamilyCard 
-                      toggleEdit={this.toggleEdit}  
-                      key={item.id.value.toString()} 
-                      item={item} 
+                    <FamilyCard
+                      toggleEdit={this.toggleEdit}
+                      key={item.id.value.toString()}
+                      item={item}
                       index={index}
                       familyRelation={this.state.familyRelation}
                       commonJobCategory={this.state.commonJobCategory}
                     />
-                    
+
                   )
                 }
               })
             }
-            <AddFamilyCard 
+            <AddFamilyCard
               familyRelation={this.state.familyRelation}
               commonJobCategory={this.state.commonJobCategory}
             />
@@ -165,7 +167,7 @@ class FamilyInfo extends Component {
               {JSON.stringify(this.state, null, 2)}
             </pre>
           </div>:
-          <AddFamilyCard 
+          <AddFamilyCard
             familyRelation={this.state.familyRelation}
             commonJobCategory={this.state.commonJobCategory}
           />
