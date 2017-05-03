@@ -73,49 +73,49 @@ class BasicInfo extends Component {
       address: {
         value: ''
       },
-      tags: [],
+      tags: '',
     },
     detailsInfo: {
       yearIncome: {
-        value: ''
+        // value: ''
       },
       yearExpense: {
-        value: ''
+        // value: ''
       },
       marryStatus: {
-        value: '',
+        // value: '',
         options: []
       },
       houseType: {
-        value: '',
+        // value: '',
         options: []
       },
       withCar: {
-        value: '',
+        // value: '',
         options: []
       },
       carPrice: {
-        value: '',
+        // value: '',
         options: []
       },
       withDebt: {
-        value: '',
+        // value: '',
         options: []
       },
       debtAmount: {
-        value: '',
+        // value: '',
         options: []
       },
       needLoan: {
-        value: '',
+        // value: '',
         options: []
       },
       loanAmount: {
-        value: '',
+        // value: '',
         options: []
       },
       loanPurpose: {
-        value: '',
+        // value: '',
         options: []
       },
     }
@@ -164,102 +164,7 @@ class BasicInfo extends Component {
 
         this.setState(newState);
       })
-    })
-  }
-
-  componentWillReceiveProps(next){
-    info('basicInfo will receive props.');
-    // 当前的客户 id发生变化时，或者当前用户的信息 beEdited === true时，重置 state
-    const { id, beEdited} = this.props.currentCustomerInfo;
-    if(id !== next.currentCustomerInfo.id || beEdited === true) {
-      this.getBaseInfo(next.currentCustomerInfo.id);
-    }
-  }
-
-  // 获取客户基本信息
-  getBaseInfo = (id) => {
-    ajax.Get(API.GET_CUSTOMER_BASE(4))
-    .then((res) => {
-      // console.log(res.data.data);
-      const dateFormat = 'YYYY-MM-DD'; // 日期格式
-      const commonDropDownType = [
-        'marryStatus',
-        'houseType',
-        'withCar',
-        'carPrice',
-        'withDebt',
-        'debtAmount',
-        'needLoan',
-        'loanAmount',
-        'loanPurpose'
-      ];
-      commonDropDownType.map(item => {
-        let newState = update(this.state, {
-          detailsInfo: {
-            [item]: {
-              value: {$set: res.data.data[item] + ''}
-            },
-          }
-        })
-
-        // 将 newState赋值给原先的 state
-        return this.state = newState;
-
-        if(item === commonDropDownType[commonDropDownType.length - 1]) {
-          this.setState(newState);
-        }
-      })
-
-      let newState = update(this.state, {
-        briefInfo: {
-          department: {
-            value: {$set: res.data.data.department + ''}
-          },
-          manager: {
-            value: {$set: res.data.data.manager + ''}
-          },
-          grid: {
-            value: {$set: res.data.data.grid + ''}
-          },
-          phone: {
-            value: {$set: res.data.data.phone}
-          },
-          wechat: {
-            value: {$set: res.data.data.wechat}
-          },
-          certificate: {
-            value: {$set: res.data.data.certificate}
-          },
-          birth: {
-            value: {$set: moment(res.data.data.birth, dateFormat)}
-          },
-          origin: {
-            value: {$set: [res.data.data.origin]}
-          },
-          age: {
-            value: {$set: res.data.data.age}
-          },
-          address: {
-            value: {$set: res.data.data.address}
-          },
-          tags: {$push: res.data.data.joiners}
-        },
-        detailsInfo: {
-          yearIncome: {
-            value: {
-              $set: res.data.data.yearIncome
-            }
-          },
-          yearExpense: {
-            value: {
-              $set: res.data.data.yearExpense
-            }
-          },
-        },
-        eachCustomerInfo: {$set: res.data.data}
-      });
-      this.setState(newState);
-    })
+    });
 
     // 所属机构
     ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
@@ -300,6 +205,110 @@ class BasicInfo extends Component {
     })
   }
 
+  componentWillReceiveProps(next){
+    info('basicInfo will receive props.');
+    // 当前的客户 id发生变化时，或者当前用户的信息 beEdited === true时，重置 state
+    const { id, beEdited} = this.props.currentCustomerInfo;
+    if(id !== next.currentCustomerInfo.id || beEdited === true ) {
+      this.getBaseInfo(next.currentCustomerInfo.id);
+    }
+  }
+
+  // 获取客户基本信息
+  getBaseInfo = (id) => {
+    if(id !== -1) {
+      ajax.Get(API.GET_CUSTOMER_BASE(4))
+      .then((res) => {
+        // console.log(res.data.data);
+        const dateFormat = 'YYYY-MM-DD'; // 日期格式
+        const commonDropDownType = [
+          'marryStatus',
+          'houseType',
+          'withCar',
+          'carPrice',
+          'withDebt',
+          'debtAmount',
+          'needLoan',
+          'loanAmount',
+          'loanPurpose'
+        ];
+        commonDropDownType.map(item => {
+          // 判断对应的值是否为 null
+          if(res.data.data[item] !== null) {
+            let newState = update(this.state, {
+              detailsInfo: {
+                [item]: {
+                  value: {$set: res.data.data[item] + ''}
+                },
+              }
+            })
+            return this.state = newState; // 将 newState赋值给原先的 state
+            if(item === commonDropDownType[commonDropDownType.length - 1]) {
+              this.setState(newState);
+            }
+          } else {
+            // 当该属性的 value为 null的时候，且该对象的属性发生了变化
+            // 删除 detailsInfo中的 value属性
+            if(this.state.detailsInfo[item].value) {
+              delete this.state.detailsInfo[item].value
+            }
+          }
+        })
+
+        // 更新 briefInfo, detailsInfo, eachCustomerInfo
+        let newState = update(this.state, {
+          briefInfo: {
+            department: {
+              value: {$set: res.data.data.department + ''}
+            },
+            manager: {
+              value: {$set: res.data.data.manager + ''}
+            },
+            grid: {
+              value: {$set: res.data.data.grid + ''}
+            },
+            phone: {
+              value: {$set: res.data.data.phone}
+            },
+            wechat: {
+              value: {$set: res.data.data.wechat}
+            },
+            certificate: {
+              value: {$set: res.data.data.certificate}
+            },
+            birth: {
+              value: {$set: moment(res.data.data.birth, dateFormat)}
+            },
+            origin: {
+              value: {$set: [res.data.data.origin]}
+            },
+            age: {
+              value: {$set: res.data.data.age}
+            },
+            address: {
+              value: {$set: res.data.data.address}
+            },
+            tags: {$set: res.data.data.joiners}
+          },
+          detailsInfo: {
+            yearIncome: {
+              value: {
+                $set: res.data.data.yearIncome
+              }
+            },
+            yearExpense: {
+              value: {
+                $set: res.data.data.yearExpense
+              }
+            },
+          },
+          eachCustomerInfo: {$set: res.data.data}
+        });
+        this.setState(newState);
+      })
+    }
+  }
+
   handleFormChange = (changedFields) => {
     let newState = update(this.state,{
       briefInfo: {
@@ -320,7 +329,7 @@ class BasicInfo extends Component {
 
   render() {
     const { customerInfoBeEdit } = this.props;
-    const { step, mode, currentId, beEdited } = this.props.currentCustomerInfo;
+    const { step, mode, id, beEdited } = this.props.currentCustomerInfo;
     const { eachCustomerInfo, edited, detailsInfo, briefInfo } = this.state;
 
     const modal = {
@@ -331,7 +340,7 @@ class BasicInfo extends Component {
     const basicInfoProps = {
       beEdited: beEdited,
       customerInfoBeEdit: customerInfoBeEdit,
-      currentId: eachCustomerInfo.id,
+      id: id,
       eachCustomerInfo: eachCustomerInfo
     }
 
