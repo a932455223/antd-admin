@@ -10,8 +10,11 @@ import {
 } from 'antd';
 import styles from './../indexStyle.less';
 import { connect } from 'react-redux';
+import api from './../../../../../API';
+import ajax from '../../../../tools/POSTF.js';
 const FormItem = Form.Item;
 const Option = Select.Option;
+
 export default class AddFamilyCard extends Component{
     state = {
         isAdd:false
@@ -27,7 +30,7 @@ export default class AddFamilyCard extends Component{
         });
     }
     componentWillMount(){
-
+            
             // console.log(this.props.item.certificate)
             // console.log(this.props.item.id)
             // console.log(this.props.item.name)

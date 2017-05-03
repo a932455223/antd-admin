@@ -18,10 +18,21 @@ class familyForm extends Component{
     };
     componentWillMount() {
         // console.log(this.props.item.phone.value);
-        console.log(this.props.item)
+        // console.log(this.props.item)
+        // console.log(this)
     }
     componentWillReceiveProps(newProps){
         // console.log(this.props)
+    }
+    clickSavaBtn=()=>{
+        this.props.saveChangeValue(this.props.id.value,this.props.form.getFieldsValue())
+        this.props.toggleEdit(this.props.index)
+        // console.log(this.props.form.getFieldsValue())
+        // console.log(this.props.id.value)
+    }
+    clickCancelBtn=()=>{
+        this.props.cancelChangeValue();
+        this.props.toggleEdit(this.props.index);
     }
     findDropDownItem(value,dropDownType){
         return this.props[dropDownType].filter((item)=>{
@@ -49,13 +60,15 @@ class familyForm extends Component{
                             </FormItem>
                             <span
                                 className="cancel-btn"
-                                onClick={()=>{this.props.toggleEdit(this.props.index)}}
+                                onClick={this.clickCancelBtn}
                             >
                                 取消
                             </span>
                             <span
                                 className="save-btn"
+                                onClick={this.clickSavaBtn}
                             >
+                            
                                 保存
                             </span>
                         </div>
@@ -66,36 +79,12 @@ class familyForm extends Component{
                     <span>关系：</span>
                     </Col>
                     <Col span={16}>
-                        <Select 
-                            
-                        >
-                            {
-                                this.props.familyRelation.map((rel) => {
-                                    return (
-                                        <Option 
-                                            value={rel.id.toString()}
-                                            key={rel.id.toString()}
-                                        >
-                                            {rel.name}
-                                        </Option >
-                                    )
-                                })
-                            }
-                        </Select>
-                    </Col>
-                </Row>
-                {/*<FormItem>
-                {getFieldDecorator('relation', {
-                    rules: [{ required: true, message: 'relation is required!' }],
-                })(<Input />)}
-                </FormItem>*/}
-                    {/*<Row>
-                        <Col span={8}>
-                        <span>关系：</span>
-                        </Col>
-                        <Col span={16}>
+                        <FormItem>
+                        {getFieldDecorator('relation', {
+                            rules: [{ required: true, message: '姓名不能为空' }],
+                        })(
                             <Select 
-                                defaultValue={this.props.item.relation.value.toString()}
+                                
                             >
                                 {
                                     this.props.familyRelation.map((rel) => {
@@ -109,23 +98,33 @@ class familyForm extends Component{
                                         )
                                     })
                                 }
-                            </Select>
-                        </Col>
-                    </Row>
+                            </Select>)}
+                        </FormItem>
+                    </Col>
+                </Row>
                     <Row>
                         <Col span={8}>
                         <span>联系方式：</span>
                         </Col>
                         <Col span={16}>
-                        <Input type="text" value={this.props.item.phone.value}  />
+                            <FormItem>
+                                {getFieldDecorator('phone', {
+                                    rules: [{ required: true, message: '联系方式不能为空' }],
+                                })(<Input />)}
+                            </FormItem>
                         </Col>
+                        
                     </Row>
                     <Row>
                         <Col span={8}>
                         <span>身份证号：</span>
                         </Col>
                         <Col span={16}>
-                        <Input type="text" value={this.props.item.certificate.value} />
+                            <FormItem>
+                                {getFieldDecorator('certificate', {
+                                    rules: [{ required: true, message: '身份证不能为空' }],
+                                })(<Input />)}
+                            </FormItem>
                         </Col>
                     </Row>
                     <Row>
@@ -133,38 +132,40 @@ class familyForm extends Component{
                         <span>工作属性：</span>
                         </Col>
                         <Col span={16}>
-                            <Select 
-                                defaultValue={this.props.item.jobCategory.value.toString()}
-                            >
-                                {
-                                    this.props.commonJobCategory.map((job) => {
-                                        return (
-                                            <Option 
-                                                value={job.id.toString()}
-                                                key={job.id.toString()}
-                                            >
-                                                {job.name}
-                                            </Option >
-                                        )
-                                    })
-                                }
-                            </Select>
+                            <FormItem>
+                                {getFieldDecorator('jobCategory', {
+                                    rules: [{ required: true, message: '姓名不能为空' }],
+                                })(
+                                    <Select >
+                                        {
+                                            this.props.commonJobCategory.map((rel) => {
+                                                return (
+                                                    <Option 
+                                                        value={rel.id.toString()}
+                                                        key={rel.id.toString()}
+                                                    >
+                                                        {rel.name}
+                                                    </Option >
+                                                )
+                                            })
+                                        }
+                                    </Select>)}
+                            </FormItem>
                         </Col>
-                    </Row>*/}
+                    </Row>
                 </Card>
 
             </Form>
         )
     }
 }
+// var that=this
 const FamilyForm = Form.create({
     onFieldsChange(props, changedFields) {
-        console.log(props, changedFields)
-        var aa = props.onChange(changedFields);
-        console.log(aa);
+        props.onChange(changedFields);
     },
     mapPropsToFields(props) {
-        console.log('map triggered.',props)
+        // console.log('map triggered.',props)
         return {
             name: {
                 ...props.name
@@ -178,10 +179,15 @@ const FamilyForm = Form.create({
             jobCategory: {
                 ...props.jobCategory
             },
+            phone:{
+                ...props.phone
+            }
         };
     },
     onValuesChange(_, values) {
-        console.log(_, values)
+        // console.log(_, values)
+        // console.log(familyForm)
+        // familyForm.setState({values,values})
     },
 })(familyForm);
 

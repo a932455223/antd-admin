@@ -10,6 +10,8 @@ import {
 } from 'antd';
 import styles from './../indexStyle.less';
 import { connect } from 'react-redux';
+import api from './../../../../../API';
+import ajax from '../../../../tools/POSTF.js';
 const FormItem = Form.Item;
 const Option = Select.Option;
 export default class familyCard extends Component{

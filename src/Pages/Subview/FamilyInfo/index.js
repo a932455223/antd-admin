@@ -19,6 +19,7 @@ import FamilyCard from './component/familyCard'
 import FamilyForm from './component/familyForm'
 const FormItem = Form.Item;
 const Option = Select.Option;
+//增加、删除
 class FamilyInfo extends Component {
   state={
     isLoading:false,//是否正在加载
@@ -26,6 +27,23 @@ class FamilyInfo extends Component {
     familyList:[],//家庭信息数组
     familyRelation: [],//家庭成员关系
     commonJobCategory: [],//工作属性
+    newFamily:{//放到组件中
+      "certificate": {
+        "value": ""
+      },
+      "jobCategory": {
+        "value": ""
+      },
+      "name": {
+        "value": ""
+      },
+      "phone": {
+        "value": ""
+      },
+      "relation": {
+        "value": ""
+      }
+    }
   }
   //查看和修改状态切换
   toggleEdit=(index)=>{
@@ -39,14 +57,52 @@ class FamilyInfo extends Component {
     )
     this.setState(newState);
   };
+  //保存修改
+  saveChangeValue=(index,values)=>{
+    ajax.Put(api.PUT_CUSTOMERS_FAMILY(index),values)
+      .then( res => {
+            if(res.data.message === 'OK'){
+              this.getFamilyInfo(this.props.currentId);
+            }
+          })
+
+  };
+  //增加新的card！！！从这里开始
+  addNewFamilyValue=()=>{
+    ajax.Post(api.POST_CUSTOMERS_FAMILY(this.props.currentId),{
+      "certificate":"222111199310213333",
+      "jobCategory":61,
+      "name":"abcc",
+      "phone":"13816666666",
+      "relation":102
+    })
+      .then( res => {
+            // if(res.data.message === 'OK'){
+            //   this.getFamilyInfo(this.props.currentId);
+            // }
+            console.log(res)
+            if(res.data.code===200){
+              if(res.data.message==='OK'){
+                console.log('成功')
+              }
+            }else{
+              console.log(res.data.message)
+            }
+          })
+  }
+  cancelChangeValue=()=>{
+    this.getFamilyInfo(this.props.currentId);
+  };
   //-----------------APIS----------------------
   //家庭成员数组
   getFamilyInfo = (id) => {
     ajax.Get(api.GET_CUSTOMERS_FAMILY(id))
     .then((data) => {
+      if(data.status===200&&data.statusText==='OK'){
+        console.log(data.status)
         let newFamilyList= data.data.data.map((item)=>{
           return Object.keys(item).reduce((pre,ky)=>{
-            pre[ky] = {value:item[ky]}
+            pre[ky] = {value:item[ky]+""}
             return pre;
           },{})
         });
@@ -55,6 +111,8 @@ class FamilyInfo extends Component {
           isModify:new Array(newFamilyList.length).fill(false),
           isLoading:false
         })
+        console.log("getfamilies")
+      }
     })
   }
   //成员关系下拉菜单,api接口
@@ -82,7 +140,7 @@ class FamilyInfo extends Component {
     })
   }
   handleFormChange = (index,changedFields) => {
-    console.log(index)
+    // console.log(index)
     // this.setState({
     //   fields: { ...this.state.fields, ...changedFields },
     // });
@@ -90,7 +148,7 @@ class FamilyInfo extends Component {
     let newState=update(
       this.state,{familyList:{[index]:{$set:fields}}}
     )
-    console.log("0000000000000",newState);
+    // console.log("0000000000000",newState);
     this.setState(newState)
   }
   componentWillMount() {
@@ -98,6 +156,7 @@ class FamilyInfo extends Component {
     this.getFamilyInfo(this.props.currentId);
     this.getFamilyRelation();
     this.getCommonJobCategory();
+    
   }
   componentWillReceiveProps(newProps){
     console.log("======","familyinfo receive props")
@@ -140,6 +199,8 @@ class FamilyInfo extends Component {
                       index={index}
                       familyRelation={this.state.familyRelation}
                       commonJobCategory={this.state.commonJobCategory}
+                      saveChangeValue={this.saveChangeValue}
+                      cancelChangeValue={this.cancelChangeValue}
                     />
                   )
                 }else{
@@ -160,14 +221,16 @@ class FamilyInfo extends Component {
             <AddFamilyCard 
               familyRelation={this.state.familyRelation}
               commonJobCategory={this.state.commonJobCategory}
+              addNewFamilyValue={this.addNewFamilyValue}
             />
             <pre className="language-bash" style={{textAlign:'left'}}>
-              {JSON.stringify(this.state, null, 2)}
+              {JSON.stringify(this.state.familyList[0], null, 2)}
             </pre>
           </div>:
           <AddFamilyCard 
             familyRelation={this.state.familyRelation}
             commonJobCategory={this.state.commonJobCategory}
+            addNewFamilyValue={this.addNewFamilyValue}
           />
         }
       </div>
