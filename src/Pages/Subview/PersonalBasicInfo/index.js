@@ -5,6 +5,7 @@ import {
   Select,
 } from 'antd';
 import moment from 'moment';
+import $ from 'jquery';
 import axios from 'axios';
 import update from "immutability-helper";
 import { connect } from 'react-redux';
@@ -39,8 +40,6 @@ class BasicInfo extends Component {
     modalVisible: false,
     edited: false,
     eachCustomerInfo: '',
-    updateBriefInfo: {},
-    updateDetailsInfo: {},
     briefInfo: {
       department: {
         value: '',
@@ -168,43 +167,33 @@ class BasicInfo extends Component {
       })
     });
 
-    // 所属机构
-    ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
-    .then((res) => {
-      let newState = update(this.state, {
-        briefInfo: {
-          department: {
-            options: {$set: res.data.data},
-          }
-        },
-      });
-      this.setState(newState);
-    })
+    // // 所属机构
+    // ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
+    // .then((res) => {
+    //   let newState = update(this.state, {
+    //     briefInfo: {
+    //       department: {
+    //         options: {$set: res.data.data},
+    //       }
+    //     },
+    //   });
+    //   this.setState(newState);
+    // })
+    //
+    // // 所属客户经理
 
-    // 所属客户经理
-    ajax.Get(API.GET_DEPARTMENT_STAFFS(1))
-    .then((res) => {
-      let newState = update(this.state, {
-        briefInfo: {
-          manager: {
-            options: {$set: res.data.data},
-          }
-        },
-      });
-      this.setState(newState);
-    })
-
-    ajax.Get(API.GET_DEPARTMENT_AREAS(1))
-    .then((res) => {
-      let newState = update(this.state, {
-        briefInfo: {
-          grid: {
-            options: {$set: res.data.data},
-          }
-        },
-      });
-      this.setState(newState);
-    })
+    //
+    // ajax.Get(API.GET_DEPARTMENT_AREAS(1))
+    // .then((res) => {
+    //   let newState = update(this.state, {
+    //     briefInfo: {
+    //       grid: {
+    //         options: {$set: res.data.data},
+    //       }
+    //     },
+    //   });
+    //   this.setState(newState);
+    // })
   }
 
   componentWillReceiveProps(next){
@@ -262,19 +251,19 @@ class BasicInfo extends Component {
           briefInfo: {
             department: {
               $set: {
-                options: this.state.briefInfo.department.options,
+                // options: this.state.briefInfo.department.options,
                 value: res.data.data.department + ''
               }
             },
             manager: {
               $set: {
-                options: this.state.briefInfo.manager.options,
+                // options: this.state.briefInfo.manager.options,
                 value: res.data.data.manager + ''
               }
             },
             grid: {
               $set: {
-                options: this.state.briefInfo.grid.options,
+                // options: this.state.briefInfo.grid.options,
                 value: res.data.data.grid + ''
               }
             },
@@ -338,12 +327,59 @@ class BasicInfo extends Component {
 
   // 新建客户
   addNewCustomer = (briefInfo) => {
-    this.setState({
-      updateBriefInfo: briefInfo
+    const { name } = this.props.currentCustomerInfo;
+
+    // console.log(briefInfo);
+    let json = {
+      accounts: [],
+      address: briefInfo.address ? briefInfo.address : '',
+      birth: '',
+      certificate: briefInfo.certificate ? briefInfo.certificate : '',
+      department: briefInfo.department ? briefInfo.department - 0 : '',
+      grid: briefInfo.grid ? briefInfo.grid - 0 : '',
+      joiners: briefInfo.joiners ? briefInfo.joiners : '',
+      manager: briefInfo.manager ? briefInfo.manager - 0 : '',
+      name: name ? name : '',
+      origin: '',
+      phone: briefInfo.phone	? briefInfo.phone : '',
+      wechat: briefInfo.wechat ? briefInfo.wechat : '',
+    }
+
+    // console.log(json);
+
+    $.ajax({
+      type: 'POST',
+      // url: 'http://106.14.69.82/crm/customer/individual/base',
+      url: '/crm/api/customer/individual/base',
+      data: JSON.stringify(json),
+      success: function(data){
+      	console.info(data);
+      },
+      dataType: "json",
+      contentType: "application/json"
     });
+
+    // ajax.Post(API.POST_CUSTOMER_INDIVIDUAL_BASE, json)
+    // .then((res) => {
+    //   console.log(res.data.data)
+    // })
   }
 
   handleFormChange = (changedFields) => {
+    if(changedFields.department) {
+      console.log(changedFields.department);
+      // let newState = update(this.state,{
+      //   briefInfo: {
+      //     department: {
+      //       $set: changedFields.department
+      //     },
+      //     manager: {
+      //       $set: {value: 0 + ''}
+      //     }
+      //   }
+      // })
+    }
+
     let newState = update(this.state,{
       briefInfo: {
         $set: {

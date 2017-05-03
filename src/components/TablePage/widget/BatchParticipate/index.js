@@ -29,8 +29,12 @@ export default class BatchParticipate extends Component {
           department: res.data.data[0]
         })
       });
+
+    let json = {
+      departmentId: 1
+    }
     //
-    ajax.Get(API.GET_STAFFS, {departmentId: 1})
+    ajax.Get(API.GET_STAFFS, json)
       .then(res => {
         this.setState({
           table: {

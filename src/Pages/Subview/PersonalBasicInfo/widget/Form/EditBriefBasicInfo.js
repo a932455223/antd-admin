@@ -36,26 +36,19 @@ class EditBriefBasicInfoForm extends Component{
     ],
     basicInfoBeEdit: false,
     phone: '',
-    department: ''
+    departmentOptions: [],
+    managerOptions: [],
+    gridOptions: []
   }
 
   componentWillMount(){
     // console.log('key will mount');
+    this.getDepartments(1, 1);
   }
 
   componentWillReceiveProps(next) {
     // console.log('personalBasicInfo will recieve props');
     const { getFieldValue } = next.form;
-    //
-    // if(next.id !== -1 || (getFieldValue('phone') !== '' && getFieldValue('department') !== '')) {
-    //
-    // }
-
-    // this.setState({
-    //   id: next.id,
-    //   phone: getFieldValue('phone'),
-    //   department: getFieldValue('department')
-    // })
 
     // 重置 InfoBeEdited
     if(!next.beEdited || getFieldValue('phone') === '' || getFieldValue('department') === '') {
@@ -64,7 +57,44 @@ class EditBriefBasicInfoForm extends Component{
       })
       this.setState(newState)
     }
+
+    // 三级联动，更新 manager和 grid
+    // let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : 1;
+    // let managerId = getFieldValue('manager') ? getFieldValue('manager') - 0 : 1;
+    // if(departmentId > 0) {
+    //   this.getDepartments(departmentId, managerId);
+    // }
   };
+
+  // 获取 department，
+  getDepartments = (departmentId, managerId) => {
+    // 所属机构
+    ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
+    .then((res) => {
+      let newState = update(this.state, {
+        departmentOptions: {$set: res.data.data},
+      });
+      this.setState(newState);
+    })
+
+    // 所属客户经理
+    ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId))
+    .then((res) => {
+      let newState = update(this.state, {
+        managerOptions: {$set: res.data.data},
+      });
+      this.setState(newState);
+    })
+
+
+    ajax.Get(API.GET_DEPARTMENT_AREAS(1))
+    .then((res) => {
+      let newState = update(this.state, {
+        gridOptions: {$set: res.data.data},
+      });
+      this.setState(newState);
+    })
+  }
 
   // basic 输入框内容被修改了
   inputBasicInfoChange = () => {
@@ -75,12 +105,17 @@ class EditBriefBasicInfoForm extends Component{
   }
 
   // basic 选择框内容被修改了
-  selectBasicInfoChange = () => {
+  selectBasicInfoChange = (value) => {
     let newState = update(this.state, {
       basicInfoBeEdit: {$set: true}
     })
-    this.setState(newState)
+    this.setState(newState);
   };
+
+  // 所属机构和客户经理联动
+  changeDepartment = () => {
+
+  }
 
   remove = (k) => {
     const { form } = this.props;
@@ -130,6 +165,12 @@ class EditBriefBasicInfoForm extends Component{
     const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess, beEdited} = this.props;
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue} = this.props.form;
     const { department, manager, grid, tags } = this.props.briefInfo;
+    const { departmentOptions, managerOptions, gridOptions } = this.state;
+    // let managerValue = managerOptions && managerOptions[0] && managerOptions[0].id;
+    // console.log(managerValue);
+    //
+    // setFieldsValue({['manager']: null});
+    // console.log(departmentOptions);
 
     const kinitialValue = function(){
       var selfkeys = [];
@@ -242,7 +283,7 @@ class EditBriefBasicInfoForm extends Component{
                   filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                   getPopupContainer={() => document.getElementById('editMyBase')}
                 >
-                  {department && department.options && department.options.map(departmentItem =>
+                  {departmentOptions && departmentOptions.map(departmentItem =>
                     <Option key={departmentItem.id} value={departmentItem.id + ''}>{departmentItem.name}</Option>
                   )}
                 </Select>
@@ -265,7 +306,7 @@ class EditBriefBasicInfoForm extends Component{
                   filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                   getPopupContainer={() => document.getElementById('editMyBase')}
                 >
-                  {manager && manager.options.map(managerItem =>
+                  {managerOptions && managerOptions.map(managerItem =>
                     <Option key={managerItem.id} value={managerItem.id + ''}>{managerItem.name}</Option>
                   )}
                 </Select>
@@ -288,7 +329,7 @@ class EditBriefBasicInfoForm extends Component{
                   filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                   getPopupContainer={() => document.getElementById('editMyBase')}
                 >
-                  {grid && grid.options.map(gridItem =>
+                  {gridOptions && gridOptions.map(gridItem =>
                     <Option key={gridItem.id} value={gridItem.id + ''}>{gridItem.name}</Option>
                   )}
                 </Select>
