@@ -1,7 +1,10 @@
 import React,{Component} from 'react'
-import {Button, Card, Col, DatePicker, Form, Input, Row, Select} from "antd";
+import {Button, Card, Col, DatePicker, Form, Input, Row, Select,Radio} from "antd";
 import {connect} from "react-redux";
-
+import API from "../../../../../../API";
+import ajax from '../../../../../tools/POSTF'
+import Reg from "../../../../../tools/Reg"
+const RadioGroup = Radio.Group;
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -11,19 +14,28 @@ class StaffBaseForm extends Component{
     changed:false
   }
 
+  inputChange=()=>{
+    this.setState({
+      changed:true
+    })
+  }
+
   componentWillReceiveProps(){
     console.log('StaffBaseForm will receive props.')
   }
 
+  onHandleSubmit = () => {
+    const id = this.props.id;
+    const { getFieldsValue} = this.props.form;
+    const FieldsValue = getFieldsValue();
+    FieldsValue.birth = FieldsValue.birth.format('YYYY-MM-DD')
+    ajax.Put(API.PUT_STAFF(id),FieldsValue)
+    .then(() => {
+      this.props.getStaffs()
+    })
+  }
   render(){
     let {baseInfo} = this.props;
-    baseInfo = {
-      name:'',
-      certificateNo:'',
-      address:'',
-      wechat:''
-    }
-
     const formItemLayout = {
       labelCol: {
         span: 6
@@ -34,23 +46,23 @@ class StaffBaseForm extends Component{
     };
 
     const {getFieldDecorator} = this.props.form;
-    const Gender = getFieldDecorator('gender', {
+    const {gender} = this.props.dropdown;
+    const Gender = gender.length>0 ? getFieldDecorator('gender', {
       rules: [{required: false, message: '请选择性别!'}],
-      initialValue: baseInfo.gender && baseInfo.gender.id
+      onChange:this.inputChange,
     })(
       <Select
         placeholder="请选择性别"
         getPopupContainer={ () => document.getElementById('staffEditor')}
       >
         {
-          this.props.dropdown.gender.map(item => {
+          gender.map(item => {
             return <Option value={item.id.toString()} key={item.id}>{item.name}</Option>
           })
         }
-      </Select>
-  :
-    null
-  );
+      </Select>)
+  : null
+  
 
     return (
       <Card
@@ -59,19 +71,7 @@ class StaffBaseForm extends Component{
             <Col span="18">
               <h3>个人档案</h3>
             </Col>
-            <Col span="3">
-              <Button
-                className="cancel"
-                disabled={this.state.changed ? false : true}
-              >取消</Button>
-            </Col>
-            <Col span="3">
-              <Button
-                className="save"
-                disabled={this.state.changed ? false : true}
-                htmlType="submit"
-              >保存</Button>
-            </Col>
+            
           </Row>
         )}
       >
@@ -85,7 +85,7 @@ class StaffBaseForm extends Component{
             >
               {getFieldDecorator('name', {
                 rules: [{required: false, message: '请填写员工名称!'}],
-                initialValue: baseInfo.name
+                onChange:this.inputChange,
               })(
                 <Input/>
               )}
@@ -108,7 +108,7 @@ class StaffBaseForm extends Component{
             >
               {getFieldDecorator('certificateNo', {
                 rules: [{required: false, message: '请填写证件号码!'}],
-                initialValue: baseInfo.certificateNo
+                onChange:this.inputChange,
               })(
                 <Input/>
               )}
@@ -121,7 +121,7 @@ class StaffBaseForm extends Component{
             >
               {getFieldDecorator('email', {
                 rules: [{required: false, message: '请输入邮箱!'}],
-                initialValue: baseInfo.email
+                onChange:this.inputChange,
               })(
                 <Input/>
               )}
@@ -136,7 +136,7 @@ class StaffBaseForm extends Component{
             >
               {getFieldDecorator('birth', {
                 rules: [{required: false, message: '请选择出生日期!'}],
-                initialValue: baseInfo.birth && moment(baseInfo.birth)
+                onChange:this.inputChange,
               })(
                 <DatePicker
                   getCalendarContainer={ () => document.getElementById('staffEditor')}
@@ -156,7 +156,7 @@ class StaffBaseForm extends Component{
             >
               {getFieldDecorator('phone', {
                 rules: [{required: false, message: '请填写手机号码!'}],
-                initialValue: baseInfo.phone
+                onChange:this.inputChange,
               })(
                 <Input/>
               )}
@@ -171,7 +171,7 @@ class StaffBaseForm extends Component{
             >
               {getFieldDecorator('wechat', {
                 rules: [{required: false, message: '请输入微信号!'}],
-                initialValue: baseInfo.wechat
+                onChange:this.inputChange,
               })(
                 <Input/>
               )}
@@ -182,9 +182,28 @@ class StaffBaseForm extends Component{
               label={<span>家庭住址</span>}
               {...formItemLayout}
             >
+              {getFieldDecorator('isUser', {
+                rules: [{required: false, message: '请填写家庭住址!'}],
+                onChange:this.inputChange,
+              })(
+                <RadioGroup>
+                  <Radio value={true}>是</Radio>
+                  <Radio value={false}>否</Radio>
+                </RadioGroup>
+              )}
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <FormItem
+              label={<span>家庭住址</span>}
+              labelCol={{span:3}}
+              wrapperCol={{span:19}}
+            >
               {getFieldDecorator('address', {
                 rules: [{required: false, message: '请填写家庭住址!'}],
-                initialValue: baseInfo.address
+                onChange:this.inputChange,
               })(
                 <Input/>
               )}
@@ -192,6 +211,23 @@ class StaffBaseForm extends Component{
           </Col>
         </Row>
         </Form>
+        <Row className="buttonrow">
+          {/*<Col span="3">
+              <Button
+                className="cancel"
+                // disabled={this.state.changed ? true : false}
+              >取消</Button>
+            </Col>  */}
+            <Col span="3"></Col>
+            <Col span="20">
+              <Button
+                className={this.state.changed ? "ablesavebtn" : "disablesavebtn"}
+                disabled={this.state.changed ? false : true}
+                htmlType="submit"
+                onClick={this.onHandleSubmit}
+              >保存</Button>
+            </Col>
+        </Row>
       </Card>
     )
   }
@@ -227,14 +263,20 @@ function mapPropsToFields(props){
     },
     address:{
       ...baseInfo.address
+    },
+    gender:{
+      ...baseInfo.gender
+    },
+    isUser:{
+      ...baseInfo.isUser
     }
-
   }
 }
 
 function onFieldsChange(props,changedFields){
   props.onChange(changedFields)
 }
+
 export default connect(mapStateToProps)(Form.create({
   onFieldsChange,
   mapPropsToFields

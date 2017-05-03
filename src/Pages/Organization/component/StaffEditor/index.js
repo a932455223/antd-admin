@@ -39,7 +39,8 @@ class BranchesEditor extends Component {
 
   state = {
     staff: {
-      base: {}
+      base: {},
+      job:{}
     },
     parentDepartmentDropDown: [],
     changed: false,
@@ -73,18 +74,24 @@ class BranchesEditor extends Component {
           business: res.data.data
         })
       })
+
+      ajax.Get(API.GET_ADD_DEPARTMENT).then((res)=>{
+        console.dir(res)
+      })
+
+      ajax.Get(API.GET_STAFF_ADD_DEPARTMENT)
+      .then((res) => {
+        this.setState({
+          parentDepartmentDropDown: res.data.data
+        })
+      });
   }
 
   componentWillReceiveProps(nextProps) {
     console.log('staffEditor will receive props.')
     this.getStaffInfo(nextProps.id)
 
-    ajax.Get(API.GET_STAFF_ADD_DEPARTMENT)
-      .then(res => {
-        this.setState({
-          parentDepartmentDropDown: res.data.data
-        })
-      });
+    
 
 
   }
@@ -93,7 +100,6 @@ class BranchesEditor extends Component {
     axios.get(API.GET_STAFF_BASE(id))
       .then(res => {
         let staffBase = res.data.data;
-        console.dir(staffBase)
         this.setState({
           staff: {
             base: {
@@ -117,6 +123,35 @@ class BranchesEditor extends Component {
               },
               address:{
                 value:staffBase.address || ''
+              },
+              gender:{
+                value:staffBase.gender.id ? staffBase.gender.id.toString() : undefined
+              },
+              isUser:{
+                value:staffBase.isUser
+              }
+            },
+            job:{
+              departments:{
+                value:staffBase.departments
+              },
+              inductionTime:{
+                value:staffBase.inductionTime
+              },
+              jobNumber:{
+                value:staffBase.jobNumber
+              },
+              jobStatus:{
+                value:staffBase.jobStatus.id
+              },
+              jobCategory:{
+                value:staffBase.jobCategory.id ? staffBase.jobCategory.id.toString() : undefined
+              },
+              leader:{
+                value:staffBase.leader.id ? staffBase.leader.id.toString() : undefined
+              },
+              asd:{
+                value:staffBase.asd
               }
             }
           }
@@ -144,7 +179,6 @@ class BranchesEditor extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log('start',values)
         const data = ((values) => {
           for (let key in values) {
             // if (typeof values[key] === 'object' && Object.keys(values[key]).includes('_d')) {
@@ -155,7 +189,6 @@ class BranchesEditor extends Component {
             }
           }
 
-          console.log('dataaaaaaaa', values);
           return values;
         })(values);
 
@@ -184,8 +217,8 @@ class BranchesEditor extends Component {
     };
 
     const baseInfo = this.state.staff.base;
+    const jobInfo = this.state.staff.job;
     const {business} = this.state;
-
 
     return (
         <div
@@ -209,7 +242,7 @@ class BranchesEditor extends Component {
             </Col>
           </Row>
           {/*组织信息*/}
-          <BaseInoForm onChange={this.baseInfoChange} baseInfo={baseInfo}/>
+          <BaseInoForm onChange={this.baseInfoChange} baseInfo={baseInfo} id={this.props.id} getStaffs={this.props.getStaffs}/>
           {/*业务信息*/}
           <Card className="business" title={<h3>业务信息</h3>}>
             <Row>
@@ -247,7 +280,7 @@ class BranchesEditor extends Component {
           </Card>
 
           {/*工作信息*/}
-        {/*<JobInfoForm/>*/}
+       <JobInfoForm onChange={this.jobInfoChange} jobInfo={jobInfo} id={this.props.id} getStaffs={this.props.getStaffs} parentDepartmentDropDown={this.state.parentDepartmentDropDown}/>
 
           {/*教育经历*/}
       {/*<EducationInfoForm/>*/}

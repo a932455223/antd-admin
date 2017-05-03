@@ -40,7 +40,7 @@ export default class Branches extends Component {
   }
 
   // 获取组织列表 表格 数据
-  getStaffs(index = 1) {
+  getStaffs = (index = 1) => {
     this.setState({
       table: {
         ...this.state.table,
@@ -125,6 +125,7 @@ export default class Branches extends Component {
             id={id}
             closeDock={this.closeDock.bind(this)}
             refresh={this.refresh.bind(this)}
+            getStaffs={this.getStaffs}
           />
         )
       }
@@ -133,7 +134,6 @@ export default class Branches extends Component {
 
   // 表格分页点击事件
   tableChange(pagination) {
-    console.log(pagination);
     this.setState({
       table: {
         ...this.state.table,
@@ -145,7 +145,6 @@ export default class Branches extends Component {
 
   // 树 选择事件
   treeChange(selectKey) {
-    console.log(selectKey);
     this.setState({
       parentId: parseInt(selectKey[0])
     }, () => {
