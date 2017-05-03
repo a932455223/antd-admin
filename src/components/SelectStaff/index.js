@@ -4,6 +4,7 @@
 import React, {Component} from "react";
 import {Button, Card, Icon, Table, Tabs, Tag, Tree} from "antd";
 import axios from "axios";
+import ajax from '../../tools/POSTF';
 //=============================================+
 import "./less/selectStaff.less";
 import API from "../../../API";
@@ -22,15 +23,16 @@ export default class SelectStaff extends Component {
   };
 
   componentWillMount() {
-    axios.get(API.GET_DEPARTMENT_HIERARCHY)
+    ajax.Get(API.GET_DEPARTMENT_HIERARCHY)
       .then(res => {
         this.setState({
           department: res.data.data
         })
       });
 
-    axios.get(API.GET_STAFFS)
+    ajax.Get(API.GET_STAFFS, {departmentId: 1})
       .then(res => {
+        console.log(res.data.data);
         this.setState({
           table: {
             dataSource: res.data.data.staffs
@@ -182,6 +184,3 @@ export default class SelectStaff extends Component {
     )
   }
 }
-
-
-

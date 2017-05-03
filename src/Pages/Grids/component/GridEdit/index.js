@@ -13,26 +13,10 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 
 
-class RoleEditF extends Component {
+class GridEditF extends Component {
   state = {
     area : "",
     orgNameDropDown : ""
-  }
-  inputChange = (e)=> {
-    let newState = update(this.state,{area:{[e.target.name]:{$set:e.target.value}}})
-    this.setState(newState)
-  }
-
-  handleChange = () => {
-    const id = this.props.id;
-    const { getFieldsValue} = this.props.form;
-    const FieldsValue = getFieldsValue();
-    console.log(FieldsValue);
-    ajax.Put(API.PUT_API_AREA(id),this.state.area)
-    .then(() => {
-      console.log("put. ok");
-      this.props.ajaxFaFun()
-    })
   }
 
   componentWillMount() {
@@ -51,6 +35,11 @@ class RoleEditF extends Component {
     ajax.Get(API.GET_GRIDS_ID(id))
     .then(res => {
       res.data.data.orgId = res.data.data.orgId.toString()
+      let regionCodes = res.data.data.regionCode.split(' ');
+      res.data.data.province = regionCodes[0];
+      res.data.data.city = regionCodes[1]
+      res.data.data.region = regionCodes[2]
+      res.data.data.addressDetail = res.data.data.address.split(' ')[3]
       this.setState({
         area : this.transformData(res.data.data)
       })
@@ -67,16 +56,23 @@ class RoleEditF extends Component {
    }
 
    handleFormChange = (changedFields)=>{
-    let newState = update(this.state,{area:{$set:{...this.state.area,...changedFields}}})
-    console.dir(newState)
-    this.setState(newState);
+    let subTree;
+    if(changedFields.province){
+      subTree = {...this.state.area,...changedFields,...{city:{value:undefined},region:{value:undefined}}}
+    }else if(changedFields.city){
+      subTree = {...this.state.area,...changedFields,...{region:{value:undefined}}}
+    }else{
+      subTree = {...this.state.area,...changedFields}
+    }
+     let newState = update(this.state,{area:{$set:subTree}})
+     this.setState(newState);
    }
 
-   transformData = (obj)=>{
+   transformData = (obj)=> {
     return Object.keys(obj).reduce(function(pre,key){
       pre[key] = {value:obj[key]}
       return pre;
-    },{}) 
+    },{})
    }
 
   render() {
@@ -84,15 +80,7 @@ class RoleEditF extends Component {
     const {area, orgNameDropDown} = this.state;
     return (
       <div id="RoleEdit" className="formbox">
-        <AreaForm area={area} onChange={this.handleFormChange} close={this.props.close} orgNameDropDown={orgNameDropDown}/>
-          <Row className="buttonsave">
-            <Col span={24} >
-              <Col span={4}>
-              </Col>
-              <Button type="primary" onClick={this.handleChange}>保存</Button>
-            </Col>
-          </Row>
-
+        <AreaForm getTableData={this.props.getTableData} area={area} onChange={this.handleFormChange} close={this.props.close} orgNameDropDown={orgNameDropDown} id={id}/>
         <div>
            <h1>操作记录</h1>
            <div className="recordbox">
@@ -123,4 +111,4 @@ class RoleEditF extends Component {
   }
 }
 
-export default RoleEditF;
+export default GridEditF;

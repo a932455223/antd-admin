@@ -5,6 +5,7 @@ import {
   Select,
 } from 'antd';
 import moment from 'moment';
+import $ from 'jquery';
 import axios from 'axios';
 import update from "immutability-helper";
 import { connect } from 'react-redux';
@@ -166,43 +167,33 @@ class BasicInfo extends Component {
       })
     });
 
-    // 所属机构
-    ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
-    .then((res) => {
-      let newState = update(this.state, {
-        briefInfo: {
-          department: {
-            options: {$set: res.data.data},
-          }
-        },
-      });
-      this.setState(newState);
-    })
+    // // 所属机构
+    // ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
+    // .then((res) => {
+    //   let newState = update(this.state, {
+    //     briefInfo: {
+    //       department: {
+    //         options: {$set: res.data.data},
+    //       }
+    //     },
+    //   });
+    //   this.setState(newState);
+    // })
+    //
+    // // 所属客户经理
 
-    // 所属客户经理
-    ajax.Get(API.GET_DEPARTMENT_STAFFS(1))
-    .then((res) => {
-      let newState = update(this.state, {
-        briefInfo: {
-          manager: {
-            options: {$set: res.data.data},
-          }
-        },
-      });
-      this.setState(newState);
-    })
-
-    ajax.Get(API.GET_DEPARTMENT_AREAS(1))
-    .then((res) => {
-      let newState = update(this.state, {
-        briefInfo: {
-          grid: {
-            options: {$set: res.data.data},
-          }
-        },
-      });
-      this.setState(newState);
-    })
+    //
+    // ajax.Get(API.GET_DEPARTMENT_AREAS(1))
+    // .then((res) => {
+    //   let newState = update(this.state, {
+    //     briefInfo: {
+    //       grid: {
+    //         options: {$set: res.data.data},
+    //       }
+    //     },
+    //   });
+    //   this.setState(newState);
+    // })
   }
 
   componentWillReceiveProps(next){
@@ -259,36 +250,61 @@ class BasicInfo extends Component {
         let newState = update(this.state, {
           briefInfo: {
             department: {
-              value: {$set: res.data.data.department + ''}
+              $set: {
+                // options: this.state.briefInfo.department.options,
+                value: res.data.data.department + ''
+              }
             },
             manager: {
-              value: {$set: res.data.data.manager + ''}
+              $set: {
+                // options: this.state.briefInfo.manager.options,
+                value: res.data.data.manager + ''
+              }
             },
             grid: {
-              value: {$set: res.data.data.grid + ''}
+              $set: {
+                // options: this.state.briefInfo.grid.options,
+                value: res.data.data.grid + ''
+              }
             },
             phone: {
-              value: {$set: res.data.data.phone}
+              $set: {
+                value: res.data.data.phone
+              }
             },
             wechat: {
-              value: {$set: res.data.data.wechat}
+              $set: {
+                value: res.data.data.wechat
+              }
             },
             certificate: {
-              value: {$set: res.data.data.certificate}
+              $set: {
+                value: res.data.data.certificate
+              }
             },
             birth: {
-              value: {$set: moment(res.data.data.birth, dateFormat)}
+              $set: {
+                value: moment(res.data.data.birth, dateFormat)
+              }
             },
             origin: {
-              value: {$set: [res.data.data.origin]}
+              $set: {
+                value: [res.data.data.origin]
+              }
             },
             age: {
-              value: {$set: res.data.data.age}
+              $set: {
+                value: res.data.data.age
+              }
             },
             address: {
-              value: {$set: res.data.data.address}
+              $set: {
+                value: res.data.data.address
+              }
             },
-            tags: {$set: res.data.data.joiners}
+            tags: {
+              $set: res.data.data.joiners
+            }
           },
           detailsInfo: {
             yearIncome: {
@@ -309,7 +325,61 @@ class BasicInfo extends Component {
     }
   }
 
+  // 新建客户
+  addNewCustomer = (briefInfo) => {
+    const { name } = this.props.currentCustomerInfo;
+
+    // console.log(briefInfo);
+    let json = {
+      accounts: [],
+      address: briefInfo.address ? briefInfo.address : '',
+      birth: '',
+      certificate: briefInfo.certificate ? briefInfo.certificate : '',
+      department: briefInfo.department ? briefInfo.department - 0 : '',
+      grid: briefInfo.grid ? briefInfo.grid - 0 : '',
+      joiners: briefInfo.joiners ? briefInfo.joiners : '',
+      manager: briefInfo.manager ? briefInfo.manager - 0 : '',
+      name: name ? name : '',
+      origin: '',
+      phone: briefInfo.phone	? briefInfo.phone : '',
+      wechat: briefInfo.wechat ? briefInfo.wechat : '',
+    }
+
+    // console.log(json);
+
+    $.ajax({
+      type: 'POST',
+      // url: 'http://106.14.69.82/crm/customer/individual/base',
+      url: '/crm/api/customer/individual/base',
+      data: JSON.stringify(json),
+      success: function(data){
+      	console.info(data);
+      },
+      dataType: "json",
+      contentType: "application/json"
+    });
+
+    // ajax.Post(API.POST_CUSTOMER_INDIVIDUAL_BASE, json)
+    // .then((res) => {
+    //   console.log(res.data.data)
+    // })
+  }
+
   handleFormChange = (changedFields) => {
+    if(changedFields.department) {
+      console.log(changedFields.department);
+      // let newState = update(this.state,{
+      //   briefInfo: {
+      //     department: {
+      //       $set: changedFields.department
+      //     },
+      //     manager: {
+      //       $set: {value: 0 + ''}
+      //     }
+      //   }
+      // })
+    }
+
     let newState = update(this.state,{
       briefInfo: {
         $set: {
@@ -330,7 +400,7 @@ class BasicInfo extends Component {
   render() {
     const { customerInfoBeEdit } = this.props;
     const { step, mode, id, beEdited } = this.props.currentCustomerInfo;
-    const { eachCustomerInfo, edited, detailsInfo, briefInfo } = this.state;
+    const { eachCustomerInfo, edited, detailsInfo, briefInfo, updateBriefInfo } = this.state;
 
     const modal = {
       visible: this.state.modalVisible,
@@ -338,6 +408,7 @@ class BasicInfo extends Component {
     };
 
     const basicInfoProps = {
+      addNewCustomer: this.addNewCustomer,
       beEdited: beEdited,
       customerInfoBeEdit: customerInfoBeEdit,
       id: id,
