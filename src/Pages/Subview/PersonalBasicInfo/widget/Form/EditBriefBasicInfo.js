@@ -47,7 +47,7 @@ class EditBriefBasicInfoForm extends Component{
   }
 
   componentWillReceiveProps(next) {
-    console.log('personalBasicInfo will recieve props');
+    // console.log('personalBasicInfo will recieve props');
     const { getFieldValue } = next.form;
 
     // 重置 InfoBeEdited

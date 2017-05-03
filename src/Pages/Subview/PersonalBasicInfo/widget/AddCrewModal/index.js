@@ -17,7 +17,9 @@ export default class AddCrewModal extends Component {
     table: {
       dataSource: []
     },
-    open:false
+    open: false,
+    staffs: [],
+    selectedRowKeys: [18, 19]
   };
 
   componentWillMount() {
@@ -34,7 +36,24 @@ export default class AddCrewModal extends Component {
   }
 
   componentWillReceiveProps(next){
-    // this.initTableScroll();
+    // console.log('next');
+    const { staffs } = this.props;
+    if(staffs.length > 0){
+      let a = [];
+      staffs.map((item) => {
+        a.push(item.id);
+        this.setState({
+          selectedRowKeys: a
+        })
+      })
+    }
+
+    const { selectedRowKeys } = this.state;
+    // 选择经理，同步到 tags
+    const crews = this.state.table.dataSource && this.state.table.dataSource.filter(item => selectedRowKeys.includes(item.id) === true);
+    this.setState({
+      staffs: crews
+    })
   }
 
   getStaffs = (departmentId) => {
@@ -77,21 +96,6 @@ export default class AddCrewModal extends Component {
     tableScroll.style['overflow-y'] = 'auto';
   }
 
-  rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-    },
-    onSelect: (record, selected, selectedRows) => {
-      console.log(record, selected, selectedRows);
-    },
-    onSelectAll: (selected, selectedRows, changeRows) => {
-      console.log(selected, selectedRows, changeRows);
-    },
-    getCheckboxProps: record => ({
-      disabled: record.name === 'Disabled User',    // Column configuration not to be checked
-    }),
-  };
-
   createTree(data) {
     if (data.childDepartments && data.childDepartments.length > 0) {
       return (
@@ -133,8 +137,39 @@ export default class AddCrewModal extends Component {
     this.getStaffs(selectedKeys[0]);
   }
 
+  handleClose = (tag) => {
+    const crews = this.state.selectedRowKeys.filter(item => item !== tag.id);
+    this.setState({
+      selectedRowKeys: crews
+    })
+  }
+
+  onSelectChange = (selectedRowKeys) => {
+    this.setState({
+      selectedRowKeys: selectedRowKeys
+    });
+
+    // 选择经理，同步到 tags
+    const crews = this.state.table.dataSource && this.state.table.dataSource.filter(item => selectedRowKeys.includes(item.id) === true);
+    this.setState({
+      staffs: crews
+    })
+  }
+
   render() {
+    console.log(this.state.selectedRowKeys);
     const { visible } = this.props;
+    const { selectedRowKeys, staffs } = this.state;
+    const participate = staffs && staffs.map((item, index) => {
+      return (
+        <Tag
+          key={`${item.id}${index}`}
+          closable="true"
+          afterClose={() => this.handleClose(item)}>
+          {item.name}
+        </Tag>
+      )
+    })
     const tableConf = {
       columns: [
         {
@@ -152,8 +187,18 @@ export default class AddCrewModal extends Component {
       ],
       dataSource: this.state.table.dataSource
     };
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.onSelectChange,
+      onSelectAll: (selected, selectedRows, changeRows) => {
+        // console.log(selected, selectedRows, changeRows);
+      }
+    };
     const tree = this.state.department && this.state.department !== {} ?
-      <Tree checkable onSelect={this.onSelect}>
+      <Tree
+        defaultExpandedKeys={[this.state.department.id + '']}
+        checkable
+        onSelect={this.onSelect}>
         {this.createTree(this.state.department)}
       </Tree>
       :
@@ -188,7 +233,7 @@ export default class AddCrewModal extends Component {
                     {...tableConf}
                     checkable
                     rowKey={record => record.id}
-                    rowSelection={this.rowSelection}
+                    rowSelection={rowSelection}
                     scroll={{y: 300}}
                     pagination={{
                       pageSize: 20
@@ -204,10 +249,7 @@ export default class AddCrewModal extends Component {
                 <span>6 人</span>
               </div>
               <div>
-                <Tag>Tag 1</Tag>
-                <Tag><a href="https://github.com/ant-design/ant-design/issues/1862">Link</a></Tag>
-                <Tag closable>Tag 2</Tag>
-                <Tag closable>Prevent Default</Tag>
+                {participate}
               </div>
             </div>
           </Card>
