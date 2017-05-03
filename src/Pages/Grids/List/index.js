@@ -3,11 +3,11 @@ import {Button} from "antd";
 import axios from "axios";
 // import {qs} from 'qs'
 //=============================================================
-import RoleEdit from "../component/RoleEdit";
+import GridEdit from "../component/GridEdit";
 import Content from "../component/Content";
 import SelectStaff from "../../../components/SelectStaff";
-import RolePermission from "../component/RolePermission";
-import NewRole from '../component/NewRole';
+import GridPermission from "../component/GridPermission";
+import NewGrid from '../component/NewGrid';
 //===============================================================
 import "../style/rolesStyle.less";
 import API from "../../../../API";
@@ -18,10 +18,10 @@ export default class GridsList extends Component {
     super(props);
   
   }
-  
-  roleEdit = (id,mode) => {
+
+  GridEdit = (id,mode) => {
       return (
-        <RoleEdit
+        <GridEdit
           id={id}
           close={() => {
             this.setState({
@@ -30,9 +30,9 @@ export default class GridsList extends Component {
               }
             })
           }}
-          rolePermission={this.rolePermission.bind(this,id,mode)}
+          GridPermission={this.GridPermission.bind(this,id,mode)}
           addUser={this.addUser.bind(this)}
-          ajaxFaFun = {this.ajaxFaFun}
+          getTableData = {this.getTableData}
         />
       )
   }
@@ -50,10 +50,10 @@ export default class GridsList extends Component {
   };
 
   componentWillMount() {
-   this.ajaxFaFun();
+   this.getTableData();
   }
 
-  ajaxFaFun =() => {
+  getTableData =() => {
     this.setState(update(this.state,{table:{loading:{$set:true}}}))
     console.log('refresh.')
     ajax.Post(API.POST_GRIDS_AREAS,{areaType:72})
@@ -72,7 +72,7 @@ export default class GridsList extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: <NewRole close={this.close.bind(this)}  ajaxFaFun={this.ajaxFaFun}/>
+        children: <NewGrid close={this.close.bind(this)}  getTableData={this.getTableData}/>
       }
     });
   }
@@ -86,7 +86,7 @@ export default class GridsList extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: this.roleEdit(rowData.id,'edit')
+        children: this.GridEdit(rowData.id,'edit')
       }
     });
    
@@ -120,21 +120,21 @@ export default class GridsList extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: this.roleEdit(id,'edit')
+        children: this.GridEdit(id,'edit')
       }
     });
   }
 
   // 权限分配
-  rolePermission(id,mode) {
+  GridPermission(id,mode) {
     this.setState({
       dock: {
         visible: true,
         children: (
-          <RolePermission
+          <GridPermission
             id={id}
             close={this.close.bind(this)}
-            backRoleEdit={this.addUserBack.bind(this,id)}
+            backGridEdit={this.addUserBack.bind(this,id)}
             mode={mode}
           />
         )

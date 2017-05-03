@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Button, Card, Input, Table , Row, Col, Form, Icon, Select} from "antd";
 import API from "../../../../../../API";
 import ajax from '../../../../../tools/POSTF'
+import Reg from "../../../../../tools/Reg"
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -19,7 +20,7 @@ class AreaForm extends Component{
     ajax.Put(API.PUT_API_AREA(id),FieldsValueAll)
     .then(() => {
       console.log("put. ok");
-      this.props.ajaxFaFun()
+      this.props.getTableData()
     })
   }
 
@@ -58,7 +59,7 @@ class AreaForm extends Component{
                   <Input/>
                   )
               }
-              	
+
               </FormItem>
             </Col>
 
@@ -67,7 +68,7 @@ class AreaForm extends Component{
                         wrapperCol={{span: 15}}
                         label="所属机构"
                         >
-                {	
+                {
                  	orgNameDropDown.length > 0 ? getFieldDecorator('orgId',{
                  		rules: [{ message: '请选择所属机构' , whitespace:"ture"}],
                  		onChange:this.orgIdChange
@@ -75,15 +76,15 @@ class AreaForm extends Component{
               		<Select
 	                    getPopupContainer={() => document.getElementById('RoleEdit')}
                       className="selectorgId"
-	                  > 
+	                  >
 	                  	{
-	                   		
+
 	                  		orgNameDropDown.map((item,index)=>(<Option key={item.id.toString()} value={item.id.toString()}>{item.name}</Option>))
 	                  	}
-	                </Select>  
+	                </Select>
               		):null
                 }
-               	
+
               </FormItem>
             </Col>
           </Row>
@@ -108,7 +109,7 @@ class AreaForm extends Component{
                         label="网格面积">
               {
               	getFieldDecorator('landArea',{
-                  rules: [{pattern:/^\d+$/, message: "请填写数字"}],
+                  rules: [{pattern:Reg.Integer, message: "请填写数字"}],
                 })(
               		<Input/>
               		)
@@ -125,7 +126,7 @@ class AreaForm extends Component{
               >
               {
               	getFieldDecorator('residenceCount',{
-                  rules: [{pattern:/\d+/, message: "请填写数字"}],
+                  rules: [{pattern:Reg.Integer, message: "请填写数字"}],
                 })(
               		<Input/>
               		)
@@ -139,7 +140,7 @@ class AreaForm extends Component{
                         label="网格人口数">
                		{
                			getFieldDecorator('personCount',{
-                      rules: [{pattern:/\d+/, message: "请填写数字"}],
+                      rules: [{pattern:Reg.Integer, message: "请填写数字"}],
                     })(
               				<Input/>
               				)

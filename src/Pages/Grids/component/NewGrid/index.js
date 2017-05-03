@@ -5,16 +5,16 @@
 import React, {Component} from "react";
 import {Button, Card, Form, Input, Select, Tabs, Icon,Row} from "antd";
 //============================================================
-import RolePermission from '../RolePermission';
+import GridPermission from '../GridPermission';
 //================================================
-import "./less/newRole.less";
+import "./less/newGrid.less";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
 
 
-class NewRole extends Component {
+class NewGrid extends Component {
   state = {
     roleName: null,
     formGroupVisible: false
@@ -54,13 +54,13 @@ class NewRole extends Component {
 
 
     return (
-      <div className="newcreate">
+      <div className="newcreate" id="newgridh">
         <div style={{clear:'both'}}></div>
         <Card className="new-role" 
           style={{display: this.state.formGroupVisible ? 'none' : 'block'}}
           className="cardbox"
         >
-          {/*<div className="newroletitle">
+          {/*<div className="newGridtitle">
             <h3>{this.state.roleName}</h3>
             <span>
               {this.state.formGroupVisible && <Button onClick={this.save.bind(this)}>保存</Button>}
@@ -90,7 +90,7 @@ class NewRole extends Component {
           </Row>
         </Card>
         {
-          this.state.formGroupVisible && <RolePermission ajaxFaFun={this.props.ajaxFaFun} roleName={this.state.roleName} close={this.props.close} />
+          this.state.formGroupVisible && <GridPermission getTableData={this.props.getTableData} roleName={this.state.roleName} close={this.props.close} />
         }
       </div>
     )
@@ -98,4 +98,4 @@ class NewRole extends Component {
 }
 
 
-export default Form.create()(NewRole)
+export default Form.create()(NewGrid)

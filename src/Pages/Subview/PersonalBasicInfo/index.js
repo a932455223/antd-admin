@@ -259,36 +259,61 @@ class BasicInfo extends Component {
         let newState = update(this.state, {
           briefInfo: {
             department: {
-              value: {$set: res.data.data.department + ''}
+              $set: {
+                options: this.state.briefInfo.department.options,
+                value: res.data.data.department + ''
+              }
             },
             manager: {
-              value: {$set: res.data.data.manager + ''}
+              $set: {
+                options: this.state.briefInfo.manager.options,
+                value: res.data.data.manager + ''
+              }
             },
             grid: {
-              value: {$set: res.data.data.grid + ''}
+              $set: {
+                options: this.state.briefInfo.grid.options,
+                value: res.data.data.grid + ''
+              }
             },
             phone: {
-              value: {$set: res.data.data.phone}
+              $set: {
+                value: res.data.data.phone
+              }
             },
             wechat: {
-              value: {$set: res.data.data.wechat}
+              $set: {
+                value: res.data.data.wechat
+              }
             },
             certificate: {
-              value: {$set: res.data.data.certificate}
+              $set: {
+                value: res.data.data.certificate
+              }
             },
             birth: {
-              value: {$set: moment(res.data.data.birth, dateFormat)}
+              $set: {
+                value: moment(res.data.data.birth, dateFormat)
+              }
             },
             origin: {
-              value: {$set: [res.data.data.origin]}
+              $set: {
+                value: [res.data.data.origin]
+              }
             },
             age: {
-              value: {$set: res.data.data.age}
+              $set: {
+                value: res.data.data.age
+              }
             },
             address: {
-              value: {$set: res.data.data.address}
+              $set: {
+                value: res.data.data.address
+              }
             },
-            tags: {$set: res.data.data.joiners}
+            tags: {
+              $set: res.data.data.joiners
+            }
           },
           detailsInfo: {
             yearIncome: {

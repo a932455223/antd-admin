@@ -6,19 +6,38 @@ import {Button, Card, Form, Input, Select, Tabs, Icon,Row,Col} from "antd";
 import API from "../../../../../API";
 import ajax from '../../../../tools/POSTF'
 const FormItem = Form.Item;
+const Option = Select.Option;
 
 
- class  RolePermission extends Component{
+ class  GridPermission extends Component{
+  state={
+    orgNameDropDown:''
+  }
+
+  componentWillMount() {
+    this.getorgNameDropDown();
+  }
+  getorgNameDropDown = () => {
+    ajax.Get(API.GET_ADD_DEPARTMENT)
+    .then(res => {
+      console.log(res.data.data)
+      this.setState({
+        orgNameDropDown : res.data.data
+      })
+    })
+   }
+
  	onHandleChange = () => {
  		const { getFieldsValue} = this.props.form;
  		const FieldsValue = getFieldsValue();
  		ajax.Post(API.POST_API_AREA,FieldsValue)
 	    .then(
-	    	this.props.ajaxFaFun
+	    	this.props.getTableData
 	    )
  	}
   render(){
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
+    const {orgNameDropDown} = this.state;
     return (
     	<div className="formbox" >
         <Form className="formboxsub">
@@ -66,11 +85,24 @@ const FormItem = Form.Item;
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="所属机构">
-                {getFieldDecorator('orgId', {
-                  onChange: this.inputChange
-                })(
-                  <Input placeholder="请填写所属机构"/>
-                )}
+                {
+                  orgNameDropDown.length > 0 ? getFieldDecorator('orgId',{
+                    
+                    rules: [{ message: '请选择所属机构' , whitespace:"ture"}],
+                    onChange:this.orgIdChange
+                  })(
+                  <Select
+                      getPopupContainer={() => document.getElementById('newgridh')}
+                      className="selectorgId"
+                      placeholder="请选择所属机构"
+                    >
+                      {
+
+                        orgNameDropDown.map((item,index)=>(<Option key={item.id.toString()} value={item.id.toString()}>{item.name}</Option>))
+                      }
+                  </Select>
+                  ):null
+                }
               </FormItem>
             </Col>
           </Row>
@@ -176,5 +208,5 @@ const FormItem = Form.Item;
   }
 }
 
-const RolePermissionF = Form.create()(RolePermission);
-export default RolePermissionF;
+const GridPermissionF = Form.create()(GridPermission);
+export default GridPermissionF;

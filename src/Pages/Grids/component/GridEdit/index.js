@@ -13,7 +13,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 
 
-class RoleEditF extends Component {
+class GridEditF extends Component {
   state = {
     area : "",
     orgNameDropDown : ""
@@ -69,7 +69,7 @@ class RoleEditF extends Component {
     const {area, orgNameDropDown} = this.state;
     return (
       <div id="RoleEdit" className="formbox">
-        <AreaForm ajaxFaFun={this.props.ajaxFaFun} area={area} onChange={this.handleFormChange} close={this.props.close} orgNameDropDown={orgNameDropDown} id={id}/>
+        <AreaForm getTableData={this.props.getTableData} area={area} onChange={this.handleFormChange} close={this.props.close} orgNameDropDown={orgNameDropDown} id={id}/>
         <div>
            <h1>操作记录</h1>
            <div className="recordbox">
@@ -100,4 +100,4 @@ class RoleEditF extends Component {
   }
 }
 
-export default RoleEditF;
+export default GridEditF;
