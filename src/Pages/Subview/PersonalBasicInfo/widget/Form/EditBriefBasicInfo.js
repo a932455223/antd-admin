@@ -47,7 +47,7 @@ class EditBriefBasicInfoForm extends Component{
   }
 
   componentWillReceiveProps(next) {
-    // console.log('personalBasicInfo will recieve props');
+    console.log('personalBasicInfo will recieve props');
     const { getFieldValue } = next.form;
 
     // 重置 InfoBeEdited
@@ -59,16 +59,16 @@ class EditBriefBasicInfoForm extends Component{
     }
 
     // 三级联动，更新 manager和 grid
-    // let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : 1;
-    // let managerId = getFieldValue('manager') ? getFieldValue('manager') - 0 : 1;
-    // if(departmentId > 0) {
-    //   this.getDepartments(departmentId, managerId);
-    // }
+    let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : '';
+    let managerId = getFieldValue('manager') ? getFieldValue('manager') - 0 : '';
+    if(departmentId > 0) {
+      this.getDepartments(departmentId, managerId);
+    }
   };
 
   // 获取 department，
   getDepartments = (departmentId, managerId) => {
-    // 所属机构
+    // 所属机构下拉菜单
     ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
     .then((res) => {
       let newState = update(this.state, {
@@ -77,7 +77,7 @@ class EditBriefBasicInfoForm extends Component{
       this.setState(newState);
     })
 
-    // 所属客户经理
+    // 所属客户经理下拉菜单
     ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId))
     .then((res) => {
       let newState = update(this.state, {
@@ -86,8 +86,8 @@ class EditBriefBasicInfoForm extends Component{
       this.setState(newState);
     })
 
-
-    ajax.Get(API.GET_DEPARTMENT_AREAS(1))
+    // 重置网格
+    ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))
     .then((res) => {
       let newState = update(this.state, {
         gridOptions: {$set: res.data.data},
@@ -132,7 +132,9 @@ class EditBriefBasicInfoForm extends Component{
   }
 
   // select staff
-  selectStaff = () => {this.setState({visible:true})}
+  selectStaff = () => {
+    this.props.modalShow()
+  }
 
   add = () => {
     const { form } = this.props;

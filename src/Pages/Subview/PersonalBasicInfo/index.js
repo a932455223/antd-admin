@@ -365,34 +365,36 @@ class BasicInfo extends Component {
     // })
   }
 
+
   handleFormChange = (changedFields) => {
+    // 所属机构，客户经理，所属网格三级联动
+    let briefInfo;
     if(changedFields.department) {
-      console.log(changedFields.department);
-      // let newState = update(this.state,{
-      //   briefInfo: {
-      //     department: {
-      //       $set: changedFields.department
-      //     },
-      //     manager: {
-      //       $set: {value: 0 + ''}
-      //     }
-      //   }
-      // })
+      briefInfo = {
+        ...this.state.briefInfo,
+        ...changedFields,
+        ...{manager: {
+          value: undefined
+        }},
+        ...{grid: {
+          value: undefined
+        }}
+      }
+    } else {
+      briefInfo = {
+        ...this.state.briefInfo,
+        ...changedFields
+      }
+    }
+
+    let detailsInfo = {
+      ...this.state.detailsInfo,
+      ...changedFields
     }
 
     let newState = update(this.state,{
-      briefInfo: {
-        $set: {
-          ...this.state.briefInfo,
-          ...changedFields
-        }
-      },
-      detailsInfo: {
-        $set: {
-          ...this.state.detailsInfo,
-          ...changedFields
-        }
-      }
+      briefInfo: {$set: {...briefInfo}},
+      detailsInfo: {$set: {...detailsInfo}}
     })
     this.setState(newState);
   }
@@ -401,10 +403,12 @@ class BasicInfo extends Component {
     const { customerInfoBeEdit } = this.props;
     const { step, mode, id, beEdited } = this.props.currentCustomerInfo;
     const { eachCustomerInfo, edited, detailsInfo, briefInfo, updateBriefInfo } = this.state;
+    // console.log(briefInfo);
 
     const modal = {
       visible: this.state.modalVisible,
-      hide: this.modalHide
+      hide: this.modalHide,
+      id: id
     };
 
     const basicInfoProps = {
@@ -412,7 +416,8 @@ class BasicInfo extends Component {
       beEdited: beEdited,
       customerInfoBeEdit: customerInfoBeEdit,
       id: id,
-      eachCustomerInfo: eachCustomerInfo
+      eachCustomerInfo: eachCustomerInfo,
+      modalShow: this.modalShow
     }
 
     const maintainRecordProps = {
@@ -421,7 +426,7 @@ class BasicInfo extends Component {
 
     return(
       <div style={{textAlign: 'left'}}>
-        <AddCrewModal {...modal}/>
+        <AddCrewModal key={id} {...modal}/>
 
         <div className="">
           {mode && mode === 'view' &&
