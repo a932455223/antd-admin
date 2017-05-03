@@ -11,6 +11,10 @@ class StaffBaseForm extends Component{
     changed:false
   }
 
+  componentWillReceiveProps(){
+    console.log('StaffBaseForm will receive props.')
+  }
+
   render(){
     let {baseInfo} = this.props;
     baseInfo = {
@@ -40,7 +44,7 @@ class StaffBaseForm extends Component{
       >
         {
           this.props.dropdown.gender.map(item => {
-            return <Option value={item.id} key={item.id}>{item.name}</Option>
+            return <Option value={item.id.toString()} key={item.id}>{item.name}</Option>
           })
         }
       </Select>

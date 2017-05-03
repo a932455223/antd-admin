@@ -26,15 +26,24 @@ class BranchesEditor extends Component {
     changed: false,
     department: {},
     categoryDropdown: [],
-    parentDepartmentDropDown: []
+    parentDepartmentDropDown: [],
+    province:[],
+    city:[],
+    area:[]
   };
 
   componentWillMount(){
     ajax.Get(API.GET_ADD_DEPARTMENT_CATEGORIES)
       .then(res => {
-        console.log('=======================',res);
         this.setState({
           categoryDropdown: res.data.data
+        })
+      })
+
+    ajax.Get(API.GET_AREA_SELECT(1))
+      .then(res => {
+        this.setState({
+          province:res.data.data
         })
       })
   }
@@ -44,7 +53,10 @@ class BranchesEditor extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-    this.getDepartmnent(nextProps.id);
+
+    if(this.props.id !==nextProps.id){
+      this.getDepartmnent(nextProps.id);
+    }
 
   }
 
@@ -69,6 +81,23 @@ class BranchesEditor extends Component {
     })
   }
 
+  getCity = (value) => {
+    ajax.Get(API.GET_AREA_SELECT(value))
+      .then(res => {
+        this.setState({
+          city:res.data.data
+        })
+      })
+  }
+
+  getArea = (value) => {
+    ajax.Get(API.GET_AREA_SELECT(value))
+      .then(res => {
+        this.setState({
+          area:res.data.data
+        })
+      })
+  }
 
   handleSubmit = (e) => {
     e.preventDefault();
@@ -92,8 +121,35 @@ class BranchesEditor extends Component {
   };
 
   render() {
-    console.log(this.state)
     const {getFieldDecorator} = this.props.form;
+
+    const Province = getFieldDecorator('province')(
+      <Select
+        placeholder="选择省份"
+        notFoundContent="没有省份"
+        onChange={this.getCity}
+      >
+        {this.state.province.map((item,index)=>(<Option key={item.id.toString()}>{item.name}</Option>))}
+      </Select>)
+
+
+    const City = getFieldDecorator('city')(
+      <Select
+       placeholder="选择城市"
+       notFoundContent="没有城市"
+       onChange={this.getArea}
+      >
+        {this.state.city.map((item,index)=>(<Option key={item.id.toString()}>{item.name}</Option>))}
+      </Select>)
+
+    const Area = getFieldDecorator('area')(
+      <Select
+        placeholder="选择地区"
+        notFoundContent="没有地区"
+      >
+        {this.state.area.map((item,index)=>(<Option key={item.id.toString()}>{item.name}</Option>))}
+      </Select>)
+
 
     const formItemLayout = {
       labelCol: {
@@ -105,7 +161,6 @@ class BranchesEditor extends Component {
     };
 
     const departmentInfo = this.state.department;
-    console.log('departmentInfo',departmentInfo);
 
     return (
       <Form onSubmit={this.handleSubmit.bind(this)}>
@@ -247,18 +302,29 @@ class BranchesEditor extends Component {
                 </FormItem>
               </Col>
             </Row>
-            <Row>
-              <Col span={12}>
+            <Row gutter={8}>
+
+              <Col span={6}>
                 <FormItem
                   label={<span>地址</span>}
-                  {...formItemLayout}
+                  labelCol={{span:12}}
+                  wrapperCol={{span:12}}
                 >
-                  {getFieldDecorator('address', {
-                    rules: [{required: false, message: '地址!'}],
-                    initialValue: departmentInfo.address
-                  })(
-                    <Input/>
-                  )}
+                  {Province}
+                </FormItem>
+              </Col>
+              <Col span={3}>
+                <FormItem
+                  wrapperCol={{span:24}}
+                >
+                  {City}
+                </FormItem>
+              </Col>
+              <Col span={3}>
+                <FormItem
+                  wrapperCol={{span:24}}
+                >
+                  {Area}
                 </FormItem>
               </Col>
             </Row>

@@ -93,6 +93,7 @@ class BranchesEditor extends Component {
     axios.get(API.GET_STAFF_BASE(id))
       .then(res => {
         let staffBase = res.data.data;
+        console.dir(staffBase)
         this.setState({
           staff: {
             base: {
