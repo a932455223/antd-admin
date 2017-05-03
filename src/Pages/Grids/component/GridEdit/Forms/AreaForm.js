@@ -11,6 +11,64 @@ class AreaForm extends Component{
 	orgIdChange = (value)=>{
 
 	}
+
+  state = {
+    province:[],
+    city:[],
+    region:[]
+  }
+
+
+  componentWillMount(){
+    ajax.Get(API.GET_AREA_SELECT(1))
+      .then(res => {
+        this.setState({
+          province:res.data.data
+        })
+      })
+  }
+
+
+  componentWillReceiveProps(nextProps){
+
+    if((this.props.area ==='' && nextProps.area !=='') || (nextProps.area !== '' && this.props.area !=='' && nextProps.area.city.value !==this.props.area.city.value)){
+      if(nextProps.area.province.value !==undefined){
+        this.getCity(nextProps.area.province.value)
+      }
+
+      if(nextProps.area.city.value !==undefined){
+        this.getRegion(nextProps.area.city.value)
+      }
+    }
+  }
+
+  getCity = (value) => {
+    ajax.Get(API.GET_AREA_SELECT(value))
+      .then(res => {
+        this.setState({
+          city:res.data.data
+        })
+      })
+
+
+  }
+
+  handleProvinceChange = (value)=>{
+    this.getCity(value);
+    this.setState({
+      region:[]
+    })
+  }
+
+  getRegion = (value) => {
+    ajax.Get(API.GET_AREA_SELECT(value))
+      .then(res => {
+        this.setState({
+          region:res.data.data
+        })
+      })
+  }
+
   handleChange = () => {
     const id = this.props.id;
     const { getFieldsValue} = this.props.form;
@@ -27,6 +85,34 @@ class AreaForm extends Component{
 	render(){
 		 const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched , getFieldValue} = this.props.form;
 		 const {orgNameDropDown} = this.props;
+
+    const Province = getFieldDecorator('province')(
+      <Select
+        placeholder="选择省份"
+        notFoundContent="没有省份"
+        onChange={this.handleProvinceChange}
+      >
+        {this.state.province.map((item,index)=>(<Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>))}
+      </Select>)
+
+
+    const City = getFieldDecorator('city')(
+      <Select
+        placeholder="选择城市"
+        notFoundContent="没有城市"
+        onChange={this.getRegion}
+      >
+        {this.state.city.map((item,index)=>(<Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>))}
+      </Select>)
+
+    const Region = getFieldDecorator('region')(
+      <Select
+        placeholder="选择地区"
+        notFoundContent="没有地区"
+      >
+        {this.state.region.map((item,index)=>(<Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>))}
+      </Select>)
+
 		return (
       <div>
 		<Form>
@@ -163,6 +249,47 @@ class AreaForm extends Component{
               </FormItem>
             </Col>
           </Row>
+          <Row gutter={8}>
+            <Col span={9}>
+              <FormItem
+                label={<span>地址</span>}
+                labelCol={{span:12}}
+                wrapperCol={{span:12}}
+              >
+                {Province}
+              </FormItem>
+            </Col>
+            <Col span={4}>
+              <FormItem
+                wrapperCol={{span:24}}
+              >
+                {City}
+              </FormItem>
+            </Col>
+            <Col span={4}>
+              <FormItem
+                wrapperCol={{span:24}}
+              >
+                {Region}
+              </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <FormItem
+                labelCol={{span: 8}}
+                wrapperCol={{span: 15}}
+                label="详细信息"
+                className="idnumber"
+               >
+                {
+                  getFieldDecorator('addressDetail')(
+                    <Input/>
+                  )
+                }
+              </FormItem>
+            </Col>
+          </Row>
           <Row>
             <Col span={24} className="">
               <FormItem labelCol={{span: 4}}
@@ -192,6 +319,7 @@ class AreaForm extends Component{
 }
 
 function mapPropsToFields(props){
+  console.dir(props.area)
 	return {
 		name:{
 		...props.area.name
@@ -219,7 +347,20 @@ function mapPropsToFields(props){
 	},
 	remark:{
 		...props.area.remark
-	}
+	},
+    province:{
+      ...props.area.province
+    },
+    city:{
+      ...props.area.city
+    },
+    region:{
+      ...props.area.region
+    },
+    addressDetail:{
+      ...props.area.addressDetail
+    }
+
 	}
 }
 
