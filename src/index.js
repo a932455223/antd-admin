@@ -6,11 +6,11 @@
  */
 import "babel-polyfill";
 import React from "react";
-import {render} from "react-dom";
+import { render } from "react-dom";
 import Root from "./containers/Root.dev";
 import configStores from "./redux/store";
-// import $ from "jquery";
-
+import ajax from './tools/POSTF'
+import $ from 'jquery'
 const store = configStores();
 //
 
@@ -68,6 +68,26 @@ render(<Root store={store}/>, document.getElementById('root'));
 //
 // console.log(1)
 
+// $.get('/api/customer/individual/4/base').then((res)=>{
+//   console.dir(res)
+// })
+// let obj = { "accounts": [{ "accountNo": "32432432", "remark": "备注1", "priority": 1 }, { "accountNo": "797323", "remark": "备注2", "priority": 2 }], "address": "江苏省 南京市 江宁区 金陵科技学院", "addressCode": "16 220 1843", "age": 24, "birth": "1993-10-21", "carPrice": null, "certificate": "320621199310216933", "debtAmount": 27, "department": 1, "grid": 3, "houseType": 17, "id": 4, "joinerIds": [18,19,21], "loanAmount": 33, "loanPurpose": 39, "manager": 25, "marryStatus": 14, "name": null, "needLoan": 31, "origin": "南通", "phone": "18625170698", "wechat": "wechat", "withCar": 19, "withDebt": 24, "yearExpense": 100.00, "yearIncome": 543.34 }
 
-import axios from 'axios';
-import qs from 'qs';
+// $.ajax({
+//     url: '/api/customer/individual/4/base/tab1',
+//     type: 'PUT',
+//     data: JSON.stringify(obj),
+//     dataType: "json",
+//     contentType: "application/json",
+//     success: function(res) {
+//         console.dir(res)
+//     }
+// })
+
+
+
+
+// ajax.PutJson('/api/customer/individual/4/base/tab1',obj).then((res)=>{
+//   console.dir(res)
+// })
+

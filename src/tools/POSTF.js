@@ -4,6 +4,7 @@
 import axios from 'axios';
 // import qs from 'query-string';
 import qs from 'qs';
+import $ from 'jquery'
 
 
 // export const POSTF = (url,data) => {
@@ -18,6 +19,27 @@ import qs from 'qs';
     arrayFormat: 'brackets'
   }))
 };
+
+
+const PostJson = (url,data) => {
+  return   $.ajax({
+    url: url,
+    type: 'POST',
+    data: JSON.stringify(data),
+    dataType: "json",
+    contentType: "application/json"
+  })
+};
+
+const PutJson = (url,data) => {
+  return   $.ajax({
+    url: url,
+    type: 'PUT',
+    data: JSON.stringify(data),
+    dataType: "json",
+    contentType: "application/json"
+  })
+}
 
 const Get = (url,data) => {
   return  axios.get(url,{
@@ -37,5 +59,7 @@ export default {
 	Post,
 	Get,
 	Put,
-	Delete
+	Delete,
+  PostJson,
+  PutJson
 }
