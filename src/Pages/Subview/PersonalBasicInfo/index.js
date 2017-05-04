@@ -230,7 +230,7 @@ class BasicInfo extends Component {
         })
 
         // 客户账户
-        let accounts = arr.map((item,index) => ({
+        let accounts = res.data.data.accounts.map((item,index) => ({
           [`row-${index}-accountNo`]: {value: item.accountNo},
           [`row-${index}-remark`]: {value: item.remark}
         }));
@@ -479,8 +479,7 @@ class BasicInfo extends Component {
       modalShow: this.modalShow,
       changeJoiners: this.changeJoiners,
       joinersBeEdited: joinersBeEdited,
-      accounts: accounts,
-      accountsArray: accountsArray
+      accounts: accounts
     }
 
     const maintainRecordProps = {
