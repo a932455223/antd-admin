@@ -40,7 +40,8 @@ class SliderBar extends Component {
   state = {
     currentMenu: '',
     menus: {},
-    selectKeys: ['-1']
+    selectKeys: ['-1'],
+    openKeys:['-1']
   }
 
   componentWillReceiveProps(pre, next) {
@@ -58,6 +59,7 @@ class SliderBar extends Component {
           ...this.state,
           currentMenu: pathname,
           selectKeys: [navPath[1].id.toString()],
+          openKeys:[navPath[0].id.toString()],
           menus: {
             ...this.state.menus,
             [pathname]: response.data
@@ -72,7 +74,8 @@ class SliderBar extends Component {
       this.setState({
         ...this.state,
         currentMenu: pathname,
-        selectKeys: [navPath[1].id.toString()]
+        selectKeys: [navPath[1].id.toString()],
+        openKeys:[navPath[0].id.toString()]
       })
       updateNavPath([navPath[0].name, navPath[1].name])
     }
@@ -94,16 +97,15 @@ class SliderBar extends Component {
 
   render() {
     const items = this.state.menus[this.state.currentMenu] || [];
-    const openKeys = items.length > 0 ? [items[0].id.toString()] : ['-1'];
     return (
       <Sider width={200} style={{background: '#fff'}}>
         <Menu
           theme="dark"
           mode="inline"
-          defaultOpenKeys={openKeys}
+          defaultOpenKeys={this.state.openKeys}
           selectedKeys={this.state.selectKeys}
           style={{height: '100%'}}
-          key={openKeys[0]}
+          key={this.state.openKeys[0]}
           className="mySiderMenu"
         >
           {items.map((item) => {

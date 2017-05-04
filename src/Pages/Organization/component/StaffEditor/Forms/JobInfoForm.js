@@ -6,10 +6,21 @@ const Option = Select.Option;
 
 class JobInfoForm extends Component{
   state = {
-    parentDepartmentDropDown:[]
+    changed : false
   }
+
+  componentWillReceiveProps(nextProps) {
+    console.dir(nextProps.parentDepartmentDropDown)
+  }
+  onHandleSubmit = () =>{
+
+  }
+
   render(){
-    const {getFieldDecorator} = this.props.form;const formItemLayout = {
+    const {getFieldDecorator} = this.props.form;
+    const {jobInfo} = this.props;
+    console.log('%clen:'+this.props.parentDepartmentDropDown.length,'color:red')
+    const formItemLayout = {
       labelCol: {
         span: 6
       },
@@ -23,29 +34,25 @@ class JobInfoForm extends Component{
       inductionTime:''
     }
     return (
-      <Card title={<h3>工作信息</h3>}>
+      <Card title={<h3>工作信息</h3>}
+      className="jobinfoform">
         <Row>
           <Col span={12}>
             <FormItem
               label={<span>所属机构</span>}
-              {...formItemLayout}
+              {...formItemLayout} 
+              className="departments"
             >
               {getFieldDecorator('departments', {
                 rules: [{required: false, message: '所属机构!'}],
-                initialValue: baseInfo.departments && baseInfo.departments.id
               })(
                 <Select
                   mode="multiple"
                   getPopupContainer={ () => document.getElementById('staffEditor')}
-                  onChange={() => {
-                    this.setState({
-                      changed: true
-                    })
-                  }}
                 >
                   {
-                    this.state.parentDepartmentDropDown.map(item => {
-                      return <Option value={item.id.toString()} key={item.id}>{item.name}</Option>
+                    this.props.parentDepartmentDropDown.map((item) => {
+                      return <Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>
                     })
                   }
                 </Select>
@@ -54,19 +61,14 @@ class JobInfoForm extends Component{
           </Col>
           <Col span={12}>
             <FormItem
-              label={<span>任职时间</span>}
+              label={<span>入职时间</span>}
               {...formItemLayout}
             >
               {getFieldDecorator('inductionTime', {
-                rules: [{required: false, message: '所属机构!'}],
-                initialValue: baseInfo.inductionTime && moment(baseInfo.inductionTime)
+                rules: [{required: false, message: '入职时间!'}],
               })(
                 <DatePicker
-                  onChange={() => {
-                    this.setState({
-                      changed: true
-                    })
-                  }}
+                getCalendarContainer={ () => document.getElementById('staffEditor')}
                 />
               )}
             </FormItem>
@@ -79,8 +81,7 @@ class JobInfoForm extends Component{
               {...formItemLayout}
             >
               {getFieldDecorator('jobNumber', {
-                rules: [{required: false, message: '所属机构!'}],
-                initialValue: baseInfo.jobNumber
+                rules: [{required: false, message: '工号!'}],
               })(
                 <Input/>
               )}
@@ -93,15 +94,9 @@ class JobInfoForm extends Component{
             >
               {getFieldDecorator('jobStatus', {
                 rules: [{required: false, message: '任职状态!'}],
-                initialValue: baseInfo.jobStatus && baseInfo.jobStatus.id
               })(
                 <Select
                   getPopupContainer={ () => document.getElementById('staffEditor')}
-                  onChange={() => {
-                    this.setState({
-                      changed: true
-                    })
-                  }}
                 >
                   {
                     this.props.dropdown.jobStatus.map(item => {
@@ -121,15 +116,9 @@ class JobInfoForm extends Component{
             >
               {getFieldDecorator('jobCategory', {
                 rules: [{required: false, message: '职位!'}],
-                initialValue: baseInfo.jobCategory && baseInfo.jobCategory.id
               })(
                 <Select
                   getPopupContainer={ () => document.getElementById('staffEditor')}
-                  onChange={() => {
-                    this.setState({
-                      changed: true
-                    })
-                  }}
                 >
                   {
                     this.props.dropdown.jobCategory.map(item => {
@@ -146,21 +135,15 @@ class JobInfoForm extends Component{
               {...formItemLayout}
             >
               {getFieldDecorator('leader', {
-                rules: [{required: false, message: '所属机构!'}],
-                initialValue: baseInfo.leader && baseInfo.leader.id
+                rules: [{required: false, message: '直属上级!'}],
               })(
                 <Select
                   getPopupContainer={ () => document.getElementById('staffEditor')}
-                  onChange={() => {
-                    this.setState({
-                      changed: true
-                    })
-                  }}
                 >
                   {
-                    this.state.leadersDropdown.map(item => {
-                      return <Option value={item.id.toString()} key={item.id}>{item.name}</Option>
-                    })
+                    // this.props.leadersDropdown.map(item => {
+                    //   return <Option value={item.id.toString()} key={item.id}>{item.name}</Option>
+                    // })
                   }
                 </Select>
               )}
@@ -175,11 +158,21 @@ class JobInfoForm extends Component{
           >
             {getFieldDecorator('asd', {
               rules: [{required: false, message: '调岗记录!'}],
-              // initialValue: baseInfo.leader
             })(
               <Input/>
             )}
           </FormItem>
+        </Row>
+        <Row className="buttonrow">
+            <Col span="3"></Col>
+            <Col span="20">
+              <Button
+                className={this.state.changed ? "ablesavebtn" : "disablesavebtn"}
+                disabled={this.state.changed ? false : true}
+                htmlType="submit"
+                onClick={this.onHandleSubmit}
+              >保存</Button>
+            </Col>
         </Row>
       </Card>
     )
@@ -192,4 +185,34 @@ function mapStateToProps(store) {
   }
 }
 
-export default connect(mapStateToProps)(Form.create()(JobInfoForm));
+function mapPropsToFields(props){
+  const {jobInfo} = props;
+  return {
+    departments:{
+      ...jobInfo.departments
+    },
+    inductionTime:{
+      ...jobInfo.inductionTime
+    },
+    jobNumber:{
+     ...jobInfo.jobNumber
+    },
+    jobStatus:{
+      ...jobInfo.jobStatus
+    },
+    jobCategory:{
+      ...jobInfo.jobCategory
+    },
+    leader:{
+      ...jobInfo.leader
+    },
+    asd:{
+      ...jobInfo.asd
+    }
+  }
+}
+
+function onFieldsChange(props,changedFields){
+  props.onChange(changedFields)
+}
+export default connect(mapStateToProps)(Form.create(onFieldsChange,mapPropsToFields)(JobInfoForm));
