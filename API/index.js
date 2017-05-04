@@ -1,14 +1,22 @@
 export default {
-  //客户家庭信息
-  GET_CUSTOMERS_FAMILY: function (id) {
-    return "/api/customer/individual/" + id + "/families"
-  },
-  //修改家庭信息
-  PUT_CUSTOMERS_FAMILY:familyId => `/api/customer/individual/family/${familyId}`,
-  //增加家庭成员信息
+  //个人客户家庭信息：
+  //查看
+  GET_CUSTOMERS_FAMILY:customerId =>`/api/customer/individual/${customerId}/families`,
+  //增加
   POST_CUSTOMERS_FAMILY:customerId => `/api/customer/individual/${customerId}/family`,
-  //删除家庭成员信息
+  //删除
   DELETE_CUSTOMERS_FAMILY:familyId=>`/api/customer/individual/family/${familyId}`,
+  //修改
+  PUT_CUSTOMERS_FAMILY:familyId => `/api/customer/individual/family/${familyId}`,
+  //企业客户关键人信息
+  //查看
+  GET_CUSTOMETS_KEYPERSONS:customerId=>`/api/customer/enterprise/${customerId}/keyPersons`,
+  //增加
+  POST_CUSTOMERS_KEYPERSONS:customerId=>`/api/customer/enterprise/${customerId}/keyPerson`,
+  //删除
+  DELETE_CUSTOMERS_KEYPERSONS:customerId=>`/api/customer/enterprise/keyPerson/${customerId}`,
+  //修改
+  PUT_CUSTOMERS_KEYPERSONS:customerId=>`/api/customer/enterprise/keyPerson/${customerId}`,
   /*===============================GET=======================================*/
   // 客户列表
   GET_CUSTOMERS: '/asd/customers',

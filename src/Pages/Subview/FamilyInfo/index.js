@@ -206,12 +206,6 @@ class FamilyInfo extends Component {
   };
   render() {
     const loading=this.state.isLoading?(<div>loading</div>):"";
-    /*const familyCards=(
-      <div className="familyCards">
-        <AddFamilyCard />
-      </div>
-    );*/
-
     return(
       <div className="families">
         {loading}
