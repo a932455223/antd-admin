@@ -16,7 +16,6 @@ import update from 'immutability-helper'
 export default class GridsList extends Component {
   constructor(props) {
     super(props);
-  
   }
 
   GridEdit = (id,mode) => {
@@ -55,7 +54,6 @@ export default class GridsList extends Component {
 
   getTableData =() => {
     this.setState(update(this.state,{table:{loading:{$set:true}}}))
-    console.log('refresh.')
     ajax.Post(API.POST_GRIDS_AREAS,{areaType:72})
     .then( res => {
       this.setState({
@@ -78,7 +76,7 @@ export default class GridsList extends Component {
   }
 
 
-    
+
 
 
   // 表格点击事件
@@ -89,7 +87,7 @@ export default class GridsList extends Component {
         children: this.GridEdit(rowData.id,'edit')
       }
     });
-   
+
   }
 
   close() {

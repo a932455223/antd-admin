@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import API from "../../../../../../API";
 import ajax from '../../../../../tools/POSTF'
 import Reg from "../../../../../tools/Reg"
+import $ from 'jquery'
 const RadioGroup = Radio.Group;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -11,7 +12,10 @@ const Option = Select.Option;
 class StaffBaseForm extends Component{
 
   state = {
-    changed:false
+    changed:false,
+    rolesDropDown:[],
+    rolesHide : false,
+    loading:false
   }
 
   inputChange=()=>{
@@ -19,19 +23,42 @@ class StaffBaseForm extends Component{
       changed:true
     })
   }
+  componentWillMount() {
+    ajax.Get(API.GET_ROLES)
+    .then((res)=>{
+      this.setState({
+        rolesDropDown:res.data.data
+      })
+    })
+
+  }
 
   componentWillReceiveProps(){
     console.log('StaffBaseForm will receive props.')
+    const { getFieldValue} = this.props.form;
+    console.log(getFieldValue("isUser"))
+    this.setState({
+       rolesHide:  getFieldValue("isUser")
+    })
   }
 
   onHandleSubmit = () => {
+    this.setState({
+      loading:true
+    })
     const id = this.props.id;
     const { getFieldsValue} = this.props.form;
     const FieldsValue = getFieldsValue();
     FieldsValue.birth = FieldsValue.birth && FieldsValue.birth.format('YYYY-MM-DD')
+    // FieldsValue.roles = FieldsValue.roles.map(item => parseInt(item));
+
     ajax.Put(API.PUT_STAFF(id),FieldsValue)
     .then(() => {
       this.props.getStaffs()
+      this.setState({
+        changed:false,
+        loading:false
+      })
     })
   }
   render(){
@@ -46,6 +73,7 @@ class StaffBaseForm extends Component{
     };
 
     const {getFieldDecorator} = this.props.form;
+    const {rolesDropDown,rolesHide} = this.state;
     const {gender} = this.props.dropdown;
     const Gender = gender.length>0 ? getFieldDecorator('gender', {
       rules: [{required: false, message: '请选择性别!'}],
@@ -74,6 +102,7 @@ class StaffBaseForm extends Component{
             
           </Row>
         )}
+        className="staffbase"
       >
         <Form>
         <Row>
@@ -84,7 +113,7 @@ class StaffBaseForm extends Component{
 
             >
               {getFieldDecorator('name', {
-                rules: [{required: false, message: '请填写员工名称!'}],
+                rules: [{required: true, message: '请填写员工姓名!'}],
                 onChange:this.inputChange,
               })(
                 <Input/>
@@ -140,11 +169,6 @@ class StaffBaseForm extends Component{
               })(
                 <DatePicker
                   getCalendarContainer={ () => document.getElementById('staffEditor')}
-                  onChange={() => {
-                    this.setState({
-                      changed: true
-                    })
-                  }}
                 />
               )}
             </FormItem>
@@ -155,7 +179,7 @@ class StaffBaseForm extends Component{
               {...formItemLayout}
             >
               {getFieldDecorator('phone', {
-                rules: [{required: false, message: '请填写手机号码!'}],
+                rules: [{required: true, message: '请填写手机号码!'}],
                 onChange:this.inputChange,
               })(
                 <Input/>
@@ -183,7 +207,7 @@ class StaffBaseForm extends Component{
               {...formItemLayout}
             >
               {getFieldDecorator('isUser', {
-                rules: [{required: false, message: '请填写家庭住址!'}],
+                rules: [{required: true, message: '添加用户!'}],
                 onChange:this.inputChange,
               })(
                 <RadioGroup>
@@ -194,18 +218,27 @@ class StaffBaseForm extends Component{
             </FormItem>
           </Col>
         </Row>
-        <Row>
+        <Row style={{display :rolesHide ? "block" : "none" }}>
           <Col span={24}>
             <FormItem
               label={<span>选择角色</span>}
               labelCol={{span:3}}
-              wrapperCol={{span:7}}
+              wrapperCol={{span:19}}
             >
               {getFieldDecorator('roles', {
-                rules: [{required: false, message: '请选择角色！'}],
+                rules: [{required: true, message: '请选择角色！'}],
                 onChange:this.inputChange,
               })(
-                <Input/>
+                <Select
+                  mode="multiple"
+                  getPopupContainer={ () => document.getElementById('staffEditor')}
+                >
+                  {
+                    rolesDropDown && rolesDropDown.map(item => {
+                      return <Option value={item.id.toString()} key={item.id.toString()}>{item.roleName}</Option>
+                    })
+                  }
+                </Select>
               )}
             </FormItem>
           </Col>
@@ -241,6 +274,8 @@ class StaffBaseForm extends Component{
                 disabled={this.state.changed ? false : true}
                 htmlType="submit"
                 onClick={this.onHandleSubmit}
+                loading={this.state.loading}
+
               >保存</Button>
             </Col>
         </Row>
@@ -258,6 +293,7 @@ function mapStateToProps(store) {
 
 function mapPropsToFields(props){
   const {baseInfo} = props;
+  console.log(baseInfo)
   return {
     name:{
       ...baseInfo.name
@@ -285,6 +321,9 @@ function mapPropsToFields(props){
     },
     isUser:{
       ...baseInfo.isUser
+    },
+    roles:{
+      ...baseInfo.roles
     }
   }
 }
@@ -294,6 +333,5 @@ function onFieldsChange(props,changedFields){
 }
 
 export default connect(mapStateToProps)(Form.create({
-  onFieldsChange,
   mapPropsToFields
 })(StaffBaseForm));

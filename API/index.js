@@ -93,7 +93,7 @@ export default {
  PUT_API_AREA : id => `/api/area/${id}`,
 
  //获取网格所属机构dropdown
- GET_ADD_DEPARTMENT : '/api/areas/add/departments',
+ GET_AREAS_ADD_DEPARTMENTS : '/api/areas/add/departments',
 
 
   // 下拉菜单信息
@@ -135,6 +135,9 @@ export default {
 
   // 直属上级下拉
   GET_STAFF_LEADERS: '/api/staff/leaders',
+
+  //新增员工角色下拉
+  GET_ROLES : '/api/roles',
 
   // 员工业务信息
   GET_STAFF_BUSSINESS_INFO: id => `/api/staff/${id}/businessInfo`

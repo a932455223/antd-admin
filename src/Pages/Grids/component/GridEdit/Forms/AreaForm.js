@@ -3,15 +3,13 @@ import {Button, Card, Input, Table , Row, Col, Form, Icon, Select} from "antd";
 import API from "../../../../../../API";
 import ajax from '../../../../../tools/POSTF'
 import Reg from "../../../../../tools/Reg"
-import { Modal } from 'antd'
+import { Modal,message } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
 class AreaForm extends Component{
 
-	orgIdChange = (value)=>{
 
-	}
 
   state = {
 	  provinceText:'',
@@ -19,7 +17,9 @@ class AreaForm extends Component{
     regionText:'',
     province:[],
     city:[],
-    region:[]
+    region:[],
+    staffs:[],
+    gridTypes:[]
   }
 
 
@@ -30,20 +30,31 @@ class AreaForm extends Component{
           province:res.data.data
         })
       })
+
+
+    ajax.Get(API.GET_COMMON_DROPDOWN('gridType'))
+      .then((res)=>{
+        this.setState({
+          gridTypes:res.data.data
+        })
+      })
+
   }
 
 
   componentWillReceiveProps(nextProps){
-
     if(this.props.id !== nextProps.id && nextProps.area !==''){
       let arry = nextProps.area.address.value.split(' ')
-
       this.setState({
         provinceText:arry[0],
         cityText:arry[1],
         regionText:arry[2]
       })
 
+    }
+
+    if(this.props.area ==='' && nextProps.area !==''){
+      this.getStaffsByDepartmentId(nextProps.area.orgId.value)
     }
 
     if((this.props.area ==='' && nextProps.area !=='') || (nextProps.area !== '' && this.props.area !=='' && nextProps.area.city.value !==this.props.area.city.value)){
@@ -82,6 +93,19 @@ class AreaForm extends Component{
       })
   }
 
+  orgIdChange = (value) => {
+    this.getStaffsByDepartmentId(value);
+  }
+
+  getStaffsByDepartmentId = (id) => {
+    ajax.Get(API.GET_DEPARTMENT_STAFFS(id))
+      .then((res)=>{
+        this.setState({
+          staffs:res.data.data
+        })
+      })
+  }
+
   handleSubmit = () => {
     const id = this.props.id;
     const { getFieldsValue , getFieldValue} = this.props.form;
@@ -107,8 +131,8 @@ class AreaForm extends Component{
       console.dir(FieldsValueAll)
       ajax.Put(API.PUT_API_AREA(id),FieldsValueAll)
         .then(() => {
-          console.log("put. ok");
           this.props.getTableData()
+          message.success('员工修改成功',5)
         })
     }
   }
@@ -182,7 +206,7 @@ class AreaForm extends Component{
         <div className="ant-form-white">
           <Row>
             <Col span={12}>
-              <FormItem labelCol={{span: 8,offset:1}}
+              <FormItem labelCol={{span: 8}}
                         wrapperCol={{span: 15}}
                         label="所属机构"
               >
@@ -206,15 +230,18 @@ class AreaForm extends Component{
             </Col>
 
             <Col span={12}>
-              <FormItem  labelCol={{span: 8}}
+              <FormItem  labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="网格负责人"
                         className="idnumber"
               >
               {
-                getFieldDecorator('director')(
-                 <Select>
-                   {[1,2,3,4,5,6,7].map((item,index)=>(<Option key={item.toString()}>{item}</Option>))}
+                getFieldDecorator('directorId')(
+                 <Select
+                   placeholder="选择网格负责人"
+                   notFoundContent="没有找到对应员工"
+                 >
+                   {this.state.staffs.map((item,index)=>(<Option key={item.id.toString()}>{item.name}</Option>))}
                  </Select>
                   )
               }
@@ -232,8 +259,10 @@ class AreaForm extends Component{
                         className="idnumber"
               >
               {
-              	getFieldDecorator('gridType')(
-              		<Input/>
+              	getFieldDecorator('gridId')(
+                  <Select>
+                    {this.state.gridTypes.map((item)=>(<Option key={item.id.toString()}>{item.name}</Option>))}
+                  </Select>
               		)
               }
               </FormItem>
@@ -289,7 +318,7 @@ class AreaForm extends Component{
             <Col span={9}>
               <FormItem
                 label={<span>地址</span>}
-                labelCol={{span:12}}
+                labelCol={{span:14}}
                 wrapperCol={{span:12}}
               >
                 {Province}
@@ -313,9 +342,9 @@ class AreaForm extends Component{
           <Row>
             <Col span={24}>
               <FormItem
-                labelCol={{span: 8}}
-                wrapperCol={{span: 15}}
-                label="详细信息"
+                labelCol={{span: 4}}
+                wrapperCol={{span: 20}}
+                label="详细地址"
                 className="idnumber"
                >
                 {
@@ -362,11 +391,14 @@ function mapPropsToFields(props){
 	director:{
 		...props.area.director
 	},
+    directorId:{
+      ...props.area.directorId
+    },
 	orgId:{
 		...props.area.orgId
 	},
-	gridType:{
-		...props.area.gridType
+    gridId:{
+		...props.area.gridId
 	},
 	landArea:{
 		...props.area.landArea
