@@ -49,13 +49,17 @@ class EditBriefBasicInfoForm extends Component{
   componentWillReceiveProps(next) {
     // console.log('personalBasicInfo will recieve props');
     const { getFieldValue } = next.form;
-
-    // 重置 InfoBeEdited
-    if(!next.beEdited || getFieldValue('phone') === '' || getFieldValue('department') === '') {
-      let newState = update(this.state, {
-        basicInfoBeEdit: {$set: false}
-      })
-      this.setState(newState)
+    // 确认参与人员按钮被点击时
+    if(next.joinersBeEdited && !next.beEdited) {
+      this.activeButton();
+    } else {
+      // 重置 InfoBeEdited
+      if(!next.beEdited || getFieldValue('phone') === '' || getFieldValue('department') === '') {
+        let newState = update(this.state, {
+          basicInfoBeEdit: {$set: false}
+        })
+        this.setState(newState)
+      }
     }
 
     // 三级联动，更新 manager和 grid
@@ -65,6 +69,16 @@ class EditBriefBasicInfoForm extends Component{
       this.getDepartments(departmentId, managerId);
     }
   };
+
+  activeButton = () => {
+    if(!this.props.beEdited) {
+      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    }
+    let newState = update(this.state, {
+      basicInfoBeEdit: {$set: true}
+    })
+    this.setState(newState)
+  }
 
   // 获取 department，
   getDepartments = (departmentId, managerId) => {
@@ -113,9 +127,9 @@ class EditBriefBasicInfoForm extends Component{
   };
 
   // 所属机构和客户经理联动
-  changeDepartment = () => {
-
-  }
+  // changeDepartment = () => {
+  //
+  // }
 
   remove = (k) => {
     const { form } = this.props;
@@ -147,6 +161,7 @@ class EditBriefBasicInfoForm extends Component{
     });
   }
 
+  // 删除 tags
   handleClose = (joiner) => {
     if(!this.props.beEdited) {
       this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
@@ -166,12 +181,13 @@ class EditBriefBasicInfoForm extends Component{
   }
 
   render() {
-    const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess, beEdited} = this.props;
+    const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess, beEdited, joinersBeEdited } = this.props;
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue} = this.props.form;
     const { department, manager, grid, tags } = this.props.briefInfo;
     const { departmentOptions, managerOptions, gridOptions } = this.state;
     // setFieldsValue({['manager']: null});
-    // console.log(departmentOptions);
+    // console.log(joinersBeEdited);
+    // console.log(beEdited);
 
     const kinitialValue = function(){
       var selfkeys = [];
