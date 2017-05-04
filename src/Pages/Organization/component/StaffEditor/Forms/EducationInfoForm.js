@@ -30,7 +30,6 @@ class EducationInfoForm extends Component{
             >
               {getFieldDecorator('educationLevel', {
                 rules: [{required: false, message: '学历!'}],
-                initialValue: baseInfo.educationLevel && baseInfo.educationLevel.id
               })(
                 <Select
                   getPopupContainer={ () => document.getElementById('staffEditor')}
@@ -56,7 +55,6 @@ class EducationInfoForm extends Component{
             >
               {getFieldDecorator('major', {
                 rules: [{required: false, message: '专业!'}],
-                initialValue: baseInfo.major
               })(
                 <Input/>
               )}
@@ -106,4 +104,26 @@ function mapStateToProps(store) {
   }
 }
 
-export default connect(mapStateToProps)(Form.create()(EducationInfoForm));
+function mapPropsToFields(props){
+  const {educationInfo} = props;
+  return {
+    educationLevel:{
+      ...educationInfo.educationLevel
+    },
+    major:{
+      ...educationInfo.major
+    },
+    school:{
+      ...educationInfo.school
+    },
+    graduationTime:{
+      ...educationInfo.graduationTime
+    }
+  }
+}
+
+function onFieldsChange(props,changedFields){
+  props.onChange(changedFields)
+}
+
+export default connect(mapStateToProps)(Form.create(onFieldsChange,mapPropsToFields)(EducationInfoForm));
