@@ -223,9 +223,9 @@ class BasicInfo extends Component {
           } else {
             // 当该属性的 value为 null的时候，且该对象的属性发生了变化
             // 删除 detailsInfo中的 value属性
-            if(this.state.detailsInfo[item].value) {
-              delete this.state.detailsInfo[item].value
-            }
+            // if(this.state.detailsInfo[item].value) {
+            //   delete this.state.detailsInfo[item].value
+            // }
           }
         })
 
@@ -371,6 +371,7 @@ class BasicInfo extends Component {
   // 表单数据的双向绑定
   handleFormChange = (changedFields) => {
     console.log(changedFields);
+    console.log()
     // 所属机构，客户经理，所属网格三级联动
     let briefInfo;
     if(changedFields.department) {
@@ -391,9 +392,44 @@ class BasicInfo extends Component {
       }
     }
 
-    let detailsInfo = {
-      ...this.state.detailsInfo,
-      ...changedFields
+    let detailsInfo;
+    // 是否有车
+    if(changedFields.withCar) {
+      detailsInfo = {
+        ...this.state.detailsInfo,
+        ...changedFields,
+        ...{carPrice: {
+          value: undefined,
+          options: this.state.detailsInfo.carPrice.options
+        }}
+      }
+    } else if(changedFields.withDebt) { // 是否负债
+      detailsInfo = {
+        ...this.state.detailsInfo,
+        ...changedFields,
+        ...{debtAmount: {
+          value: undefined,
+          options: this.state.detailsInfo.debtAmount.options
+        }}
+      }
+    } else if(changedFields.needLoan) { // 是否有贷款需求
+      detailsInfo = {
+        ...this.state.detailsInfo,
+        ...changedFields,
+        ...{loanAmount: {
+          value: undefined,
+          options: this.state.detailsInfo.loanAmount.options
+        }},
+        ...{loanPurpose: {
+          value: undefined,
+          options: this.state.detailsInfo.loanPurpose.options
+        }}
+      }
+    } else {
+      detailsInfo = {
+        ...this.state.detailsInfo,
+        ...changedFields
+      }
     }
 
     let accounts = {
@@ -402,7 +438,6 @@ class BasicInfo extends Component {
     }
 
     let newState = update(this.state,{
-      accountsArray: {$set: this.state.accountsArray},
       accounts: {$set: {...accounts}},
       briefInfo: {$set: {...briefInfo}},
       detailsInfo: {$set: {...detailsInfo}}
