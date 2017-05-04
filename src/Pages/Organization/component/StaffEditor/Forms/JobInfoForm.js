@@ -19,7 +19,6 @@ class JobInfoForm extends Component{
   render(){
     const {getFieldDecorator} = this.props.form;
     const {jobInfo} = this.props;
-    console.log('%clen:'+this.props.parentDepartmentDropDown.length,'color:red')
     const formItemLayout = {
       labelCol: {
         span: 6
@@ -40,7 +39,7 @@ class JobInfoForm extends Component{
           <Col span={12}>
             <FormItem
               label={<span>所属机构</span>}
-              {...formItemLayout} 
+              {...formItemLayout}
               className="departments"
             >
               {getFieldDecorator('departments', {
@@ -187,6 +186,7 @@ function mapStateToProps(store) {
 
 function mapPropsToFields(props){
   const {jobInfo} = props;
+  console.log('%cmapPropsToFields','color:yellow')
   return {
     departments:{
       ...jobInfo.departments
@@ -215,4 +215,7 @@ function mapPropsToFields(props){
 function onFieldsChange(props,changedFields){
   props.onChange(changedFields)
 }
-export default connect(mapStateToProps)(Form.create(onFieldsChange,mapPropsToFields)(JobInfoForm));
+export default connect(mapStateToProps)(Form.create({
+  onFieldsChange,
+  mapPropsToFields
+})(JobInfoForm));
