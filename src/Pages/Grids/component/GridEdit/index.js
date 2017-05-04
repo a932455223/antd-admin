@@ -17,6 +17,7 @@ class GridEditF extends Component {
   state = {
     area : "",
     orgNameDropDown : ""
+
   }
 
   componentWillMount() {
@@ -40,6 +41,8 @@ class GridEditF extends Component {
       res.data.data.city = regionCodes[1]
       res.data.data.region = regionCodes[2]
       res.data.data.addressDetail = res.data.data.address.split(' ')[3]
+      res.data.data.gridId = res.data.data.gridId.toString()
+      res.data.data.directorId = res.data.data.directorId.toString()
       this.setState({
         area : this.transformData(res.data.data)
       })
@@ -47,7 +50,7 @@ class GridEditF extends Component {
    }
 
    getorgNameDropDown = () => {
-    ajax.Get(API.GET_ADD_DEPARTMENT)
+    ajax.Get(API.GET_AREAS_ADD_DEPARTMENTS)
     .then(res => {
       this.setState({
         orgNameDropDown : res.data.data
@@ -61,7 +64,10 @@ class GridEditF extends Component {
       subTree = {...this.state.area,...changedFields,...{city:{value:undefined},region:{value:undefined}}}
     }else if(changedFields.city){
       subTree = {...this.state.area,...changedFields,...{region:{value:undefined}}}
-    }else{
+    }else if(changedFields.orgId){
+      subTree = {...this.state.area,...changedFields,...{directorId:{value:undefined}}}
+    }
+    else{
       subTree = {...this.state.area,...changedFields}
     }
      let newState = update(this.state,{area:{$set:subTree}})
