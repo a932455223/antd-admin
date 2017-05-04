@@ -186,7 +186,6 @@ function mapStateToProps(store) {
 
 function mapPropsToFields(props){
   const {jobInfo} = props;
-  console.log('%cmapPropsToFields','color:yellow')
   return {
     departments:{
       ...jobInfo.departments

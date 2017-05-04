@@ -93,7 +93,7 @@ export default {
  PUT_API_AREA : id => `/api/area/${id}`,
 
  //获取网格所属机构dropdown
- GET_ADD_DEPARTMENT : '/api/areas/add/departments',
+ GET_AREAS_ADD_DEPARTMENTS : '/api/areas/add/departments',
 
 
   // 下拉菜单信息
