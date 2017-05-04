@@ -15,9 +15,8 @@ class JobInfoForm extends Component{
   render(){
     const {getFieldDecorator} = this.props.form;
     const {jobInfo} = this.props;
-    // const {departments} = this.props.dropdown
-
     console.log('%clen:'+this.props.parentDepartmentDropDown.length,'color:red')
+    console.log(jobInfo)
     const formItemLayout = {
       labelCol: {
         span: 6
@@ -32,12 +31,14 @@ class JobInfoForm extends Component{
       inductionTime:''
     }
     return (
-      <Card title={<h3>工作信息</h3>}>
+      <Card title={<h3>工作信息</h3>}
+      className="jobinfoform">
         <Row>
           <Col span={12}>
             <FormItem
               label={<span>所属机构</span>}
-              {...formItemLayout}
+              {...formItemLayout} 
+              className="departments"
             >
               {getFieldDecorator('departments', {
                 rules: [{required: false, message: '所属机构!'}],
