@@ -36,7 +36,7 @@ export default class AddCrewModal extends Component {
   }
 
   componentWillReceiveProps(next){
-    // console.log('next');
+    console.log('next');
     const { staffs } = this.props;
     if(staffs.length > 0){
       let a = [];
@@ -61,9 +61,7 @@ export default class AddCrewModal extends Component {
       this.setState({
         table: {
           dataSource: res.data.data.staffs
-        },
-        // staffs: [],
-        // selectedRowKeys: []
+        }
       })
     })
   }
@@ -119,16 +117,8 @@ export default class AddCrewModal extends Component {
 
   // modal handle
   handleOk = () => {
-    // this.setState({
-    //   confirmLoading: true,
-    // });
-
-    // setTimeout(() => {
-      this.props.hide();
-      // this.setState({
-      //   confirmLoading: false,
-      // });
-    // }, 2000);
+    this.props.hide();
+    this.props.joinersBeModified();
   };
 
   // modal handle cancle
@@ -172,7 +162,7 @@ export default class AddCrewModal extends Component {
 
   render() {
     // console.log(this.state.selectedRowKeys);
-    console.log(this.state.staffs);
+    // console.log(this.state.staffs);
     const { visible } = this.props;
     const { selectedRowKeys, staffs } = this.state;
     const participate = staffs && staffs.map((item, index) => {

@@ -40,6 +40,7 @@ class BasicInfo extends Component {
   state = {
     modalVisible: false,
     edited: false,
+    joinersBeEdited: false,
     eachCustomerInfo: '',
     joiners: [],
     briefInfo: {
@@ -176,11 +177,19 @@ class BasicInfo extends Component {
   }
 
   componentWillReceiveProps(next){
-    info('basicInfo will receive props.');
+    // info('basicInfo will receive props.');
     // 当前的客户 id发生变化时，或者当前用户的信息 beEdited === true时，重置 state
-    const { id, beEdited} = this.props.currentCustomerInfo;
+    const { id, beEdited } = this.props.currentCustomerInfo;
     if(id !== next.currentCustomerInfo.id || beEdited === true ) {
       this.getBaseInfo(next.currentCustomerInfo.id);
+    }
+
+    // 重置 joinersBeEdited
+    if(beEdited === false) {
+      // console.log('joinersBeEdited');
+      this.setState({
+        joinersBeEdited: false
+      })
     }
   }
 
@@ -406,10 +415,19 @@ class BasicInfo extends Component {
     return newState
   }
 
+  // 参与人员被修改了
+  joinersBeModified = () => {
+    if(!this.state.joinersBeEdited) {
+      this.setState({
+        joinersBeEdited: true
+      })
+    }
+  }
+
   render() {
     const { customerInfoBeEdit } = this.props;
     const { step, mode, id, beEdited } = this.props.currentCustomerInfo;
-    const { modalVisible, eachCustomerInfo, edited, detailsInfo, briefInfo } = this.state;
+    const { modalVisible, eachCustomerInfo, edited, detailsInfo, briefInfo, joiners, joinersBeEdited } = this.state;
 
     const modal = {
       visible: modalVisible,
@@ -417,17 +435,20 @@ class BasicInfo extends Component {
       id: id,
       staffs: briefInfo.tags,
       changeJoiners: this.changeJoiners,
-      resetJoiners: this.resetJoiners
+      resetJoiners: this.resetJoiners,
+      joinersBeModified: this.joinersBeModified,
     };
 
     const basicInfoProps = {
+      joiners: joiners,
       addNewCustomer: this.addNewCustomer,
       beEdited: beEdited,
       customerInfoBeEdit: customerInfoBeEdit,
       id: id,
       eachCustomerInfo: eachCustomerInfo,
       modalShow: this.modalShow,
-      changeJoiners: this.changeJoiners
+      changeJoiners: this.changeJoiners,
+      joinersBeEdited: joinersBeEdited
     }
 
     const maintainRecordProps = {
