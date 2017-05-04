@@ -46,7 +46,7 @@ class StaffBaseForm extends Component{
     const { getFieldsValue} = this.props.form;
     const FieldsValue = getFieldsValue();
     FieldsValue.birth = FieldsValue.birth && FieldsValue.birth.format('YYYY-MM-DD')
-    FieldsValue.roles = FieldsValue.roles.map(item => parseInt(item));
+    // FieldsValue.roles = FieldsValue.roles.map(item => parseInt(item));
 
     ajax.Put(API.PUT_STAFF(id),FieldsValue)
     .then(() => {
@@ -104,7 +104,7 @@ class StaffBaseForm extends Component{
 
             >
               {getFieldDecorator('name', {
-                rules: [{required: false, message: '请填写员工名称!'}],
+                rules: [{required: true, message: '请填写员工名称!'}],
                 onChange:this.inputChange,
               })(
                 <Input/>
@@ -160,11 +160,6 @@ class StaffBaseForm extends Component{
               })(
                 <DatePicker
                   getCalendarContainer={ () => document.getElementById('staffEditor')}
-                  onChange={() => {
-                    this.setState({
-                      changed: true
-                    })
-                  }}
                 />
               )}
             </FormItem>
@@ -175,7 +170,7 @@ class StaffBaseForm extends Component{
               {...formItemLayout}
             >
               {getFieldDecorator('phone', {
-                rules: [{required: false, message: '请填写手机号码!'}],
+                rules: [{required: true, message: '请填写手机号码!'}],
                 onChange:this.inputChange,
               })(
                 <Input/>
@@ -203,7 +198,7 @@ class StaffBaseForm extends Component{
               {...formItemLayout}
             >
               {getFieldDecorator('isUser', {
-                rules: [{required: false, message: '添加用户!'}],
+                rules: [{required: true, message: '添加用户!'}],
                 onChange:this.inputChange,
               })(
                 <RadioGroup>
@@ -222,7 +217,7 @@ class StaffBaseForm extends Component{
               wrapperCol={{span:19}}
             >
               {getFieldDecorator('roles', {
-                rules: [{required: false, message: '请选择角色！'}],
+                rules: [{required: true, message: '请选择角色！'}],
                 onChange:this.inputChange,
               })(
                 <Select
