@@ -199,7 +199,7 @@ class StaffBaseForm extends Component{
             <FormItem
               label={<span>选择角色</span>}
               labelCol={{span:3}}
-              wrapperCol={{span:19}}
+              wrapperCol={{span:7}}
             >
               {getFieldDecorator('roles', {
                 rules: [{required: false, message: '请选择角色！'}],
