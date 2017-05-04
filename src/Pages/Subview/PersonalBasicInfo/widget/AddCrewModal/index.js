@@ -38,7 +38,6 @@ export default class AddCrewModal extends Component {
   componentWillReceiveProps(next){
     console.log('next');
     const { staffs } = this.props;
-    // if(this.props.id !== next.id) {
     if(staffs.length > 0){
       let a = [];
       staffs.map((item) => {
@@ -48,11 +47,9 @@ export default class AddCrewModal extends Component {
         })
       })
     }
-    // }
 
     const { selectedRowKeys } = this.state;
     // 选择经理，同步到 tags
-    // const crews = this.state.table.dataSource && this.state.table.dataSource.filter(item => selectedRowKeys.includes(item.id) === true);
     this.setState({
       staffs: staffs
     })
@@ -64,9 +61,7 @@ export default class AddCrewModal extends Component {
       this.setState({
         table: {
           dataSource: res.data.data.staffs
-        },
-        // staffs: [],
-        // selectedRowKeys: []
+        }
       })
     })
   }
@@ -122,16 +117,8 @@ export default class AddCrewModal extends Component {
 
   // modal handle
   handleOk = () => {
-    // this.setState({
-    //   confirmLoading: true,
-    // });
-
-    // setTimeout(() => {
-      this.props.hide();
-      // this.setState({
-      //   confirmLoading: false,
-      // });
-    // }, 2000);
+    this.props.hide();
+    this.props.joinersBeModified();
   };
 
   // modal handle cancle
@@ -147,10 +134,15 @@ export default class AddCrewModal extends Component {
 
   // modal handle close
   handleClose = (tag) => {
+    // 点击 tags的删除按钮，更新 staffs
+    const { staffs } = this.state;
+    const position = staffs.findIndex(item => item.id === tag.id);
+    staffs.splice(position, 1);
     const crews = this.state.selectedRowKeys.filter(item => item !== tag.id);
     this.setState({
+      staffs: staffs,
       selectedRowKeys: crews
-    })
+    });
   }
 
   // table row select
@@ -253,6 +245,7 @@ export default class AddCrewModal extends Component {
         width="600px"
         visible={visible}
         className="addCrewModal"
+        maskClosable={false}
         onOk={this.handleOk}
         confirmLoading={this.state.confirmLoading}
         onCancel={this.handleCancel}
