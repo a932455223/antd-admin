@@ -259,7 +259,7 @@ class AreaForm extends Component{
                         className="idnumber"
               >
               {
-              	getFieldDecorator('gridId')(
+              	getFieldDecorator('areaType')(
                   <Select>
                     {this.state.gridTypes.map((item)=>(<Option key={item.id.toString()}>{item.name}</Option>))}
                   </Select>
