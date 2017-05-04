@@ -75,10 +75,6 @@ class BranchesEditor extends Component {
         })
       })
 
-      ajax.Get(API.GET_ADD_DEPARTMENT).then((res)=>{
-        console.dir(res)
-      })
-
       ajax.Get(API.GET_STAFF_ADD_DEPARTMENT)
       .then((res) => {
         this.setState({
@@ -96,11 +92,7 @@ class BranchesEditor extends Component {
     axios.get(API.GET_STAFF_BASE(id))
       .then(res => {
         let staffBase = res.data.data;
-        let departmentsId = [];
-        let getDepartmentsId = staffBase.departments && staffBase.departments.map((item,index)=>{
-              return departmentsId.push(item.id.toString());
-           }).join();
-        console.log(staffBase,getDepartmentsId)
+        let getDepartmentsId = staffBase.departments && staffBase.departments.map( item => item.id.toString());
         this.setState({
           staff: {
             base: {
@@ -239,7 +231,6 @@ class BranchesEditor extends Component {
     const jobInfo = this.state.staff.job;
     const educationInfo = this.state.staff.educationInfo;
     const {business} = this.state;
-
     return (
         <div
           className={classNames('dock-container', 'staffEditor')}

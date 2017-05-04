@@ -28,7 +28,7 @@ class StaffBaseForm extends Component{
     const id = this.props.id;
     const { getFieldsValue} = this.props.form;
     const FieldsValue = getFieldsValue();
-    FieldsValue.birth = FieldsValue.birth.format('YYYY-MM-DD')
+    FieldsValue.birth = FieldsValue.birth && FieldsValue.birth.format('YYYY-MM-DD')
     ajax.Put(API.PUT_STAFF(id),FieldsValue)
     .then(() => {
       this.props.getStaffs()
@@ -179,7 +179,7 @@ class StaffBaseForm extends Component{
           </Col>
           <Col span={12}>
             <FormItem
-              label={<span>家庭住址</span>}
+              label={<span>添加用户</span>}
               {...formItemLayout}
             >
               {getFieldDecorator('isUser', {
@@ -190,6 +190,22 @@ class StaffBaseForm extends Component{
                   <Radio value={true}>是</Radio>
                   <Radio value={false}>否</Radio>
                 </RadioGroup>
+              )}
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <FormItem
+              label={<span>选择角色</span>}
+              labelCol={{span:3}}
+              wrapperCol={{span:7}}
+            >
+              {getFieldDecorator('roles', {
+                rules: [{required: false, message: '请选择角色！'}],
+                onChange:this.inputChange,
+              })(
+                <Input/>
               )}
             </FormItem>
           </Col>
@@ -274,7 +290,6 @@ function mapPropsToFields(props){
 }
 
 function onFieldsChange(props,changedFields){
-    console.log(props,changedFields)
   props.onChange(changedFields)
 }
 
