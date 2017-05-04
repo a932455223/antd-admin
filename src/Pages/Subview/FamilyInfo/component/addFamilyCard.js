@@ -15,7 +15,7 @@ import ajax from '../../../../tools/POSTF.js';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-export default class AddFamilyCard extends Component{
+class addFamilyCard extends Component{
     state = {
         isAdd:false
     }
@@ -29,6 +29,15 @@ export default class AddFamilyCard extends Component{
         isAdd:!this.state.isAdd
         });
     }
+    clickSavaBtn=()=>{
+        this.props.addNewFamilyValue(this.props.form.getFieldsValue())
+        this.toggleAdd()
+        this.props.resetAddCard();
+    }
+    clickCancelBtn=()=>{
+        this.toggleAdd()
+        this.props.resetAddCard();
+    }
     componentWillMount(){
             
             // console.log(this.props.item.certificate)
@@ -38,38 +47,46 @@ export default class AddFamilyCard extends Component{
     }
     render(){
         let addArea;
+        const { getFieldDecorator } = this.props.form;
         if(this.state.isAdd){
         addArea=
-            (<Card
-                className="family-card family-card-modify"
-                title={
-                    <div className="my-card-title">
-                    <Input
-                        prefix={<i className="iconfont icon-customer1"></i>}
-                        type="text"
-                        placeholder='请输入姓名'
-                    />
-                    <span
-                        className="cancel-btn"
-                         onClick={()=>{this.toggleAdd()}}
-                    >
-                        取消
-                    </span>
-                    <span
-                        className="save-btn"
-                    >
-                        保存
-                    </span>
-                    </div>
-                }
+            
+            (<Form  className="family-card family-card-modify">
+                <Card
+                    title={
+                        <div className="my-card-title">
+                            <FormItem>
+                                {getFieldDecorator('name', {
+                                    rules: [{ required: true, message: '姓名不能为空' }],
+                                })(<Input />)}
+                            </FormItem>
+                            <span
+                                className="cancel-btn"
+                                onClick={this.clickCancelBtn}
+                            >
+                                取消
+                            </span>
+                            <span
+                                className="save-btn"
+                                onClick={this.clickSavaBtn}
+                            >
+                            
+                                保存
+                            </span>
+                        </div>
+                    }
                 >
-                    <Row>
-                        <Col span={8}>
-                        <span>关系：</span>
-                        </Col>
-                        <Col span={16}>
+                <Row>
+                    <Col span={8}>
+                    <span>关系：</span>
+                    </Col>
+                    <Col span={16}>
+                        <FormItem>
+                        {getFieldDecorator('relation', {
+                            rules: [{ required: true, message: '姓名不能为空' }],
+                        })(
                             <Select 
-                                defaultValue="请选择关系"
+                                
                             >
                                 {
                                     this.props.familyRelation.map((rel) => {
@@ -83,27 +100,33 @@ export default class AddFamilyCard extends Component{
                                         )
                                     })
                                 }
-                            </Select>
-                        </Col>
-                    </Row>
+                            </Select>)}
+                        </FormItem>
+                    </Col>
+                </Row>
                     <Row>
                         <Col span={8}>
                         <span>联系方式：</span>
                         </Col>
                         <Col span={16}>
-                        <Input type="text" 
-                            placeholder='请输入联系方式' 
-                        />
+                            <FormItem>
+                                {getFieldDecorator('phone', {
+                                    rules: [{ required: true, message: '联系方式不能为空' }],
+                                })(<Input />)}
+                            </FormItem>
                         </Col>
+                        
                     </Row>
                     <Row>
                         <Col span={8}>
                         <span>身份证号：</span>
                         </Col>
                         <Col span={16}>
-                        <Input type="text" 
-                            placeholder='请输入身份证号'
-                        />
+                            <FormItem>
+                                {getFieldDecorator('certificate', {
+                                    rules: [{ required: true, message: '身份证不能为空' }],
+                                })(<Input />)}
+                            </FormItem>
                         </Col>
                     </Row>
                     <Row>
@@ -111,26 +134,30 @@ export default class AddFamilyCard extends Component{
                         <span>工作属性：</span>
                         </Col>
                         <Col span={16}>
-                             <Select 
-                                defaultValue="请选择工作属性"
-                             >
-                                {
-                                    this.props.commonJobCategory.map((job) => {
-                                        return (
-                                            <Option 
-                                                value={job.id.toString()}
-                                                key={job.id.toString()}
-                                            >
-                                                {job.name}
-                                            </Option >
-                                        )
-                                    })
-                                }
-                            </Select>
+                            <FormItem>
+                                {getFieldDecorator('jobCategory', {
+                                    rules: [{ required: true, message: '姓名不能为空' }],
+                                })(
+                                    <Select >
+                                        {
+                                            this.props.commonJobCategory.map((rel) => {
+                                                return (
+                                                    <Option 
+                                                        value={rel.id.toString()}
+                                                        key={rel.id.toString()}
+                                                    >
+                                                        {rel.name}
+                                                    </Option >
+                                                )
+                                            })
+                                        }
+                                    </Select>)}
+                            </FormItem>
                         </Col>
                     </Row>
-            </Card>)
+                </Card>
 
+            </Form>)
         }else{
         //添加按钮
         addArea=
@@ -139,8 +166,40 @@ export default class AddFamilyCard extends Component{
                 <p>新建家庭关系</p>
             </Card>)
         }
+        // const { getFieldDecorator } = this.props.form;
         return (
             addArea
         )
     }
 }
+const AddFamilyCard =Form.create({
+    onFieldsChange(props, changedFields) {
+        props.onAddChange(changedFields);
+    },
+    mapPropsToFields(props) {
+        // console.log('map triggered.',props)
+        return {
+            name: {
+                ...props.name
+            },
+            relation: {
+                ...props.relation
+            },
+            certificate: {
+                ...props.certificate
+            },
+            jobCategory: {
+                ...props.jobCategory
+            },
+            phone:{
+                ...props.phone
+            }
+        };
+    },
+    onValuesChange(_, values) {
+        // console.log(_, values)
+        // console.log(familyForm)
+        // familyForm.setState({values,values})
+    },
+})(addFamilyCard);
+export default AddFamilyCard;

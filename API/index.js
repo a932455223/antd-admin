@@ -7,6 +7,8 @@ export default {
   PUT_CUSTOMERS_FAMILY:familyId => `/api/customer/individual/family/${familyId}`,
   //增加家庭成员信息
   POST_CUSTOMERS_FAMILY:customerId => `/api/customer/individual/${customerId}/family`,
+  //删除家庭成员信息
+  DELETE_CUSTOMERS_FAMILY:familyId=>`/api/customer/individual/family/${familyId}`,
   /*===============================GET=======================================*/
   // 客户列表
   GET_CUSTOMERS: '/asd/customers',
