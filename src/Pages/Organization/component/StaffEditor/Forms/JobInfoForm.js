@@ -6,17 +6,20 @@ const Option = Select.Option;
 
 class JobInfoForm extends Component{
   state = {
-
+    changed : false
   }
 
   componentWillReceiveProps(nextProps) {
     console.dir(nextProps.parentDepartmentDropDown)
   }
+  onHandleSubmit = () =>{
+
+  }
+
   render(){
     const {getFieldDecorator} = this.props.form;
     const {jobInfo} = this.props;
     console.log('%clen:'+this.props.parentDepartmentDropDown.length,'color:red')
-    console.log(jobInfo)
     const formItemLayout = {
       labelCol: {
         span: 6
@@ -132,13 +135,13 @@ class JobInfoForm extends Component{
               {...formItemLayout}
             >
               {getFieldDecorator('leader', {
-                rules: [{required: false, message: '所属机构!'}],
+                rules: [{required: false, message: '直属上级!'}],
               })(
                 <Select
                   getPopupContainer={ () => document.getElementById('staffEditor')}
                 >
                   {
-                    // this.state.leadersDropdown.map(item => {
+                    // this.props.leadersDropdown.map(item => {
                     //   return <Option value={item.id.toString()} key={item.id}>{item.name}</Option>
                     // })
                   }
@@ -159,6 +162,17 @@ class JobInfoForm extends Component{
               <Input/>
             )}
           </FormItem>
+        </Row>
+        <Row className="buttonrow">
+            <Col span="3"></Col>
+            <Col span="20">
+              <Button
+                className={this.state.changed ? "ablesavebtn" : "disablesavebtn"}
+                disabled={this.state.changed ? false : true}
+                htmlType="submit"
+                onClick={this.onHandleSubmit}
+              >保存</Button>
+            </Col>
         </Row>
       </Card>
     )
