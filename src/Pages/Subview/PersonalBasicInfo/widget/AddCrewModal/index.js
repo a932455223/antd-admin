@@ -19,7 +19,7 @@ export default class AddCrewModal extends Component {
     },
     open: false,
     staffs: [],
-    selectedRowKeys: [18, 19]
+    selectedRowKeys: []
   };
 
   componentWillMount() {
@@ -36,7 +36,7 @@ export default class AddCrewModal extends Component {
   }
 
   componentWillReceiveProps(next){
-    // console.log('next');
+    console.log('next');
     const { staffs } = this.props;
     if(staffs.length > 0){
       let a = [];
@@ -50,9 +50,8 @@ export default class AddCrewModal extends Component {
 
     const { selectedRowKeys } = this.state;
     // 选择经理，同步到 tags
-    const crews = this.state.table.dataSource && this.state.table.dataSource.filter(item => selectedRowKeys.includes(item.id) === true);
     this.setState({
-      staffs: crews
+      staffs: staffs
     })
   }
 
@@ -81,9 +80,9 @@ export default class AddCrewModal extends Component {
   //   this.initTableScroll();
   // }
 
-  componentWillUnmout(){
-    removeEventListener('resize', this.initTableScroll)
-  }
+  // componentWillUnmout(){
+  //   removeEventListener('resize', this.initTableScroll)
+  // }
 
   initTableScroll() {
     let addCrew = document.getElementById('addCrew');
@@ -116,48 +115,54 @@ export default class AddCrewModal extends Component {
     }
   }
 
+  // modal handle
   handleOk = () => {
-    this.setState({
-      confirmLoading: true,
-    });
-
-    setTimeout(() => {
-      this.props.hide();
-      this.setState({
-        confirmLoading: false,
-      });
-    }, 2000);
-  };
-
-  handleCancel = () => {
     this.props.hide();
+    this.props.joinersBeModified();
   };
 
+  // modal handle cancle
+  handleCancel = () => {
+    let newState = this.props.hide();
+    this.props.resetJoiners(newState);
+  };
+
+  // treenode select
   onSelect = (selectedKeys, info) => {
     this.getStaffs(selectedKeys[0]);
   }
 
+  // modal handle close
   handleClose = (tag) => {
+    // 点击 tags的删除按钮，更新 staffs
+    const { staffs } = this.state;
+    const position = staffs.findIndex(item => item.id === tag.id);
+    staffs.splice(position, 1);
     const crews = this.state.selectedRowKeys.filter(item => item !== tag.id);
     this.setState({
+      staffs: staffs,
       selectedRowKeys: crews
-    })
+    });
   }
 
-  onSelectChange = (selectedRowKeys) => {
+  // table row select
+  onSelectChange = (selectedRowKeys, selectedRows) => {
     this.setState({
       selectedRowKeys: selectedRowKeys
     });
 
     // 选择经理，同步到 tags
-    const crews = this.state.table.dataSource && this.state.table.dataSource.filter(item => selectedRowKeys.includes(item.id) === true);
-    this.setState({
-      staffs: crews
-    })
+    // const crews = this.state.table.dataSource && this.state.table.dataSource.filter(item => selectedRowKeys.includes(item.id) === true);
+    // console.log(this.state.table.dataSource);
+    // console.log(crews);
+    // this.setState({
+    //   staffs: crews
+    // })
   }
 
   render() {
-    console.log(this.state.selectedRowKeys);
+    // console.log(this.state.selectedRowKeys);
+    // console.log(this.state.staffs);
     const { visible } = this.props;
     const { selectedRowKeys, staffs } = this.state;
     const participate = staffs && staffs.map((item, index) => {
@@ -190,8 +195,38 @@ export default class AddCrewModal extends Component {
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
+      // 单选
+      onSelect: (record, selected, selectedRows) => {
+        // 判断 staffs值中是否包含 id === record.id
+        if(staffs.every(item => item.id !== record.id)) {
+          // 勾选某一个员工，添加到 staffs数组中
+          staffs.push(record);
+        } else {
+          // 再次勾选某个员工，从数组中删除
+          const position = staffs.findIndex(item => item.id === record.id);
+          staffs.splice(position, 1);
+        }
+        this.setState({
+          staffs: staffs
+        })
+      },
+      // 全选
       onSelectAll: (selected, selectedRows, changeRows) => {
-        // console.log(selected, selectedRows, changeRows);
+        // 判断是否勾中，若全选，则 push被修改的 changeRows
+        if(selected) {
+          changeRows.map(record => {
+            staffs.push(record);
+          })
+          // const newJoiners = staffs.concat(changeRows);
+        } else { // 判断是否勾中，若全不选，则 push被修改的 changeRows
+          changeRows.map(record => {
+            const position = staffs.findIndex(item => item.id === record.id);
+            staffs.splice(position, 1);
+          })
+        }
+        this.setState({
+          staffs: staffs
+        })
       }
     };
     const tree = this.state.department && this.state.department !== {} ?
@@ -210,6 +245,7 @@ export default class AddCrewModal extends Component {
         width="600px"
         visible={visible}
         className="addCrewModal"
+        maskClosable={false}
         onOk={this.handleOk}
         confirmLoading={this.state.confirmLoading}
         onCancel={this.handleCancel}
@@ -246,7 +282,7 @@ export default class AddCrewModal extends Component {
             <div className="tags-wrapper">
               <div className="tags-title">
                 <h3>已选成员</h3>
-                <span>6 人</span>
+                <span>{staffs.length} 人</span>
               </div>
               <div>
                 {participate}

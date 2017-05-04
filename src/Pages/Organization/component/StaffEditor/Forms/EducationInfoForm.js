@@ -1,10 +1,30 @@
 import React,{Component} from 'react'
 import {Button, Card, Col, DatePicker, Form, Input, Row, Select} from "antd";
 import {connect} from "react-redux";
+import API from "../../../../../../API";
+import ajax from '../../../../../tools/POSTF'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
 class EducationInfoForm extends Component{
+  state = {
+    changed : false
+  }
+  onHandleSubmit = () => {
+    const id = this.props.id;
+    const { getFieldsValue} = this.props.form;
+    const FieldsValue = getFieldsValue();
+    FieldsValue.graduationTime = FieldsValue.graduationTime && FieldsValue.graduationTime.format('YYYY-MM-DD')
+    ajax.Put(API.PUT_STAFF(id),FieldsValue)
+    .then(() => {
+      this.props.getStaffs()
+    })
+  }
+  inputChange=()=>{
+    this.setState({
+      changed:true
+    })
+  }
   render(){
     const {getFieldDecorator} = this.props.form;
     const formItemLayout = {
@@ -30,18 +50,14 @@ class EducationInfoForm extends Component{
             >
               {getFieldDecorator('educationLevel', {
                 rules: [{required: false, message: '学历!'}],
+                onChange:this.inputChange,
               })(
                 <Select
                   getPopupContainer={ () => document.getElementById('staffEditor')}
-                  onChange={() => {
-                    this.setState({
-                      changed: true
-                    })
-                  }}
                 >
                   {
                     this.props.dropdown.educationLevel.map(item => {
-                      return <Option value={item.id} key={item.id}>{item.name}</Option>
+                      return <Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>
                     })
                   }
                 </Select>
@@ -55,6 +71,7 @@ class EducationInfoForm extends Component{
             >
               {getFieldDecorator('major', {
                 rules: [{required: false, message: '专业!'}],
+                onChange:this.inputChange,
               })(
                 <Input/>
               )}
@@ -69,7 +86,7 @@ class EducationInfoForm extends Component{
             >
               {getFieldDecorator('school', {
                 rules: [{required: false, message: '毕业院校!'}],
-                initialValue: baseInfo.school
+                onChange:this.inputChange,
               })(
                 <Input/>
               )}
@@ -82,16 +99,25 @@ class EducationInfoForm extends Component{
             >
               {getFieldDecorator('graduationTime', {
                 rules: [{required: false, message: '毕业时间!'}],
-                initialValue: baseInfo.graduationTime && moment(baseInfo.graduationTime)
+                onChange:this.inputChange,
               })(
-                <DatePicker onChange={() => {
-                  this.setState({
-                    changed: true
-                  })
-                }}/>
+                <DatePicker
+                  getCalendarContainer={ () => document.getElementById('staffEditor')}
+                 />
               )}
             </FormItem>
           </Col>
+        </Row>
+        <Row className="buttonrow">
+            <Col span="3"></Col>
+            <Col span="20">
+              <Button
+                className={this.state.changed ? "ablesavebtn" : "disablesavebtn"}
+                disabled={this.state.changed ? false : true}
+                htmlType="submit"
+                onClick={this.onHandleSubmit}
+              >保存</Button>
+            </Col>
         </Row>
       </Card>
     )
@@ -126,4 +152,4 @@ function onFieldsChange(props,changedFields){
   props.onChange(changedFields)
 }
 
-export default connect(mapStateToProps)(Form.create(onFieldsChange,mapPropsToFields)(EducationInfoForm));
+export default connect(mapStateToProps)(Form.create({onFieldsChange,mapPropsToFields})(EducationInfoForm));

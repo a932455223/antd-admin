@@ -1,6 +1,8 @@
 import React,{Component} from 'react'
 import {Button, Card, Col, DatePicker, Form, Input, Row, Select} from "antd";
 import {connect} from "react-redux";
+import API from "../../../../../../API";
+import ajax from '../../../../../tools/POSTF'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -13,13 +15,25 @@ class JobInfoForm extends Component{
     console.dir(nextProps.parentDepartmentDropDown)
   }
   onHandleSubmit = () =>{
+    const id = this.props.id;
+    const { getFieldsValue} = this.props.form;
+    const FieldsValue = getFieldsValue();
+    FieldsValue.inductionTime = FieldsValue.inductionTime && FieldsValue.inductionTime.format('YYYY-MM-DD')
 
+    ajax.Put(API.PUT_STAFF(id),FieldsValue)
+    .then(() => {
+      this.props.getStaffs()
+    })
+  }
+  inputChange=()=>{
+    this.setState({
+      changed:true
+    })
   }
 
   render(){
     const {getFieldDecorator} = this.props.form;
     const {jobInfo} = this.props;
-    console.log('%clen:'+this.props.parentDepartmentDropDown.length,'color:red')
     const formItemLayout = {
       labelCol: {
         span: 6
@@ -40,11 +54,12 @@ class JobInfoForm extends Component{
           <Col span={12}>
             <FormItem
               label={<span>所属机构</span>}
-              {...formItemLayout} 
+              {...formItemLayout}
               className="departments"
             >
               {getFieldDecorator('departments', {
-                rules: [{required: false, message: '所属机构!'}],
+                rules: [{required: true, message: '所属机构!'}],
+                onChange:this.inputChange,
               })(
                 <Select
                   mode="multiple"
@@ -65,7 +80,8 @@ class JobInfoForm extends Component{
               {...formItemLayout}
             >
               {getFieldDecorator('inductionTime', {
-                rules: [{required: false, message: '入职时间!'}],
+                rules: [{required: true, message: '入职时间!'}],
+                onChange:this.inputChange,
               })(
                 <DatePicker
                 getCalendarContainer={ () => document.getElementById('staffEditor')}
@@ -81,7 +97,8 @@ class JobInfoForm extends Component{
               {...formItemLayout}
             >
               {getFieldDecorator('jobNumber', {
-                rules: [{required: false, message: '工号!'}],
+                rules: [{required: true, message: '工号!'}],
+                onChange:this.inputChange,
               })(
                 <Input/>
               )}
@@ -94,6 +111,7 @@ class JobInfoForm extends Component{
             >
               {getFieldDecorator('jobStatus', {
                 rules: [{required: false, message: '任职状态!'}],
+                onChange:this.inputChange,
               })(
                 <Select
                   getPopupContainer={ () => document.getElementById('staffEditor')}
@@ -115,7 +133,8 @@ class JobInfoForm extends Component{
               {...formItemLayout}
             >
               {getFieldDecorator('jobCategory', {
-                rules: [{required: false, message: '职位!'}],
+                rules: [{required: true, message: '职位!'}],
+                onChange:this.inputChange,
               })(
                 <Select
                   getPopupContainer={ () => document.getElementById('staffEditor')}
@@ -136,6 +155,7 @@ class JobInfoForm extends Component{
             >
               {getFieldDecorator('leader', {
                 rules: [{required: false, message: '直属上级!'}],
+                onChange:this.inputChange,
               })(
                 <Select
                   getPopupContainer={ () => document.getElementById('staffEditor')}
@@ -149,19 +169,6 @@ class JobInfoForm extends Component{
               )}
             </FormItem>
           </Col>
-        </Row>
-        <Row>
-          <FormItem
-            label={<span>调岗记录</span>}
-            labelCol={{span: 3}}
-            wrapperCol={{span: 7}}
-          >
-            {getFieldDecorator('asd', {
-              rules: [{required: false, message: '调岗记录!'}],
-            })(
-              <Input/>
-            )}
-          </FormItem>
         </Row>
         <Row className="buttonrow">
             <Col span="3"></Col>
@@ -215,4 +222,7 @@ function mapPropsToFields(props){
 function onFieldsChange(props,changedFields){
   props.onChange(changedFields)
 }
-export default connect(mapStateToProps)(Form.create(onFieldsChange,mapPropsToFields)(JobInfoForm));
+export default connect(mapStateToProps)(Form.create({
+  onFieldsChange,
+  mapPropsToFields
+})(JobInfoForm));

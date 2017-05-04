@@ -53,6 +53,11 @@ const route = (
           cb(null, require('../Pages/Customer/All').default)
         }, 'All')
       }}/>
+      <Route path='grids' getComponent={(location, cb) => {
+        require.ensure([], () => {
+          cb(null, require('../Pages/Grids/List').default)
+        }, 'gridsList')
+      }}/>
     </Route>
 
      <Route path='grids' onEnter={validate} component={App}>
@@ -110,7 +115,7 @@ const route = (
         cb(null,require('../Pages/Demos/Form/Form2').default)
       })
     }}>
-    </Route>  
+    </Route>
     <Route path='login' getComponent={(location, cb) => {
       require.ensure([], () => {
         cb(null, require('../Pages/Login/login').default)

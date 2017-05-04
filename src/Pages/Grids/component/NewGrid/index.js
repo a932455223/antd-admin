@@ -56,15 +56,15 @@ class NewGrid extends Component {
     return (
       <div className="newcreate" id="newgridh">
         <div style={{clear:'both'}}></div>
-        <Card className="new-role" 
+        <Card
+          className="new-role cardbox"
           style={{display: this.state.formGroupVisible ? 'none' : 'block'}}
-          className="cardbox"
         >
           {/*<div className="newGridtitle">
             <h3>{this.state.roleName}</h3>
             <span>
               {this.state.formGroupVisible && <Button onClick={this.save.bind(this)}>保存</Button>}
-              
+
             </span>
           </div>     */}
           <Icon
@@ -72,7 +72,7 @@ class NewGrid extends Component {
               onClick={this.props.close}
               type="close"
               style={{fontSize:"24px",cursor:"pointer"}}
-            />   
+            />
           <Row>
           <Form onSubmit={this.saveUsername} className="editrolename">
             <FormItem
