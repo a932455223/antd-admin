@@ -35,6 +35,11 @@ class GridEditF extends Component {
     ajax.Get(API.GET_GRIDS_ID(id))
     .then(res => {
       res.data.data.orgId = res.data.data.orgId.toString()
+      let regionCodes = res.data.data.regionCode.split(' ');
+      res.data.data.province = regionCodes[0];
+      res.data.data.city = regionCodes[1]
+      res.data.data.region = regionCodes[2]
+      res.data.data.addressDetail = res.data.data.address.split(' ')[3]
       this.setState({
         area : this.transformData(res.data.data)
       })
@@ -51,17 +56,23 @@ class GridEditF extends Component {
    }
 
    handleFormChange = (changedFields)=>{
-    console.log(changedFields)
-    let newState = update(this.state,{area:{$set:{...this.state.area,...changedFields}}})
-    console.dir(newState)
-    this.setState(newState);
+    let subTree;
+    if(changedFields.province){
+      subTree = {...this.state.area,...changedFields,...{city:{value:undefined},region:{value:undefined}}}
+    }else if(changedFields.city){
+      subTree = {...this.state.area,...changedFields,...{region:{value:undefined}}}
+    }else{
+      subTree = {...this.state.area,...changedFields}
+    }
+     let newState = update(this.state,{area:{$set:subTree}})
+     this.setState(newState);
    }
 
    transformData = (obj)=> {
     return Object.keys(obj).reduce(function(pre,key){
       pre[key] = {value:obj[key]}
       return pre;
-    },{}) 
+    },{})
    }
 
   render() {

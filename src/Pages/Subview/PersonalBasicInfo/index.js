@@ -5,6 +5,7 @@ import {
   Select,
 } from 'antd';
 import moment from 'moment';
+import $ from 'jquery';
 import axios from 'axios';
 import update from "immutability-helper";
 import { connect } from 'react-redux';
@@ -166,43 +167,33 @@ class BasicInfo extends Component {
       })
     });
 
-    // 所属机构
-    ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
-    .then((res) => {
-      let newState = update(this.state, {
-        briefInfo: {
-          department: {
-            options: {$set: res.data.data},
-          }
-        },
-      });
-      this.setState(newState);
-    })
+    // // 所属机构
+    // ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
+    // .then((res) => {
+    //   let newState = update(this.state, {
+    //     briefInfo: {
+    //       department: {
+    //         options: {$set: res.data.data},
+    //       }
+    //     },
+    //   });
+    //   this.setState(newState);
+    // })
+    //
+    // // 所属客户经理
 
-    // 所属客户经理
-    ajax.Get(API.GET_DEPARTMENT_STAFFS(1))
-    .then((res) => {
-      let newState = update(this.state, {
-        briefInfo: {
-          manager: {
-            options: {$set: res.data.data},
-          }
-        },
-      });
-      this.setState(newState);
-    })
-
-    ajax.Get(API.GET_DEPARTMENT_AREAS(1))
-    .then((res) => {
-      let newState = update(this.state, {
-        briefInfo: {
-          grid: {
-            options: {$set: res.data.data},
-          }
-        },
-      });
-      this.setState(newState);
-    })
+    //
+    // ajax.Get(API.GET_DEPARTMENT_AREAS(1))
+    // .then((res) => {
+    //   let newState = update(this.state, {
+    //     briefInfo: {
+    //       grid: {
+    //         options: {$set: res.data.data},
+    //       }
+    //     },
+    //   });
+    //   this.setState(newState);
+    // })
   }
 
   componentWillReceiveProps(next){
@@ -260,19 +251,19 @@ class BasicInfo extends Component {
           briefInfo: {
             department: {
               $set: {
-                options: this.state.briefInfo.department.options,
+                // options: this.state.briefInfo.department.options,
                 value: res.data.data.department + ''
               }
             },
             manager: {
               $set: {
-                options: this.state.briefInfo.manager.options,
+                // options: this.state.briefInfo.manager.options,
                 value: res.data.data.manager + ''
               }
             },
             grid: {
               $set: {
-                options: this.state.briefInfo.grid.options,
+                // options: this.state.briefInfo.grid.options,
                 value: res.data.data.grid + ''
               }
             },
@@ -334,20 +325,76 @@ class BasicInfo extends Component {
     }
   }
 
-  handleFormChange = (changedFields) => {
-    let newState = update(this.state,{
-      briefInfo: {
-        $set: {
-          ...this.state.briefInfo,
-          ...changedFields
-        }
+  // 新建客户
+  addNewCustomer = (briefInfo) => {
+    const { name } = this.props.currentCustomerInfo;
+
+    // console.log(briefInfo);
+    let json = {
+      accounts: [],
+      address: briefInfo.address ? briefInfo.address : '',
+      birth: '',
+      certificate: briefInfo.certificate ? briefInfo.certificate : '',
+      department: briefInfo.department ? briefInfo.department - 0 : '',
+      grid: briefInfo.grid ? briefInfo.grid - 0 : '',
+      joiners: briefInfo.joiners ? briefInfo.joiners : '',
+      manager: briefInfo.manager ? briefInfo.manager - 0 : '',
+      name: name ? name : '',
+      origin: '',
+      phone: briefInfo.phone	? briefInfo.phone : '',
+      wechat: briefInfo.wechat ? briefInfo.wechat : '',
+    }
+
+    // console.log(json);
+
+    $.ajax({
+      type: 'POST',
+      // url: 'http://106.14.69.82/crm/customer/individual/base',
+      url: '/crm/api/customer/individual/base',
+      data: JSON.stringify(json),
+      success: function(data){
+      	console.info(data);
       },
-      detailsInfo: {
-        $set: {
-          ...this.state.detailsInfo,
-          ...changedFields
-        }
+      dataType: "json",
+      contentType: "application/json"
+    });
+
+    // ajax.Post(API.POST_CUSTOMER_INDIVIDUAL_BASE, json)
+    // .then((res) => {
+    //   console.log(res.data.data)
+    // })
+  }
+
+
+  handleFormChange = (changedFields) => {
+    // 所属机构，客户经理，所属网格三级联动
+    let briefInfo;
+    if(changedFields.department) {
+      briefInfo = {
+        ...this.state.briefInfo,
+        ...changedFields,
+        ...{manager: {
+          value: undefined
+        }},
+        ...{grid: {
+          value: undefined
+        }}
       }
+    } else {
+      briefInfo = {
+        ...this.state.briefInfo,
+        ...changedFields
+      }
+    }
+
+    let detailsInfo = {
+      ...this.state.detailsInfo,
+      ...changedFields
+    }
+
+    let newState = update(this.state,{
+      briefInfo: {$set: {...briefInfo}},
+      detailsInfo: {$set: {...detailsInfo}}
     })
     this.setState(newState);
   }
@@ -355,18 +402,23 @@ class BasicInfo extends Component {
   render() {
     const { customerInfoBeEdit } = this.props;
     const { step, mode, id, beEdited } = this.props.currentCustomerInfo;
-    const { eachCustomerInfo, edited, detailsInfo, briefInfo } = this.state;
+    const { modalVisible, eachCustomerInfo, edited, detailsInfo, briefInfo } = this.state;
+    // console.log(briefInfo);
 
     const modal = {
-      visible: this.state.modalVisible,
-      hide: this.modalHide
+      visible: modalVisible,
+      hide: this.modalHide,
+      id: id,
+      staffs: briefInfo.tags
     };
 
     const basicInfoProps = {
+      addNewCustomer: this.addNewCustomer,
       beEdited: beEdited,
       customerInfoBeEdit: customerInfoBeEdit,
       id: id,
-      eachCustomerInfo: eachCustomerInfo
+      eachCustomerInfo: eachCustomerInfo,
+      modalShow: this.modalShow
     }
 
     const maintainRecordProps = {
@@ -375,7 +427,7 @@ class BasicInfo extends Component {
 
     return(
       <div style={{textAlign: 'left'}}>
-        <AddCrewModal {...modal}/>
+        <AddCrewModal key={id} {...modal}/>
 
         <div className="">
           {mode && mode === 'view' &&

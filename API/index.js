@@ -1,17 +1,22 @@
 export default {
-
-  /*===============================GET=======================================*/
-  // 客户列表
-  GET_CUSTOMERS: '/asd/customers',
   //客户家庭信息
   GET_CUSTOMERS_FAMILY: function (id) {
     return "/api/customer/individual/" + id + "/families"
   },
+  //修改家庭信息
+  PUT_CUSTOMERS_FAMILY:familyId => `/api/customer/individual/family/${familyId}`,
+  //增加家庭成员信息
+  POST_CUSTOMERS_FAMILY:customerId => `/api/customer/individual/${customerId}/family`,
+  /*===============================GET=======================================*/
+  // 客户列表
+  GET_CUSTOMERS: '/asd/customers',
   // customer/individual/:customerId/families
   // 用户与权限 角色 列表
   GET_SYSTEM_ROLES_LIST: '/asd/system/roles/list',
 
   GET_DEPARTMENT_HIERARCHY: '/api/department/hierarchy',
+
+  GET_CUSTOMER_ADD_DEPARTMENT_HIERARCHY: '/api/customer/add/departments/hierarchy',
 
   POST_CUSTOMER_PRIVILEGE: '/asd/privilege/customer',
   //===========dropDown option========================================
