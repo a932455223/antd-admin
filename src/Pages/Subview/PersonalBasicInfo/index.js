@@ -177,7 +177,7 @@ class BasicInfo extends Component {
   }
 
   componentWillReceiveProps(next){
-    info('basicInfo will receive props.');
+    // info('basicInfo will receive props.');
     // 当前的客户 id发生变化时，或者当前用户的信息 beEdited === true时，重置 state
     const { id, beEdited } = this.props.currentCustomerInfo;
     if(id !== next.currentCustomerInfo.id || beEdited === true ) {
@@ -186,6 +186,7 @@ class BasicInfo extends Component {
 
     // 重置 joinersBeEdited
     if(beEdited === false) {
+      // console.log('joinersBeEdited');
       this.setState({
         joinersBeEdited: false
       })
@@ -414,14 +415,13 @@ class BasicInfo extends Component {
     return newState
   }
 
+  // 参与人员被修改了
   joinersBeModified = () => {
-    // if(!this.props.beEdited) {
-    //   this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
-    // }
-    // this.props.customerInfoBeEdit();
-    this.setState({
-      joinersBeEdited: true
-    })
+    if(!this.state.joinersBeEdited) {
+      this.setState({
+        joinersBeEdited: true
+      })
+    }
   }
 
   render() {

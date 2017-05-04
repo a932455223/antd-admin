@@ -49,18 +49,25 @@ class EditBriefBasicInfoForm extends Component{
   componentWillReceiveProps(next) {
     // console.log('personalBasicInfo will recieve props');
     const { getFieldValue } = next.form;
-    // 确认参与人员按钮被点击时
-    if(next.joinersBeEdited && !next.beEdited) {
-      this.activeButton();
-    } else {
-      // 重置 InfoBeEdited
-      if(!next.beEdited || getFieldValue('phone') === '' || getFieldValue('department') === '') {
-        let newState = update(this.state, {
-          basicInfoBeEdit: {$set: false}
-        })
-        this.setState(newState)
-      }
+
+    if(!next.beEdited && next.joinersBeEdited) {
+      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
     }
+
+    // 确认参与人员按钮被点击时
+    if(next.joinersBeEdited && (!this.props.beEdited || next.beEdited) ) {
+      let newState = update(this.state, {
+        basicInfoBeEdit: {$set: true}
+      })
+      this.setState(newState)
+    } else if(!next.beEdited || getFieldValue('phone') === '' || getFieldValue('department') === '') {
+      let newState = update(this.state, {
+        basicInfoBeEdit: {$set: false}
+      })
+      this.setState(newState)
+    }
+    // 重置 InfoBeEdited
+
 
     // 三级联动，更新 manager和 grid
     let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : '';
@@ -69,16 +76,6 @@ class EditBriefBasicInfoForm extends Component{
       this.getDepartments(departmentId, managerId);
     }
   };
-
-  activeButton = () => {
-    if(!this.props.beEdited) {
-      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
-    }
-    let newState = update(this.state, {
-      basicInfoBeEdit: {$set: true}
-    })
-    this.setState(newState)
-  }
 
   // 获取 department，
   getDepartments = (departmentId, managerId) => {
