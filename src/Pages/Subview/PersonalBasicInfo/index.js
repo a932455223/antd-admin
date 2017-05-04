@@ -43,6 +43,7 @@ class BasicInfo extends Component {
     joinersBeEdited: false,
     eachCustomerInfo: '',
     joiners: [],
+    accounts: {},
     briefInfo: {
       department: {
         value: '',
@@ -134,14 +135,9 @@ class BasicInfo extends Component {
 
   // modal hide
   modalHide = () => {
-    let newState = update(this.state, {
-      modalVisible: {$set: false}
+    this.setState({
+      modalVisible: false
     })
-    this.setState(newState);
-    return newState;
-    // this.setState({
-    //   modalVisible: false
-    // })
   }
 
   componentWillMount(){
@@ -186,7 +182,6 @@ class BasicInfo extends Component {
 
     // 重置 joinersBeEdited
     if(beEdited === false) {
-      // console.log('joinersBeEdited');
       this.setState({
         joinersBeEdited: false
       })
@@ -233,6 +228,24 @@ class BasicInfo extends Component {
             }
           }
         })
+
+        // 客户账户
+        let accounts = arr.map((item,index) => ({
+          [`row-${index}-accountNo`]: {value: item.accountNo},
+          [`row-${index}-remark`]: {value: item.remark}
+        }));
+
+        // 展平 accounts
+        const accountsObj = accounts.reduce((pre, next) => {
+          return {
+            ...pre,
+            ...next
+          }
+        },{});
+
+        this.setState({
+          accounts: accountsObj
+        });
 
         // 更新 briefInfo, detailsInfo, eachCustomerInfo
         let newJoiners = _.cloneDeep(res.data.data.joiners);
@@ -355,7 +368,7 @@ class BasicInfo extends Component {
     // })
   }
 
-
+  // 表单数据的双向绑定
   handleFormChange = (changedFields) => {
     console.log(changedFields);
     // 所属机构，客户经理，所属网格三级联动
@@ -383,7 +396,14 @@ class BasicInfo extends Component {
       ...changedFields
     }
 
+    let accounts = {
+      ...this.state.accounts,
+      ...changedFields
+    }
+
     let newState = update(this.state,{
+      accountsArray: {$set: this.state.accountsArray},
+      accounts: {$set: {...accounts}},
       briefInfo: {$set: {...briefInfo}},
       detailsInfo: {$set: {...detailsInfo}}
     })
@@ -427,7 +447,17 @@ class BasicInfo extends Component {
   render() {
     const { customerInfoBeEdit } = this.props;
     const { step, mode, id, beEdited } = this.props.currentCustomerInfo;
-    const { modalVisible, eachCustomerInfo, edited, detailsInfo, briefInfo, joiners, joinersBeEdited } = this.state;
+    const {
+      modalVisible,
+      eachCustomerInfo,
+      edited,
+      detailsInfo,
+      briefInfo,
+      joiners,
+      joinersBeEdited,
+      accounts
+    } = this.state;
+    // console.log(accounts);
 
     const modal = {
       visible: modalVisible,
@@ -448,7 +478,9 @@ class BasicInfo extends Component {
       eachCustomerInfo: eachCustomerInfo,
       modalShow: this.modalShow,
       changeJoiners: this.changeJoiners,
-      joinersBeEdited: joinersBeEdited
+      joinersBeEdited: joinersBeEdited,
+      accounts: accounts,
+      accountsArray: accountsArray
     }
 
     const maintainRecordProps = {

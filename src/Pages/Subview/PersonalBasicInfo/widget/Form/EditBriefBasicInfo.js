@@ -178,12 +178,11 @@ class EditBriefBasicInfoForm extends Component{
   }
 
   render() {
-    const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess, beEdited, joinersBeEdited } = this.props;
+    const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess, beEdited, joinersBeEdited, accounts } = this.props;
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue} = this.props.form;
     const { department, manager, grid, tags } = this.props.briefInfo;
     const { departmentOptions, managerOptions, gridOptions } = this.state;
     // setFieldsValue({['manager']: null});
-    // console.log(joinersBeEdited);
     // console.log(beEdited);
 
     const kinitialValue = function(){
@@ -223,7 +222,7 @@ class EditBriefBasicInfoForm extends Component{
     getFieldDecorator('keys', { initialValue: kinitialValue() });
     const keys = getFieldValue('keys');
     const EditFormItems = () => {
-      var len = eachCustomerInfo.accounts && eachCustomerInfo.accounts.length;
+      // var len = accounts && accounts.length;
       var formItemArray = keys.map((k, index) => {
         return (
           <Row key={index}>
@@ -235,21 +234,22 @@ class EditBriefBasicInfoForm extends Component{
                 {...(index===0 ? formItemLayout : formItemLayoutWithOutLabel)}
                 className="accounts"
               >
-                {getFieldDecorator(`names-${k}`, {
-                  validateTrigger: ['onChange', 'onBlur'],
-                  initialValue:len > index ? eachCustomerInfo.accounts[index].accountNo : "",
+                {getFieldDecorator(`${k}-accountNo`, {
+                  // validateTrigger: ['onChange', 'onBlur'],
+                  // initialValue:len > index ? eachCustomerInfo.accounts[index].accountNo : "",
                   onChange: this.inputBasicInfoChange
                 })(
                   <Input placeholder="填写账号信息"  />
                 )}
               </FormItem>
             </Col>
+
             <Col span={12} className="addMessage">
               <FormItem
                 wrapperCol={{span: 24}}
               >
-                {getFieldDecorator(`info-${k}`, {
-                  initialValue:len > index ? eachCustomerInfo.accounts[index].remark : "",
+                {getFieldDecorator(`${k}-remark`, {
+                  // initialValue:len > index ? eachCustomerInfo.accounts[index].remark : "",
                   onChange: this.inputBasicInfoChange
                 })(
                   <Input placeholder="填写备注信息"/>
@@ -269,6 +269,7 @@ class EditBriefBasicInfoForm extends Component{
                 }
               </FormItem>
             </Col>
+
           </Row>
         )
       });
@@ -510,8 +511,10 @@ class EditBriefBasicInfoForm extends Component{
 }
 
 function mapPropsToFields (props) {
-  const { briefInfo } = props;
+  const { briefInfo, accounts } = props;
+
   return {
+    ...accounts,
     department: {
       ...briefInfo.department
     },
