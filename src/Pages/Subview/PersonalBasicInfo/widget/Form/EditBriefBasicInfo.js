@@ -147,7 +147,7 @@ class EditBriefBasicInfoForm extends Component{
     });
   }
 
-  handleClose = () => {
+  handleClose = (joiner) => {
     if(!this.props.beEdited) {
       this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
     }
@@ -155,7 +155,9 @@ class EditBriefBasicInfoForm extends Component{
     let newState = update(this.state, {
       basicInfoBeEdit: {$set: true}
     })
-    this.setState(newState)
+    this.setState(newState);
+
+    this.props.changeJoiners(joiner);
   }
 
   updateInfo = (briefInfo) => {
@@ -168,9 +170,6 @@ class EditBriefBasicInfoForm extends Component{
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue} = this.props.form;
     const { department, manager, grid, tags } = this.props.briefInfo;
     const { departmentOptions, managerOptions, gridOptions } = this.state;
-    // let managerValue = managerOptions && managerOptions[0] && managerOptions[0].id;
-    // console.log(managerValue);
-    //
     // setFieldsValue({['manager']: null});
     // console.log(departmentOptions);
 

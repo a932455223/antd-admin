@@ -86,10 +86,6 @@ class BranchesEditor extends Component {
   componentWillReceiveProps(nextProps) {
     console.log('staffEditor will receive props.')
     this.getStaffInfo(nextProps.id)
-
-
-
-
   }
 
   getStaffInfo(id) {
@@ -150,6 +146,20 @@ class BranchesEditor extends Component {
               asd:{
                 value:staffBase.asd
               }
+            },
+            educationInfo:{
+              educationLevel:{
+                value:staffBase.educationLevel.id ? staffBase.educationLevel.id.toString() : undefined
+              },
+              major:{
+                value:staffBase.major
+              },
+              school:{
+                value:staffBase.school
+              },
+              graduationTime:{
+                value:staffBase.graduationTime
+              }
             }
           }
         })
@@ -159,6 +169,10 @@ class BranchesEditor extends Component {
   baseInfoChange = (chagnedField) => {
     let newState = update(this.state,{staff:{base:{$set:{...this.state.staff.base,...chagnedField}}}})
     this.setState(newState);
+  }
+
+  jobInfoChange = ()=> {
+
   }
 
   closeDock() {
@@ -215,6 +229,7 @@ class BranchesEditor extends Component {
 
     const baseInfo = this.state.staff.base;
     const jobInfo = this.state.staff.job;
+    const educationInfo = this.state.staff.educationInfo;
     const {business} = this.state;
     return (
         <div
@@ -276,10 +291,10 @@ class BranchesEditor extends Component {
           </Card>
 
           {/*工作信息*/}
-       <JobInfoForm onChange={this.jobInfoChange} jobInfo={jobInfo} id={this.props.id} getStaffs={this.props.getStaffs} parentDepartmentDropDown={this.state.parentDepartmentDropDown} />
+        <JobInfoForm onChange={this.jobInfoChange} jobInfo={jobInfo} id={this.props.id} getStaffs={this.props.getStaffs} parentDepartmentDropDown={this.state.parentDepartmentDropDown} />
 
           {/*教育经历*/}
-      {/*<EducationInfoForm/>*/}
+        <EducationInfoForm onChange={this.educationInfoChange} educationInfo={educationInfo} id={this.props.id} getStaffs={this.props.getStaffs}/>
 
 
           {/*操作日志*/}

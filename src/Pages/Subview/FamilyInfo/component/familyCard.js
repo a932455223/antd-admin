@@ -52,7 +52,9 @@ export default class familyCard extends Component{
                             <i className="iconfont icon-edit"></i>编辑
                         </a>
 
-                        <a href="javascript:void(0);" >
+                        <a href="javascript:void(0);" 
+                            onClick={()=>{this.props.deleteFamilyValue(this.props.item.id.value)}}
+                        >
                             <i className="iconfont icon-delete"></i>删除
                         </a>
                     </div>

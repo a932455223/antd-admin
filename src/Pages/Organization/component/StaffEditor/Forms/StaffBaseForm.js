@@ -274,6 +274,7 @@ function mapPropsToFields(props){
 }
 
 function onFieldsChange(props,changedFields){
+    console.log(props,changedFields)
   props.onChange(changedFields)
 }
 

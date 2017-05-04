@@ -8,6 +8,7 @@ import moment from 'moment';
 import $ from 'jquery';
 import axios from 'axios';
 import update from "immutability-helper";
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import API from '../../../../API';
 import ajax from '../../../tools/POSTF';
@@ -40,6 +41,7 @@ class BasicInfo extends Component {
     modalVisible: false,
     edited: false,
     eachCustomerInfo: '',
+    joiners: [],
     briefInfo: {
       department: {
         value: '',
@@ -131,9 +133,14 @@ class BasicInfo extends Component {
 
   // modal hide
   modalHide = () => {
-    this.setState({
-      modalVisible: false
+    let newState = update(this.state, {
+      modalVisible: {$set: false}
     })
+    this.setState(newState);
+    return newState;
+    // this.setState({
+    //   modalVisible: false
+    // })
   }
 
   componentWillMount(){
@@ -166,34 +173,6 @@ class BasicInfo extends Component {
         this.setState(newState);
       })
     });
-
-    // // 所属机构
-    // ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
-    // .then((res) => {
-    //   let newState = update(this.state, {
-    //     briefInfo: {
-    //       department: {
-    //         options: {$set: res.data.data},
-    //       }
-    //     },
-    //   });
-    //   this.setState(newState);
-    // })
-    //
-    // // 所属客户经理
-
-    //
-    // ajax.Get(API.GET_DEPARTMENT_AREAS(1))
-    // .then((res) => {
-    //   let newState = update(this.state, {
-    //     briefInfo: {
-    //       grid: {
-    //         options: {$set: res.data.data},
-    //       }
-    //     },
-    //   });
-    //   this.setState(newState);
-    // })
   }
 
   componentWillReceiveProps(next){
@@ -247,7 +226,9 @@ class BasicInfo extends Component {
         })
 
         // 更新 briefInfo, detailsInfo, eachCustomerInfo
+        let newJoiners = _.cloneDeep(res.data.data.joiners);
         let newState = update(this.state, {
+          joiners: {$set: res.data.data.joiners},
           briefInfo: {
             department: {
               $set: {
@@ -303,7 +284,7 @@ class BasicInfo extends Component {
               }
             },
             tags: {
-              $set: res.data.data.joiners
+              $set: newJoiners
             }
           },
           detailsInfo: {
@@ -367,6 +348,7 @@ class BasicInfo extends Component {
 
 
   handleFormChange = (changedFields) => {
+    console.log(changedFields);
     // 所属机构，客户经理，所属网格三级联动
     let briefInfo;
     if(changedFields.department) {
@@ -399,8 +381,34 @@ class BasicInfo extends Component {
     this.setState(newState);
   }
 
+  // change joiners
+  changeJoiners = (joiner) => {
+    const { tags } = this.state.briefInfo;
+    const newJoiners = tags.filter(item => item.id !== joiner.id);
+    let newState = update(this.state, {
+      briefInfo: {
+        tags: {$set: newJoiners}
+      }
+    })
+    this.setState(newState);
+  };
+
+  // 重置参与人员
+  resetJoiners = (state) => {
+    let st = state || this.state;
+    let newJoiners = _.cloneDeep(st.joiners);
+    let newState = update(state, {
+      briefInfo: {
+        tags: {$set: newJoiners}
+      }
+    })
+    this.setState(newState);
+    return newState
+  }
+
   render() {
     const { customerInfoBeEdit } = this.props;
+    console.log(this.state.joiners);
     const { step, mode, id, beEdited } = this.props.currentCustomerInfo;
     const { modalVisible, eachCustomerInfo, edited, detailsInfo, briefInfo } = this.state;
     // console.log(briefInfo);
@@ -409,7 +417,9 @@ class BasicInfo extends Component {
       visible: modalVisible,
       hide: this.modalHide,
       id: id,
-      staffs: briefInfo.tags
+      staffs: briefInfo.tags,
+      changeJoiners: this.changeJoiners,
+      resetJoiners: this.resetJoiners
     };
 
     const basicInfoProps = {
@@ -418,7 +428,8 @@ class BasicInfo extends Component {
       customerInfoBeEdit: customerInfoBeEdit,
       id: id,
       eachCustomerInfo: eachCustomerInfo,
-      modalShow: this.modalShow
+      modalShow: this.modalShow,
+      changeJoiners: this.changeJoiners
     }
 
     const maintainRecordProps = {
