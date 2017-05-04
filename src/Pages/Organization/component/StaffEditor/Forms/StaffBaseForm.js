@@ -14,7 +14,8 @@ class StaffBaseForm extends Component{
   state = {
     changed:false,
     rolesDropDown:[],
-    rolesHide : false
+    rolesHide : false,
+    loading:false
   }
 
   inputChange=()=>{
@@ -42,6 +43,9 @@ class StaffBaseForm extends Component{
   }
 
   onHandleSubmit = () => {
+    this.setState({
+      loading:true
+    })
     const id = this.props.id;
     const { getFieldsValue} = this.props.form;
     const FieldsValue = getFieldsValue();
@@ -51,6 +55,10 @@ class StaffBaseForm extends Component{
     ajax.Put(API.PUT_STAFF(id),FieldsValue)
     .then(() => {
       this.props.getStaffs()
+      this.setState({
+        changed:false,
+        loading:false
+      })
     })
   }
   render(){
@@ -94,6 +102,7 @@ class StaffBaseForm extends Component{
             
           </Row>
         )}
+        className="staffbase"
       >
         <Form>
         <Row>
@@ -104,7 +113,7 @@ class StaffBaseForm extends Component{
 
             >
               {getFieldDecorator('name', {
-                rules: [{required: true, message: '请填写员工名称!'}],
+                rules: [{required: true, message: '请填写员工姓名!'}],
                 onChange:this.inputChange,
               })(
                 <Input/>
@@ -265,6 +274,8 @@ class StaffBaseForm extends Component{
                 disabled={this.state.changed ? false : true}
                 htmlType="submit"
                 onClick={this.onHandleSubmit}
+                loading={this.state.loading}
+
               >保存</Button>
             </Col>
         </Row>

@@ -6,7 +6,7 @@
  */
 
 import React, {Component} from "react";
-import {Button, Card, Col, DatePicker, Form, Input, Row, Select} from "antd";
+import {Button, Card, Col, DatePicker, Form, Input, Row, Select,Icon} from "antd";
 import classNames from "classnames";
 import axios from "axios";
 import moment from "moment";
@@ -249,16 +249,16 @@ class BranchesEditor extends Component {
             <Col span={22}>
               <Row className="avatar">
                 <div></div>
-                <p>{baseInfo.name ? baseInfo.name.value : null}</p>
+                <p className="baseinfoname">{baseInfo.name ? baseInfo.name.value : null}</p>
               </Row>
             </Col>
             <Col span={2}>
-            <span
+            <Icon
               className="close"
               onClick={this.closeDock.bind(this)}
-            >
-              &times;
-            </span>
+              type="close"
+              style={{cursor:"pointer"}}
+            />
             </Col>
           </Row>
           {/*组织信息*/}
