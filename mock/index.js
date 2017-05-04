@@ -51,6 +51,14 @@ module.exports = {
           url: '/customer/all'
         }
       ]
+    },{
+      id:2,
+      name:'网格管理',
+      children:[{
+        id:20,
+        name:'网格列表',
+        url:'/customer/grids'
+      }]
     }
   ],
 
