@@ -48,11 +48,15 @@ const Get = (url,data) => {
 }
 
 const Put = (url,data) => {
-  return  axios.put(url,qs.stringify(data))
+  return  axios.put(url,qs.stringify(data,{
+    arrayFormat: 'brackets'
+  }))
 }
 
 const Delete = (url,data) => {
-  return  axios.delete(url,qs.stringify(data))
+  return  axios.delete(url,qs.stringify(data,{
+    arrayFormat: 'brackets'
+  }))
 }
 
 export default {

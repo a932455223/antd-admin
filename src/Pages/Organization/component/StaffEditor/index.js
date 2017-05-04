@@ -40,7 +40,8 @@ class BranchesEditor extends Component {
   state = {
     staff: {
       base: {},
-      job:{}
+      job:{},
+      educationInfo:{}
     },
     parentDepartmentDropDown: [],
     changed: false,
@@ -92,7 +93,9 @@ class BranchesEditor extends Component {
     axios.get(API.GET_STAFF_BASE(id))
       .then(res => {
         let staffBase = res.data.data;
+        console.log(staffBase);
         let getDepartmentsId = staffBase.departments && staffBase.departments.map( item => item.id.toString());
+        let rolesId = staffBase.roles && staffBase.roles.map (item => item.roleId.toString());
         this.setState({
           staff: {
             base: {
@@ -122,6 +125,9 @@ class BranchesEditor extends Component {
               },
               isUser:{
                 value:staffBase.isUser
+              },
+              roles:{
+                value:rolesId
               }
             },
             job:{
@@ -158,7 +164,7 @@ class BranchesEditor extends Component {
                 value:staffBase.school
               },
               graduationTime:{
-                value:staffBase.graduationTime
+                value:staffBase.graduationTime ? moment(staffBase.graduationTime) : null
               }
             }
           }
@@ -171,10 +177,13 @@ class BranchesEditor extends Component {
     this.setState(newState);
   }
 
-  jobInfoChange = ()=> {
+  jobInfoChange = (chagnedField)=> {
 
   }
-
+  educationInfoChange = (chagnedField)=>{
+    let newState = update(this.state,{staff:{educationInfo:{$set:{...this.state.staff.educationInfo,...chagnedField}}}})
+    this.setState(newState);
+  }
   closeDock() {
     console.log('bye bye');
     this.props.closeDock()
