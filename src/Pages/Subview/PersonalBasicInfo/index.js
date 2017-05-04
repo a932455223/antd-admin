@@ -408,10 +408,8 @@ class BasicInfo extends Component {
 
   render() {
     const { customerInfoBeEdit } = this.props;
-    console.log(this.state.joiners);
     const { step, mode, id, beEdited } = this.props.currentCustomerInfo;
     const { modalVisible, eachCustomerInfo, edited, detailsInfo, briefInfo } = this.state;
-    // console.log(briefInfo);
 
     const modal = {
       visible: modalVisible,
