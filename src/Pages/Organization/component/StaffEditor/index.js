@@ -100,6 +100,11 @@ class BranchesEditor extends Component {
     axios.get(API.GET_STAFF_BASE(id))
       .then(res => {
         let staffBase = res.data.data;
+        let departmentsId = [];
+        let getDepartmentsId = staffBase.departments && staffBase.departments.map((item,index)=>{
+              return departmentsId.push(item.id.toString());
+           }).join();
+        console.log(staffBase,getDepartmentsId)
         this.setState({
           staff: {
             base: {
@@ -133,10 +138,10 @@ class BranchesEditor extends Component {
             },
             job:{
               departments:{
-                value:staffBase.departments
+                value:getDepartmentsId
               },
               inductionTime:{
-                value:staffBase.inductionTime
+                value:staffBase.inductionTime ? moment(staffBase.inductionTime) : null
               },
               jobNumber:{
                 value:staffBase.jobNumber
@@ -280,7 +285,7 @@ class BranchesEditor extends Component {
           </Card>
 
           {/*工作信息*/}
-       <JobInfoForm onChange={this.jobInfoChange} jobInfo={jobInfo} id={this.props.id} getStaffs={this.props.getStaffs} parentDepartmentDropDown={this.state.parentDepartmentDropDown}/>
+       <JobInfoForm onChange={this.jobInfoChange} jobInfo={jobInfo} id={this.props.id} getStaffs={this.props.getStaffs} parentDepartmentDropDown={this.state.parentDepartmentDropDown} />
 
           {/*教育经历*/}
       {/*<EducationInfoForm/>*/}

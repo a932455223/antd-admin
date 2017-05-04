@@ -152,7 +152,7 @@ export default class Branches extends Component {
     })
   }
 
-  refresh(){
+  refresh (){
     this.getStaffs()
   }
 
