@@ -132,6 +132,7 @@ function mapStateToProps(store) {
 
 function mapPropsToFields(props){
   const {educationInfo} = props;
+  console.dir(educationInfo)
   return {
     educationLevel:{
       ...educationInfo.educationLevel
