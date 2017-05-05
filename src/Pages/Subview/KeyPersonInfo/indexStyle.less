@@ -27,20 +27,11 @@
         color: @color;
     }
 }
-.keypersons{
-    display: flex;
-    justify-content:space-between;
-    flex-wrap: wrap;
-    //查看
-    .keyperson-card{
-        border: 1px solid @c-gery-border;
-        width: 49%;
-        margin: 1em 0;
-        min-height: 195px;
-        .ant-row{
-            display: flex;
-            align-items: center;
-        }
+.key-persons{
+    .key-person-cards{
+        display: flex;
+        flex-wrap:wrap;
+        justify-content:space-between;
         .ant-card-head {
             //头部
             background-color: @c-gery-bg;
@@ -59,6 +50,19 @@
                 }
             }
         }
+    }
+    //查看
+    .keyperson-card{
+        border: 1px solid @c-gery-border;
+        width: 49%;
+        margin: 1em 0;
+        min-height: 195px;
+        .ant-row{
+            display: flex;
+            align-items: center;
+        }
+        
+        
         .ant-card-extra {
             //编辑删除
             span{
@@ -96,6 +100,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        width: 50%;
         .ant-card-body{
             .icon-create{
                 color: @c-cloudy-blue;
@@ -116,10 +121,10 @@
             .ant-card-head-title {
                 //头部状态
                 .my-card-title {
-                    display: inline-flex;
+                    display: flex;
                     width: 100%;
                     align-items: center;
-                    .ant-input-affix-wrapper {
+                    .ant-form-item-control-wrapper {
                         flex-grow: 1;
                         color: #000;
                         .ant-input-prefix {

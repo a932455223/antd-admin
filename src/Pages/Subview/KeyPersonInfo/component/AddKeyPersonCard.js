@@ -8,7 +8,7 @@ import {
   Form,
   Select
 } from 'antd';
-// import styles from './../indexStyle.less';
+import styles from './../indexStyle.less';
 import { connect } from 'react-redux';
 import api from './../../../../../API';
 import ajax from '../../../../tools/POSTF.js';
@@ -30,7 +30,7 @@ class addFamilyCard extends Component{
         });
     }
     clickSavaBtn=()=>{
-        this.props.addNewFamilyValue(this.props.form.getFieldsValue())
+        this.props.addKeyPersonValue(this.props.form.getFieldsValue())
         this.toggleAdd()
         this.props.resetAddCard();
     }
@@ -51,7 +51,7 @@ class addFamilyCard extends Component{
         if(this.state.isAdd){
         addArea=
             
-            (<Form  className="family-card family-card-modify">
+            (<Form  className="keyperson-card-modify">
                 <Card
                     title={
                         <div className="my-card-title">
@@ -76,34 +76,18 @@ class addFamilyCard extends Component{
                         </div>
                     }
                 >
-                <Row>
-                    <Col span={8}>
-                    <span>关系：</span>
-                    </Col>
-                    <Col span={16}>
-                        <FormItem>
-                        {getFieldDecorator('relation', {
-                            rules: [{ required: true, message: '姓名不能为空' }],
-                        })(
-                            <Select 
-                                
-                            >
-                                {
-                                    this.props.familyRelation.map((rel) => {
-                                        return (
-                                            <Option 
-                                                value={rel.id.toString()}
-                                                key={rel.id.toString()}
-                                            >
-                                                {rel.name}
-                                            </Option >
-                                        )
-                                    })
-                                }
-                            </Select>)}
-                        </FormItem>
-                    </Col>
-                </Row>
+                    <Row>
+                        <Col span={8}>
+                        <span>所属部门</span>
+                        </Col>
+                        <Col span={16}>
+                            <FormItem>
+                                {getFieldDecorator('department', {
+                                    rules: [{ required: true, message: '身份证不能为空' }],
+                                })(<Input />)}
+                            </FormItem>
+                        </Col>
+                    </Row>
                     <Row>
                         <Col span={8}>
                         <span>联系方式：</span>
@@ -116,44 +100,6 @@ class addFamilyCard extends Component{
                             </FormItem>
                         </Col>
                         
-                    </Row>
-                    <Row>
-                        <Col span={8}>
-                        <span>身份证号：</span>
-                        </Col>
-                        <Col span={16}>
-                            <FormItem>
-                                {getFieldDecorator('certificate', {
-                                    rules: [{ required: true, message: '身份证不能为空' }],
-                                })(<Input />)}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={8}>
-                        <span>工作属性：</span>
-                        </Col>
-                        <Col span={16}>
-                            <FormItem>
-                                {getFieldDecorator('jobCategory', {
-                                    rules: [{ required: true, message: '姓名不能为空' }],
-                                })(
-                                    <Select >
-                                        {
-                                            this.props.commonJobCategory.map((rel) => {
-                                                return (
-                                                    <Option 
-                                                        value={rel.id.toString()}
-                                                        key={rel.id.toString()}
-                                                    >
-                                                        {rel.name}
-                                                    </Option >
-                                                )
-                                            })
-                                        }
-                                    </Select>)}
-                            </FormItem>
-                        </Col>
                     </Row>
                 </Card>
 
@@ -182,14 +128,8 @@ const AddFamilyCard =Form.create({
             name: {
                 ...props.name
             },
-            relation: {
-                ...props.relation
-            },
-            certificate: {
-                ...props.certificate
-            },
-            jobCategory: {
-                ...props.jobCategory
+            department: {
+                ...props.department
             },
             phone:{
                 ...props.phone
