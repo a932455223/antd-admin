@@ -80,6 +80,18 @@ export default {
   // 新增员工
   POST_ADD_STAFF: '/api/staff',
 
+  //修改员工基本信息
+  PUT_STAFF_BASIC: id => `/api/staff/${id}/basic`,
+
+  //修改员工工作信息
+  PUT_STAFF_JOB: id => `/api/staff/${id}/job`,
+
+  //修改员工教育信息
+  PUT_STAFF_EDUCATION: id => `/api/staff/${id}/education`,
+
+  //获取多个组织机构的直属员工
+  GET_DEPARTMENTS_STAFFS:'/api/department/staffs',
+
   //网格列表
   POST_GRIDS_AREAS: '/api/areas',
 
