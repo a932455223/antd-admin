@@ -79,7 +79,7 @@ class BasicInfo extends Component {
       address: {
         value: ''
       },
-      tags: '',
+      tags: [],
     },
     detailsInfo: {
       yearIncome: {
@@ -136,9 +136,12 @@ class BasicInfo extends Component {
 
   // modal hide
   modalHide = () => {
-    this.setState({
-      modalVisible: false
+    let newState = update(this.state, {
+      modalVisible: {$set: false}
     })
+
+    this.setState(newState);
+    return newState;
   }
 
   componentWillMount(){
@@ -483,7 +486,9 @@ class BasicInfo extends Component {
   resetJoiners = (state) => {
     let st = state || this.state;
     let newJoiners = _.cloneDeep(st.joiners);
-    let newState = update(state, {
+    // console.log(newJoiners);
+    // console.log(state);
+    let newState = update(st, {
       briefInfo: {
         tags: {$set: newJoiners}
       }

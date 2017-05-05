@@ -41,7 +41,7 @@ class EnterpriseBasicInfo extends Component {
 
     joinersBeEdited: false,
     joiners: [],
-    tags: [],
+    tags: '',
 
     eachCompanyInfo: {
       registertime: {
@@ -101,7 +101,7 @@ class EnterpriseBasicInfo extends Component {
 
         let newJoiners = _.cloneDeep(res.data.data.joiner);
         let newState = update(this.state, {
-          joiners: {$set: res.data.data.joiners},
+          joiners: {$set: res.data.data.joiner},
           tags: {$set: newJoiners},
           eachCompanyInfo: {
             registertime: {
@@ -179,11 +179,16 @@ class EnterpriseBasicInfo extends Component {
   resetJoiners = (state) => {
     let st = state || this.state;
     let newJoiners = _.cloneDeep(st.joiners);
-    let newState = update(state, {
-      tags: {$set: newJoiners}
-    })
-    this.setState(newState);
-    return newState
+    console.log(newJoiners);
+    console.log(this.state.tags);
+    // debugger;
+    // let newState = update(state, {
+    //   tags: {$set: newJoiners}
+    // })
+    this.setState({
+      tags: newJoiners
+    });
+    // return newState
   }
 
   render() {
@@ -196,7 +201,7 @@ class EnterpriseBasicInfo extends Component {
       tags,
       joinersBeEdited
     } = this.state;
-    console.log(eachCompanyInfo);
+    // console.log(eachCompanyInfo);
 
     const modal = {
       visible: modalVisible,
