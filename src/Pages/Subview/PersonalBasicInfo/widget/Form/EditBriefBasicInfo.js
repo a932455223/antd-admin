@@ -479,7 +479,7 @@ class EditBriefBasicInfoForm extends Component{
               >
                 {getFieldDecorator('origin', {
                   // initialValue: [eachCustomerInfo.origin],
-                  onChange: this.selectBasicInfoChange
+                  onChange: this.inputBasicInfoChange
                 })(
                   <Input placeholder="请选择籍贯"/>
                 )}
@@ -555,7 +555,7 @@ class EditBriefBasicInfoForm extends Component{
 
 function mapPropsToFields (props) {
   const { briefInfo, accounts } = props;
-  console.log(accounts);
+  // console.log(accounts);
   return {
     ...accounts,
     department: {

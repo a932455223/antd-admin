@@ -44,17 +44,15 @@ class CompanyBasicInfo extends Component{
 
   componentWillReceiveProps(next) {
     const { getFieldValue } = next.form;
-    if(!next.beEdited && next.joinersBeEdited) {
-      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
-    }
 
     // 确认参与人员按钮被点击时
     if(next.joinersBeEdited && (!this.props.beEdited || next.beEdited) ) {
+      // console.log(next.beEdited);
       let newState = update(this.state, {
         basicInfoBeEdit: {$set: true}
       })
       this.setState(newState)
-    } else if(!next.beEdited || getFieldValue('phone') === '' || getFieldValue('department') === '') {
+    } else if(!next.beEdited) {
       // 重置 InfoBeEdited
       let newState = update(this.state, {
         basicInfoBeEdit: {$set: false}
@@ -62,7 +60,16 @@ class CompanyBasicInfo extends Component{
       this.setState(newState)
     }
 
-    this.getDepartments(1, 1);
+    if(!next.beEdited && next.joinersBeEdited) {
+      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    }
+
+    // 三级联动，更新 manager和 grid
+    let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : '';
+    let managerId = getFieldValue('manager') ? getFieldValue('manager') - 0 : '';
+    if(departmentId > 0) {
+      this.getDepartments(departmentId, managerId);
+    }
   }
 
   // 获取 department，
@@ -96,13 +103,7 @@ class CompanyBasicInfo extends Component{
   }
 
   // 输入框发生变化
-  inputChange = () => {
-    const { customerInfoBeEdit } = this.props;
-
-    if(!this.props.beEdited) {
-      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
-    }
-
+  inputBasicInfoChange = () => {
     let newState = update(this.state, {
       basicInfoBeEdit: {$set: true}
     })
@@ -110,13 +111,7 @@ class CompanyBasicInfo extends Component{
   }
 
   // 选择框发生变化
-  selectChange = () => {
-    const { customerInfoBeEdit } = this.props;
-
-    if(!this.props.beEdited) {
-      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
-    }
-
+  selectBasicInfoChange = () => {
     let newState = update(this.state, {
       basicInfoBeEdit: {$set: true}
     })
@@ -145,7 +140,7 @@ class CompanyBasicInfo extends Component{
   render() {
     const {eachCompanyInfo,currentId, createCustomerSuccess, tags} = this.props;
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
-    const { departmentOptions, managerOptions, gridOptions } = this.state;
+    const { departmentOptions, managerOptions, gridOptions, basicInfoBeEdit } = this.state;
 
     const tagsitems  = tags && tags.map((item,index) => {
       return (
@@ -155,7 +150,7 @@ class CompanyBasicInfo extends Component{
       )
     })
     return (
-        <Form id="mybase" className="basicInfolist">
+        <Form id="editMyBase" className="basicInfolist">
           <Row className={currentId === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
             <Col span={7}>
               <FormItem labelCol={{span: 11}}
@@ -167,14 +162,14 @@ class CompanyBasicInfo extends Component{
                     message: '选择所属机构!'
                   }],
                   // initialValue: eachCompanyInfo ? eachCompanyInfo.department : null,
-                  onChange: this.selectChange
+                  onChange: this.selectBasicInfoChange
                 })(
                     <Select
                       showSearch
                       placeholder="选择所属机构"
                       optionFilterProp="children"
                       filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                      getPopupContainer={() => document.getElementById('mybase')}
+                      getPopupContainer={() => document.getElementById('editMyBase')}
                     >
                       {departmentOptions && departmentOptions.map(departmentItem =>
                         <Option key={departmentItem.id} value={departmentItem.id + ''}>{departmentItem.name}</Option>
@@ -190,14 +185,14 @@ class CompanyBasicInfo extends Component{
                         label="客户经理">
                 {getFieldDecorator('manager', {
                   // initialValue:eachCompanyInfo ? eachCompanyInfo.manager : null,
-                  onChange: this.selectChange
+                  onChange: this.selectBasicInfoChange
                 })(
                   <Select
                     showSearch
                     placeholder="选择客户经理"
                     optionFilterProp="children"
                     filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    getPopupContainer={() => document.getElementById('mybase')}
+                    getPopupContainer={() => document.getElementById('editMyBase')}
                   >
                     {managerOptions && managerOptions.map(managerItem =>
                       <Option key={managerItem.id} value={managerItem.id + ''}>{managerItem.name}</Option>
@@ -212,15 +207,15 @@ class CompanyBasicInfo extends Component{
                         wrapperCol={{span: 13}}
                         label="所属网格">
                 {getFieldDecorator('grid', {
-                  initialValue: eachCompanyInfo ? eachCompanyInfo.grid : null,
-                  onChange: this.selectChange
+                  // initialValue: eachCompanyInfo ? eachCompanyInfo.grid : null,
+                  onChange: this.selectBasicInfoChange
                 })(
                   <Select
                     showSearch
                     placeholder="选择所属网格"
                     optionFilterProp="children"
                     filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    getPopupContainer={() => document.getElementById('mybase')}
+                    getPopupContainer={() => document.getElementById('editMyBase')}
 
                   >
                     {gridOptions && gridOptions.map(gridItem =>
@@ -239,8 +234,8 @@ class CompanyBasicInfo extends Component{
                           wrapperCol={{span: 15}}
                           label="注册时间">
                   {getFieldDecorator('registertime', {
-                    initialValue: eachCompanyInfo ? eachCompanyInfo.registertime : null,
-                    onChange: this.inputChange,
+                    // initialValue: eachCompanyInfo ? eachCompanyInfo.registertime : null,
+                    onChange: this.inputBasicInfoChange,
                     rules: [{
                     required: true,
                     message: '请填写注册时间'
@@ -256,8 +251,8 @@ class CompanyBasicInfo extends Component{
                           wrapperCol={{span: 15}}
                           label="所属行业">
                   {getFieldDecorator('industry', {
-                    initialValue: eachCompanyInfo ? eachCompanyInfo.industry : null,
-                    onChange: this.inputChange,
+                    // initialValue: eachCompanyInfo ? eachCompanyInfo.industry : null,
+                    onChange: this.inputBasicInfoChange,
                     rules: [{
                     required: true,
                     message: '请填写所属行业'
@@ -275,7 +270,7 @@ class CompanyBasicInfo extends Component{
                           label="主营业务">
                   {getFieldDecorator('business', {
                     // initialValue: eachCompanyInfo ? eachCompanyInfo.business : null,
-                    onChange: this.inputChange,
+                    onChange: this.inputBasicInfoChange,
                     rules: [{
                     required: true,
                     message: '请填写主营业务'
@@ -292,7 +287,7 @@ class CompanyBasicInfo extends Component{
                           label="年营业额">
                   {getFieldDecorator('yearmoney', {
                     // initialValue: eachCompanyInfo ? eachCompanyInfo.yearmoney : null,
-                    onChange: this.inputChange,
+                    onChange: this.inputBasicInfoChange,
                     rules: [{
                     required: true,
                     message: '请填写年营业额'
@@ -310,7 +305,7 @@ class CompanyBasicInfo extends Component{
                           label="法人法名">
                   {getFieldDecorator('owner', {
                     // initialValue: eachCompanyInfo ? eachCompanyInfo.owner : null,
-                    onChange: this.inputChange,
+                    onChange: this.inputBasicInfoChange,
                     rules: [{
                     required: true,
                     message: '请填写法人法名'
@@ -327,7 +322,7 @@ class CompanyBasicInfo extends Component{
                           label="企业电话">
                   {getFieldDecorator('phone', {
                     // initialValue: eachCompanyInfo ? eachCompanyInfo.phone : null,
-                    onChange: this.inputChange,
+                    onChange: this.inputBasicInfoChange,
                     rules: [{
                     required: true,
                     message: '请填写企业电话'
@@ -345,7 +340,7 @@ class CompanyBasicInfo extends Component{
                           label="员工人数">
                   {getFieldDecorator('people', {
                     // initialValue: eachCompanyInfo ? eachCompanyInfo.people : null,
-                    onChange: this.inputChange,
+                    onChange: this.inputBasicInfoChange,
                     rules: [{
                     required: true,
                     message: '请填写员工人数'
@@ -362,7 +357,7 @@ class CompanyBasicInfo extends Component{
                           label="平均工资">
                   {getFieldDecorator('saliary', {
                     // initialValue: eachCompanyInfo ? eachCompanyInfo.saliary : null,
-                    onChange: this.inputChange,
+                    onChange: this.inputBasicInfoChange,
                     rules: [{
                     required: true,
                     message: '请填写平均工资'
@@ -381,7 +376,7 @@ class CompanyBasicInfo extends Component{
                           label="企业住址">
                   {getFieldDecorator('address', {
                     // initialValue: eachCompanyInfo ? eachCompanyInfo.address : null,
-                    onChange: this.inputChange,
+                    onChange: this.inputBasicInfoChange,
                     rules: [{
                     required: true,
                     message: '请填写企业住址'
@@ -398,7 +393,7 @@ class CompanyBasicInfo extends Component{
                           >
                   {getFieldDecorator('addressinfo', {
                     // initialValue: eachCompanyInfo ? eachCompanyInfo.addressinfo :null,
-                    onChange: this.inputChange
+                    onChange: this.inputBasicInfoChange
                   })(
                     <Input />
                   )}
@@ -455,7 +450,7 @@ function onFieldsChange(props, changedFields) {
 
 const EnterpriseBasicInfoForm = Form.create({
   mapPropsToFields,
-  // onFieldsChange
+  onFieldsChange
 })(CompanyBasicInfo);
 
 export default EnterpriseBasicInfoForm;

@@ -32,7 +32,7 @@ import ViewBriefBasicInfo from './widget/Form/ViewBriefBasicInfo'
 import EditBriefBasicInfo from './widget/Form/EditBriefBasicInfo'
 
 import BasicInfoEdit from './widget/BasicInfoEdit'
-import AddCrewModal from './widget/AddCrewModal'
+import AddCrewModal from '../PersonalBasicInfo/widget/AddCrewModal'
 
 class EnterpriseBasicInfo extends Component {
   state = {
@@ -90,6 +90,13 @@ class EnterpriseBasicInfo extends Component {
     if(id !== next.currentCustomerInfo.id || beEdited === true ) {
       this.getBaseInfo(next.currentCustomerInfo.id);
     }
+
+    // 重置 joinersBeEdited
+    if(beEdited === false) {
+      this.setState({
+        joinersBeEdited: false
+      })
+    }
   }
 
   // 获取客户基本信息
@@ -141,6 +148,35 @@ class EnterpriseBasicInfo extends Component {
     }
   }
 
+  // 表单数据的双向绑定
+  handleFormChange = (changedFields) => {
+    console.log(changedFields);
+    // 所属机构，客户经理，所属网格三级联动
+    let eachCompanyInfo;
+    if(changedFields.department) {
+      eachCompanyInfo = {
+        ...this.state.eachCompanyInfo,
+        ...changedFields,
+        ...{manager: {
+          value: undefined
+        }},
+        ...{grid: {
+          value: undefined
+        }}
+      }
+    } else {
+      eachCompanyInfo = {
+        ...this.state.eachCompanyInfo,
+        ...changedFields
+      }
+    }
+
+    let newState = update(this.state,{
+      eachCompanyInfo: {$set: {...eachCompanyInfo}}
+    })
+    this.setState(newState);
+  }
+
   // modal Show
   modalShow = () => {
     this.setState({
@@ -150,9 +186,11 @@ class EnterpriseBasicInfo extends Component {
 
   // modal hide
   modalHide = () => {
-    this.setState({
-      modalVisible: false
+    let newState = update(this.state, {
+      modalVisible: {$set: false}
     })
+    this.setState(newState);
+    return newState;
   }
 
   // 参与人员被修改了
@@ -179,16 +217,11 @@ class EnterpriseBasicInfo extends Component {
   resetJoiners = (state) => {
     let st = state || this.state;
     let newJoiners = _.cloneDeep(st.joiners);
-    console.log(newJoiners);
-    console.log(this.state.tags);
-    // debugger;
-    // let newState = update(state, {
-    //   tags: {$set: newJoiners}
-    // })
-    this.setState({
-      tags: newJoiners
-    });
-    // return newState
+    let newState = update(st, {
+      tags: {$set: newJoiners}
+    })
+    this.setState(newState)
+    return newState
   }
 
   render() {
@@ -229,11 +262,15 @@ class EnterpriseBasicInfo extends Component {
     // console.log(this.props);
     return(
       <div style={{textAlign: 'left'}}>
-        <AddCrewModal key={id} {...modal}/>
+        <AddCrewModal
+          key={id}
+          {...modal}
+        />
 
         <div>
           <EditBriefBasicInfo
             {...basicInfoProps}
+            onChange={this.handleFormChange}
           />
         </div>
 
