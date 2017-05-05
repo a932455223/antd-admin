@@ -8,7 +8,7 @@ import {
   Form,
   Select
 } from 'antd';
-import styles from './../indexStyle.less';
+// import styles from './../indexStyle.less';
 import { connect } from 'react-redux';
 import api from './../../../../../API';
 import ajax from '../../../../tools/POSTF.js';
