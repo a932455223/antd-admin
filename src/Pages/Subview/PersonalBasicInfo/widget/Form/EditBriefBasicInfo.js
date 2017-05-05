@@ -23,18 +23,6 @@ import ajax from '../../../../../tools/POSTF';
 class EditBriefBasicInfoForm extends Component{
   state = {
     tags : [],
-    originOptions:[
-      {
-        value: '上海',
-        label: '上海',
-        isLeaf: false,
-      },
-      {
-        value: '江苏南通',
-        label: '江苏',
-        isLeaf: false,
-      }
-    ],
     basicInfoBeEdit: false,
     phone: '',
     departmentOptions: [],
@@ -62,7 +50,7 @@ class EditBriefBasicInfoForm extends Component{
         basicInfoBeEdit: {$set: true}
       })
       this.setState(newState)
-    } else if(!next.beEdited || getFieldValue('phone') === '' || getFieldValue('department') === '') {
+    } else if(!next.beEdited) {
       // 重置 InfoBeEdited
       let newState = update(this.state, {
         basicInfoBeEdit: {$set: false}
@@ -493,11 +481,7 @@ class EditBriefBasicInfoForm extends Component{
                   // initialValue: [eachCustomerInfo.origin],
                   onChange: this.selectBasicInfoChange
                 })(
-                  <Cascader
-                    placeholder="请选择客户籍贯"
-                    options={this.state.originOptions}
-                    getPopupContainer={() => document.getElementById('editMyDetails')}
-                  />
+                  <Input placeholder="请选择籍贯"/>
                 )}
               </FormItem>
             </Col>
