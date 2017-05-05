@@ -36,14 +36,16 @@ class keyPersonForm extends Component{
     render(){
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form className="keyperson-card-modify">
+            <Form className="my-form-card">
                 <Card
                     title={
                         <div className="my-card-title">
                             <FormItem>
                                 {getFieldDecorator('name', {
                                     rules: [{ required: true, message: '姓名不能为空' }],
-                                })(<Input />)}
+                                })(<Input 
+                                    prefix={<i className="iconfont icon-customer1" />}
+                                />)}
                             </FormItem>
                             <span
                                 className="cancel-btn"
@@ -63,7 +65,7 @@ class keyPersonForm extends Component{
                 >
                     <Row>
                         <Col span={8}>
-                        <span>所属部门：</span>
+                        所属部门：
                         </Col>
                         <Col span={16}>
                             <FormItem>
@@ -76,7 +78,7 @@ class keyPersonForm extends Component{
                     </Row>
                     <Row>
                         <Col span={8}>
-                        <span>联系方式：</span>
+                        联系方式：
                         </Col>
                         <Col span={16}>
                             <FormItem>
@@ -105,7 +107,7 @@ const KeyPersonForm = Form.create({
             },
             department: {
                 ...props.department
-            },
+            }, 
             phone:{
                 ...props.phone
             }

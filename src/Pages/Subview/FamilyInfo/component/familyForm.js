@@ -84,7 +84,7 @@ class familyForm extends Component{
                 >
                 <Row>
                     <Col span={8}>
-                    <span>关系：</span>
+                    关系：
                     </Col>
                     <Col span={16}>
                         <FormItem>
