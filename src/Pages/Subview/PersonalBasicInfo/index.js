@@ -38,12 +38,14 @@ const AddMaintainRecord = Form.create()(AddMaintainRecordForm);
 //个人信息表单................
 class BasicInfo extends Component {
   state = {
+    eachCustomerInfo: '',
     modalVisible: false,
     edited: false,
     joinersBeEdited: false,
-    eachCustomerInfo: '',
     joiners: [],
+    accountsArr: [],
     accounts: {},
+    originAccounts: {},
     briefInfo: {
       department: {
         value: '',
@@ -178,6 +180,7 @@ class BasicInfo extends Component {
     const { id, beEdited } = this.props.currentCustomerInfo;
     if(id !== next.currentCustomerInfo.id || beEdited === true ) {
       this.getBaseInfo(next.currentCustomerInfo.id);
+      this.resetAccounts();
     }
 
     // 重置 joinersBeEdited
@@ -186,6 +189,17 @@ class BasicInfo extends Component {
         joinersBeEdited: false
       })
     }
+  }
+
+  // reset accounts
+  resetAccounts = () => {
+    let originAccounts = _.cloneDeep(this.state.originAccounts);
+    let accountsArr = _.cloneDeep(this.state.accountsArr);
+
+    this.setState({
+      originAccounts: originAccounts,
+      accountsArr: accountsArr
+    });
   }
 
   // 获取客户基本信息
@@ -235,6 +249,8 @@ class BasicInfo extends Component {
           [`row-${index}-remark`]: {value: item.remark}
         }));
 
+        let accountsArr = res.data.data.accounts.map((item,index) => `row-${index}`);
+
         // 展平 accounts
         const accountsObj = accounts.reduce((pre, next) => {
           return {
@@ -242,9 +258,12 @@ class BasicInfo extends Component {
             ...next
           }
         },{});
+        let originAccounts = _.cloneDeep(accountsObj);
 
         this.setState({
-          accounts: accountsObj
+          accounts: accountsObj,
+          originAccounts: originAccounts,
+          accountsArr: accountsArr
         });
 
         // 更新 briefInfo, detailsInfo, eachCustomerInfo
@@ -370,8 +389,9 @@ class BasicInfo extends Component {
 
   // 表单数据的双向绑定
   handleFormChange = (changedFields) => {
+    const { beEdited } = this.props.currentCustomerInfo;
+
     console.log(changedFields);
-    console.log()
     // 所属机构，客户经理，所属网格三级联动
     let briefInfo;
     if(changedFields.department) {
@@ -447,6 +467,7 @@ class BasicInfo extends Component {
 
   // change joiners
   changeJoiners = (joiner) => {
+    // console.log(joiner);
     const { tags } = this.state.briefInfo;
     const newJoiners = tags.filter(item => item.id !== joiner.id);
     let newState = update(this.state, {
@@ -490,9 +511,10 @@ class BasicInfo extends Component {
       briefInfo,
       joiners,
       joinersBeEdited,
-      accounts
+      accountsArr,
+      accounts,
+      originAccounts
     } = this.state;
-    // console.log(accounts);
 
     const modal = {
       visible: modalVisible,
@@ -514,7 +536,8 @@ class BasicInfo extends Component {
       modalShow: this.modalShow,
       changeJoiners: this.changeJoiners,
       joinersBeEdited: joinersBeEdited,
-      accounts: accounts
+      accounts: accounts,
+      accountsArr: accountsArr
     }
 
     const maintainRecordProps = {

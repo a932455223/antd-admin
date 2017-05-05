@@ -90,15 +90,15 @@ class TablePage extends Component {
     }
 
     // 判断 dock是否显示，若未显示，则弹出 slider
-    if(!this.state.dockVisible) {
+    if(!this.state.dockVisible ) {
       let newState = update(this.state, {
-        dockContent: {$set: 'CustomerSlider'},
         dockVisible: {$set: true}
       })
       this.setState(newState);
     }
 
     this.setState({
+      dockContent: 'CustomerSlider',
       mode: mode,
       currentCustomer: info,
       onlyCloseModal: false
@@ -166,7 +166,10 @@ class TablePage extends Component {
   // add new customer
   addNewCustomer = () => {
     const { dispatch } = this.props;
-    let newState = update(this.state, {dockVisible: {$set: true}})
+    let newState = update(this.state, {
+      dockContent: {$set: 'CustomerSlider'},
+      dockVisible: {$set: true}
+    })
     this.setState(newState);
     dispatch(createCustomer());
   }
