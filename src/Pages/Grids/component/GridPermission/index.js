@@ -2,7 +2,7 @@
  * Created by jufei on 2017/4/25.
  */
 import React,{Component} from 'react';
-import {Button, Card, Form, Input, Select, Tabs, Icon,Row,Col,Modal} from "antd";
+import {Button, Form, Input, Select, Icon,Row,Col,Modal,message} from "antd";
 import API from "../../../../../API";
 import ajax from '../../../../tools/POSTF'
 const FormItem = Form.Item;
@@ -71,7 +71,7 @@ const Option = Select.Option;
       })
   }
   getorgNameDropDown = () => {
-    ajax.Get(API.GET_ADD_DEPARTMENT)
+    ajax.Get(API.GET_AREAS_ADD_DEPARTMENTS)
     .then(res => {
       this.setState({
         orgNameDropDown : res.data.data
@@ -110,6 +110,7 @@ const Option = Select.Option;
         .then((res) => {
           if(res.data.code === 200){
             this.props.getTableData()
+            message.success("网格创建成功")
           }else{
             Modal.error({content:res.data.message})
           }
@@ -183,7 +184,6 @@ const Option = Select.Option;
                         label="所属机构">
                 {
                   orgNameDropDown.length > 0 ? getFieldDecorator('orgId',{
-
                     rules: [{ message: '请选择所属机构' , whitespace:"ture"}],
                     onChange:this.orgIdChange
                   })(
@@ -193,7 +193,6 @@ const Option = Select.Option;
                       placeholder="请选择所属机构"
                     >
                       {
-
                         orgNameDropDown.map((item,index)=>(<Option key={item.id.toString()} value={item.id.toString()}>{item.name}</Option>))
                       }
                   </Select>

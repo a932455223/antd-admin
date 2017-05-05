@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {Button, Card, Col, DatePicker, Form, Input, Row, Select,Radio} from "antd";
+import {Button, Card, Col, DatePicker, Form, Input, Row, Select,Radio,Modal,message} from "antd";
 import {connect} from "react-redux";
 import API from "../../../../../../API";
 import ajax from '../../../../../tools/POSTF'
@@ -36,7 +36,6 @@ class StaffBaseForm extends Component{
   componentWillReceiveProps(){
     console.log('StaffBaseForm will receive props.')
     const { getFieldValue} = this.props.form;
-    console.log(getFieldValue("isUser"))
     this.setState({
        rolesHide:  getFieldValue("isUser")
     })
@@ -47,20 +46,36 @@ class StaffBaseForm extends Component{
       loading:true
     })
     const id = this.props.id;
-    const { getFieldsValue} = this.props.form;
+    const { getFieldsValue,getFieldsError} = this.props.form;
     const FieldsValue = getFieldsValue();
     FieldsValue.birth = FieldsValue.birth && FieldsValue.birth.format('YYYY-MM-DD')
     // FieldsValue.roles = FieldsValue.roles.map(item => parseInt(item));
 
-    ajax.Put(API.PUT_STAFF(id),FieldsValue)
+    this.props.form.validateFields()
+    let fieldErrors = this.props.form.getFieldsError();
+    let hasError = false;
+    for(let [key,value] of Object.entries(fieldErrors)){
+      if(Array.isArray(value)){
+        hasError = true;
+       break; 
+      }
+    }
+    if(hasError){
+      Modal.error({content: '信息填写有误',})
+    }else{
+      ajax.Put(API.PUT_STAFF_BASIC(id),FieldsValue)
     .then(() => {
       this.props.getStaffs()
       this.setState({
         changed:false,
         loading:false
       })
+      message.success('您已经修改成功！');
     })
+    }
+    
   }
+
   render(){
     let {baseInfo} = this.props;
     const formItemLayout = {

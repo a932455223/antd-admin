@@ -1,33 +1,77 @@
 import React,{Component} from 'react'
-import {Button, Card, Col, DatePicker, Form, Input, Row, Select} from "antd";
+import {Button, Card, Col, DatePicker, Form, Input, Row, Select,Modal,message} from "antd";
 import {connect} from "react-redux";
 import API from "../../../../../../API";
 import ajax from '../../../../../tools/POSTF'
+
+import $ from 'jquery'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
 class JobInfoForm extends Component{
   state = {
-    changed : false
+    changed : false,
+    loading:false,
+    leaders:[]
   }
 
   componentWillReceiveProps(nextProps) {
     console.dir(nextProps.parentDepartmentDropDown)
   }
   onHandleSubmit = () =>{
+    this.setState({
+      loading:true
+    })
     const id = this.props.id;
     const { getFieldsValue} = this.props.form;
     const FieldsValue = getFieldsValue();
     FieldsValue.inductionTime = FieldsValue.inductionTime && FieldsValue.inductionTime.format('YYYY-MM-DD')
-
-    ajax.Put(API.PUT_STAFF(id),FieldsValue)
-    .then(() => {
+    console.log(FieldsValue);
+    this.props.form.validateFields()
+    let fieldErrors = this.props.form.getFieldsError();
+    let hasError = false;
+    for(let [key,value] of Object.entries(fieldErrors)){
+      if(Array.isArray(value)){
+        hasError = true;
+       break; 
+      }
+    }
+    if(hasError){
+      Modal.error({content: '信息填写有误',})
+    }else{
+      ajax.Put(API.PUT_STAFF_JOB(id),FieldsValue)
+      .then(() => {
       this.props.getStaffs()
+      this.setState({
+        changed:false,
+        loading:false
+      })
+      message.success('您已经修改成功！');
     })
+    }
   }
   inputChange=()=>{
     this.setState({
       changed:true
+    })
+  }
+
+  departmensChange = (value)=>{
+    console.dir(value)
+    this.inputChange();
+    ajax.Get(API.GET_DEPARTMENTS_STAFFS,{"departmentIds[]":value.join(',')})
+    .then((res)=>{
+      this.setState({
+        leaders:res.data.data
+      })
+    })
+
+    // $.get(API.GET_DEPARTMENTS_STAFFS,{"departmentIds[]":value}).then((res)=>{
+    //   console.dir(res)
+    // })
+
+    this.props.form.setFieldsValue({
+      leader:undefined
     })
   }
 
@@ -57,9 +101,9 @@ class JobInfoForm extends Component{
               {...formItemLayout}
               className="departments"
             >
-              {getFieldDecorator('departments', {
+              {getFieldDecorator('departmentIds', {
                 rules: [{required: true, message: '所属机构!'}],
-                onChange:this.inputChange,
+                onChange:this.departmensChange,
               })(
                 <Select
                   mode="multiple"
@@ -96,7 +140,7 @@ class JobInfoForm extends Component{
               label={<span>工号</span>}
               {...formItemLayout}
             >
-              {getFieldDecorator('jobNumber', {
+              {getFieldDecorator('code', {
                 rules: [{required: true, message: '工号!'}],
                 onChange:this.inputChange,
               })(
@@ -141,7 +185,7 @@ class JobInfoForm extends Component{
                 >
                   {
                     this.props.dropdown.jobCategory.map(item => {
-                      return <Option value={item.id} key={item.id}>{item.name}</Option>
+                      return <Option  key={item.id.toString()}>{item.name}</Option>
                     })
                   }
                 </Select>
@@ -161,9 +205,9 @@ class JobInfoForm extends Component{
                   getPopupContainer={ () => document.getElementById('staffEditor')}
                 >
                   {
-                    // this.props.leadersDropdown.map(item => {
-                    //   return <Option value={item.id.toString()} key={item.id}>{item.name}</Option>
-                    // })
+                    this.state.leaders && this.state.leaders.map(item => {
+                      return <Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>
+                    })
                   }
                 </Select>
               )}
@@ -195,14 +239,14 @@ function mapStateToProps(store) {
 function mapPropsToFields(props){
   const {jobInfo} = props;
   return {
-    departments:{
-      ...jobInfo.departments
+    departmentIds:{
+      ...jobInfo.departmentIds
     },
     inductionTime:{
       ...jobInfo.inductionTime
     },
-    jobNumber:{
-     ...jobInfo.jobNumber
+    code:{
+     ...jobInfo.code
     },
     jobStatus:{
       ...jobInfo.jobStatus
@@ -223,6 +267,5 @@ function onFieldsChange(props,changedFields){
   props.onChange(changedFields)
 }
 export default connect(mapStateToProps)(Form.create({
-  onFieldsChange,
   mapPropsToFields
 })(JobInfoForm));

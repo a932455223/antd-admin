@@ -41,8 +41,8 @@ class GridEditF extends Component {
       res.data.data.city = regionCodes[1]
       res.data.data.region = regionCodes[2]
       res.data.data.addressDetail = res.data.data.address.split(' ')[3]
-      res.data.data.gridId = res.data.data.gridId.toString()
-      res.data.data.directorId = res.data.data.directorId.toString()
+      res.data.data.areaType = res.data.data.areaType.toString()
+      res.data.data.director = res.data.data.director && res.data.data.director.toString()
       this.setState({
         area : this.transformData(res.data.data)
       })

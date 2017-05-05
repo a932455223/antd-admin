@@ -131,17 +131,17 @@ class BranchesEditor extends Component {
               }
             },
             job:{
-              departments:{
+              departmentIds:{
                 value:getDepartmentsId
               },
               inductionTime:{
                 value:staffBase.inductionTime ? moment(staffBase.inductionTime) : null
               },
-              jobNumber:{
-                value:staffBase.jobNumber
+              code:{
+                value:staffBase.code
               },
               jobStatus:{
-                value:staffBase.jobStatus.id
+                value:staffBase.jobStatus.id ? staffBase.jobStatus.id.toString():undefined
               },
               jobCategory:{
                 value:staffBase.jobCategory.id ? staffBase.jobCategory.id.toString() : undefined

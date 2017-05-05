@@ -15,6 +15,7 @@ import {
 } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
+let addkey = 100;
 
 import API from '../../../../../../API';
 import ajax from '../../../../../tools/POSTF';
@@ -38,7 +39,8 @@ class EditBriefBasicInfoForm extends Component{
     phone: '',
     departmentOptions: [],
     managerOptions: [],
-    gridOptions: []
+    gridOptions: [],
+    accountsArr: []
   }
 
   componentWillMount(){
@@ -68,6 +70,10 @@ class EditBriefBasicInfoForm extends Component{
     }
     // 重置 InfoBeEdited
 
+    // 更新 accountsArr
+    this.setState({
+      accountsArr: next.accountsArr
+    })
 
     // 三级联动，更新 manager和 grid
     let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : '';
@@ -109,6 +115,10 @@ class EditBriefBasicInfoForm extends Component{
 
   // basic 输入框内容被修改了
   inputBasicInfoChange = () => {
+    if(!this.props.beEdited) {
+      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    }
+
     let newState = update(this.state, {
       basicInfoBeEdit: {$set: true}
     })
@@ -123,39 +133,60 @@ class EditBriefBasicInfoForm extends Component{
     this.setState(newState);
   };
 
-  // 所属机构和客户经理联动
-  // changeDepartment = () => {
-  //
-  // }
-
-  remove = (k) => {
-    const { form } = this.props;
-    // can use data-binding to get
-    const keys = form.getFieldValue('keys');
-    if (keys.length === 1) {
-      return;
-    }
-
-    // can use data-binding to set
-    form.setFieldsValue({
-      keys: keys.filter(key => key !== k)
-    });
-  }
-
   // select staff
   selectStaff = () => {
     this.props.modalShow()
   }
 
   add = () => {
-    const { form } = this.props;
-    const keys = form.getFieldValue('keys');
-    const {eachCustomerInfo} = this.props;
-    let addkey = 100;
-    const nextKeys = keys.concat(`row-${addkey++}`);
-    form.setFieldsValue({
-      keys: nextKeys,
-    });
+    const { addAccountsInfo } = this.props;
+    // const keys = form.getFieldValue('keys');
+    // const nextKeys = keys.concat(`row-${addkey}`);
+    // form.setFieldsValue({
+    //   keys: nextKeys,
+    // });
+    addAccountsInfo(addkey);
+    const { accountsArr } = this.state;
+    accountsArr.push(`row-${addkey}`);
+    if(!this.props.beEdited) {
+      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    }
+    let newState = update(this.state, {
+      accountsArr: {$set: accountsArr},
+      basicInfoBeEdit: {$set: true}
+    })
+    this.setState(newState)
+    return addkey++
+  }
+
+  remove = (k) => {
+    const { deleteAccountsInfo } = this.props;
+    // // can use data-binding to get
+    // const keys = form.getFieldValue('keys');
+    // if (keys.length === 1) {
+    //   return;
+    // }
+    //
+    deleteAccountsInfo(k);
+    // console.log(keys.filter(key => key !== k))
+    //
+    // // can use data-binding to set
+    // form.setFieldsValue({
+    //   keys: keys.filter(key => key !== k)
+    // });
+
+    const { accountsArr } = this.state;
+
+    const position = accountsArr.indexOf(k);
+    accountsArr.splice(position, 1);
+    if(!this.props.beEdited) {
+      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    }
+    let newState = update(this.state, {
+      accountsArr: {$set: accountsArr},
+      basicInfoBeEdit: {$set: true}
+    })
+    this.setState(newState)
   }
 
   // 删除 tags
@@ -174,24 +205,36 @@ class EditBriefBasicInfoForm extends Component{
 
   updateInfo = (briefInfo) => {
     const { addNewCustomer } = this.props;
+
     addNewCustomer(briefInfo);
   }
 
   render() {
-    const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess, beEdited, joinersBeEdited, accounts } = this.props;
+    const {
+      eachCustomerInfo,
+      edited,
+      mode,
+      currentId,
+      createCustomerSuccess,
+      beEdited,
+      joinersBeEdited,
+      accounts } = this.props;
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue} = this.props.form;
     const { department, manager, grid, tags } = this.props.briefInfo;
-    const { departmentOptions, managerOptions, gridOptions } = this.state;
+    const { departmentOptions, managerOptions, gridOptions, accountsArr } = this.state;
     // setFieldsValue({['manager']: null});
-    // console.log(beEdited);
+    // console.log(accounts['row-0-accountNo'] && accounts['row-0-accountNo']);
+    // console.log(accountsArr);
 
-    const kinitialValue = function(){
-      var selfkeys = [];
-      eachCustomerInfo.accounts && eachCustomerInfo.accounts.map((item ,index) => {
-        selfkeys.push(`row-${index}`);
-      })
-      return selfkeys;
-    }
+
+    // const kinitialValue = function(){
+    //   // console.log()
+    //   var selfkeys = [];
+    //   eachCustomerInfo.accounts && eachCustomerInfo.accounts.map((item ,index) => {
+    //     selfkeys.push(`row-${index}`);
+    //   })
+    //   return selfkeys;
+    // }
 
     const formItemLayout = {
       labelCol: {
@@ -219,60 +262,103 @@ class EditBriefBasicInfoForm extends Component{
       )
     })
 
-    getFieldDecorator('keys', { initialValue: kinitialValue() });
-    const keys = getFieldValue('keys');
+    // getFieldDecorator('keys', { initialValue: kinitialValue() });
+    // const keys = getFieldValue('keys');
+    // console.log(keys);
     const EditFormItems = () => {
-      // var len = accounts && accounts.length;
-      var formItemArray = keys.map((k, index) => {
-        return (
-          <Row key={index}>
-            <Col span={12}>
-              <FormItem
-                label={index === 0 ? '账户' : ''}
-                required={false}
-                key={k}
-                {...(index===0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                className="accounts"
-              >
-                {getFieldDecorator(`${k}-accountNo`, {
-                  // validateTrigger: ['onChange', 'onBlur'],
-                  // initialValue:len > index ? eachCustomerInfo.accounts[index].accountNo : "",
-                  onChange: this.inputBasicInfoChange
-                })(
-                  <Input placeholder="填写账号信息"  />
-                )}
-              </FormItem>
-            </Col>
+      let formItemArray;
+      // if(keys.length === 0) {
+      //   formItemArray = (
+      //     <Row key={0}>
+      //       <Col span={12}>
+      //         <FormItem
+      //           label='账户'
+      //           required={false}
+      //           key={`row-0-accountNo`}
+      //           {...formItemLayout}
+      //           className="accounts"
+      //         >
+      //           {getFieldDecorator(`row-0-accountNo`, {
+      //             // validateTrigger: ['onChange', 'onBlur'],
+      //             // initialValue:len > index ? eachCustomerInfo.accounts[index].accountNo : "",
+      //             onChange: this.inputBasicInfoChange
+      //           })(
+      //             <Input placeholder="填写账号信息"  />
+      //           )}
+      //         </FormItem>
+      //       </Col>
+      //
+      //       <Col span={12} className="addMessage">
+      //         <FormItem wrapperCol={{span: 24}}>
+      //           {getFieldDecorator(`row-0-remark`, {
+      //             // initialValue:len > index ? eachCustomerInfo.accounts[index].remark : "",
+      //             onChange: this.inputBasicInfoChange
+      //           })(
+      //             <Input placeholder="填写备注信息"/>
+      //           )}
+      //             <i
+      //               className="dynamic-add-button iconfont"
+      //               onClick={this.add}
+      //             >&#xe688;</i>
+      //         </FormItem>
+      //       </Col>
+      //
+      //     </Row>
+      //   )
+      // } else {
+        // var len = accounts && accounts.length;
+        formItemArray = accountsArr.map((k, index) => {
+          return (
+            <Row key={index}>
+              <Col span={12}>
+                <FormItem
+                  label={index === 0 ? '账户' : ''}
+                  required={false}
+                  key={k}
+                  {...(index===0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                  className="accounts"
+                >
+                  {getFieldDecorator(`${k}-accountNo`, {
+                    // validateTrigger: ['onChange', 'onBlur'],
+                    // initialValue:len > index ? eachCustomerInfo.accounts[index].accountNo : "",
+                    onChange: this.inputBasicInfoChange
+                  })(
+                    <Input placeholder="填写账号信息"  />
+                  )}
+                </FormItem>
+              </Col>
 
-            <Col span={12} className="addMessage">
-              <FormItem
-                wrapperCol={{span: 24}}
-              >
-                {getFieldDecorator(`${k}-remark`, {
-                  // initialValue:len > index ? eachCustomerInfo.accounts[index].remark : "",
-                  onChange: this.inputBasicInfoChange
-                })(
-                  <Input placeholder="填写备注信息"/>
-                )}
+              <Col span={12} className="addMessage">
+                <FormItem
+                  wrapperCol={{span: 24}}
+                >
+                  {getFieldDecorator(`${k}-remark`, {
+                    // initialValue:len > index ? eachCustomerInfo.accounts[index].remark : "",
+                    onChange: this.inputBasicInfoChange
+                  })(
+                    <Input placeholder="填写备注信息"/>
+                  )}
 
-                {index === 0
-                    ?
-                    <i
-                      className="dynamic-add-button iconfont"
-                      onClick={this.add}
-                    >&#xe688;</i>
-                    :
-                    <i
-                      className="dynamic-delete-button iconfont"
-                      onClick={() => this.remove(k)}
-                    >&#xe697;</i>
-                }
-              </FormItem>
-            </Col>
+                  {index === 0
+                      ?
+                      <i
+                        className="dynamic-add-button iconfont"
+                        onClick={this.add}
+                      >&#xe688;</i>
+                      :
+                      <i
+                        className="dynamic-delete-button iconfont"
+                        onClick={() => this.remove(k)}
+                      >&#xe697;</i>
+                  }
+                </FormItem>
+              </Col>
 
-          </Row>
-        )
-      });
+            </Row>
+          )
+        });
+      // }
+
       return formItemArray;
     }
 
@@ -512,7 +598,7 @@ class EditBriefBasicInfoForm extends Component{
 
 function mapPropsToFields (props) {
   const { briefInfo, accounts } = props;
-
+  console.log(accounts);
   return {
     ...accounts,
     department: {
