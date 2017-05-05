@@ -127,6 +127,8 @@ class EditDetailsBasicInfoForm extends Component{
       loanPurpose
     } = this.props.detailsInfo;
 
+    // console.log(withCar);
+
     const formItemLayout = {
       labelCol: {
         sm: { span: 8 }
@@ -259,7 +261,7 @@ class EditDetailsBasicInfoForm extends Component{
               </FormItem>
             </Col>
 
-            {eachCustomerInfo.withCar === 19 &&
+            {withCar && withCar.value == 19 &&
               <Col span={12} className={currentId === -1 ? "propertyValueCreate" : "propertyValueEdit"}>
                 <FormItem
                   labelCol={{span: 8, offset: 1}}
@@ -314,7 +316,7 @@ class EditDetailsBasicInfoForm extends Component{
               </FormItem>
             </Col>
 
-            {eachCustomerInfo.withDebt &&
+            {withDebt &&  withDebt.value == 24 &&
               <Col span={12} className={currentId === -1 ? "withDebtAmountCreate" : "withDebtAmountEdit"}>
                 <FormItem
                   labelCol={{span: 8, offset: 1}}
@@ -369,7 +371,7 @@ class EditDetailsBasicInfoForm extends Component{
               </FormItem>
             </Col>
 
-            {eachCustomerInfo.needLoan &&
+            {needLoan && needLoan.value == 31 &&
               <Col span={12} className={currentId === -1 ? "needLoanAmountCreate" : "needLoanAmountEdit"}>
                 <FormItem
                   labelCol={{span: 8, offset: 1}}
@@ -397,7 +399,7 @@ class EditDetailsBasicInfoForm extends Component{
               </Col>
             }
 
-            {eachCustomerInfo.needLoan &&
+            {needLoan && needLoan.value == 31 &&
               <Col span={12} className={currentId === -1 ? "useOfLoanCreate" : "useOfLoanEdit"}>
                 <FormItem
                   labelCol={{span: 8}}
@@ -448,6 +450,7 @@ class EditDetailsBasicInfoForm extends Component{
 
 function mapPropsToFields (props) {
   const { detailsInfo } = props;
+  // console.log(detailsInfo.withCar);
   return {
     marryStatus: {
       ...detailsInfo.marryStatus

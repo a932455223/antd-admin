@@ -16,7 +16,6 @@ import update from 'immutability-helper'
 export default class GridsList extends Component {
   constructor(props) {
     super(props);
-
   }
 
   GridEdit = (id,mode) => {
