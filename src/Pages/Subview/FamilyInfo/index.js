@@ -28,6 +28,7 @@ class FamilyInfo extends Component {
     familyList:[],//家庭信息数组
     familyRelation: [],//家庭成员关系
     commonJobCategory: [],//工作属性
+    addFamilyCardLoading:false,
     newFamily:{//放到组件中
       "certificate": {
         "value": ""
@@ -45,6 +46,9 @@ class FamilyInfo extends Component {
         "value": ""
       }
     }
+  }
+  changeAddFamilyCardLoading(){
+    this.setState({"addFamilyCardLoading":!this.state.addFamilyCardLoading})
   }
   //查看和修改状态切换
   toggleEdit=(index)=>{
@@ -89,21 +93,27 @@ class FamilyInfo extends Component {
   };
   //增加新的card
   addNewFamilyValue=(data)=>{
-    ajax.Post(api.POST_CUSTOMERS_FAMILY(this.props.currentId),data)
-      .then( res => {
-            // if(res.data.message === 'OK'){
-            //   this.getFamilyInfo(this.props.currentId);
-            // }
-            console.log(res)
-            if(res.data.code===200){
-              if(res.data.message==='OK'){
-                console.log('成功')
-                this.getFamilyInfo(this.props.currentId);
+    
+    console.log(data);
+    setTimeout(()=>{
+      ajax.Post(api.POST_CUSTOMERS_FAMILY(this.props.currentId),data)
+        .then( res => {
+              // if(res.data.message === 'OK'){
+              //   this.getFamilyInfo(this.props.currentId);
+              // }
+              console.log(res)
+              if(res.data.code===200){
+                if(res.data.message==='OK'){
+                  console.log('成功')
+                  this.getFamilyInfo(this.props.currentId);
+                }
+              }else{
+                console.log(res.data.message)
               }
-            }else{
-              console.log(res.data.message)
-            }
-          })
+              this.changeAddFamilyCardLoading();
+            })
+
+    },2000)
   }
   //删除family信息
   deleteFamilyValue=(familyId)=>{
@@ -154,7 +164,13 @@ class FamilyInfo extends Component {
         console.log(data.status)
         let newFamilyList= data.data.data.map((item)=>{
           return Object.keys(item).reduce((pre,ky)=>{
-            pre[ky] = {value:item[ky]+""}
+            if(item[ky]===null){
+              pre[ky] = {value:""}
+            }else{
+              pre[ky] = {value:item[ky]+""}
+            }
+            // console.log(item[ky]===null)
+            // pre[ky] = {value:item[ky]+""}
             return pre;
           },{})
         });
@@ -276,12 +292,15 @@ class FamilyInfo extends Component {
               addNewFamilyValue={this.addNewFamilyValue}
               familyRelation={this.state.familyRelation}
               commonJobCategory={this.state.commonJobCategory}
+              addFamilyCardLoading={this.state.addFamilyCardLoading}
+              changeAddFamilyCardLoading={this.changeAddFamilyCardLoading}
               {...this.state.newFamily}
               resetAddCard={this.resetAddCard}
               onAddChange={this.onAddChange}
+              
             />
             <pre className="language-bash" style={{textAlign:'left'}}>
-              {JSON.stringify(this.state.newFamily, null, 2)}
+              {JSON.stringify(this.state.addFamilyCardLoading, null, 2)}
             </pre>
           </div>:
           <AddFamilyCard
@@ -290,9 +309,12 @@ class FamilyInfo extends Component {
             addNewFamilyValue={this.addNewFamilyValue}
             familyRelation={this.state.familyRelation}
             commonJobCategory={this.state.commonJobCategory}
+            addFamilyCardLoading={this.state.addFamilyCardLoading}
+            changeAddFamilyCardLoading={this.changeAddFamilyCardLoading}
             {...this.state.newFamily}
             resetAddCard={this.resetAddCard}
             onAddChange={this.onAddChange}
+            
           />
         }
       </div>

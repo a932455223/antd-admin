@@ -15,6 +15,7 @@ import ajax from '../../../../tools/POSTF.js';
 const FormItem = Form.Item;
 const Option = Select.Option;
 export default class familyCard extends Component{
+    
     constructor(props) {
         super(props);
     };
@@ -89,7 +90,7 @@ export default class familyCard extends Component{
                         工作属性：
                     </Col>
                     <Col span={16}>
-                        {this.findDropDownItem(this.props.item.jobCategory.value,'commonJobCategory').name}
+                        {this.props.item.jobCategory.value===""?"":this.findDropDownItem(this.props.item.jobCategory.value,'commonJobCategory').name}
                     </Col>
                 </Row>
             </Card>
