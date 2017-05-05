@@ -206,7 +206,7 @@ class AreaForm extends Component{
         <div className="ant-form-white">
           <Row>
             <Col span={12}>
-              <FormItem labelCol={{span: 8,offset:1}}
+              <FormItem labelCol={{span: 8}}
                         wrapperCol={{span: 15}}
                         label="所属机构"
               >
@@ -230,7 +230,7 @@ class AreaForm extends Component{
             </Col>
 
             <Col span={12}>
-              <FormItem  labelCol={{span: 8}}
+              <FormItem  labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="网格负责人"
                         className="idnumber"
@@ -318,7 +318,7 @@ class AreaForm extends Component{
             <Col span={9}>
               <FormItem
                 label={<span>地址</span>}
-                labelCol={{span:12}}
+                labelCol={{span:14}}
                 wrapperCol={{span:12}}
               >
                 {Province}
@@ -342,9 +342,9 @@ class AreaForm extends Component{
           <Row>
             <Col span={24}>
               <FormItem
-                labelCol={{span: 8}}
-                wrapperCol={{span: 15}}
-                label="详细信息"
+                labelCol={{span: 4}}
+                wrapperCol={{span: 20}}
+                label="详细地址"
                 className="idnumber"
                >
                 {
