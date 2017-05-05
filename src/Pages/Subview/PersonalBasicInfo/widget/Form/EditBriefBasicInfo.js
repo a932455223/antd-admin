@@ -63,12 +63,12 @@ class EditBriefBasicInfoForm extends Component{
       })
       this.setState(newState)
     } else if(!next.beEdited || getFieldValue('phone') === '' || getFieldValue('department') === '') {
+      // 重置 InfoBeEdited
       let newState = update(this.state, {
         basicInfoBeEdit: {$set: false}
       })
       this.setState(newState)
     }
-    // 重置 InfoBeEdited
 
     // 更新 accountsArr
     this.setState({
@@ -138,14 +138,11 @@ class EditBriefBasicInfoForm extends Component{
     this.props.modalShow()
   }
 
+  // add accounts info
   add = () => {
     const { addAccountsInfo } = this.props;
-    // const keys = form.getFieldValue('keys');
-    // const nextKeys = keys.concat(`row-${addkey}`);
-    // form.setFieldsValue({
-    //   keys: nextKeys,
-    // });
     addAccountsInfo(addkey);
+
     const { accountsArr } = this.state;
     accountsArr.push(`row-${addkey}`);
     if(!this.props.beEdited) {
@@ -159,21 +156,10 @@ class EditBriefBasicInfoForm extends Component{
     return addkey++
   }
 
+  // remove accounts info
   remove = (k) => {
     const { deleteAccountsInfo } = this.props;
-    // // can use data-binding to get
-    // const keys = form.getFieldValue('keys');
-    // if (keys.length === 1) {
-    //   return;
-    // }
-    //
     deleteAccountsInfo(k);
-    // console.log(keys.filter(key => key !== k))
-    //
-    // // can use data-binding to set
-    // form.setFieldsValue({
-    //   keys: keys.filter(key => key !== k)
-    // });
 
     const { accountsArr } = this.state;
 
@@ -203,6 +189,7 @@ class EditBriefBasicInfoForm extends Component{
     this.props.changeJoiners(joiner);
   }
 
+  // 更新信息
   updateInfo = (briefInfo) => {
     const { addNewCustomer } = this.props;
 
@@ -222,19 +209,8 @@ class EditBriefBasicInfoForm extends Component{
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue} = this.props.form;
     const { department, manager, grid, tags } = this.props.briefInfo;
     const { departmentOptions, managerOptions, gridOptions, accountsArr } = this.state;
-    // setFieldsValue({['manager']: null});
-    // console.log(accounts['row-0-accountNo'] && accounts['row-0-accountNo']);
-    // console.log(accountsArr);
+    const accountsArray = accountsArr.length == 0 ? ['row-0'] : accountsArr
 
-
-    // const kinitialValue = function(){
-    //   // console.log()
-    //   var selfkeys = [];
-    //   eachCustomerInfo.accounts && eachCustomerInfo.accounts.map((item ,index) => {
-    //     selfkeys.push(`row-${index}`);
-    //   })
-    //   return selfkeys;
-    // }
 
     const formItemLayout = {
       labelCol: {
@@ -262,12 +238,9 @@ class EditBriefBasicInfoForm extends Component{
       )
     })
 
-    // getFieldDecorator('keys', { initialValue: kinitialValue() });
-    // const keys = getFieldValue('keys');
-    // console.log(keys);
     const EditFormItems = () => {
       let formItemArray;
-      // if(keys.length === 0) {
+      // if(accountsArr.length === 0) {
       //   formItemArray = (
       //     <Row key={0}>
       //       <Col span={12}>

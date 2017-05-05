@@ -113,28 +113,33 @@ class AreaForm extends Component{
     const pid = getFieldValue('province')
     const cid = getFieldValue('city')
     const rid = getFieldValue('region')
-    if(pid === undefined || cid === undefined || rid === undefined){
-      Modal.error({
-        content:'请仔细检查您填写的地址'
-      })
-    }else{
-      const province = this.state.province.find(item => item.id == pid).name
-      const city = this.state.city.find(item => item.id == cid).name
-      const region = this.state.region.find(item => item.id == rid).name
-      let address = province +' '+ city +' '+region + ' ' + getFieldValue('addressDetail')
-      FieldsValue.address = address
-      delete FieldsValue.city
-      delete FieldsValue.province
-      delete FieldsValue.region
 
-      const FieldsValueAll = {...FieldsValue, ...{name:this.props.area.name.value}}
-      console.dir(FieldsValueAll)
-      ajax.Put(API.PUT_API_AREA(id),FieldsValueAll)
-        .then(() => {
-          this.props.getTableData()
-          message.success('员工修改成功',5)
-        })
-    }
+    this.props.form.validateFields()
+
+    let formErrors = this.props.form.getFieldsError()
+    console.dir(formErrors)
+    // if(pid === undefined || cid === undefined || rid === undefined){
+    //   Modal.error({
+    //     content:'请仔细检查您填写的地址'
+    //   })
+    // }else{
+    //   const province = this.state.province.find(item => item.id == pid).name
+    //   const city = this.state.city.find(item => item.id == cid).name
+    //   const region = this.state.region.find(item => item.id == rid).name
+    //   let address = province +' '+ city +' '+region + ' ' + getFieldValue('addressDetail')
+    //   FieldsValue.address = address
+    //   delete FieldsValue.city
+    //   delete FieldsValue.province
+    //   delete FieldsValue.region
+    //
+    //   const FieldsValueAll = {...FieldsValue, ...{name:this.props.area.name.value}}
+    //   console.dir(FieldsValueAll)
+    //   ajax.Put(API.PUT_API_AREA(id),FieldsValueAll)
+    //     .then(() => {
+    //       this.props.getTableData()
+    //       message.success('员工修改成功',5)
+    //     })
+    // }
   }
 
 	render(){
@@ -305,7 +310,7 @@ class AreaForm extends Component{
                         label="网格人口数">
                		{
                			getFieldDecorator('personCount',{
-                      rules: [{pattern:Reg.Integer, message: "请填写数字"}],
+                      rules: [{required:true,message:'填写'},{pattern:Reg.Integer, message: "请填写数字"}],
                     })(
               				<Input/>
               				)

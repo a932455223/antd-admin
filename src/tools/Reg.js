@@ -1,3 +1,4 @@
 export default {
-  "Integer":/^\d+$/
+  "Integer":/^\d+$/,
+  "mobile":/^\d{3,20}$/
 }
