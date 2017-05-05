@@ -51,14 +51,16 @@ class addFamilyCard extends Component{
         if(this.state.isAdd){
         addArea=
             
-            (<Form  className="family-card family-card-modify">
+            (<Form  className="my-form-card">
                 <Card
                     title={
                         <div className="my-card-title">
                             <FormItem>
                                 {getFieldDecorator('name', {
                                     rules: [{ required: true, message: '姓名不能为空' }],
-                                })(<Input />)}
+                                })(<Input 
+                                    prefix={<i className="iconfont icon-customer1" />}
+                                />)}
                             </FormItem>
                             <span
                                 className="cancel-btn"
@@ -161,7 +163,7 @@ class addFamilyCard extends Component{
         }else{
         //添加按钮
         addArea=
-            (<Card  className="family-card family-add-card">
+            (<Card  className="my-card my-add-card">
                 <i className="iconfont icon-create"   onClick={()=>{this.toggleAdd()}}></i>
                 <p>新建家庭关系</p>
             </Card>)

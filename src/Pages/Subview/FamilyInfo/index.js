@@ -233,11 +233,11 @@ class FamilyInfo extends Component {
   render() {
     const loading=this.state.isLoading?(<div>loading</div>):"";
     return(
-      <div className="families">
+      <div className="my-cards-page">
         {loading}
         {
           this.state.familyList.length?
-          <div className="familiyCards">
+          <div className="my-cards-area">
             {
               this.state.familyList.map((item,index)=>{
                 if(this.state.isModify[index]){
