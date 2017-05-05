@@ -26,7 +26,6 @@ class JobInfoForm extends Component{
     const { getFieldsValue} = this.props.form;
     const FieldsValue = getFieldsValue();
     FieldsValue.inductionTime = FieldsValue.inductionTime && FieldsValue.inductionTime.format('YYYY-MM-DD')
-    console.log(FieldsValue);
     this.props.form.validateFields()
     let fieldErrors = this.props.form.getFieldsError();
     let hasError = false;
@@ -52,7 +51,8 @@ class JobInfoForm extends Component{
   }
   inputChange=()=>{
     this.setState({
-      changed:true
+      changed:true,
+      loading : false
     })
   }
 

@@ -318,7 +318,7 @@ class AreaForm extends Component{
             <Col span={9}>
               <FormItem
                 label={<span>地址</span>}
-                labelCol={{span:14}}
+                labelCol={{span:10}}
                 wrapperCol={{span:12}}
               >
                 {Province}

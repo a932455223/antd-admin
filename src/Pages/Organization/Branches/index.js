@@ -37,7 +37,7 @@ export default class Branches extends Component {
   }
 
   // 获取组织列表 表格 数据
-  getDepartments(){
+  getDepartments= () => {
     this.setState({
       table: {
         ...this.state.table,
@@ -100,6 +100,7 @@ export default class Branches extends Component {
             closeDock={this.closeDock.bind(this)}
             refresh={this.refresh.bind(this)}
             id={id}
+            getDepartments={this.getDepartments}
           />
         )
       }

@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {Button, Card, Col, DatePicker, Form, Input, Row, Select} from "antd";
+import {Button, Card, Col, DatePicker, Form, Input, Row, Select,Modal,message} from "antd";
 import {connect} from "react-redux";
 import API from "../../../../../../API";
 import ajax from '../../../../../tools/POSTF'
@@ -8,24 +8,54 @@ const Option = Select.Option;
 
 class EducationInfoForm extends Component{
   state = {
-    changed : false
+    changed : false,
+    loading : false
   }
+
   onHandleSubmit = () => {
+    this.setState({
+      loading:true
+    })
     const id = this.props.id;
     const { getFieldsValue} = this.props.form;
     const FieldsValue = getFieldsValue();
     FieldsValue.graduationTime = FieldsValue.graduationTime && FieldsValue.graduationTime.format('YYYY-MM-DD')
-    ajax.Put(API.PUT_STAFF(id),FieldsValue)
-    .then(() => {
+    
+    this.props.form.validateFields()
+    let fieldErrors = this.props.form.getFieldsError();
+    let hasError = false;
+    for(let [key,value] of Object.entries(fieldErrors)){
+      if(Array.isArray(value)){
+        hasError = true;
+       break; 
+      }
+    }
+    if(hasError){
+      Modal.error({content: '信息填写有误',})
+    }else{
+      ajax.Put(API.PUT_STAFF_EDUCATION(id),FieldsValue)
+      .then(() => {
       this.props.getStaffs()
+      this.setState({
+        changed:false,
+        loading:false
+      })
+      message.success('您已经修改成功！');
     })
+    }
+  
+
+
   }
-  inputChange=()=>{
+
+  inputChange = () => {
     this.setState({
-      changed:true
+      changed:true,
+      loading : false
     })
   }
-  render(){
+
+  render (){
     const {getFieldDecorator} = this.props.form;
     const formItemLayout = {
       labelCol: {
@@ -35,11 +65,6 @@ class EducationInfoForm extends Component{
         span: 14
       }
     };
-
-    let baseInfo = {
-      educationLevel:'',
-      major:''
-    }
     return (
       <Card title={<h3>教育经历</h3>}>
         <Row>

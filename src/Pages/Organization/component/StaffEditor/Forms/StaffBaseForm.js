@@ -20,7 +20,8 @@ class StaffBaseForm extends Component{
 
   inputChange=()=>{
     this.setState({
-      changed:true
+      changed:true,
+      loading : false
     })
   }
   componentWillMount() {
@@ -50,7 +51,6 @@ class StaffBaseForm extends Component{
     const FieldsValue = getFieldsValue();
     FieldsValue.birth = FieldsValue.birth && FieldsValue.birth.format('YYYY-MM-DD')
     // FieldsValue.roles = FieldsValue.roles.map(item => parseInt(item));
-
     this.props.form.validateFields()
     let fieldErrors = this.props.form.getFieldsError();
     let hasError = false;
