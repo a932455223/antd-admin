@@ -115,6 +115,10 @@ class EditBriefBasicInfoForm extends Component{
 
   // basic 输入框内容被修改了
   inputBasicInfoChange = () => {
+    if(!this.props.beEdited) {
+      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    }
+
     let newState = update(this.state, {
       basicInfoBeEdit: {$set: true}
     })
@@ -135,32 +139,35 @@ class EditBriefBasicInfoForm extends Component{
   }
 
   add = () => {
-    // const { form } = this.props;
+    const { addAccountsInfo } = this.props;
     // const keys = form.getFieldValue('keys');
     // const nextKeys = keys.concat(`row-${addkey}`);
     // form.setFieldsValue({
     //   keys: nextKeys,
     // });
+    addAccountsInfo(addkey);
     const { accountsArr } = this.state;
-    accountsArr.push(`row-${addkey++}`);
-    this.setState({
-      accountsArr: accountsArr
+    accountsArr.push(`row-${addkey}`);
+    if(!this.props.beEdited) {
+      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    }
+    let newState = update(this.state, {
+      accountsArr: {$set: accountsArr},
+      basicInfoBeEdit: {$set: true}
     })
-    // console.log(accountsArr);
-    // return accountsArr;
-
-    // return addkey++
+    this.setState(newState)
+    return addkey++
   }
 
   remove = (k) => {
-    // const { form } = this.props;
+    const { deleteAccountsInfo } = this.props;
     // // can use data-binding to get
     // const keys = form.getFieldValue('keys');
     // if (keys.length === 1) {
     //   return;
     // }
     //
-    // console.log(k)
+    deleteAccountsInfo(k);
     // console.log(keys.filter(key => key !== k))
     //
     // // can use data-binding to set
@@ -172,9 +179,14 @@ class EditBriefBasicInfoForm extends Component{
 
     const position = accountsArr.indexOf(k);
     accountsArr.splice(position, 1);
-    this.setState({
-      accountsArr: accountsArr
+    if(!this.props.beEdited) {
+      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    }
+    let newState = update(this.state, {
+      accountsArr: {$set: accountsArr},
+      basicInfoBeEdit: {$set: true}
     })
+    this.setState(newState)
   }
 
   // 删除 tags
@@ -193,6 +205,7 @@ class EditBriefBasicInfoForm extends Component{
 
   updateInfo = (briefInfo) => {
     const { addNewCustomer } = this.props;
+
     addNewCustomer(briefInfo);
   }
 
@@ -211,7 +224,7 @@ class EditBriefBasicInfoForm extends Component{
     const { departmentOptions, managerOptions, gridOptions, accountsArr } = this.state;
     // setFieldsValue({['manager']: null});
     // console.log(accounts['row-0-accountNo'] && accounts['row-0-accountNo']);
-    console.log(accountsArr);
+    // console.log(accountsArr);
 
 
     // const kinitialValue = function(){
@@ -585,8 +598,7 @@ class EditBriefBasicInfoForm extends Component{
 
 function mapPropsToFields (props) {
   const { briefInfo, accounts } = props;
-  // console.log(accounts);
-
+  console.log(accounts);
   return {
     ...accounts,
     department: {
