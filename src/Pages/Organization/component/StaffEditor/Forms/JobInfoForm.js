@@ -185,7 +185,7 @@ class JobInfoForm extends Component{
                 >
                   {
                     this.props.dropdown.jobCategory.map(item => {
-                      return <Option value={item.id} key={item.id}>{item.name}</Option>
+                      return <Option  key={item.id.toString()}>{item.name}</Option>
                     })
                   }
                 </Select>

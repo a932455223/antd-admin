@@ -6,13 +6,16 @@ import {
   Icon,
   Input,
   Form,
+  Button,
   Select
 } from 'antd';
-import styles from './../indexStyle.less';
 import { connect } from 'react-redux';
 const FormItem = Form.Item;
 const Option = Select.Option;
 class familyForm extends Component{
+    state={
+        btnLoading:false
+    }
     constructor(props) {
         super(props);
     };
@@ -23,10 +26,12 @@ class familyForm extends Component{
     }
     componentWillReceiveProps(newProps){
         // console.log(this.props)
+        this.setState({btnLoading:false})
     }
     clickSavaBtn=()=>{
-        this.props.saveChangeValue(this.props.id.value,this.props.form.getFieldsValue())
-        this.props.toggleEdit(this.props.index)
+        this.props.saveChangeValue(this.props.id.value,this.props.form.getFieldsValue(),this.props.index)
+        // this.props.toggleEdit(this.props.index)
+        this.setState({btnLoading:true})
         // console.log(this.props.form.getFieldsValue())
         // console.log(this.props.id.value)
     }
@@ -64,13 +69,14 @@ class familyForm extends Component{
                             >
                                 取消
                             </span>
-                            <span
+                            <Button
                                 className="save-btn"
                                 onClick={this.clickSavaBtn}
+                                loading={this.state.btnLoading}
                             >
                             
                                 保存
-                            </span>
+                            </Button>
                         </div>
                     }
                 >

@@ -115,6 +115,7 @@ export default class BatchParticipate extends Component {
   // 确认参与人员的信息
   confirmParticipant = () => {
     message.success('参与者修改成功');
+    this.props.closeDock();
   }
 
   render() {
