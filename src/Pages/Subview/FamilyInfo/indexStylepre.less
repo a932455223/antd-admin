@@ -1,13 +1,3 @@
-@c-gery-border: #d4d4d5;
-@c-gery-bg: #fafafa;
-@c-gery-darken: #d2d2d2;
-@c-blue-grey: #6A819A;
-@c-black: #333333;
-@c-blue-darken: #5c6bc0;
-@c-white: #fff;
-@c-white-two: #d2d2d2;
-@c-cloudy-blue: #cfd8e2;
-@c-grey-blue: #6a819a;
 .a-base(@color) {
     &:link {
         color: @color;
@@ -23,14 +13,36 @@
     }
     &:active {
         background-color: transparent;
-        color: @color;
+        color: @color; 
     }
 }
-.key-persons{
-    .key-person-cards{
+
+.families { 
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    @c-gery-border: #d4d4d5;
+    @c-gery-bg: #fafafa;
+    @c-gery-darken: #d2d2d2;
+    @c-blue-grey: #6A819A;
+    @c-black: #333333;
+    @c-blue-darken: #5c6bc0;
+    @c-white: #fff;
+    @c-white-two: #d2d2d2;
+    @c-cloudy-blue: #cfd8e2;
+    @c-grey-blue: #6a819a;
+    .familiyCards{
+        width: 100%;
         display: flex;
-        flex-wrap:wrap;
-        justify-content:space-between;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .family-card {
+        // card最外层
+        border: 1px solid @c-gery-border;
+        width: 48%;
+        margin: 1em 0;
+        min-height: 195px;
         .ant-card-head {
             //头部
             background-color: @c-gery-bg;
@@ -49,24 +61,10 @@
                 }
             }
         }
-    }
-    //查看
-    .keyperson-card{
-        border: 1px solid @c-gery-border;
-        width: 49%;
-        margin: 1em 0;
-        min-height: 195px;
-        .ant-row{
-            display: flex;
-            align-items: center;
-        }
-        
-        
         .ant-card-extra {
             //编辑删除
-            span{
-                color: @c-blue-grey;
-                cursor: pointer;
+            a {
+                .a-base(@c-blue-grey);
                 font-size: 1.2em;
                 margin-left: 0.5em;
                 .iconfont {
@@ -87,43 +85,17 @@
             }
         }
     }
-    .keyperson-form{
-        width: 49%;
-        .keyperson-card{
-            width:100%;
-        }
-    }
-    .keyperson-add-card {
-        background-color: @c-gery-bg;
-        color: @c-grey-blue;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 50%;
-        .ant-card-body{
-            .icon-create{
-                color: @c-cloudy-blue;
-                font-size: 3em;
-                cursor: pointer;
-            }
-            padding-top: 12px;
-            p{
-                font-size: 1.3em;
-
-            }
-        }
-    }
-    //添加
-    .keyperson-card-modify{
+    .family-card-modify {
+        // card最外层
         .ant-card-head {
             //头部
             .ant-card-head-title {
                 //头部状态
                 .my-card-title {
-                    display: flex;
-                    width: 100%;
-                    align-items: center;
-                    .ant-form-item-control-wrapper {
+                    // display: flex;
+                    // width: 100%;
+                    // align-items: center;
+                    .ant-input-affix-wrapper {
                         flex-grow: 1;
                         color: #000;
                         .ant-input-prefix {
@@ -177,16 +149,27 @@
         .ant-card-body {
             .ant-row {
                 div {
-                    &:nth-of-type(2) {
-                        color:red;
-                    }
+                    &:nth-of-type(2) {}
                 }
             }
-            .ant-row{
-                padding: 0.1em 0;
-                div{
-                    margin: 0;
-                }
+        }
+    }
+    .family-add-card {
+        background-color: @c-gery-bg;
+        color: @c-grey-blue;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .ant-card-body{
+            .icon-create{
+                color: @c-cloudy-blue;
+                font-size: 3em;
+                cursor: pointer;
+            }
+            padding-top: 12px;
+            p{
+                font-size: 1.3em;
+
             }
         }
     }

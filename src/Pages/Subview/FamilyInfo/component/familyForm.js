@@ -54,14 +54,16 @@ class familyForm extends Component{
     render(){
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form  className="family-card family-card-modify">
+            <Form  className="my-form-card">
                 <Card
                     title={
                         <div className="my-card-title">
                             <FormItem>
                                 {getFieldDecorator('name', {
                                     rules: [{ required: true, message: '姓名不能为空' }],
-                                })(<Input />)}
+                                })(<Input 
+                                    prefix={<i className="iconfont icon-customer1" />}
+                                />)}
                             </FormItem>
                             <span
                                 className="cancel-btn"
@@ -110,7 +112,7 @@ class familyForm extends Component{
                 </Row>
                     <Row>
                         <Col span={8}>
-                        <span>联系方式：</span>
+                            联系方式：
                         </Col>
                         <Col span={16}>
                             <FormItem>
@@ -123,7 +125,7 @@ class familyForm extends Component{
                     </Row>
                     <Row>
                         <Col span={8}>
-                        <span>身份证号：</span>
+                        身份证号
                         </Col>
                         <Col span={16}>
                             <FormItem>
@@ -135,7 +137,7 @@ class familyForm extends Component{
                     </Row>
                     <Row>
                         <Col span={8}>
-                        <span>工作属性：</span>
+                        工作属性：
                         </Col>
                         <Col span={16}>
                             <FormItem>

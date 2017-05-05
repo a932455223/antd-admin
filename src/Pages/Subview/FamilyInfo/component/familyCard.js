@@ -41,22 +41,22 @@ export default class familyCard extends Component{
     render(){
         return (
             <Card
-                className="family-card"
+                className="my-card"
                 title={this.props.item.name.value}
                 key={this.props.item.id.value}
                 extra={
                     <div>
-                        <a href="javascript:void(0);" 
+                        <span
                             onClick={()=>{this.props.toggleEdit(this.props.index)}}
                         >
                             <i className="iconfont icon-edit"></i>编辑
-                        </a>
+                        </span>
 
-                        <a href="javascript:void(0);" 
+                        <span
                             onClick={()=>{this.props.deleteFamilyValue(this.props.item.id.value)}}
                         >
                             <i className="iconfont icon-delete"></i>删除
-                        </a>
+                        </span>
                     </div>
                 }
                 >
