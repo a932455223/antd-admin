@@ -236,7 +236,7 @@ class AreaForm extends Component{
                         className="idnumber"
               >
               {
-                getFieldDecorator('directorId')(
+                getFieldDecorator('director')(
                  <Select
                    placeholder="选择网格负责人"
                    notFoundContent="没有找到对应员工"
@@ -259,7 +259,7 @@ class AreaForm extends Component{
                         className="idnumber"
               >
               {
-              	getFieldDecorator('gridId')(
+              	getFieldDecorator('areaType')(
                   <Select>
                     {this.state.gridTypes.map((item)=>(<Option key={item.id.toString()}>{item.name}</Option>))}
                   </Select>
@@ -384,6 +384,8 @@ class AreaForm extends Component{
 }
 
 function mapPropsToFields(props){
+
+  console.dir(props)
 	return {
 		name:{
 		...props.area.name
@@ -391,14 +393,11 @@ function mapPropsToFields(props){
 	director:{
 		...props.area.director
 	},
-    directorId:{
-      ...props.area.directorId
-    },
 	orgId:{
 		...props.area.orgId
 	},
-    gridId:{
-		...props.area.gridId
+    areaType:{
+		...props.area.areaType
 	},
 	landArea:{
 		...props.area.landArea

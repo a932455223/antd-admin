@@ -141,7 +141,7 @@ class BranchesEditor extends Component {
                 value:staffBase.jobNumber
               },
               jobStatus:{
-                value:staffBase.jobStatus.id
+                value:staffBase.jobStatus.id ? staffBase.jobStatus.id.toString():undefined
               },
               jobCategory:{
                 value:staffBase.jobCategory.id ? staffBase.jobCategory.id.toString() : undefined

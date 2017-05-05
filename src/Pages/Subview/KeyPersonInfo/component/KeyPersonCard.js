@@ -8,13 +8,13 @@ import {
   Form,
   Select
 } from 'antd';
-// import styles from './../indexStyle.less';
+import styles from './../indexStyle.less';
 import { connect } from 'react-redux';
 import api from './../../../../../API';
 import ajax from '../../../../tools/POSTF.js';
 const FormItem = Form.Item;
 const Option = Select.Option;
-export default class familyCard extends Component{
+export default class KeyPersonCard extends Component{
     constructor(props) {
         super(props);
     };
@@ -26,22 +26,10 @@ export default class familyCard extends Component{
     //    this.findDropDownItem(61,'commonJobCategory'));
     //    console.log(this.props.commonJobCategory);
     }
-    findDropDownItem(value,dropDownType){
-        return this.props[dropDownType].filter((item)=>{
-            let bool;
-            Object.getOwnPropertyNames(item).
-                forEach((val, idx, array)=> {
-                    if(item[val]==value){
-                        bool=true;
-                    }
-                });
-            return bool;
-        })[0];
-    }
     render(){
         return (
             <Card
-                className="family-card"
+                className="keyperson-card"
                 title={this.props.item.name.value}
                 key={this.props.item.id.value}
                 extra={
@@ -53,7 +41,7 @@ export default class familyCard extends Component{
                         </a>
 
                         <a href="javascript:void(0);" 
-                            onClick={()=>{this.props.deleteFamilyValue(this.props.item.id.value)}}
+                            onClick={()=>{this.props.deleteKeyPersonValue(this.props.item.id.value)}}
                         >
                             <i className="iconfont icon-delete"></i>删除
                         </a>
@@ -62,10 +50,10 @@ export default class familyCard extends Component{
                 >
                 <Row>
                     <Col span={8}>
-                        关系：
+                        所属部门：
                     </Col>
                     <Col span={16}>
-                        {this.findDropDownItem(this.props.item.relation.value,'familyRelation').name}
+                        {this.props.item.department.value}
                     </Col>
                 </Row>
                 <Row>
@@ -74,22 +62,6 @@ export default class familyCard extends Component{
                     </Col>
                     <Col span={16}>
                         {this.props.item.phone.value}
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={8}>
-                        身份证号：
-                    </Col>
-                    <Col span={16}>
-                        {this.props.item.certificate.value}
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={8}>
-                        工作属性：
-                    </Col>
-                    <Col span={16}>
-                        {this.findDropDownItem(this.props.item.jobCategory.value,'commonJobCategory').name}
                     </Col>
                 </Row>
             </Card>

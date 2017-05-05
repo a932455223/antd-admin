@@ -6,7 +6,9 @@ import {
   Icon,
   Input,
   Form,
-  Select
+  Select,
+  Modal,
+  message
 } from 'antd';
 import _ from 'lodash';
 import styles from './indexStyle.less';
@@ -52,14 +54,38 @@ class FamilyInfo extends Component {
     this.setState(newState);
   };
   //保存修改
-  saveChangeValue=(index,values)=>{
+  saveChangeValue=(index,values,num)=>{
+    setTimeout(()=>{
     ajax.Put(api.PUT_CUSTOMERS_FAMILY(index),values)
       .then( res => {
-            if(res.data.message === 'OK'){
-              this.getFamilyInfo(this.props.currentId);
-            }
-          })
+          console.log(res);
+          switch(res.status){
+              case(200):
+                {
+                  if(res.data.code===200&&res.data.message==='OK')
+                    message.success('更改成功');
+                    this.getFamilyInfo(this.props.currentId);
+                  if(res.data.code!==200){
+                    // message.error(res.data.message)
+                    Modal.error({
+                      title:res.data.message,
+                    });
+                  }
+                }
+                break;
+              default:
+                {
+                  // message.error(res.statusText)
+                   Modal.error({
+                    title: res.statusText,
+                  });
+                }
+          }
+          this.toggleEdit(num);//编辑状态改变
+        })
 
+    },2000)
+    
   };
   //增加新的card
   addNewFamilyValue=(data)=>{
@@ -206,12 +232,6 @@ class FamilyInfo extends Component {
   };
   render() {
     const loading=this.state.isLoading?(<div>loading</div>):"";
-    /*const familyCards=(
-      <div className="familyCards">
-        <AddFamilyCard />
-      </div>
-    );*/
-
     return(
       <div className="families">
         {loading}
