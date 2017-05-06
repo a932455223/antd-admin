@@ -35,6 +35,13 @@ export const createCustomerSuccess = (id) => (
   }
 )
 
+// edit customer success
+export const editCustomerSuccess = () => (
+  {
+    type: actionTypes.EDIT_CUSTOMER_SUCCESS,
+  }
+)
+
 // customer info be edited
 export const customerInfoBeEdit = () => (
   {
@@ -42,7 +49,7 @@ export const customerInfoBeEdit = () => (
   }
 )
 
-// customer info be edited
+// reset Customer Info
 export const resetCustomerInfo = () => (
   {
     type: actionTypes.RESET_CUSTOMER_INFO

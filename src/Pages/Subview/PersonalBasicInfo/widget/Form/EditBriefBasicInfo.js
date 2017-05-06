@@ -412,7 +412,7 @@ class EditBriefBasicInfoForm extends Component{
         </Row>
 
         <div className="personInfo">
-          {EditFormItems()}
+      {/*EditFormItems()*/}
           <Row>
             <Col span={12} className={currentId === -1 ? "phoneCreate" : "phoneEdit"}>
               <FormItem labelCol={{span: 8}}
@@ -453,7 +453,6 @@ class EditBriefBasicInfoForm extends Component{
                 label="身份证号："
                 className="certificate"
               >
-
                 {getFieldDecorator('certificate', {
                   // initialValue: eachCustomerInfo.certificate,
                   onChange: this.inputBasicInfoChange

@@ -8,6 +8,8 @@ export default {
   DELETE_CUSTOMERS_FAMILY:familyId=>`/api/customer/individual/family/${familyId}`,
   //修改
   PUT_CUSTOMERS_FAMILY:familyId => `/api/customer/individual/family/${familyId}`,
+
+  GET_CUSTOMER_ENTERPRISE_BASE: customerId => `/api/customer/enterprise/${customerId}/base`,
   //企业客户关键人信息
   //查看
   GET_CUSTOMETS_KEYPERSONS:customerId=>`/api/customer/enterprise/${customerId}/keyPersons`,
@@ -41,6 +43,7 @@ export default {
 
   // 新增客户
   POST_CUSTOMER_INDIVIDUAL_BASE: '/api/customer/individual/base',
+  PUT_CUSTOMER_INDIVIDUAL_BASE: id => `/api/customer/individual/${id}/base/tab1`,
 
   GET_DEPARTMENT_AREAS: id => `/api/department/${id}/areas`,
   GET_CUSTOMER_DEPARTMENT: '/api/customer/add/departments/noHierarchy',

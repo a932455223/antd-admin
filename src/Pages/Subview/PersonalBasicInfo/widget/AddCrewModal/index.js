@@ -80,9 +80,9 @@ export default class AddCrewModal extends Component {
   //   this.initTableScroll();
   // }
 
-  // componentWillUnmout(){
-  //   removeEventListener('resize', this.initTableScroll)
-  // }
+  componentWillUnmout(){
+    removeEventListener('resize', this.initTableScroll)
+  }
 
   initTableScroll() {
     let addCrew = document.getElementById('addCrew');
