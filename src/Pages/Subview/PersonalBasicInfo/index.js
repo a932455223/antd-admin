@@ -125,9 +125,7 @@ class BasicInfo extends Component {
         options: []
       },
     },
-    commonDropDown:{
-
-    }
+    commonDropDown:{}
   }
 
   // modal Show
@@ -374,23 +372,6 @@ class BasicInfo extends Component {
     }
 
     console.log(json);
-
-    // $.ajax({
-    //   type: 'POST',
-    //   // url: 'http://106.14.69.82/crm/customer/individual/base',
-    //   url: '/crm/api/customer/individual/base',
-    //   data: JSON.stringify(json),
-    //   success: function(data){
-    //   	console.info(data);
-    //   },
-    //   dataType: "json",
-    //   contentType: "application/json"
-    // });
-
-    // ajax.Post(API.POST_CUSTOMER_INDIVIDUAL_BASE, json)
-    // .then((res) => {
-    //   console.log(res.data.data)
-    // })
   }
 
   // 表单数据的双向绑定
@@ -522,15 +503,15 @@ class BasicInfo extends Component {
   // 新建 accounts字段
   addAccountsInfo = (key) => {
     const { accounts } = this.state;
-    console.log({
-      ...accounts,
-      [`row-${key}-accountNo`]: {
-        value: ''
-      },
-      [`row-${key}-remark`]: {
-        value: ''
-      },
-    });
+    // console.log({
+    //   ...accounts,
+    //   [`row-${key}-accountNo`]: {
+    //     value: ''
+    //   },
+    //   [`row-${key}-remark`]: {
+    //     value: ''
+    //   },
+    // });
 
     this.setState({
       accounts: {

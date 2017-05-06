@@ -8,6 +8,8 @@ export default {
   DELETE_CUSTOMERS_FAMILY:familyId=>`/api/customer/individual/family/${familyId}`,
   //修改
   PUT_CUSTOMERS_FAMILY:familyId => `/api/customer/individual/family/${familyId}`,
+
+  GET_CUSTOMER_ENTERPRISE_BASE: customerId => `/api/customer/enterprise/${customerId}/base`,
   //企业客户关键人信息
   //查看
   GET_CUSTOMETS_KEYPERSONS:customerId=>`/api/customer/enterprise/${customerId}/keyPersons`,

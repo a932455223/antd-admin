@@ -442,7 +442,6 @@ class EditBriefBasicInfoForm extends Component{
                 label="身份证号："
                 className="certificate"
               >
-
                 {getFieldDecorator('certificate', {
                   // initialValue: eachCustomerInfo.certificate,
                   onChange: this.inputBasicInfoChange

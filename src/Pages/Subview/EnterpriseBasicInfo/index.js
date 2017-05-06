@@ -15,6 +15,7 @@ import {
  } from 'antd';
 import axios from 'axios';
 import _ from 'lodash';
+import moment from 'moment';
 import API from '../../../../API';
 import ajax from '../../../tools/POSTF';
 
@@ -43,35 +44,49 @@ class EnterpriseBasicInfo extends Component {
     joiners: [],
     tags: '',
 
+    accountsArr: [],
+    accounts: {},
+    originAccounts: {},
+
     eachCompanyInfo: {
-      registertime: {
+      department: {
         value: ''
       },
-      industry: {
+      manager: {
         value: ''
       },
-      business: {
+      grid: {
         value: ''
       },
-      yearmoney: {
+      accounts: [],
+      registeTime: {
         value: ''
       },
-      owner: {
+      industory: {
         value: ''
       },
-      phone: {
+      mainBusiness: {
         value: ''
       },
-      people: {
+      yearIncome: {
         value: ''
       },
-      saliary: {
+      legalPerson: {
+        value: ''
+      },
+      telephone: {
+        value: ''
+      },
+      staffCount: {
+        value: ''
+      },
+      avgSalary: {
         value: ''
       },
       address: {
         value: ''
       },
-      addressinfo: {
+      addressCode: {
         value: ''
       }
     }
@@ -102,47 +117,107 @@ class EnterpriseBasicInfo extends Component {
   // 获取客户基本信息
   getBaseInfo = (id) => {
     if(id !== -1) {
-      ajax.Get(API.GET_COMPANY_BASE(id))
+      ajax.Get(API.GET_CUSTOMER_ENTERPRISE_BASE(5))
       .then((res) => {
+        // console.log(res.data.data)
         // const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
-        let newJoiners = _.cloneDeep(res.data.data.joiner);
+        // 客户账户
+        let accounts = res.data.data.accounts.map((item,index) => ({
+          [`row-${index}-accountNo`]: {value: item.accountNo},
+          [`row-${index}-remark`]: {value: item.remark}
+        }));
+
+        let accountsArr = res.data.data.accounts.map((item,index) => `row-${index}`);
+
+        // 展平 accounts
+        const accountsObj = accounts.reduce((pre, next) => {
+          return {
+            ...pre,
+            ...next
+          }
+        },{});
+        let originAccounts = _.cloneDeep(accountsObj);
+
+        let newJoiners = _.cloneDeep(res.data.data.joiners);
         let newState = update(this.state, {
-          joiners: {$set: res.data.data.joiner},
+          accounts: {$set: accountsObj},
+          originAccounts: {$set: originAccounts},
+          accountsArr: {$set: accountsArr},
+          joiners: {$set: res.data.data.joiners},
           tags: {$set: newJoiners},
           eachCompanyInfo: {
-            registertime: {
-              value: {$set: res.data.data.registertime}
+            department: {
+              $set: {
+                value: res.data.data.department + ''
+              }
             },
-            industry: {
-              value: {$set: res.data.data.industry}
+            manager: {
+              $set: {
+                value: res.data.data.manager + ''
+              }
             },
-            business: {
-              value: {$set: res.data.data.business}
+            grid: {
+              $set: {
+                value: res.data.data.grid + ''
+              }
             },
-            yearmoney: {
-              value: {$set: res.data.data.yearmoney}
+            accounts: {
+              $set: res.data.data.accounts
             },
-            owner: {
-              value: {$set: res.data.data.owner}
+            registeTime: {
+              $set: {
+                value: res.data.data.registeTime
+              }
             },
-            phone: {
-              value: {$set: res.data.data.phone}
+            industory: {
+              $set: {
+                value: res.data.data.industory
+              }
             },
-            people: {
-              value: {$set: res.data.data.people}
+            mainBusiness: {
+              $set: {
+                value: res.data.data.mainBusiness
+              }
             },
-            saliary: {
-              value: {$set: res.data.data.saliary}
+            yearIncome: {
+              $set: {
+                value: res.data.data.yearIncome
+              }
+            },
+            legalPerson: {
+              $set: {
+                value: res.data.data.legalPerson
+              }
+            },
+            telephone: {
+              $set: {
+                value: res.data.data.telephone
+              }
+            },
+            staffCount: {
+              $set: {
+                value: res.data.data.staffCount
+              }
+            },
+            avgSalary: {
+              $set: {
+                value: res.data.data.avgSalary
+              }
             },
             address: {
-              value: {$set: res.data.data.address}
+              $set: {
+                value: res.data.data.address
+              }
             },
-            addressinfo: {
-              value: {$set: res.data.data.addressinfo}
+            addressCode: {
+              $set: {
+                value: res.data.data.addressCode
+              }
             }
           }
         })
+
         this.setState(newState);
       })
     }
@@ -169,7 +244,13 @@ class EnterpriseBasicInfo extends Component {
       }
     }
 
-    let newState = update(this.state,{
+    let accounts = {
+      ...this.state.accounts,
+      ...changedFields
+    }
+
+    let newState = update(this.state, {
+      accounts: {$set: {...accounts}},
       eachCompanyInfo: {$set: {...eachCompanyInfo}}
     })
     this.setState(newState);
@@ -189,6 +270,34 @@ class EnterpriseBasicInfo extends Component {
     })
     this.setState(newState);
     return newState;
+  }
+
+  // 删除对应的 accounts字段
+  deleteAccountsInfo = (row) => {
+    const newState= _.cloneDeep(this.state.accounts) ;
+
+    delete newState[`${row}-accountNo`];
+    delete newState[`${row}-remark`];
+    this.setState({
+      accounts: newState
+    })
+  }
+
+  // 新建 accounts字段
+  addAccountsInfo = (key) => {
+    const { accounts } = this.state;
+
+    this.setState({
+      accounts: {
+        ...accounts,
+        [`row-${key}-accountNo`]: {
+          value: ''
+        },
+        [`row-${key}-remark`]: {
+          value: ''
+        },
+      }
+    })
   }
 
   // 参与人员被修改了
@@ -222,6 +331,30 @@ class EnterpriseBasicInfo extends Component {
     return newState
   }
 
+  // 新建/编辑客户
+  addNewCustomer = (briefInfo) => {
+    const { name } = this.props.currentCustomerInfo;
+    const dateFormat = 'YYYY-MM-DD'; // 日期格式
+
+    console.log(briefInfo);
+    let json = {
+      accounts: [],
+      address: briefInfo.address ? briefInfo.address : '',
+      birth: moment(briefInfo.birth).format(dateFormat),
+      certificate: briefInfo.certificate ? briefInfo.certificate : '',
+      department: briefInfo.department ? briefInfo.department - 0 : '',
+      grid: briefInfo.grid ? briefInfo.grid - 0 : '',
+      joiners: briefInfo.joiners ? briefInfo.joiners : '',
+      manager: briefInfo.manager ? briefInfo.manager - 0 : '',
+      name: name ? name : '',
+      origin: '',
+      phone: briefInfo.phone	? briefInfo.phone : '',
+      wechat: briefInfo.wechat ? briefInfo.wechat : '',
+    }
+
+    console.log(json);
+  }
+
   render() {
     const { customerInfoBeEdit } = this.props;
     const { step, mode, id, beEdited } = this.props.currentCustomerInfo;
@@ -230,9 +363,12 @@ class EnterpriseBasicInfo extends Component {
       eachCompanyInfo,
       // edited,
       tags,
-      joinersBeEdited
+      joinersBeEdited,
+
+      accountsArr,
+      accounts,
+      originAccounts
     } = this.state;
-    // console.log(eachCompanyInfo);
 
     const modal = {
       visible: modalVisible,
@@ -249,6 +385,12 @@ class EnterpriseBasicInfo extends Component {
       beEdited: beEdited,
       customerInfoBeEdit: customerInfoBeEdit,
       eachCompanyInfo: eachCompanyInfo,
+      addNewCustomer: this.addNewCustomer,
+
+      accountsArr: accountsArr,
+      accounts: accounts,
+      deleteAccountsInfo: this.deleteAccountsInfo,
+      addAccountsInfo: this.addAccountsInfo,
 
       tags: tags,
       changeJoiners: this.changeJoiners,
@@ -257,7 +399,6 @@ class EnterpriseBasicInfo extends Component {
       modalShow: this.modalShow,
     }
 
-    // console.log(this.props);
     return(
       <div style={{textAlign: 'left'}}>
         <AddCrewModal
@@ -266,10 +407,15 @@ class EnterpriseBasicInfo extends Component {
         />
 
         <div>
-          <EditBriefBasicInfo
-            {...basicInfoProps}
-            onChange={this.handleFormChange}
-          />
+          {mode && mode !== 'view' &&
+            <EditBriefBasicInfo
+              {...basicInfoProps}
+              onChange={this.handleFormChange}
+            />
+          }
+          {mode && mode === 'view' &&
+            <ViewBriefBasicInfo {...basicInfoProps}/>
+          }
         </div>
 
         <div className="maintain">
