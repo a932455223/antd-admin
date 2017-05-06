@@ -189,16 +189,14 @@ class AreaForm extends Component{
   }
 
 	render(){
-		 const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched , getFieldValue} = this.props.form;
 
-    const Province = getFieldDecorator('province')(
-      <Select
-        placeholder="选择省份"
-        notFoundContent="没有省份"
-        onChange={this.handleProvinceChange}
-      >
-        {this.state.province.map((item,index)=>(<Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>))}
-      </Select>)
+    const Province = <Select
+      placeholder="选择省份"
+      notFoundContent="没有省份"
+      onChange={this.handleProvinceChange}
+    >
+      {this.state.province.map((item,index)=>(<Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>))}
+    </Select>
 
 
     const City = getFieldDecorator('city')(
@@ -245,21 +243,15 @@ class AreaForm extends Component{
                             wrapperCol={{span: 15}}
                             label="所属机构"
                   >
-                    {getFieldDecorator('orgId',{
-                        rules: [{ message: '请选择所属机构' , whitespace:"ture"}],
-                        onChange:this.orgIdChange
-                      })(
-                        <Select
-                          getPopupContainer={() => document.getElementById('RoleEdit')}
-                          className="selectorgId"
-                        >
-                          {
-                            this.state.organization.map((item,index)=>(<Option key={item.id.toString()} value={item.id.toString()}>{item.name}</Option>))
-                          }
-                        </Select>
-                      )
-                    }
-
+                    <Select
+                      getPopupContainer={() => document.getElementById('RoleEdit')}
+                      className="selectorgId"
+                      name="orgId"
+                    >
+                      {
+                        this.state.organization.map((item,index)=>(<Option key={item.id.toString()} value={item.id.toString()}>{item.name}</Option>))
+                      }
+                    </Select>
                   </FormItem>
                 </Col>
 
@@ -424,60 +416,7 @@ class AreaForm extends Component{
 	}
 }
 
-function mapPropsToFields(props){
-  console.dir(props)
-	return {
-		name:{
-		...props.area.name
-	},
-	director:{
-		...props.area.director
-	},
-	orgId:{
-		...props.area.orgId
-	},
-    areaType:{
-		...props.area.areaType
-	},
-	landArea:{
-		...props.area.landArea
-	},
-	residenceCount:{
-		...props.area.residenceCount
-	},
-	personCount:{
-		...props.area.personCount
-	},
-	address:{
-		...props.area.address
-	},
-	remark:{
-		...props.area.remark
-	},
-    province:{
-      ...props.area.province
-    },
-    city:{
-      ...props.area.city
-    },
-    region:{
-      ...props.area.region
-    },
-    addressDetail:{
-      ...props.area.addressDetail
-    }
 
-	}
-}
-
-function onFieldsChange(props,changedFields){
-  props.dispatch(gridBeEdited())
-	props.onChange(changedFields)
-}
-let createdForm =  Form.create({
-	mapPropsToFields,
-	onFieldsChange
-})(AreaForm)
 
 
 function mapStateToProp(store){
@@ -486,4 +425,4 @@ function mapStateToProp(store){
   }
 }
 
-export default connect(mapStateToProp)(createdForm);
+export default connect(mapStateToProp)(AreaForm);
