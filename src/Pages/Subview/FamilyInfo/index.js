@@ -93,7 +93,7 @@ class FamilyInfo extends Component {
   };
   //增加新的card
   addNewFamilyValue=(data)=>{
-    
+    this.changeAddFamilyCardLoading();
     console.log(data);
     setTimeout(()=>{
       ajax.Post(api.POST_CUSTOMERS_FAMILY(this.props.currentId),data)
@@ -180,6 +180,8 @@ class FamilyInfo extends Component {
           isLoading:false,
         })
         this.resetAddCard();
+        // this.AddFamilyCard.toggleAdd();
+        console.log(this)
         console.log("getfamilies")
       }
     })

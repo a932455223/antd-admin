@@ -52,8 +52,6 @@ class addFamilyCard extends Component{
         })
         if(noError){
             this.props.addNewFamilyValue(this.props.form.getFieldsValue())
-            this.props.changeAddFamilyCardLoading();
-
         }
     }
     clickCancelBtn=()=>{
