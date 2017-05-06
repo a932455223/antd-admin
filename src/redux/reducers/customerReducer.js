@@ -7,7 +7,7 @@ const initialState = {
   name: '',
   id: -1,
   category: '个人客户',
-  beEdited: false
+  beEditedNumber: []
 };
 
 const customerOperation = (state = initialState, action) => {
@@ -39,21 +39,25 @@ const customerOperation = (state = initialState, action) => {
       return {
         ...state,
         mode: 'edit',
-        id: action.id,
-        beEdited: false
+        id: action.id
       }
 
     case actionTypes.EDIT_CUSTOMER_SUCCESS:
       return {
         ...state,
-        mode: 'edit',
-        beEdited: false
+        mode: 'edit'
       }
 
-    case actionTypes.CUSTOMER_INFO_BE_EDITED:
+    case actionTypes.INCREASE_BE_EDITED_NUMBER:
       return {
         ...state,
-        beEdited: true
+        beEditedNumber: state.beEditedNumber.push(1)
+      }
+
+    case actionTypes.DECREASE_BE_EDITED_NUMBER:
+      return {
+        ...state,
+        // beEditedNumber: state.beEditedNumber - 1
       }
 
     case actionTypes.RESET_CUSTOMER_INFO:
@@ -64,7 +68,7 @@ const customerOperation = (state = initialState, action) => {
         name: '',
         id: -1,
         category: '个人客户',
-        beEdited: false
+        beEditedNumber: 0
       }
 
     default:
@@ -84,7 +88,8 @@ const currentCustomerInfo = (state = {}, action) => {
       }
 
     case actionTypes.CREATE_CUSTOMER_SUCCESS:
-    case actionTypes.CUSTOMER_INFO_BE_EDITED:
+    case actionTypes.INCREASE_BE_EDITED_NUMBER:
+    case actionTypes.DECREASE_BE_EDITED_NUMBER:
     case actionTypes.EDIT_CUSTOMER_SUCCESS:
       return {
         ...state,

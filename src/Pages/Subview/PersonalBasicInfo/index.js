@@ -13,7 +13,12 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import API from '../../../../API';
 import ajax from '../../../tools/POSTF';
-import { createCustomerSuccess, customerInfoBeEdit, editCustomerSuccess } from '../../../redux/actions/customerAction';
+import {
+  createCustomerSuccess,
+  increaseBeEditNumber,
+  decreaseBeEditNumber,
+  editCustomerSuccess
+} from '../../../redux/actions/customerAction';
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -180,15 +185,15 @@ class BasicInfo extends Component {
 
   componentWillReceiveProps(next){
     // info('basicInfo will receive props.');
-    // 当前的客户 id发生变化时，或者当前用户的信息 beEdited === true时，重置 state
-    const { id, beEdited } = this.props.currentCustomerInfo;
-    if(id !== next.currentCustomerInfo.id || beEdited === true ) {
+    // 当前的客户 id发生变化时，或者当前用户的信息 beEditedNumber === true时，重置 state
+    const { id, beEditedNumber } = this.props.currentCustomerInfo;
+    if(id !== next.currentCustomerInfo.id || beEditedNumber === 0 ) {
       this.getBaseInfo(next.currentCustomerInfo.id);
       // this.resetAccounts();
     }
 
     // 重置 joinersBeEdited
-    if(beEdited === false) {
+    if(beEditedNumber !== 0) {
       this.setState({
         joinersBeEdited: false
       })
@@ -357,7 +362,6 @@ class BasicInfo extends Component {
     const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
     let joiners = this.state.briefInfo.tags.map(item => item.id);
-    console.log(briefInfo.birth == null);
 
     let json = {
       accounts: [
@@ -385,23 +389,53 @@ class BasicInfo extends Component {
       wechat: briefInfo.wechat ? briefInfo.wechat : '',
     }
 
-    console.log(json);
-
     // 如果 id不存在，则调用创建用户接口
     if(id === -1) {
       ajax.PostJson(API.POST_CUSTOMER_INDIVIDUAL_BASE, json).then((res) => {
         if(res.message === 'OK') {
           message.success('创建用户成功');
           this.props.createCustomerSuccess(res.data);
+          this.props.decreaseBeEditNumber();
         } else {
           message.error(res.message);
         }
       });
     } else {
-      ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE(id), json).then((res)=>{
+      ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1(id), json).then((res)=>{
         if(res.message === 'OK') {
           message.success('编辑用户成功');
-          this.props.editCustomerSuccess();
+          this.props.decreaseBeEditNumber();
+        } else {
+          message.error(res.message);
+        }
+      })
+    }
+  }
+
+  // update customer info
+  updateCustomerInfo = (detailsInfo) => {
+    const { name, id } = this.props.currentCustomerInfo;
+    let json = {
+      carPrice: detailsInfo.carPrice != undefined ? detailsInfo.carPrice - 0 : '',
+      debtAmount: detailsInfo.debtAmount != undefined ? detailsInfo.debtAmount - 0 : '',
+      houseType: detailsInfo.houseType != undefined ? detailsInfo.houseType - 0 : '',
+      loanAmount: detailsInfo.loanAmount != undefined ? detailsInfo.loanAmount - 0 : '',
+      loanPurpose: detailsInfo.loanPurpose != undefined ? detailsInfo.loanPurpose - 0 : '',
+      marryStatus: detailsInfo.marryStatus != undefined ? detailsInfo.marryStatus - 0 : '',
+      needLoan: detailsInfo.needLoan != undefined ? detailsInfo.needLoan - 0 : '',
+      withCar: detailsInfo.withCar != undefined ? detailsInfo.withCar - 0 : '',
+      withDebt: detailsInfo.withDebt != undefined ? detailsInfo.withDebt - 0 : '',
+      yearExpense: detailsInfo.yearExpense != 0 ? detailsInfo.yearExpense - 0 : '',
+      yearIncome: detailsInfo.yearIncome != 0 ? detailsInfo.yearIncome - 0 : '',
+    }
+
+    if(id === -1) {
+      message.error('请先创建用户');
+    } else {
+      ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB2(id), json).then((res)=>{
+        if(res.message === 'OK') {
+          message.success('编辑用户成功');
+          this.props.decreaseBeEditNumber();
         } else {
           message.error(res.message);
         }
@@ -411,7 +445,7 @@ class BasicInfo extends Component {
 
   // 表单数据的双向绑定
   handleFormChange = (changedFields) => {
-    const { beEdited } = this.props.currentCustomerInfo;
+    const { beEditedNumber } = this.props.currentCustomerInfo;
 
     // console.log(changedFields);
     // 所属机构，客户经理，所属网格三级联动
@@ -562,8 +596,12 @@ class BasicInfo extends Component {
   }
 
   render() {
-    const { customerInfoBeEdit } = this.props;
-    const { step, mode, id, beEdited } = this.props.currentCustomerInfo;
+    const {
+      customerInfoBeEdit,
+      increaseBeEditNumber,
+      decreaseBeEditNumber
+    } = this.props;
+    const { step, mode, id, beEditedNumber } = this.props.currentCustomerInfo;
     const {
       modalVisible,
       eachCustomerInfo,
@@ -595,9 +633,11 @@ class BasicInfo extends Component {
     const basicInfoProps = {
       // brief info
       id: id,
-      beEdited: beEdited,
-      customerInfoBeEdit: customerInfoBeEdit,
+      beEditedNumber: beEditedNumber,
+      increaseBeEditNumber: increaseBeEditNumber,
+      decreaseBeEditNumber: decreaseBeEditNumber,
       addNewCustomer: this.addNewCustomer,
+      updateCustomerInfo: this.updateCustomerInfo,
       eachCustomerInfo: eachCustomerInfo,
 
       // modal
@@ -723,7 +763,8 @@ const mapStateToProps = (store) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     createCustomerSuccess:(id) => {dispatch(createCustomerSuccess(id))},
-    customerInfoBeEdit: () => {dispatch(customerInfoBeEdit())},
+    increaseBeEditNumber: () => {dispatch(increaseBeEditNumber())},
+    decreaseBeEditNumber: () => {dispatch(decreaseBeEditNumber())},
     editCustomerSuccess: () => {dispatch(editCustomerSuccess())},
   }
 }

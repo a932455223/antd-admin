@@ -108,8 +108,8 @@ class EditDetailsBasicInfoForm extends Component{
     this.props.customerInfoBeEdit();
   }
 
-  fillCustomerDetailsInfo = () => {
-
+  fillCustomerDetailsInfo = (detailsInfo) => {
+    this.props.updateCustomerInfo(detailsInfo)
   }
 
   render() {
@@ -437,7 +437,7 @@ class EditDetailsBasicInfoForm extends Component{
               </Col>
               <Button
                 type="primary"
-                onClick={this.fillCustomerDetailsInfo}
+                onClick={this.fillCustomerDetailsInfo.bind(this, getFieldsValue())}
                 disabled={!this.state.detailsInfoBeEdit}
               >保存</Button>
             </Col>
