@@ -395,7 +395,7 @@ class BasicInfo extends Component {
   handleFormChange = (changedFields) => {
     const { beEdited } = this.props.currentCustomerInfo;
 
-    console.log(changedFields);
+    // console.log(changedFields);
     // 所属机构，客户经理，所属网格三级联动
     let briefInfo;
     if(changedFields.department) {

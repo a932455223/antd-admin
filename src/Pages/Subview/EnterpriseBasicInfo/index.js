@@ -150,8 +150,6 @@ class EnterpriseBasicInfo extends Component {
 
   // 表单数据的双向绑定
   handleFormChange = (changedFields) => {
-    console.log(changedFields);
-    // 所属机构，客户经理，所属网格三级联动
     let eachCompanyInfo;
     if(changedFields.department) {
       eachCompanyInfo = {
