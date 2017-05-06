@@ -125,6 +125,9 @@ class BasicInfo extends Component {
         // value: '',
         options: []
       },
+    },
+    commonDropDown:{
+
     }
   }
 
@@ -207,7 +210,6 @@ class BasicInfo extends Component {
     if(id !== -1) {
       ajax.Get(API.GET_CUSTOMER_BASE(4))
       .then((res) => {
-        // console.log(res.data.data);
         const dateFormat = 'YYYY-MM-DD'; // 日期格式
         const commonDropDownType = [
           'marryStatus',
@@ -553,7 +555,6 @@ class BasicInfo extends Component {
       accounts,
       originAccounts
     } = this.state;
-    console.log(accounts);
 
     const modal = {
       visible: modalVisible,
