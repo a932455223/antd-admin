@@ -75,30 +75,30 @@ class EditBriefBasicInfoForm extends Component{
   getDepartments = (departmentId, managerId) => {
     // 所属机构下拉菜单
     ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
-    .then((res) => {
-      let newState = update(this.state, {
-        departmentOptions: {$set: res.data.data},
-      });
-      this.setState(newState);
-    })
+      .then((res) => {
+        let newState = update(this.state, {
+          departmentOptions: {$set: res.data.data},
+        });
+        this.setState(newState);
+      })
 
     // 所属客户经理下拉菜单
     ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId))
-    .then((res) => {
-      let newState = update(this.state, {
-        managerOptions: {$set: res.data.data},
-      });
-      this.setState(newState);
-    })
+      .then((res) => {
+        let newState = update(this.state, {
+          managerOptions: {$set: res.data.data},
+        });
+        this.setState(newState);
+      })
 
     // 重置网格
     ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))
-    .then((res) => {
-      let newState = update(this.state, {
-        gridOptions: {$set: res.data.data},
-      });
-      this.setState(newState);
-    })
+      .then((res) => {
+        let newState = update(this.state, {
+          gridOptions: {$set: res.data.data},
+        });
+        this.setState(newState);
+      })
   }
 
   // basic 输入框内容被修改了
@@ -216,15 +216,15 @@ class EditBriefBasicInfoForm extends Component{
     const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
     /* 编辑状态下
-    ** basic info
-    */
+     ** basic info
+     */
     const EditParticipate = tags && tags.map((item,index) => {
-      return (
-        <Tag key={`${item.id}${index}`} closable="true" afterClose={() => this.handleClose(item)}>
-          {item.name}
-        </Tag>
-      )
-    })
+        return (
+          <Tag key={`${item.id}${index}`} closable="true" afterClose={() => this.handleClose(item)}>
+            {item.name}
+          </Tag>
+        )
+      })
 
     const EditFormItems = () => {
       let formItemArray;
@@ -267,57 +267,57 @@ class EditBriefBasicInfoForm extends Component{
       //     </Row>
       //   )
       // } else {
-        // var len = accounts && accounts.length;
-        formItemArray = accountsArr.map((k, index) => {
-          return (
-            <Row key={index}>
-              <Col span={12}>
-                <FormItem
-                  label={index === 0 ? '账户' : ''}
-                  required={false}
-                  key={k}
-                  {...(index===0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                  className="accounts"
-                >
-                  {getFieldDecorator(`${k}-accountNo`, {
-                    // validateTrigger: ['onChange', 'onBlur'],
-                    // initialValue:len > index ? eachCustomerInfo.accounts[index].accountNo : "",
-                    onChange: this.inputBasicInfoChange
-                  })(
-                    <Input placeholder="填写账号信息"  />
-                  )}
-                </FormItem>
-              </Col>
+      // var len = accounts && accounts.length;
+      formItemArray = accountsArr.map((k, index) => {
+        return (
+          <Row key={index}>
+            <Col span={12}>
+              <FormItem
+                label={index === 0 ? '账户' : ''}
+                required={false}
+                key={k}
+                {...(index===0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                className="accounts"
+              >
+                {getFieldDecorator(`${k}-accountNo`, {
+                  // validateTrigger: ['onChange', 'onBlur'],
+                  // initialValue:len > index ? eachCustomerInfo.accounts[index].accountNo : "",
+                  onChange: this.inputBasicInfoChange
+                })(
+                  <Input placeholder="填写账号信息"  />
+                )}
+              </FormItem>
+            </Col>
 
-              <Col span={12} className="addMessage">
-                <FormItem
-                  wrapperCol={{span: 24}}
-                >
-                  {getFieldDecorator(`${k}-remark`, {
-                    // initialValue:len > index ? eachCustomerInfo.accounts[index].remark : "",
-                    onChange: this.inputBasicInfoChange
-                  })(
-                    <Input placeholder="填写备注信息"/>
-                  )}
+            <Col span={12} className="addMessage">
+              <FormItem
+                wrapperCol={{span: 24}}
+              >
+                {getFieldDecorator(`${k}-remark`, {
+                  // initialValue:len > index ? eachCustomerInfo.accounts[index].remark : "",
+                  onChange: this.inputBasicInfoChange
+                })(
+                  <Input placeholder="填写备注信息"/>
+                )}
 
-                  {index === 0
-                      ?
-                      <i
-                        className="dynamic-add-button iconfont"
-                        onClick={this.add}
-                      >&#xe688;</i>
-                      :
-                      <i
-                        className="dynamic-delete-button iconfont"
-                        onClick={() => this.remove(k)}
-                      >&#xe697;</i>
-                  }
-                </FormItem>
-              </Col>
+                {index === 0
+                  ?
+                  <i
+                    className="dynamic-add-button iconfont"
+                    onClick={this.add}
+                  >&#xe688;</i>
+                  :
+                  <i
+                    className="dynamic-delete-button iconfont"
+                    onClick={() => this.remove(k)}
+                  >&#xe697;</i>
+                }
+              </FormItem>
+            </Col>
 
-            </Row>
-          )
-        });
+          </Row>
+        )
+      });
       // }
 
       return formItemArray;
@@ -334,7 +334,7 @@ class EditBriefBasicInfoForm extends Component{
                 rules: [{
                   required: true,
                   message: '选择所属机构!'
-              }],
+                }],
                 // initialValue: eachCustomerInfo.department,
                 onChange: this.selectBasicInfoChange
               })(
@@ -401,7 +401,7 @@ class EditBriefBasicInfoForm extends Component{
         </Row>
 
         <div className="personInfo">
-        {EditFormItems()}
+          {EditFormItems()}
           <Row>
             <Col span={12} className={currentId === -1 ? "phoneCreate" : "phoneEdit"}>
               <FormItem labelCol={{span: 8}}

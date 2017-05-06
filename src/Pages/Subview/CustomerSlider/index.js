@@ -138,8 +138,8 @@ class CustomerSlider extends Component {
   state = {
     visible: '',
     currentId: '',
-    activePersonalTabs: '',
-    activeEnterpriseTabs: '',
+    activePersonalTabs: 'personalBasicInfo',
+    activeEnterpriseTabs: 'enterpriseBasicInfo',
     modalVisible: false,
 
     personalClient: {
@@ -180,28 +180,22 @@ class CustomerSlider extends Component {
       let EnterpriseBasicInfo = require('../EnterpriseBasicInfo').default;
       let KeyPersonInfo = require('../KeyPersonInfo').default;
       let OfflineInfo = require('../OfflineInfo').default;
-
-      setTimeout(() => {
-        let newState = {};
-        newState = update(
-          this.state,
-          {
-            personalClient: {
-              personalBasicInfo: {$set: PersonalBasicInfo},
-              familyInfo: {$set: FamilyInfo},
-              jobInfo: {$set: JobInfo},
-              riskInfo: {$set: RiskInfo},
-              financeInfo: {$set: FinanceInfo}
-            },
-            enterpriseClient: {
-              enterpriseBasicInfo: {$set: EnterpriseBasicInfo},
-              keyPersonInfo: {$set: KeyPersonInfo},
-              offlineInfo: {$set: OfflineInfo},
-            }
+      let newState = update(this.state,{
+          personalClient: {
+            personalBasicInfo: {$set: PersonalBasicInfo},
+            familyInfo: {$set: FamilyInfo},
+            jobInfo: {$set: JobInfo},
+            riskInfo: {$set: RiskInfo},
+            financeInfo: {$set: FinanceInfo}
+          },
+          enterpriseClient: {
+            enterpriseBasicInfo: {$set: EnterpriseBasicInfo},
+            keyPersonInfo: {$set: KeyPersonInfo},
+            offlineInfo: {$set: OfflineInfo},
           }
-        )
-        this.setState(newState)
-      }, 100)
+        }
+      )
+      this.setState(newState)
     }, 'InfoTabs');
   };
 

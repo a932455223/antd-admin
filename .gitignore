@@ -7,3 +7,4 @@ yarn.lock
 /.idea/
 .happypack
 src/routes/index.dev.js
+.idea

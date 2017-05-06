@@ -264,7 +264,6 @@ export default class BasicInfoEdit extends Component{
     const { marryStatus, houseType, withCar, carPrice, withDebt, debtAmount, needLoan, loanAmount, loanPurpose } = this.props.detailsInfo;
     const { department, manager, grid } = this.props.briefInfo;
 
-    // console.log(department && department.option);
 
     const kinitialValue = function(){
       var selfkeys = [];
@@ -307,6 +306,7 @@ export default class BasicInfoEdit extends Component{
     const keys = getFieldValue('keys');
     const EditFormItems = () => {
       var len = eachCustomerInfo.accounts && eachCustomerInfo.accounts.length;
+      console.log(keys)
       var formItemArray = keys.map((k, index) => {
         return (
           <Row key={index}>
