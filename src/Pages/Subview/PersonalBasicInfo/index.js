@@ -17,7 +17,7 @@ const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
 import './indexStyle.less';
-import AddMaintainRecordForm from './widget/AddMaintainRecordForm'
+import AddMaintainRecord from './widget/AddMaintainRecordForm'
 import MaintainRecord from './widget/MaintainRecord'
 
 import ViewBriefBasicInfo from './widget/Form/ViewBriefBasicInfo'
@@ -32,17 +32,16 @@ function info(msg,color){
   console.log('%c'+msg,'color:'+color);
 }
 
-// 新增维护记录
-const AddMaintainRecord = Form.create()(AddMaintainRecordForm);
-
 //个人信息表单................
 class BasicInfo extends Component {
   state = {
     eachCustomerInfo: '',
     modalVisible: false,
     edited: false,
+
     joinersBeEdited: false,
     joiners: [],
+
     accountsArr: [],
     accounts: {},
     originAccounts: {},
@@ -80,7 +79,7 @@ class BasicInfo extends Component {
       address: {
         value: ''
       },
-      tags: '',
+      tags: [],
     },
     detailsInfo: {
       yearIncome: {
@@ -125,6 +124,9 @@ class BasicInfo extends Component {
         // value: '',
         options: []
       },
+    },
+    commonDropDown:{
+
     }
   }
 
@@ -137,9 +139,12 @@ class BasicInfo extends Component {
 
   // modal hide
   modalHide = () => {
-    this.setState({
-      modalVisible: false
+    let newState = update(this.state, {
+      modalVisible: {$set: false}
     })
+
+    this.setState(newState);
+    return newState;
   }
 
   componentWillMount(){
@@ -180,7 +185,7 @@ class BasicInfo extends Component {
     const { id, beEdited } = this.props.currentCustomerInfo;
     if(id !== next.currentCustomerInfo.id || beEdited === true ) {
       this.getBaseInfo(next.currentCustomerInfo.id);
-      this.resetAccounts();
+      // this.resetAccounts();
     }
 
     // 重置 joinersBeEdited
@@ -200,14 +205,13 @@ class BasicInfo extends Component {
       originAccounts: originAccounts,
       accountsArr: accountsArr
     });
-  }
+  };
 
   // 获取客户基本信息
   getBaseInfo = (id) => {
     if(id !== -1) {
       ajax.Get(API.GET_CUSTOMER_BASE(4))
       .then((res) => {
-        // console.log(res.data.data);
         const dateFormat = 'YYYY-MM-DD'; // 日期格式
         const commonDropDownType = [
           'marryStatus',
@@ -231,6 +235,7 @@ class BasicInfo extends Component {
               }
             })
             return this.state = newState; // 将 newState赋值给原先的 state
+
             if(item === commonDropDownType[commonDropDownType.length - 1]) {
               this.setState(newState);
             }
@@ -347,15 +352,16 @@ class BasicInfo extends Component {
     }
   }
 
-  // 新建客户
+  // 新建/编辑客户
   addNewCustomer = (briefInfo) => {
     const { name } = this.props.currentCustomerInfo;
+    const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
-    // console.log(briefInfo);
+    console.log(briefInfo);
     let json = {
       accounts: [],
       address: briefInfo.address ? briefInfo.address : '',
-      birth: '',
+      birth: moment(briefInfo.birth).format(dateFormat),
       certificate: briefInfo.certificate ? briefInfo.certificate : '',
       department: briefInfo.department ? briefInfo.department - 0 : '',
       grid: briefInfo.grid ? briefInfo.grid - 0 : '',
@@ -367,19 +373,19 @@ class BasicInfo extends Component {
       wechat: briefInfo.wechat ? briefInfo.wechat : '',
     }
 
-    // console.log(json);
+    console.log(json);
 
-    $.ajax({
-      type: 'POST',
-      // url: 'http://106.14.69.82/crm/customer/individual/base',
-      url: '/crm/api/customer/individual/base',
-      data: JSON.stringify(json),
-      success: function(data){
-      	console.info(data);
-      },
-      dataType: "json",
-      contentType: "application/json"
-    });
+    // $.ajax({
+    //   type: 'POST',
+    //   // url: 'http://106.14.69.82/crm/customer/individual/base',
+    //   url: '/crm/api/customer/individual/base',
+    //   data: JSON.stringify(json),
+    //   success: function(data){
+    //   	console.info(data);
+    //   },
+    //   dataType: "json",
+    //   contentType: "application/json"
+    // });
 
     // ajax.Post(API.POST_CUSTOMER_INDIVIDUAL_BASE, json)
     // .then((res) => {
@@ -482,7 +488,9 @@ class BasicInfo extends Component {
   resetJoiners = (state) => {
     let st = state || this.state;
     let newJoiners = _.cloneDeep(st.joiners);
-    let newState = update(state, {
+    // console.log(newJoiners);
+    // console.log(state);
+    let newState = update(st, {
       briefInfo: {
         tags: {$set: newJoiners}
       }
@@ -498,6 +506,43 @@ class BasicInfo extends Component {
         joinersBeEdited: true
       })
     }
+  }
+
+  // 删除对应的 accounts字段
+  deleteAccountsInfo = (row) => {
+    const newState= _.cloneDeep(this.state.accounts) ;
+
+    delete newState[`${row}-accountNo`];
+    delete newState[`${row}-remark`];
+    this.setState({
+      accounts: newState
+    })
+  }
+
+  // 新建 accounts字段
+  addAccountsInfo = (key) => {
+    const { accounts } = this.state;
+    console.log({
+      ...accounts,
+      [`row-${key}-accountNo`]: {
+        value: ''
+      },
+      [`row-${key}-remark`]: {
+        value: ''
+      },
+    });
+
+    this.setState({
+      accounts: {
+        ...accounts,
+        [`row-${key}-accountNo`]: {
+          value: ''
+        },
+        [`row-${key}-remark`]: {
+          value: ''
+        },
+      }
+    })
   }
 
   render() {
@@ -517,27 +562,41 @@ class BasicInfo extends Component {
     } = this.state;
 
     const modal = {
+      // modal
       visible: modalVisible,
       hide: this.modalHide,
+
+      // brief info
       id: id,
       staffs: briefInfo.tags,
+
+      // joiners
       changeJoiners: this.changeJoiners,
       resetJoiners: this.resetJoiners,
       joinersBeModified: this.joinersBeModified,
     };
 
     const basicInfoProps = {
-      joiners: joiners,
-      addNewCustomer: this.addNewCustomer,
+      // brief info
+      id: id,
       beEdited: beEdited,
       customerInfoBeEdit: customerInfoBeEdit,
-      id: id,
+      addNewCustomer: this.addNewCustomer,
       eachCustomerInfo: eachCustomerInfo,
+
+      // modal
       modalShow: this.modalShow,
+
+      // joiners
+      joiners: joiners,
       changeJoiners: this.changeJoiners,
       joinersBeEdited: joinersBeEdited,
+
+      // accounts
       accounts: accounts,
-      accountsArr: accountsArr
+      accountsArr: accountsArr,
+      deleteAccountsInfo: this.deleteAccountsInfo,
+      addAccountsInfo: this.addAccountsInfo
     }
 
     const maintainRecordProps = {

@@ -8,7 +8,6 @@ import {
   Form,
   Select
 } from 'antd';
-import styles from './../indexStyle.less';
 import { connect } from 'react-redux';
 import api from './../../../../../API';
 import ajax from '../../../../tools/POSTF.js';
@@ -51,7 +50,7 @@ class addFamilyCard extends Component{
         if(this.state.isAdd){
         addArea=
             
-            (<Form  className="keyperson-card-modify">
+            (<Form  className="my-form-card">
                 <Card
                     title={
                         <div className="my-card-title">
@@ -107,7 +106,7 @@ class addFamilyCard extends Component{
         }else{
         //添加按钮
         addArea=
-            (<Card  className="family-card family-add-card">
+            (<Card  className="my-card my-add-card">
                 <i className="iconfont icon-create"   onClick={()=>{this.toggleAdd()}}></i>
                 <p>新建家庭关系</p>
             </Card>)

@@ -15,6 +15,7 @@ import ajax from '../../../../tools/POSTF.js';
 const FormItem = Form.Item;
 const Option = Select.Option;
 export default class familyCard extends Component{
+    
     constructor(props) {
         super(props);
     };
@@ -41,22 +42,22 @@ export default class familyCard extends Component{
     render(){
         return (
             <Card
-                className="family-card"
+                className="my-card"
                 title={this.props.item.name.value}
                 key={this.props.item.id.value}
                 extra={
                     <div>
-                        <a href="javascript:void(0);" 
+                        <span
                             onClick={()=>{this.props.toggleEdit(this.props.index)}}
                         >
                             <i className="iconfont icon-edit"></i>编辑
-                        </a>
+                        </span>
 
-                        <a href="javascript:void(0);" 
+                        <span
                             onClick={()=>{this.props.deleteFamilyValue(this.props.item.id.value)}}
                         >
                             <i className="iconfont icon-delete"></i>删除
-                        </a>
+                        </span>
                     </div>
                 }
                 >
@@ -89,7 +90,7 @@ export default class familyCard extends Component{
                         工作属性：
                     </Col>
                     <Col span={16}>
-                        {this.findDropDownItem(this.props.item.jobCategory.value,'commonJobCategory').name}
+                        {this.props.item.jobCategory.value===""?"":this.findDropDownItem(this.props.item.jobCategory.value,'commonJobCategory').name}
                     </Col>
                 </Row>
             </Card>

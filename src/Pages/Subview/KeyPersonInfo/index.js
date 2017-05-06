@@ -169,11 +169,11 @@ class KeyPersonInfo extends Component {
   render() {
     const loading=this.state.isLoading?(<div>loading</div>):"";
     return(
-      <div className="key-persons">
+      <div className="my-cards-page">
         {loading}
         {
           this.state.keyPersonList.length?
-          <div className='key-person-cards'>
+          <div className='my-cards-area'>
             {
               this.state.keyPersonList.map((item,index)=>{
                 if(this.state.isModify[index]){

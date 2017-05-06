@@ -10,6 +10,7 @@ import {
   Select
 } from 'antd';
 import { connect } from 'react-redux';
+import Reg from "../../../../tools/Reg"
 const FormItem = Form.Item;
 const Option = Select.Option;
 class familyForm extends Component{
@@ -54,14 +55,16 @@ class familyForm extends Component{
     render(){
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form  className="family-card family-card-modify">
+            <Form  className="my-form-card">
                 <Card
                     title={
                         <div className="my-card-title">
                             <FormItem>
                                 {getFieldDecorator('name', {
                                     rules: [{ required: true, message: '姓名不能为空' }],
-                                })(<Input />)}
+                                })(<Input 
+                                    prefix={<i className="iconfont icon-customer1" />}
+                                />)}
                             </FormItem>
                             <span
                                 className="cancel-btn"
@@ -82,12 +85,12 @@ class familyForm extends Component{
                 >
                 <Row>
                     <Col span={8}>
-                    <span>关系：</span>
+                    关系：
                     </Col>
                     <Col span={16}>
                         <FormItem>
                         {getFieldDecorator('relation', {
-                            rules: [{ required: true, message: '姓名不能为空' }],
+                            rules: [{ required: true, message: '关系不能为空' }],
                         })(
                             <Select 
                                 
@@ -110,12 +113,12 @@ class familyForm extends Component{
                 </Row>
                     <Row>
                         <Col span={8}>
-                        <span>联系方式：</span>
+                            联系方式：
                         </Col>
                         <Col span={16}>
                             <FormItem>
-                                {getFieldDecorator('phone', {
-                                    rules: [{ required: true, message: '联系方式不能为空' }],
+                                {getFieldDecorator('phone',{
+                                    rules: [{pattern:Reg.mobile, message: "联系方式格式不正确"}],
                                 })(<Input />)}
                             </FormItem>
                         </Col>
@@ -123,25 +126,23 @@ class familyForm extends Component{
                     </Row>
                     <Row>
                         <Col span={8}>
-                        <span>身份证号：</span>
+                        身份证号
                         </Col>
                         <Col span={16}>
                             <FormItem>
                                 {getFieldDecorator('certificate', {
-                                    rules: [{ required: true, message: '身份证不能为空' }],
+                                    rules: [{ pattern:Reg.certificate, message: '身份证格式不正确' }],
                                 })(<Input />)}
                             </FormItem>
                         </Col>
                     </Row>
                     <Row>
                         <Col span={8}>
-                        <span>工作属性：</span>
+                        工作属性：
                         </Col>
                         <Col span={16}>
                             <FormItem>
-                                {getFieldDecorator('jobCategory', {
-                                    rules: [{ required: true, message: '姓名不能为空' }],
-                                })(
+                                {getFieldDecorator('jobCategory')(
                                     <Select >
                                         {
                                             this.props.commonJobCategory.map((rel) => {

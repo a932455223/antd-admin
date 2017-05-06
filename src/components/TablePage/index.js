@@ -40,32 +40,26 @@ class TablePage extends Component {
     require.ensure([],() => {
       let CustomerSlider = require('../../Pages/Subview/CustomerSlider').default;
       let BatchParticipate = require('./widget/BatchParticipate').default;
-
-      setTimeout(() => {
-        this.setState({
-          CustomerSlider: CustomerSlider,
-          BatchParticipate: BatchParticipate
-        })
-      }, 300)
+      this.setState({
+        CustomerSlider: CustomerSlider,
+        BatchParticipate: BatchParticipate
+      })
     }, 'CustomerSlider');
   }
 
   // 获取被选中的 row的 Id，打印当前的 Id
   onSelectChange = (selectedRowKeys) => {
-    console.log(selectedRowKeys);
-    this.setState({
+    let newState = {
       selectedRowKeys: selectedRowKeys
-    });
+    }
 
     if(selectedRowKeys.length === 0) {
-      this.setState({
-        batchProcessing: false
-      })
+      newState.batchProcessing = false
     } else {
-      this.setState({
-        batchProcessing: true
-      })
+      newState.batchProcessing = true
     }
+
+    this.setState(newState)
   }
 
   // componentWillReceiveProps(next) {
@@ -90,19 +84,17 @@ class TablePage extends Component {
     }
 
     // 判断 dock是否显示，若未显示，则弹出 slider
-    if(!this.state.dockVisible ) {
-      let newState = update(this.state, {
-        dockVisible: {$set: true}
-      })
-      this.setState(newState);
-    }
-
-    this.setState({
+    let newState = {
       dockContent: 'CustomerSlider',
       mode: mode,
       currentCustomer: info,
       onlyCloseModal: false
-    });
+    }
+
+    if(!this.state.dockVisible ) {
+      newState.dockVisible = true;
+    }
+    this.setState(newState);
   }
 
   // not save the be edited info
@@ -260,7 +252,7 @@ class TablePage extends Component {
         // top: 64
       }, // 背景
       fluid: true,
-      defaultSize: .47, // 初始 width/height
+      defaultSize: .48, // 初始 width/height
       duration: 350, // 动画时间
       zIndex: 100,
     }
