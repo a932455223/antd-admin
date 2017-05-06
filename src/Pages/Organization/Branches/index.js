@@ -7,7 +7,7 @@
 
 
 import React, {Component} from "react";
-import {Button, Icon} from "antd";
+import {Button, Icon,Modal,message} from "antd";
 //=========================================================
 import Content from "../component/Content";
 import BranchesDetail from "../component/BranchesDetail";
@@ -18,6 +18,7 @@ import BrabchesEditor from "../component/BranchesEditor/index";
 
 export default class Branches extends Component {
   state = {
+    haschange:false,
     parentId: 1,
     dock: {
       visible: false
@@ -72,7 +73,17 @@ export default class Branches extends Component {
       }
     })
   }
-
+  closeDockHasChange = () => {
+    if (this.state.haschange){
+      Modal.error({content: '您要离开此页面吗？',})
+    }
+  }
+  hasChange = () => {
+    console.log(888888)
+    this.setState({
+      haschange:true
+    })
+  }
 
   // 展示dock
   showDock(id) {
@@ -101,6 +112,7 @@ export default class Branches extends Component {
             refresh={this.refresh.bind(this)}
             id={id}
             getDepartments={this.getDepartments}
+            
           />
         )
       }

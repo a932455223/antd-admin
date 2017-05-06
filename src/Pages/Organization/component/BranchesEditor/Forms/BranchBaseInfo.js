@@ -67,7 +67,6 @@ class BranchBaseInfoForm extends Component{
     const id = this.props.id;
     const { getFieldsValue,getFieldValue} = this.props.form;
     const FieldsValue = getFieldsValue();
-    console.log(7777,FieldsValue);
 
     const pid = getFieldValue('province')
     const cid = getFieldValue('city')
@@ -98,7 +97,6 @@ class BranchBaseInfoForm extends Component{
 		    if(hasError){
 			      Modal.error({content: '信息填写有误',})
 			    }else{
-			    	console.log(8888)
 			      ajax.Put(API.PUT_DEPARTMENT(id),FieldsValue)
 			      .then(() => {
 			      this.props.getDepartments()
@@ -169,7 +167,7 @@ class BranchBaseInfoForm extends Component{
 		const {getFieldDecorator} = this.props.form;
 		const {province,city,area} = this.state;
     const Province = province.length > 0 ? getFieldDecorator('province',{
-    	rules:[{require:true}]
+    	rules:[{require:true}],onChange:this.inputChange,
     })(
       <Select
         placeholder="选择省份"
@@ -182,7 +180,7 @@ class BranchBaseInfoForm extends Component{
 
 
     const City = getFieldDecorator('city',{
-    	rules:[{require:true}]
+    	rules:[{require:true}],onChange:this.inputChange,
     })(
       <Select
        placeholder="选择城市"
@@ -194,7 +192,7 @@ class BranchBaseInfoForm extends Component{
       </Select>)
 
     const Area = getFieldDecorator('area',{
-    	rules:[{require:true}]
+    	rules:[{require:true}],onChange:this.inputChange,
     })(
       <Select
         placeholder="选择地区"
@@ -247,7 +245,7 @@ class BranchBaseInfoForm extends Component{
                     rules: [{required: true, message: '组织名称!',min:4,max:100}],
                     onChange:this.inputChange,
                   })(
-                    <Input readOnly/>	
+                    <Input />	
                   )}
                 </FormItem>
               </Col>
@@ -373,9 +371,10 @@ class BranchBaseInfoForm extends Component{
           <Col span="3">
             <Button
               className="save"
-              disabled={this.state.changed ? false : true}
+              disabled={this.state.changed  ? false : true}
               htmlType="submit"
               onClick = {this.onhandleClick}
+              loading={this.state.loading ? true : false}
             >保存</Button>
           </Col>
         </Row>

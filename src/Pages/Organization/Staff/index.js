@@ -8,7 +8,7 @@
 
 import React, {Component} from "react";
 import axios from "axios";
-import {Button, Icon} from "antd";
+import {Button, Icon,Modal} from "antd";
 //========================================
 import StaffDetail from "../component/StaffDetail";
 import StaffEditor from "../component/StaffEditor";
@@ -21,6 +21,9 @@ import ajax from "../../../tools/POSTF.js";
 
 export default class Branches extends Component {
   state = {
+    haschangeBase:false,
+    haschangeJob:false,
+    haschangeEdu:false,
     parentId: 1,
     dock: {
       visible: false,
@@ -62,6 +65,17 @@ export default class Branches extends Component {
       })
     })
   }
+  addCountChild = () => {
+    this.setState({
+      countChild:++countChild
+    })
+  }
+
+  reduceCountChild = () => {
+    this.setState({
+      countChild:--countChild
+    })
+  }
 
   closeDock() {
     this.setState({
@@ -71,6 +85,66 @@ export default class Branches extends Component {
     })
   }
 
+  closeDockHasChangeBase = () => {
+    if (this.state.haschangeBase || this.state.haschangeJob || this.state.haschangeEdu){
+      let that = this;
+      Modal.confirm({
+        title: '您确定要离开吗?',
+        content: 'some descriptions',
+        onOk() {
+          that.setState({
+            haschangeJob:false,
+            haschangeEdu:false,
+            haschangeBase:false,
+            dock: {
+              visible: false,
+            }
+          })
+        },
+        onCancel() {
+          console.log('Cancel');
+        },
+      });
+    }else{
+      this.setState({
+        dock: {
+          visible: false,
+        }
+      })
+    }
+  }
+
+  hasChangeBase = () => {
+    this.setState({
+      haschangeBase:true
+    })
+  }
+  hasNoChangeBase = () => {
+    this.setState({
+      haschangeBase:false
+    })
+  }
+  hasNoChangeJob = () => {
+    this.setState({
+      haschangeJob:false
+    })
+  }
+  hasChangeJob = () => {
+    this.setState({
+      haschangeJob:true
+    })
+  }
+
+  hasNoChangeEdu = () => {
+    this.setState({
+      haschangeEdu:false
+    })
+  }
+  hasChangeEdu = () => {
+    this.setState({
+      haschangeEdu:true
+    })
+  }
   showDock(id = -1) {
     this.setState({
       dock: {
@@ -116,20 +190,66 @@ export default class Branches extends Component {
     }
   }
 
+
   tableClick(id) {
-    this.setState({
-      dock: {
-        visible: true,
-        children:(
-          <StaffEditor
-            id={id}
-            closeDock={this.closeDock.bind(this)}
-            refresh={this.refresh.bind(this)}
-            getStaffs={this.getStaffs}
-          />
-        )
-      }
-    })
+
+    if (this.state.haschangeBase || this.state.haschangeJob || this.state.haschangeEdu){
+      let that = this;
+      Modal.confirm({
+        title: '警告',
+        content: '您确定不保存编辑的数据?',
+        onOk(){
+          console.log(id)
+          that.setState({
+            haschangeJob:false,
+            haschangeEdu:false,
+            haschangeBase:false,
+            dock:{
+               visible: true,
+              children:(
+                <StaffEditor
+                  id={id}
+                  closeDock={that.closeDockHasChangeBase}
+                  refresh={that.refresh.bind(that)}
+                  getStaffs={that.getStaffs}
+                  hasChangeBase={that.hasChangeBase}
+                  hasNoChangeBase={that.hasNoChangeBase}
+                  hasChangeJob = {that.hasChangeJob}
+                  hasNoChangeJob = {that.hasNoChangeJob}
+                  hasChangeEdu = {that.hasChangeEdu}
+                  hasNoChangeEdu = {that.hasNoChangeEdu}
+                />
+              )
+            }
+          })
+        },
+        onCancel() {
+          console.log('Cancel');
+        },
+      });
+    }else{
+
+      this.setState({
+        dock: {
+          visible: true,
+          children:(
+            <StaffEditor
+              id={id}
+              closeDock={this.closeDockHasChangeBase}
+              refresh={this.refresh.bind(this)}
+              getStaffs={this.getStaffs}
+              hasChangeBase={this.hasChangeBase}
+              hasNoChangeBase={this.hasNoChangeBase}
+              hasChangeJob = {this.hasChangeJob}
+              hasNoChangeJob = {this.hasNoChangeJob}
+              hasChangeEdu = {this.hasChangeEdu}
+              hasNoChangeEdu = {this.hasNoChangeEdu}
+            />
+          )
+        }
+      })
+    }
+
   }
 
   // 表格分页点击事件

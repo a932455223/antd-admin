@@ -23,8 +23,10 @@ class StaffBaseForm extends Component{
       changed:true,
       loading : false
     })
+    this.props.hasChangeBase()
   }
   componentWillMount() {
+    console.log('%cStaffBaseForm will mount','color:red');
     ajax.Get(API.GET_ROLES)
     .then((res)=>{
       this.setState({
@@ -34,15 +36,22 @@ class StaffBaseForm extends Component{
 
   }
 
-  componentWillReceiveProps(){
+  componentWillReceiveProps(nextProps){
     console.log('StaffBaseForm will receive props.')
     const { getFieldValue} = this.props.form;
+    if(nextProps.id !== this.props.id){
+      this.setState({
+        changed:false
+      })
+    }
     this.setState({
        rolesHide:  getFieldValue("isUser")
     })
   }
 
   onHandleSubmit = () => {
+    this.props.form.validateFields()
+    this.props.hasNoChangeBase()
     this.setState({
       loading:true
     })
@@ -91,7 +100,7 @@ class StaffBaseForm extends Component{
     const {rolesDropDown,rolesHide} = this.state;
     const {gender} = this.props.dropdown;
     const Gender = gender.length>0 ? getFieldDecorator('gender', {
-      rules: [{required: false, message: '请选择性别!'}],
+      rules: [{required: true, message: '请选择性别!'}],
       onChange:this.inputChange,
     })(
       <Select
@@ -125,7 +134,6 @@ class StaffBaseForm extends Component{
             <FormItem
               label={<span>姓名</span>}
               {...formItemLayout}
-
             >
               {getFieldDecorator('name', {
                 rules: [{required: true, message: '请填写员工姓名!'}],
@@ -194,7 +202,7 @@ class StaffBaseForm extends Component{
               {...formItemLayout}
             >
               {getFieldDecorator('phone', {
-                rules: [{required: true, message: '请填写手机号码!'}],
+                rules: [{required: true, message: '请填写手机号码!',len:11}],
                 onChange:this.inputChange,
               })(
                 <Input/>
@@ -209,7 +217,7 @@ class StaffBaseForm extends Component{
               {...formItemLayout}
             >
               {getFieldDecorator('wechat', {
-                rules: [{required: false, message: '请输入微信号!'}],
+                rules: [{required: false, message: '请输入微信号!',min:1,max:50}],
                 onChange:this.inputChange,
               })(
                 <Input/>
@@ -307,6 +315,8 @@ function mapStateToProps(store) {
 
 
 function mapPropsToFields(props){
+  console.log("StaffBaseForm, mapStateToProps");
+
   const {baseInfo} = props;
   console.log(baseInfo)
   return {

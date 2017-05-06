@@ -13,6 +13,7 @@ class EducationInfoForm extends Component{
   }
 
   onHandleSubmit = () => {
+    this.props.hasNoChangeEdu()
     this.setState({
       loading:true
     })
@@ -53,6 +54,7 @@ class EducationInfoForm extends Component{
       changed:true,
       loading : false
     })
+    this.props.hasChangeEdu()
   }
 
   render (){
@@ -95,7 +97,7 @@ class EducationInfoForm extends Component{
               {...formItemLayout}
             >
               {getFieldDecorator('major', {
-                rules: [{required: false, message: '专业!'}],
+                rules: [{required: false, message: '专业!',min: 1, max:100}],
                 onChange:this.inputChange,
               })(
                 <Input/>
@@ -110,7 +112,7 @@ class EducationInfoForm extends Component{
               {...formItemLayout}
             >
               {getFieldDecorator('school', {
-                rules: [{required: false, message: '毕业院校!'}],
+                rules: [{required: false, message: '毕业院校!',min: 1, max:100}],
                 onChange:this.inputChange,
               })(
                 <Input/>
