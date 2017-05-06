@@ -43,6 +43,7 @@ export default {
 
   // 新增客户
   POST_CUSTOMER_INDIVIDUAL_BASE: '/api/customer/individual/base',
+  PUT_CUSTOMER_INDIVIDUAL_BASE: id => `/api/customer/individual/${id}/base/tab1`,
 
   GET_DEPARTMENT_AREAS: id => `/api/department/${id}/areas`,
   GET_CUSTOMER_DEPARTMENT: '/api/customer/add/departments/noHierarchy',

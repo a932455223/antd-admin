@@ -39,7 +39,15 @@ const customerOperation = (state = initialState, action) => {
       return {
         ...state,
         mode: 'edit',
-        id: action.id
+        id: action.id,
+        beEdited: false
+      }
+
+    case actionTypes.EDIT_CUSTOMER_SUCCESS:
+      return {
+        ...state,
+        mode: 'edit',
+        beEdited: false
       }
 
     case actionTypes.CUSTOMER_INFO_BE_EDITED:
@@ -69,14 +77,15 @@ const currentCustomerInfo = (state = {}, action) => {
     case actionTypes.SAVE_CURRENT_CUSTOMER_INFO:
     case actionTypes.CREATE_CUSTOMER:
     case actionTypes.FILL_CUSTOMER_INFO:
-    case actionTypes.CREATE_CUSTOMER_SUCCESS:
     case actionTypes.RESET_CUSTOMER_INFO:
       return {
         ...state,
         ...customerOperation(state[0], action)
       }
 
+    case actionTypes.CREATE_CUSTOMER_SUCCESS:
     case actionTypes.CUSTOMER_INFO_BE_EDITED:
+    case actionTypes.EDIT_CUSTOMER_SUCCESS:
       return {
         ...state,
         ...customerOperation(state, action)

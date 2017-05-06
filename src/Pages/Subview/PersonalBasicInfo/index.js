@@ -3,6 +3,7 @@ import {
   Tabs,
   Form,
   Select,
+  message
 } from 'antd';
 import moment from 'moment';
 import $ from 'jquery';
@@ -12,7 +13,7 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import API from '../../../../API';
 import ajax from '../../../tools/POSTF';
-import { createCustomerSuccess, customerInfoBeEdit } from '../../../redux/actions/customerAction';
+import { createCustomerSuccess, customerInfoBeEdit, editCustomerSuccess } from '../../../redux/actions/customerAction';
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -71,7 +72,7 @@ class BasicInfo extends Component {
         value: null
       },
       origin: {
-        value: []
+        value: ''
       },
       age: {
         value: ''
@@ -208,7 +209,7 @@ class BasicInfo extends Component {
   // 获取客户基本信息
   getBaseInfo = (id) => {
     if(id !== -1) {
-      ajax.Get(API.GET_CUSTOMER_BASE(4))
+      ajax.Get(API.GET_CUSTOMER_BASE(id))
       .then((res) => {
         const dateFormat = 'YYYY-MM-DD'; // 日期格式
         const commonDropDownType = [
@@ -240,9 +241,9 @@ class BasicInfo extends Component {
           } else {
             // 当该属性的 value为 null的时候，且该对象的属性发生了变化
             // 删除 detailsInfo中的 value属性
-            // if(this.state.detailsInfo[item].value) {
-            //   delete this.state.detailsInfo[item].value
-            // }
+            if(this.state.detailsInfo[item].value) {
+              delete this.state.detailsInfo[item].value
+            }
           }
         })
 
@@ -283,13 +284,13 @@ class BasicInfo extends Component {
             manager: {
               $set: {
                 // options: this.state.briefInfo.manager.options,
-                value: res.data.data.manager + ''
+                value: res.data.data.manager != null ? res.data.data.manager + '' : undefined
               }
             },
             grid: {
               $set: {
                 // options: this.state.briefInfo.grid.options,
-                value: res.data.data.grid + ''
+                value: res.data.data.grid != null ? res.data.data.grid + '' : undefined
               }
             },
             phone: {
@@ -309,12 +310,12 @@ class BasicInfo extends Component {
             },
             birth: {
               $set: {
-                value: moment(res.data.data.birth, dateFormat)
+                value: res.data.data.birth != null ? moment(res.data.data.birth, dateFormat) : undefined
               }
             },
             origin: {
               $set: {
-                value: [res.data.data.origin]
+                value: res.data.data.origin
               }
             },
             age: {
@@ -352,26 +353,60 @@ class BasicInfo extends Component {
 
   // 新建/编辑客户
   addNewCustomer = (briefInfo) => {
-    const { name } = this.props.currentCustomerInfo;
+    const { name, id } = this.props.currentCustomerInfo;
     const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
-    console.log(briefInfo);
+    let joiners = this.state.briefInfo.tags.map(item => item.id);
+    console.log(briefInfo.birth == null);
+
     let json = {
-      accounts: [],
+      accounts: [
+        {
+          accountNo: '7654321',
+          priority: 1,
+          remark: '工商银行'
+        },
+        {
+          accountNo: '62227',
+          priority: 2,
+          remark: '工商银行'
+        }
+      ],
       address: briefInfo.address ? briefInfo.address : '',
-      birth: moment(briefInfo.birth).format(dateFormat),
+      birth: briefInfo.birth != null ? moment(briefInfo.birth).format(dateFormat) : '',
       certificate: briefInfo.certificate ? briefInfo.certificate : '',
       department: briefInfo.department ? briefInfo.department - 0 : '',
       grid: briefInfo.grid ? briefInfo.grid - 0 : '',
-      joiners: briefInfo.joiners ? briefInfo.joiners : '',
+      joinerIds: joiners ? joiners : '',
       manager: briefInfo.manager ? briefInfo.manager - 0 : '',
       name: name ? name : '',
-      origin: '',
+      origin: briefInfo.origin ? briefInfo.origin : '',
       phone: briefInfo.phone	? briefInfo.phone : '',
       wechat: briefInfo.wechat ? briefInfo.wechat : '',
     }
 
     console.log(json);
+
+    // 如果 id不存在，则调用创建用户接口
+    if(id === -1) {
+      ajax.PostJson(API.POST_CUSTOMER_INDIVIDUAL_BASE, json).then((res) => {
+        if(res.message === 'OK') {
+          message.success('创建用户成功');
+          this.props.createCustomerSuccess(res.data);
+        } else {
+          message.error(res.message);
+        }
+      });
+    } else {
+      ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE(id), json).then((res)=>{
+        if(res.message === 'OK') {
+          message.success('编辑用户成功');
+          this.props.editCustomerSuccess();
+        } else {
+          message.error(res.message);
+        }
+      })
+    }
   }
 
   // 表单数据的双向绑定
@@ -688,7 +723,8 @@ const mapStateToProps = (store) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     createCustomerSuccess:(id) => {dispatch(createCustomerSuccess(id))},
-    customerInfoBeEdit: () => {dispatch(customerInfoBeEdit())}
+    customerInfoBeEdit: () => {dispatch(customerInfoBeEdit())},
+    editCustomerSuccess: () => {dispatch(editCustomerSuccess())},
   }
 }
 

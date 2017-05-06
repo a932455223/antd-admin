@@ -401,7 +401,7 @@ class EditBriefBasicInfoForm extends Component{
         </Row>
 
         <div className="personInfo">
-          {EditFormItems()}
+      {/*EditFormItems()*/}
           <Row>
             <Col span={12} className={currentId === -1 ? "phoneCreate" : "phoneEdit"}>
               <FormItem labelCol={{span: 8}}
