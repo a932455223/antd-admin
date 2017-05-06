@@ -6,33 +6,55 @@ import {
   Icon,
   Input,
   Form,
+  Modal,
+  Button,
   Select
 } from 'antd';
 // import styles from './../indexStyle.less';
 import { connect } from 'react-redux';
 import api from './../../../../../API';
 import ajax from '../../../../tools/POSTF.js';
+import Reg from "../../../../tools/Reg"
+import update from 'immutability-helper';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
 class addFamilyCard extends Component{
     state = {
-        isAdd:false
+        isAdd:false,
     }
-    
     constructor(props) {
         super(props);
     };
     //添加状态切换
     toggleAdd = () => {
-        this.setState({
-        isAdd:!this.state.isAdd
-        });
+        let newState=update(
+            this.state,{isAdd:{$set:!this.state.isAdd}}
+        )
+        this.setState(newState);
     }
     clickSavaBtn=()=>{
-        this.props.addNewFamilyValue(this.props.form.getFieldsValue())
-        this.toggleAdd()
-        this.props.resetAddCard();
+        // let newState=update(
+        //     this.state,{btnLoading:{$set:true}}
+        // )
+        // this.setState(newState);
+        
+        this.props.form.validateFields()
+        let formErrors = this.props.form.getFieldsError()
+        let noError=true;
+        Object.keys(formErrors).reduce((pre,ky)=>{
+            if(!(formErrors[ky]===undefined)){
+                Modal.error({
+                    title:'情仔细填写表单',
+                });
+                noError=false;
+            }
+        })
+        if(noError){
+            this.props.addNewFamilyValue(this.props.form.getFieldsValue())
+            this.props.changeAddFamilyCardLoading();
+
+        }
     }
     clickCancelBtn=()=>{
         this.toggleAdd()
@@ -44,6 +66,13 @@ class addFamilyCard extends Component{
             // console.log(this.props.item.id)
             // console.log(this.props.item.name)
             // console.log(this.props.item.relation)
+    }
+    componentWillReceiveProps(newProps){
+        // let newState=update(
+        //     this.state,{btnLoading:{$set:false}}
+        // )
+        // this.setState(newState);
+        // this.setState({btnLoading:false})
     }
     render(){
         let addArea;
@@ -68,13 +97,14 @@ class addFamilyCard extends Component{
                             >
                                 取消
                             </span>
-                            <span
+                            <Button
                                 className="save-btn"
                                 onClick={this.clickSavaBtn}
+                                loading={this.props.addFamilyCardLoading}
                             >
                             
                                 保存
-                            </span>
+                            </Button>
                         </div>
                     }
                 >
@@ -85,7 +115,7 @@ class addFamilyCard extends Component{
                     <Col span={16}>
                         <FormItem>
                         {getFieldDecorator('relation', {
-                            rules: [{ required: true, message: '姓名不能为空' }],
+                            rules: [{ required: true, message: '关系不能为空' }],
                         })(
                             <Select 
                                 
@@ -112,8 +142,8 @@ class addFamilyCard extends Component{
                         </Col>
                         <Col span={16}>
                             <FormItem>
-                                {getFieldDecorator('phone', {
-                                    rules: [{ required: true, message: '联系方式不能为空' }],
+                                {getFieldDecorator('phone',{
+                                    rules: [{pattern:Reg.mobile, message: "联系方式格式不正确"}],
                                 })(<Input />)}
                             </FormItem>
                         </Col>
@@ -126,7 +156,7 @@ class addFamilyCard extends Component{
                         <Col span={16}>
                             <FormItem>
                                 {getFieldDecorator('certificate', {
-                                    rules: [{ required: true, message: '身份证不能为空' }],
+                                    rules: [{ pattern:Reg.certificate, message: '身份证格式不正确' }],
                                 })(<Input />)}
                             </FormItem>
                         </Col>
@@ -137,9 +167,7 @@ class addFamilyCard extends Component{
                         </Col>
                         <Col span={16}>
                             <FormItem>
-                                {getFieldDecorator('jobCategory', {
-                                    rules: [{ required: true, message: '姓名不能为空' }],
-                                })(
+                                {getFieldDecorator('jobCategory')(
                                     <Select >
                                         {
                                             this.props.commonJobCategory.map((rel) => {
@@ -158,7 +186,9 @@ class addFamilyCard extends Component{
                         </Col>
                     </Row>
                 </Card>
-
+                <pre className="language-bash" style={{textAlign:'left'}}>
+                {JSON.stringify(this.state, null, 2)}
+                </pre>
             </Form>)
         }else{
         //添加按钮
