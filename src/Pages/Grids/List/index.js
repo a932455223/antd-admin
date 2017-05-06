@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Button} from "antd";
+import {Button,Modal} from "antd";
 import axios from "axios";
 // import {qs} from 'qs'
 //=============================================================
@@ -8,12 +8,14 @@ import Content from "../component/Content";
 import SelectStaff from "../../../components/SelectStaff";
 import GridPermission from "../component/GridPermission";
 import NewGrid from '../component/NewGrid';
+import {gridBeEdited,gridNotBeEdited} from '../../../redux/actions/gridsAction'
 //===============================================================
+import {connect} from 'react-redux'
 import "../style/rolesStyle.less";
 import API from "../../../../API";
 import ajax from '../../../tools/POSTF'
 import update from 'immutability-helper'
-export default class GridsList extends Component {
+class GridsList extends Component {
   constructor(props) {
     super(props);
   }
@@ -81,12 +83,29 @@ export default class GridsList extends Component {
 
   // 表格点击事件
   rowClick(rowData) {
-    this.setState({
-      dock: {
-        visible: true,
-        children: this.GridEdit(rowData.id,'edit')
-      }
-    });
+    const newRow = ()=>{
+      this.setState({
+        dock: {
+          visible: true,
+          children: this.GridEdit(rowData.id,'edit')
+        }
+      });
+    }
+    const okHandler = ()=>{
+      this.props.dispatch(gridNotBeEdited())
+      newRow()
+    }
+
+    if(this.props.gridBeEdited){
+      Modal.confirm({
+        title:"确认切换?",
+        content:"您有修改没有保存，确认切换?",
+        onOk:okHandler
+      })
+    }else{
+      newRow()
+    }
+
 
   }
 
@@ -225,3 +244,12 @@ export default class GridsList extends Component {
     )
   }
 }
+
+
+function mapStateToProp(store){
+  return {
+    gridBeEdited:store.grids.beEdited
+  }
+}
+
+export default connect(mapStateToProp)(GridsList)

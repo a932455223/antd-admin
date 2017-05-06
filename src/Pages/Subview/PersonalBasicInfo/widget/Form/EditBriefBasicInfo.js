@@ -13,12 +13,13 @@ import {
   DatePicker,
   Cascader
 } from 'antd';
+import { connect } from 'react-redux';
+import API from '../../../../../../API';
+import ajax from '../../../../../tools/POSTF';
 const FormItem = Form.Item;
 const Option = Select.Option;
 let addkey = 100;
 
-import API from '../../../../../../API';
-import ajax from '../../../../../tools/POSTF';
 
 class EditBriefBasicInfoForm extends Component{
   state = {
@@ -74,31 +75,41 @@ class EditBriefBasicInfoForm extends Component{
   // 获取 department，
   getDepartments = (departmentId, managerId) => {
     // 所属机构下拉菜单
-    ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
-      .then((res) => {
-        let newState = update(this.state, {
-          departmentOptions: {$set: res.data.data},
-        });
-        this.setState(newState);
-      })
 
-    // 所属客户经理下拉菜单
-    ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId))
-      .then((res) => {
+    ajax.all([ajax.Get(API.GET_CUSTOMER_DEPARTMENT),ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)),ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))])
+      .then((res)=>{
         let newState = update(this.state, {
-          managerOptions: {$set: res.data.data},
-        });
+                departmentOptions: {$set: res[0].data.data},
+                managerOptions:{$set:res[1].data.data},
+                gridOptions:{$set:res[2].data.data}
+              });
         this.setState(newState);
       })
-
-    // 重置网格
-    ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))
-      .then((res) => {
-        let newState = update(this.state, {
-          gridOptions: {$set: res.data.data},
-        });
-        this.setState(newState);
-      })
+    // ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
+    //   .then((res) => {
+    //     let newState = update(this.state, {
+    //       departmentOptions: {$set: res.data.data},
+    //     });
+    //     this.setState(newState);
+    //   })
+    //
+    // // 所属客户经理下拉菜单
+    // ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId))
+    //   .then((res) => {
+    //     let newState = update(this.state, {
+    //       managerOptions: {$set: res.data.data},
+    //     });
+    //     this.setState(newState);
+    //   })
+    //
+    // // 重置网格
+    // ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))
+    //   .then((res) => {
+    //     let newState = update(this.state, {
+    //       gridOptions: {$set: res.data.data},
+    //     });
+    //     this.setState(newState);
+    //   })
   }
 
   // basic 输入框内容被修改了
@@ -555,7 +566,7 @@ class EditBriefBasicInfoForm extends Component{
 
 function mapPropsToFields (props) {
   const { briefInfo, accounts } = props;
-  // console.log(accounts);
+  console.log(accounts);
   return {
     ...accounts,
     department: {
@@ -600,8 +611,7 @@ function onFieldsChange(props, changedFields) {
 };
 
 const EditBriefBasicInfo = Form.create({
-  mapPropsToFields,
-  onFieldsChange
+  mapPropsToFields
 })(EditBriefBasicInfoForm)
 
-export default EditBriefBasicInfo;
+export default connect()(EditBriefBasicInfo);
