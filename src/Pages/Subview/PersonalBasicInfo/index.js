@@ -363,57 +363,55 @@ class BasicInfo extends Component {
     const { name, id } = this.props.currentCustomerInfo;
     const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
-    console.log(briefInfo);
-
     let joiners = this.state.briefInfo.tags.map(item => item.id);
 
-    // let json = {
-    //   accounts: [
-    //     {
-    //       accountNo: '7654321',
-    //       priority: 1,
-    //       remark: '工商银行'
-    //     },
-    //     {
-    //       accountNo: '62227',
-    //       priority: 2,
-    //       remark: '工商银行'
-    //     }
-    //   ],
-    //   address: briefInfo.address ? briefInfo.address : '',
-    //   birth: briefInfo.birth != null ? moment(briefInfo.birth).format(dateFormat) : '',
-    //   certificate: briefInfo.certificate ? briefInfo.certificate : '',
-    //   department: briefInfo.department ? briefInfo.department - 0 : '',
-    //   grid: briefInfo.grid ? briefInfo.grid - 0 : '',
-    //   joinerIds: joiners ? joiners : '',
-    //   manager: briefInfo.manager ? briefInfo.manager - 0 : '',
-    //   name: name ? name : '',
-    //   origin: briefInfo.origin ? briefInfo.origin : '',
-    //   phone: briefInfo.phone	? briefInfo.phone : '',
-    //   wechat: briefInfo.wechat ? briefInfo.wechat : '',
-    // }
+    let json = {
+      accounts: [
+        {
+          accountNo: '7654321',
+          priority: 1,
+          remark: '工商银行'
+        },
+        {
+          accountNo: '62227',
+          priority: 2,
+          remark: '工商银行'
+        }
+      ],
+      address: briefInfo.address ? briefInfo.address : '',
+      birth: briefInfo.birth != null ? moment(briefInfo.birth).format(dateFormat) : '',
+      certificate: briefInfo.certificate ? briefInfo.certificate : '',
+      department: briefInfo.department ? briefInfo.department - 0 : '',
+      grid: briefInfo.grid ? briefInfo.grid - 0 : '',
+      joinerIds: joiners ? joiners : '',
+      manager: briefInfo.manager ? briefInfo.manager - 0 : '',
+      name: name ? name : '',
+      origin: briefInfo.origin ? briefInfo.origin : '',
+      phone: briefInfo.phone	? briefInfo.phone : '',
+      wechat: briefInfo.wechat ? briefInfo.wechat : '',
+    }
 
     // 如果 id不存在，则调用创建用户接口
-    // if(id === -1) {
-    //   ajax.PostJson(API.POST_CUSTOMER_INDIVIDUAL_BASE, json).then((res) => {
-    //     if(res.message === 'OK') {
-    //       message.success('创建用户成功');
-    //       this.props.createCustomerSuccess(res.data);
-    //       this.props.decreaseBeEditArray('basicInfo');
-    //     } else {
-    //       message.error(res.message);
-    //     }
-    //   });
-    // } else {
-    //   ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1(id), json).then((res)=>{
-    //     if(res.message === 'OK') {
-    //       message.success('编辑用户成功');
-    //       this.props.decreaseBeEditArray('basicInfo');
-    //     } else {
-    //       message.error(res.message);
-    //     }
-    //   })
-    // }
+    if(id === -1) {
+      ajax.PostJson(API.POST_CUSTOMER_INDIVIDUAL_BASE, json).then((res) => {
+        if(res.message === 'OK') {
+          message.success('创建用户成功');
+          this.props.createCustomerSuccess(res.data);
+          this.props.decreaseBeEditArray('basicInfo');
+        } else {
+          message.error(res.message);
+        }
+      });
+    } else {
+      ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1(id), json).then((res)=>{
+        if(res.message === 'OK') {
+          message.success('编辑用户成功');
+          this.props.decreaseBeEditArray('basicInfo');
+        } else {
+          message.error(res.message);
+        }
+      })
+    }
   }
 
   // update customer info
@@ -464,11 +462,12 @@ class BasicInfo extends Component {
   // 表单数据的双向绑定
   handleFormChange = (changedFields) => {
     const { beEditedNumber } = this.props.currentCustomerInfo;
+    let oldDepartment = this.state.briefInfo.department.value;
+    let newDepartment = changedFields.department && changedFields.department.value;
 
-    // console.log(changedFields);
     // 所属机构，客户经理，所属网格三级联动
     let briefInfo;
-    if(changedFields.department) {
+    if(changedFields.department && oldDepartment !== newDepartment) {
       briefInfo = {
         ...this.state.briefInfo,
         ...changedFields,
@@ -479,6 +478,8 @@ class BasicInfo extends Component {
           value: undefined
         }}
       }
+
+      // console.dir(briefInfo.manager)
     } else {
       briefInfo = {
         ...this.state.briefInfo,
@@ -486,9 +487,15 @@ class BasicInfo extends Component {
       }
     }
 
+    // console.dir(briefInfo.manager);
+    let oldWithCar = this.state.briefInfo.withCar.value;
+    let newWithCar = changedFields.withCar && changedFields.withCar.value;
+    let oldNeedLoan = this.state.briefInfo.needLoan.value;
+    let newNeedLoan = changedFields.needLoan && changedFields.needLoan.value;
+
     let detailsInfo;
     // 是否有车
-    if(changedFields.withCar) {
+    if(changedFields.withCar && oldWithCar !== newWithCar) {
       detailsInfo = {
         ...this.state.detailsInfo,
         ...changedFields,
@@ -506,7 +513,7 @@ class BasicInfo extends Component {
           options: this.state.detailsInfo.debtAmount.options
         }}
       }
-    } else if(changedFields.needLoan) { // 是否有贷款需求
+    } else if(changedFields.needLoan && oldNeedLoan !== newNeedLoan) { // 是否有贷款需求
       detailsInfo = {
         ...this.state.detailsInfo,
         ...changedFields,

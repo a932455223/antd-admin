@@ -176,8 +176,9 @@ class EditBriefBasicInfoForm extends Component{
 
   // 更新信息
   updateInfo = (briefInfo) => {
+    const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue, validateFields} = this.props.form;
     const { addNewCustomer } = this.props;
-
+    validateFields();
     addNewCustomer(briefInfo);
   }
 
@@ -191,9 +192,12 @@ class EditBriefBasicInfoForm extends Component{
       beEditedArray,
       joinersBeEdited,
       accounts } = this.props;
-    const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue} = this.props.form;
+    const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue, validateFields} = this.props.form;
     const { department, manager, grid, tags } = this.props.briefInfo;
     const { departmentOptions, managerOptions, gridOptions, accountsArr } = this.state;
+
+    // validateFields()
+    // console.log(validateFields());
 
     const formItemLayout = {
       labelCol: {
@@ -249,6 +253,11 @@ class EditBriefBasicInfoForm extends Component{
         className="accounts"
       >
         {getFieldDecorator(`${k}-accountNo`, {
+          rules: [{
+            required: true,
+          },{
+            pattern: /^\d+$/
+          }],
           // validateTrigger: ['onChange', 'onBlur'],
           onChange: this.inputBasicInfoChange
         })(
@@ -292,7 +301,6 @@ class EditBriefBasicInfoForm extends Component{
                         wrapperCol={{span: 13}}
                         label="客户经理">
                 {getFieldDecorator('manager', {
-                  // initialValue: eachCustomerInfo.manager,
                   onChange: this.selectBasicInfoChange
                 })(
                   <Select
@@ -315,7 +323,6 @@ class EditBriefBasicInfoForm extends Component{
                         wrapperCol={{span: 13}}
                         label="所属网格">
                 {getFieldDecorator('grid', {
-                  // initialValue: eachCustomerInfo.grid,
                   onChange: this.selectBasicInfoChange
                 })(
                   <Select
@@ -533,16 +540,18 @@ function mapPropsToFields (props) {
 }
 
 function onFieldsChange(props, changedFields) {
-  // if(!props.beEdited) {
-  //   props.customerInfoBeEdit(); // 修改 store树上的 beEdited
-  // }
-
   props.onChange(changedFields);
 };
 
+function onValuesChange(props, values) {
+  // console.log(props)
+  // console.log(values)
+}
+
 const EditBriefBasicInfo = Form.create({
   mapPropsToFields,
-  onFieldsChange
+  onFieldsChange,
+  onValuesChange
 })(EditBriefBasicInfoForm)
 
 export default EditBriefBasicInfo;
