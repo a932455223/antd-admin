@@ -7,7 +7,7 @@ const initialState = {
   name: '',
   id: -1,
   category: '个人客户',
-  beEditedNumber: []
+  beEditedArray: []
 };
 
 const customerOperation = (state = initialState, action) => {
@@ -19,7 +19,8 @@ const customerOperation = (state = initialState, action) => {
         mode: action.mode,
         id: action.id,
         name: action.name,
-        category: action.category
+        category: action.category,
+        beEditedArray: []
       }
 
     case actionTypes.CREATE_CUSTOMER:
@@ -48,16 +49,25 @@ const customerOperation = (state = initialState, action) => {
         mode: 'edit'
       }
 
-    case actionTypes.INCREASE_BE_EDITED_NUMBER:
+    case actionTypes.INCREASE_BE_EDITED_ARRAY:
+      state.beEditedArray.push(action.payload)
       return {
         ...state,
-        beEditedNumber: state.beEditedNumber.push(1)
+        beEditedArray: state.beEditedArray
       }
 
-    case actionTypes.DECREASE_BE_EDITED_NUMBER:
+    case actionTypes.DECREASE_BE_EDITED_ARRAY:
+      let position = state.beEditedArray.indexOf(action.payload);
+      state.beEditedArray.splice(position, 1);
       return {
         ...state,
-        // beEditedNumber: state.beEditedNumber - 1
+        beEditedArray: state.beEditedArray
+      }
+
+    case actionTypes.RESET_BE_EDITED_ARRAY:
+      return {
+        ...state,
+        beEditedArray: []
       }
 
     case actionTypes.RESET_CUSTOMER_INFO:
@@ -88,8 +98,9 @@ const currentCustomerInfo = (state = {}, action) => {
       }
 
     case actionTypes.CREATE_CUSTOMER_SUCCESS:
-    case actionTypes.INCREASE_BE_EDITED_NUMBER:
-    case actionTypes.DECREASE_BE_EDITED_NUMBER:
+    case actionTypes.INCREASE_BE_EDITED_ARRAY:
+    case actionTypes.DECREASE_BE_EDITED_ARRAY:
+    case actionTypes.RESET_BE_EDITED_ARRAY:
     case actionTypes.EDIT_CUSTOMER_SUCCESS:
       return {
         ...state,

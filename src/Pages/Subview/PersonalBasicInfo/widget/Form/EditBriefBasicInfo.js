@@ -40,18 +40,24 @@ class EditBriefBasicInfoForm extends Component{
     // console.log('personalBasicInfo will recieve props');
     const { getFieldValue } = next.form;
 
-    if(!next.beEditedNumber && next.joinersBeEdited) {
-      this.props.increaseBeEditNumber(); // 修改 store树上的 beEditedNumber
-    }
+    // if(next.beEditedArray === [] && next.joinersBeEdited) {
+    //   this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
+    //   let newState = update(this.state, {
+    //     basicInfoBeEdit: {$set: true}
+    //   })
+    //   this.setState(newState)
+    // }
 
     // 确认参与人员按钮被点击时
-    // if(next.joinersBeEdited && (!this.props.beEditedNumber || next.beEditedNumber) ) {
+    // if(next.joinersBeEdited && (!this.props.beEditedArray || next.beEditedArray) ) {
     //   let newState = update(this.state, {
     //     basicInfoBeEdit: {$set: true}
     //   })
     //   this.setState(newState)
     // } else
-    if(next.beEditedNumber === 0) {
+    // console.log(next.beEditedArray)
+
+    if(next.beEditedArray && !next.beEditedArray.includes('basicInfo')) {
       // 重置 InfoBeEdited
       let newState = update(this.state, {
         basicInfoBeEdit: {$set: false}
@@ -105,7 +111,7 @@ class EditBriefBasicInfoForm extends Component{
   // basic 输入框内容被修改了
   inputBasicInfoChange = () => {
     if(!this.state.basicInfoBeEdit) {
-      this.props.increaseBeEditNumber(); // 修改 store树上的 beEditedNumber
+      this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
       let newState = update(this.state, {
         basicInfoBeEdit: {$set: true}
       })
@@ -116,7 +122,7 @@ class EditBriefBasicInfoForm extends Component{
   // basic 选择框内容被修改了
   selectBasicInfoChange = (value) => {
     if(!this.state.basicInfoBeEdit) {
-      this.props.increaseBeEditNumber(); // 修改 store树上的 beEditedNumber
+      this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
       let newState = update(this.state, {
         basicInfoBeEdit: {$set: true}
       })
@@ -137,7 +143,7 @@ class EditBriefBasicInfoForm extends Component{
     const { accountsArr } = this.state;
     accountsArr.push(`row-${addkey}`);
     if(!this.state.basicInfoBeEdit) {
-      this.props.increaseBeEditNumber(); // 修改 store树上的 beEditedNumber
+      this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
     }
     let newState = update(this.state, {
       accountsArr: {$set: accountsArr},
@@ -157,7 +163,7 @@ class EditBriefBasicInfoForm extends Component{
     const position = accountsArr.indexOf(k);
     accountsArr.splice(position, 1);
     if(!this.state.basicInfoBeEdit) {
-      this.props.increaseBeEditNumber(); // 修改 store树上的 beEditedNumber
+      this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
     }
     let newState = update(this.state, {
       accountsArr: {$set: accountsArr},
@@ -170,7 +176,7 @@ class EditBriefBasicInfoForm extends Component{
   handleClose = (joiner) => {
     if(!this.state.basicInfoBeEdit) {
       console.log('11111111111')
-      this.props.increaseBeEditNumber(); // 修改 store树上的 beEditedNumber
+      this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
       let newState = update(this.state, {
         basicInfoBeEdit: {$set: true}
       })
@@ -194,16 +200,13 @@ class EditBriefBasicInfoForm extends Component{
       mode,
       currentId,
       createCustomerSuccess,
-      beEditedNumber,
+      beEditedArray,
       joinersBeEdited,
       accounts } = this.props;
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue} = this.props.form;
     const { department, manager, grid, tags } = this.props.briefInfo;
     const { departmentOptions, managerOptions, gridOptions, accountsArr } = this.state;
     const accountsArray = accountsArr.length == 0 ? ['row-0'] : accountsArr
-
-    console.log(this.state.basicInfoBeEdit);
-
 
     const formItemLayout = {
       labelCol: {

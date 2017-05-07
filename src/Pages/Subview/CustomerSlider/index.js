@@ -201,8 +201,8 @@ class CustomerSlider extends Component {
 
   // show and hide notification
   saveEditInfo = () => {
-    const { beEdited } = this.props.currentCustomerInfo;
-    if(beEdited) {
+    const { beEditedArray } = this.props.currentCustomerInfo;
+    if(beEditedArray.length !== 0) {
       this.props.onlyModalClose();
     } else {
       this.props.closeDock();

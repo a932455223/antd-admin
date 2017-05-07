@@ -5,7 +5,12 @@ import { Table, Pagination, Spin, Button, Icon, message, Modal } from 'antd';
 import Dock from 'react-dock';
 import './indexStyle.less';
 
-import { saveCurrentCustomerInfo, createCustomer, resetCustomerInfo } from '../../redux/actions/customerAction';
+import {
+  saveCurrentCustomerInfo,
+  createCustomer,
+  resetCustomerInfo,
+  resetBeEditArray
+} from '../../redux/actions/customerAction';
 
 class TablePage extends Component {
   // static propTypes = {
@@ -71,10 +76,10 @@ class TablePage extends Component {
     const { dockVisible } = this.state;
     const { dispatch, privilege, currentCustomer } = this.props;
     const mode = privilege[info.id]['system:update'] ? 'edit' : 'view';
-    const beEdited = currentCustomer.beEdited;
+    const beEditedArray = currentCustomer.beEditedArray;
 
     // 如果前一个客户的信息被编辑之后，未被保存，切换客户，则显示弹窗
-    if(beEdited && dockVisible) {
+    if(beEditedArray && beEditedArray.length !== 0 && dockVisible) {
       let newState = update(this.state, {
         modalVisible: {$set: true}
       })
@@ -105,21 +110,22 @@ class TablePage extends Component {
     */
     const { mode, currentCustomer, onlyCloseModal } = this.state;
     const { dispatch } = this.props;
-    const { id, beEdited } = this.props.currentCustomer;
+    const { id, beEditedArray } = this.props.currentCustomer;
 
+    let newState;
     if(onlyCloseModal) { // 关闭 modal和 dock
-      let newState = update(this.state, {
+      newState = update(this.state, {
         modalVisible: {$set: false},
         dockVisible: {$set: false}
       })
-      this.setState(newState);
-    } else if(beEdited) { // 仅关闭 modal,
-      let newState = update(this.state, {
+    } else if(beEditedArray && beEditedArray.length !== 0) { // 仅关闭 modal,
+      newState = update(this.state, {
         modalVisible: {$set: false}
       })
-      this.setState(newState);
       dispatch(saveCurrentCustomerInfo(currentCustomer, mode))
     }
+
+    this.setState(newState);
   }
 
   // 只关闭 modal

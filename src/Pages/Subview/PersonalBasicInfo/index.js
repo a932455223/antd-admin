@@ -15,8 +15,8 @@ import API from '../../../../API';
 import ajax from '../../../tools/POSTF';
 import {
   createCustomerSuccess,
-  increaseBeEditNumber,
-  decreaseBeEditNumber,
+  increaseBeEditArray,
+  decreaseBeEditArray,
   editCustomerSuccess
 } from '../../../redux/actions/customerAction';
 const TabPane = Tabs.TabPane;
@@ -186,14 +186,15 @@ class BasicInfo extends Component {
   componentWillReceiveProps(next){
     // info('basicInfo will receive props.');
     // 当前的客户 id发生变化时，或者当前用户的信息 beEditedNumber === true时，重置 state
-    const { id, beEditedNumber } = this.props.currentCustomerInfo;
-    if(id !== next.currentCustomerInfo.id || beEditedNumber === 0 ) {
+    const { id, beEditedArray } = this.props.currentCustomerInfo;
+    if(id !== next.currentCustomerInfo.id || (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) ) {
+      console.log('get info');
       this.getBaseInfo(next.currentCustomerInfo.id);
       // this.resetAccounts();
     }
 
     // 重置 joinersBeEdited
-    if(beEditedNumber !== 0) {
+    if(beEditedArray && beEditedArray.length !== 0) {
       this.setState({
         joinersBeEdited: false
       })
@@ -395,7 +396,7 @@ class BasicInfo extends Component {
         if(res.message === 'OK') {
           message.success('创建用户成功');
           this.props.createCustomerSuccess(res.data);
-          this.props.decreaseBeEditNumber();
+          this.props.decreaseBeEditArray('basicInfo');
         } else {
           message.error(res.message);
         }
@@ -404,7 +405,7 @@ class BasicInfo extends Component {
       ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1(id), json).then((res)=>{
         if(res.message === 'OK') {
           message.success('编辑用户成功');
-          this.props.decreaseBeEditNumber();
+          this.props.decreaseBeEditArray('basicInfo');
         } else {
           message.error(res.message);
         }
@@ -435,7 +436,7 @@ class BasicInfo extends Component {
       ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB2(id), json).then((res)=>{
         if(res.message === 'OK') {
           message.success('编辑用户成功');
-          this.props.decreaseBeEditNumber();
+          this.props.decreaseBeEditArray('detailsInfo');
         } else {
           message.error(res.message);
         }
@@ -598,10 +599,10 @@ class BasicInfo extends Component {
   render() {
     const {
       customerInfoBeEdit,
-      increaseBeEditNumber,
-      decreaseBeEditNumber
+      increaseBeEditArray,
+      decreaseBeEditArray
     } = this.props;
-    const { step, mode, id, beEditedNumber } = this.props.currentCustomerInfo;
+    const { step, mode, id, beEditedArray } = this.props.currentCustomerInfo;
     const {
       modalVisible,
       eachCustomerInfo,
@@ -633,9 +634,9 @@ class BasicInfo extends Component {
     const basicInfoProps = {
       // brief info
       id: id,
-      beEditedNumber: beEditedNumber,
-      increaseBeEditNumber: increaseBeEditNumber,
-      decreaseBeEditNumber: decreaseBeEditNumber,
+      beEditedArray: beEditedArray,
+      increaseBeEditArray: increaseBeEditArray,
+      decreaseBeEditArray: decreaseBeEditArray,
       addNewCustomer: this.addNewCustomer,
       updateCustomerInfo: this.updateCustomerInfo,
       eachCustomerInfo: eachCustomerInfo,
@@ -763,8 +764,8 @@ const mapStateToProps = (store) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     createCustomerSuccess:(id) => {dispatch(createCustomerSuccess(id))},
-    increaseBeEditNumber: () => {dispatch(increaseBeEditNumber())},
-    decreaseBeEditNumber: () => {dispatch(decreaseBeEditNumber())},
+    increaseBeEditArray: (item) => {dispatch(increaseBeEditArray(item))},
+    decreaseBeEditArray: (item) => {dispatch(decreaseBeEditArray(item))},
     editCustomerSuccess: () => {dispatch(editCustomerSuccess())},
   }
 }
