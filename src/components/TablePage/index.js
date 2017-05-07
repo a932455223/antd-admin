@@ -84,7 +84,7 @@ class TablePage extends Component {
         modalVisible: {$set: true}
       })
       this.setState(newState);
-    } else if(info.id !== currentCustomer.id){
+    } else if(info.id !== currentCustomer.id || !dockVisible){
       dispatch(saveCurrentCustomerInfo(info, mode))
     }
 
