@@ -416,18 +416,32 @@ class BasicInfo extends Component {
   // update customer info
   updateCustomerInfo = (detailsInfo) => {
     const { name, id } = this.props.currentCustomerInfo;
+    const {
+      carPrice,
+      debtAmount,
+      houseType,
+      loanAmount,
+      loanPurpose,
+      marryStatus,
+      needLoan,
+      withCar,
+      withDebt,
+      yearExpense,
+      yearIncome,
+    } = detailsInfo;
+
     let json = {
-      carPrice: detailsInfo.carPrice != undefined ? detailsInfo.carPrice - 0 : '',
-      debtAmount: detailsInfo.debtAmount != undefined ? detailsInfo.debtAmount - 0 : '',
-      houseType: detailsInfo.houseType != undefined ? detailsInfo.houseType - 0 : '',
-      loanAmount: detailsInfo.loanAmount != undefined ? detailsInfo.loanAmount - 0 : '',
-      loanPurpose: detailsInfo.loanPurpose != undefined ? detailsInfo.loanPurpose - 0 : '',
-      marryStatus: detailsInfo.marryStatus != undefined ? detailsInfo.marryStatus - 0 : '',
-      needLoan: detailsInfo.needLoan != undefined ? detailsInfo.needLoan - 0 : '',
-      withCar: detailsInfo.withCar != undefined ? detailsInfo.withCar - 0 : '',
-      withDebt: detailsInfo.withDebt != undefined ? detailsInfo.withDebt - 0 : '',
-      yearExpense: detailsInfo.yearExpense != 0 ? detailsInfo.yearExpense - 0 : '',
-      yearIncome: detailsInfo.yearIncome != 0 ? detailsInfo.yearIncome - 0 : '',
+      carPrice: carPrice != undefined ? carPrice - 0 : '',
+      debtAmount: debtAmount != undefined ? debtAmount - 0 : '',
+      houseType: houseType != undefined ? houseType - 0 : '',
+      loanAmount: loanAmount != undefined ? loanAmount - 0 : '',
+      loanPurpose: loanPurpose != undefined ? loanPurpose - 0 : '',
+      marryStatus: marryStatus != undefined ? marryStatus - 0 : '',
+      needLoan: needLoan != undefined ? needLoan - 0 : '',
+      withCar: withCar != undefined ? withCar - 0 : '',
+      withDebt: withDebt != undefined ? withDebt - 0 : '',
+      yearExpense: yearExpense != null && yearExpense != '' ? yearExpense - 0 : '',
+      yearIncome: yearIncome != null && yearIncome != '' ? yearIncome - 0 : '',
     }
 
     if(id === -1) {
