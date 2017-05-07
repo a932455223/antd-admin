@@ -6,6 +6,7 @@ import Reg from "../../../../../tools/Reg"
 import { connect } from 'react-redux';
 import {gridBeEdited,gridNotBeEdited} from '../../../../../redux/actions/gridsAction.js'
 import update from 'immutability-helper'
+import cloneDeep from 'lodash/cloneDeep'
 import schema  from 'async-validator'
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -21,6 +22,7 @@ const validateConfig = {
 function info(msg,color){
   console.log('%c'+msg,'color:'+color)
 }
+
 class AreaForm extends Component{
   state = {
 	  provinceText:'',
@@ -54,7 +56,7 @@ class AreaForm extends Component{
     let arry = obj.address.split(' ')
     let regionArry = obj.regionCode.split(' ')
     if(this.props.area.orgId !==undefined){
-      this.getStaffsByDepartmentId(this.props.area.orgId)
+      this.getStaffsByDepartmentId(obj.orgId)
     }
 
     let getRegionPromise = []
@@ -103,7 +105,6 @@ class AreaForm extends Component{
     info('this.props.id'+this.props.id,'red')
     info('nextProps'+nextProps.id,'blue')
     if(this.props.area.id !== nextProps.area.id){
-      console.log('do reset')
       this.resetState(nextProps.area)
     }
   }
@@ -237,40 +238,49 @@ class AreaForm extends Component{
     this.setState(newState)
   }
 
-  handleSubmit = () => {
 
-    // const id = this.props.id;
-    // const FieldsValue = getFieldsValue();
-    // const pid = getFieldValue('province')
-    // const cid = getFieldValue('city')
-    // const rid = getFieldValue('region')
-    //
-    //
-    // let formErrors = this.props.form.getFieldsError()
-    // console.dir(formErrors)
-    this.props.getTableData()
-    // if(pid === undefined || cid === undefined || rid === undefined){
-    //   Modal.error({
-    //     content:'请仔细检查您填写的地址'
-    //   })
-    // }else{
-    //   const province = this.state.province.find(item => item.id == pid).name
-    //   const city = this.state.city.find(item => item.id == cid).name
-    //   const region = this.state.region.find(item => item.id == rid).name
-    //   let address = province +' '+ city +' '+region + ' ' + getFieldValue('addressDetail')
-    //   FieldsValue.address = address
-    //   delete FieldsValue.city
-    //   delete FieldsValue.province
-    //   delete FieldsValue.region
-    //
-    //   const FieldsValueAll = {...FieldsValue, ...{name:this.props.area.name.value}}
-    //   ajax.Put(API.PUT_API_AREA(id),FieldsValueAll)
-    //     .then(() => {
-    //       this.props.getTableData()
-    //       message.success('员工修改成功',5)
-    //       this.props.dispatch(gridNotBeEdited())
-    //     })
-    // }
+  transformToServer = (obj) => {
+    delete obj.areaName
+    delete obj.addressDetail
+    delete obj.city
+    delete obj.directorName
+    delete obj.orgName
+    obj.director = obj.director === undefined ? "":obj.director
+  }
+  handleSubmit = () => {
+    const id = this.props.id;
+    const {province,city,region,addressDetail} = this.state.fields
+    if(province === "" || city === "" || region === "" || addressDetail === ''){
+      Modal.error({
+        content:'请完善您的地址信息'
+
+      })
+    }else{
+      const pName = this.state.province.find(item => item.id == province).name
+      const cName = this.state.city.find(item => item.id == city).name
+      const rName = this.state.region.find(item => item.id == region).name
+      let address = pName +' '+ cName +' '+rName + ' ' + addressDetail
+
+      let fieldsValue = cloneDeep(this.state.fields)
+      fieldsValue.address = address;
+      this.transformToServer(fieldsValue)
+      console.dir(fieldsValue)
+      ajax.Put(API.PUT_API_AREA(id),fieldsValue)
+        .then((res) => {
+          console.dir(res)
+          if(res.data.code === 200){
+            this.props.getTableData()
+            message.success('员工修改成功',5)
+            this.props.dispatch(gridNotBeEdited())
+          }else{
+            Modal.error({
+              title:'操作失败',
+              content:res.data.message
+            })
+          }
+
+        })
+    }
   }
 
 	render(){
