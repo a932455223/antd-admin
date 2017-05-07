@@ -43,9 +43,25 @@ export const editCustomerSuccess = () => (
 )
 
 // customer info be edited
-export const customerInfoBeEdit = () => (
+export const increaseBeEditArray = (item) => (
   {
-    type: actionTypes.CUSTOMER_INFO_BE_EDITED
+    type: actionTypes.INCREASE_BE_EDITED_ARRAY,
+    payload: item
+  }
+)
+
+// customer info be edited
+export const decreaseBeEditArray = (item) => (
+  {
+    type: actionTypes.DECREASE_BE_EDITED_ARRAY,
+    payload: item
+  }
+)
+
+// customer info be edited
+export const resetBeEditArray = () => (
+  {
+    type: actionTypes.RESET_BE_EDITED_ARRAY
   }
 )
 

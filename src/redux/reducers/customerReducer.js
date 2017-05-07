@@ -7,7 +7,7 @@ const initialState = {
   name: '',
   id: -1,
   category: '个人客户',
-  beEdited: false
+  beEditedArray: []
 };
 
 const customerOperation = (state = initialState, action) => {
@@ -19,7 +19,8 @@ const customerOperation = (state = initialState, action) => {
         mode: action.mode,
         id: action.id,
         name: action.name,
-        category: action.category
+        category: action.category,
+        beEditedArray: []
       }
 
     case actionTypes.CREATE_CUSTOMER:
@@ -39,21 +40,34 @@ const customerOperation = (state = initialState, action) => {
       return {
         ...state,
         mode: 'edit',
-        id: action.id,
-        beEdited: false
+        id: action.id
       }
 
     case actionTypes.EDIT_CUSTOMER_SUCCESS:
       return {
         ...state,
-        mode: 'edit',
-        beEdited: false
+        mode: 'edit'
       }
 
-    case actionTypes.CUSTOMER_INFO_BE_EDITED:
+    case actionTypes.INCREASE_BE_EDITED_ARRAY:
+      state.beEditedArray.push(action.payload)
       return {
         ...state,
-        beEdited: true
+        beEditedArray: state.beEditedArray
+      }
+
+    case actionTypes.DECREASE_BE_EDITED_ARRAY:
+      let position = state.beEditedArray.indexOf(action.payload);
+      state.beEditedArray.splice(position, 1);
+      return {
+        ...state,
+        beEditedArray: state.beEditedArray
+      }
+
+    case actionTypes.RESET_BE_EDITED_ARRAY:
+      return {
+        ...state,
+        beEditedArray: []
       }
 
     case actionTypes.RESET_CUSTOMER_INFO:
@@ -64,7 +78,7 @@ const customerOperation = (state = initialState, action) => {
         name: '',
         id: -1,
         category: '个人客户',
-        beEdited: false
+        beEditedNumber: 0
       }
 
     default:
@@ -84,7 +98,9 @@ const currentCustomerInfo = (state = {}, action) => {
       }
 
     case actionTypes.CREATE_CUSTOMER_SUCCESS:
-    case actionTypes.CUSTOMER_INFO_BE_EDITED:
+    case actionTypes.INCREASE_BE_EDITED_ARRAY:
+    case actionTypes.DECREASE_BE_EDITED_ARRAY:
+    case actionTypes.RESET_BE_EDITED_ARRAY:
     case actionTypes.EDIT_CUSTOMER_SUCCESS:
       return {
         ...state,
