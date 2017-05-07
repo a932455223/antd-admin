@@ -186,7 +186,7 @@ class EditBriefBasicInfoForm extends Component{
 
   // 更新信息
   updateInfo = (briefInfo) => {
-    const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue, validateFields} = this.props.form;
+    const { validateFields } = this.props.form;
     const { addNewCustomer } = this.props;
     validateFields();
     addNewCustomer(briefInfo);

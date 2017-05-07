@@ -20,7 +20,11 @@ import API from '../../../../API';
 import ajax from '../../../tools/POSTF';
 
 import { connect } from 'react-redux';
-import { createCustomerSuccess, customerInfoBeEdit } from '../../../redux/actions/customerAction';
+import {
+  createCustomerSuccess,
+  increaseBeEditArray,
+  decreaseBeEditArray,
+} from '../../../redux/actions/customerAction';
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -93,7 +97,7 @@ class EnterpriseBasicInfo extends Component {
   }
 
   componentWillMount(){
-    console.log('will mount');
+    // console.log('will mount');
 
     this.getBaseInfo(this.props.currentCustomerInfo.id);
   }
@@ -101,13 +105,13 @@ class EnterpriseBasicInfo extends Component {
   componentWillReceiveProps(next){
     console.log('will recieve props');
 
-    const { id, beEdited } = this.props.currentCustomerInfo;
-    if(id !== next.currentCustomerInfo.id || beEdited === true ) {
+    const { id, beEditedArray } = this.props.currentCustomerInfo;
+    if(id !== next.currentCustomerInfo.id || (beEditedArray && beEditedArray.length === 0) ) {
       this.getBaseInfo(next.currentCustomerInfo.id);
     }
 
     // 重置 joinersBeEdited
-    if(beEdited === false) {
+    if(beEditedArray && beEditedArray.length === 0) {
       this.setState({
         joinersBeEdited: false
       })
@@ -225,8 +229,12 @@ class EnterpriseBasicInfo extends Component {
 
   // 表单数据的双向绑定
   handleFormChange = (changedFields) => {
+    let oldDepartment = this.state.eachCompanyInfo.department.value;
+    let newDepartment = changedFields.department && changedFields.department.value;
+
+    // 所属机构，客户经理，所属网格三级联动
     let eachCompanyInfo;
-    if(changedFields.department) {
+    if(changedFields.department && oldDepartment !== newDepartment) {
       eachCompanyInfo = {
         ...this.state.eachCompanyInfo,
         ...changedFields,
@@ -333,31 +341,83 @@ class EnterpriseBasicInfo extends Component {
 
   // 新建/编辑客户
   addNewCustomer = (briefInfo) => {
-    const { name } = this.props.currentCustomerInfo;
+    const { id, name } = this.props.currentCustomerInfo;
+    const { accountsArr } = this.state;
     const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
-    console.log(briefInfo);
+    // 参与人数信息
+    let joiners = this.state.tags.map(item => item.id);
+    // 账户信息
+    let accountsInfo = accountsArr.map((item, index) => {
+      return {
+        accountNo: briefInfo[`${item}-accountNo`],
+        priority: index + 1,
+        remark: briefInfo[`${item}-remark`]
+      }
+    })
+
+    const {
+      address,
+      avgSalary,
+      department,
+      grid,
+      industory,
+      joinerIds,
+      legalPerson,
+      mainBusiness,
+      manager,
+      registeTime,
+      staffCount,
+      telephone,
+      yearIncome
+    } = briefInfo
+
+    // console.log(briefInfo);
     let json = {
-      accounts: [],
-      address: briefInfo.address ? briefInfo.address : '',
-      birth: moment(briefInfo.birth).format(dateFormat),
-      certificate: briefInfo.certificate ? briefInfo.certificate : '',
-      department: briefInfo.department ? briefInfo.department - 0 : '',
-      grid: briefInfo.grid ? briefInfo.grid - 0 : '',
-      joiners: briefInfo.joiners ? briefInfo.joiners : '',
-      manager: briefInfo.manager ? briefInfo.manager - 0 : '',
+      accounts: accountsInfo,
+      address: address ? address : '',
+      avgSalary: avgSalary != null && avgSalary != '' ? avgSalary - 0 : '',
+      department: department ? department - 0 : '',
+      grid: grid ? grid - 0 : '',
+      joinerIds: joiners ? joiners : '',
+      manager: manager ? manager - 0 : '',
       name: name ? name : '',
-      origin: '',
-      phone: briefInfo.phone	? briefInfo.phone : '',
-      wechat: briefInfo.wechat ? briefInfo.wechat : '',
+      industory: industory ? industory : 0,
+      legalPerson: legalPerson ? legalPerson : 0,
+      registeTime: registeTime ? registeTime : 0,
+      staffCount: staffCount ? staffCount : 0,
+      telephone: telephone ? telephone : 0,
+      yearIncome: yearIncome != null && yearIncome != '' ? yearIncome - 0 : ''
     }
 
     console.log(json);
+
+    // 如果 id不存在，则调用创建用户接口
+    // if(id === -1) {
+    //   ajax.PostJson(API.POST_CUSTOMER_INDIVIDUAL_BASE, json).then((res) => {
+    //     if(res.message === 'OK') {
+    //       message.success('创建用户成功');
+    //       this.props.createCustomerSuccess(res.data);
+    //       this.props.decreaseBeEditArray('basicInfo');
+    //     } else {
+    //       message.error(res.message);
+    //     }
+    //   });
+    // } else {
+    //   ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1(id), json).then((res)=>{
+    //     if(res.message === 'OK') {
+    //       message.success('编辑用户成功');
+    //       this.props.decreaseBeEditArray('basicInfo');
+    //     } else {
+    //       message.error(res.message);
+    //     }
+    //   })
+    // }
   }
 
   render() {
-    const { customerInfoBeEdit } = this.props;
-    const { step, mode, id, beEdited } = this.props.currentCustomerInfo;
+    const { increaseBeEditArray, decreaseBeEditArray } = this.props;
+    const { step, mode, id, beEditedArray } = this.props.currentCustomerInfo;
     const {
       modalVisible,
       eachCompanyInfo,
@@ -382,8 +442,9 @@ class EnterpriseBasicInfo extends Component {
     const basicInfoProps = {
       // basic info
       currentId: id,
-      beEdited: beEdited,
-      customerInfoBeEdit: customerInfoBeEdit,
+      beEditedArray: beEditedArray,
+      increaseBeEditArray: increaseBeEditArray,
+      decreaseBeEditArray: decreaseBeEditArray,
       eachCompanyInfo: eachCompanyInfo,
       addNewCustomer: this.addNewCustomer,
 
@@ -485,7 +546,8 @@ const mapStateToProps = (store) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     createCustomerSuccess:(id) => {dispatch(createCustomerSuccess(id))},
-    customerInfoBeEdit: () => {dispatch(customerInfoBeEdit())}
+    increaseBeEditArray: (item) => {dispatch(increaseBeEditArray(item))},
+    decreaseBeEditArray: (item) => {dispatch(decreaseBeEditArray(item))}
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(EnterpriseBasicInfo);
