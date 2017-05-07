@@ -48,8 +48,9 @@ class BasicInfo extends Component {
     joinersBeEdited: false,
     joiners: [],
 
-    accountsArr: [],
+    accountsArr: ['row-0'],
     accounts: {},
+    // originAccountsArr: ['row-0'],
     originAccounts: {},
     briefInfo: {
       department: {
@@ -362,55 +363,57 @@ class BasicInfo extends Component {
     const { name, id } = this.props.currentCustomerInfo;
     const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
+    console.log(briefInfo);
+
     let joiners = this.state.briefInfo.tags.map(item => item.id);
 
-    let json = {
-      accounts: [
-        {
-          accountNo: '7654321',
-          priority: 1,
-          remark: '工商银行'
-        },
-        {
-          accountNo: '62227',
-          priority: 2,
-          remark: '工商银行'
-        }
-      ],
-      address: briefInfo.address ? briefInfo.address : '',
-      birth: briefInfo.birth != null ? moment(briefInfo.birth).format(dateFormat) : '',
-      certificate: briefInfo.certificate ? briefInfo.certificate : '',
-      department: briefInfo.department ? briefInfo.department - 0 : '',
-      grid: briefInfo.grid ? briefInfo.grid - 0 : '',
-      joinerIds: joiners ? joiners : '',
-      manager: briefInfo.manager ? briefInfo.manager - 0 : '',
-      name: name ? name : '',
-      origin: briefInfo.origin ? briefInfo.origin : '',
-      phone: briefInfo.phone	? briefInfo.phone : '',
-      wechat: briefInfo.wechat ? briefInfo.wechat : '',
-    }
+    // let json = {
+    //   accounts: [
+    //     {
+    //       accountNo: '7654321',
+    //       priority: 1,
+    //       remark: '工商银行'
+    //     },
+    //     {
+    //       accountNo: '62227',
+    //       priority: 2,
+    //       remark: '工商银行'
+    //     }
+    //   ],
+    //   address: briefInfo.address ? briefInfo.address : '',
+    //   birth: briefInfo.birth != null ? moment(briefInfo.birth).format(dateFormat) : '',
+    //   certificate: briefInfo.certificate ? briefInfo.certificate : '',
+    //   department: briefInfo.department ? briefInfo.department - 0 : '',
+    //   grid: briefInfo.grid ? briefInfo.grid - 0 : '',
+    //   joinerIds: joiners ? joiners : '',
+    //   manager: briefInfo.manager ? briefInfo.manager - 0 : '',
+    //   name: name ? name : '',
+    //   origin: briefInfo.origin ? briefInfo.origin : '',
+    //   phone: briefInfo.phone	? briefInfo.phone : '',
+    //   wechat: briefInfo.wechat ? briefInfo.wechat : '',
+    // }
 
     // 如果 id不存在，则调用创建用户接口
-    if(id === -1) {
-      ajax.PostJson(API.POST_CUSTOMER_INDIVIDUAL_BASE, json).then((res) => {
-        if(res.message === 'OK') {
-          message.success('创建用户成功');
-          this.props.createCustomerSuccess(res.data);
-          this.props.decreaseBeEditArray('basicInfo');
-        } else {
-          message.error(res.message);
-        }
-      });
-    } else {
-      ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1(id), json).then((res)=>{
-        if(res.message === 'OK') {
-          message.success('编辑用户成功');
-          this.props.decreaseBeEditArray('basicInfo');
-        } else {
-          message.error(res.message);
-        }
-      })
-    }
+    // if(id === -1) {
+    //   ajax.PostJson(API.POST_CUSTOMER_INDIVIDUAL_BASE, json).then((res) => {
+    //     if(res.message === 'OK') {
+    //       message.success('创建用户成功');
+    //       this.props.createCustomerSuccess(res.data);
+    //       this.props.decreaseBeEditArray('basicInfo');
+    //     } else {
+    //       message.error(res.message);
+    //     }
+    //   });
+    // } else {
+    //   ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1(id), json).then((res)=>{
+    //     if(res.message === 'OK') {
+    //       message.success('编辑用户成功');
+    //       this.props.decreaseBeEditArray('basicInfo');
+    //     } else {
+    //       message.error(res.message);
+    //     }
+    //   })
+    // }
   }
 
   // update customer info
@@ -590,15 +593,6 @@ class BasicInfo extends Component {
   // 新建 accounts字段
   addAccountsInfo = (key) => {
     const { accounts } = this.state;
-    // console.log({
-    //   ...accounts,
-    //   [`row-${key}-accountNo`]: {
-    //     value: ''
-    //   },
-    //   [`row-${key}-remark`]: {
-    //     value: ''
-    //   },
-    // });
 
     this.setState({
       accounts: {
