@@ -65,5 +65,6 @@ export default {
 	Put,
 	Delete,
   PostJson,
-  PutJson
+  PutJson,
+  all:axios.all
 }

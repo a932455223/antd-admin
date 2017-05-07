@@ -21,7 +21,6 @@ class JobInfoForm extends Component{
       console.log('%cdepartmensChange will fired. ','color:red')
       this.departmensChange(value,true);
     }
-   
   }
   onHandleSubmit = () =>{
     this.props.hasNoChangeJob()
@@ -38,7 +37,7 @@ class JobInfoForm extends Component{
     for(let [key,value] of Object.entries(fieldErrors)){
       if(Array.isArray(value)){
         hasError = true;
-       break; 
+       break;
       }
     }
     if(hasError){
@@ -81,7 +80,7 @@ class JobInfoForm extends Component{
       leader:undefined
     })
     }
-    
+
   }
 
   render(){

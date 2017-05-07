@@ -12,13 +12,15 @@ import auth from "./authReducer";
 import common from "./commonReducer";
 import customer from "./customerReducer";
 import dropdown from './dropdownReducer';
+import grids from './gridsReducer'
 
 const reducers = combineReducers({
   navPath: navPath,
   auth: auth,
   common: common,
   customer: customer,
-  dropdown: dropdown
+  dropdown: dropdown,
+  grids:grids
 });
 
 export default reducers;
