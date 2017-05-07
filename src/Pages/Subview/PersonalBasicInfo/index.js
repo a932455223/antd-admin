@@ -389,6 +389,8 @@ class BasicInfo extends Component {
       wechat: briefInfo.wechat ? briefInfo.wechat : '',
     }
 
+    // console.log(json);
+
     // 如果 id不存在，则调用创建用户接口
     if(id === -1) {
       ajax.PostJson(API.POST_CUSTOMER_INDIVIDUAL_BASE, json).then((res) => {
