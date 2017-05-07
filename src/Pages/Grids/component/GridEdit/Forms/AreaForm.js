@@ -5,9 +5,22 @@ import ajax from '../../../../../tools/POSTF'
 import Reg from "../../../../../tools/Reg"
 import { connect } from 'react-redux';
 import {gridBeEdited,gridNotBeEdited} from '../../../../../redux/actions/gridsAction.js'
+import update from 'immutability-helper'
+import schema  from 'async-validator'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
+const validateConfig = {
+  landArea:[{pattern:Reg.IntegerAndWhite,message:"必须为数字"}],
+  residenceCount:[{pattern:Reg.IntegerAndWhite,message:"必须为数字"}],
+  personCount:[{pattern:Reg.IntegerAndWhite,message:"必须为数字"}],
+  addressDetail:[{len:100,message:'最多100个字符'}],
+  remark:[{len:300,message:'最多300个字符'}]
+}
+
+function info(msg,color){
+  console.log('%c'+msg,'color:'+color)
+}
 class AreaForm extends Component{
   state = {
 	  provinceText:'',
@@ -17,21 +30,15 @@ class AreaForm extends Component{
     city:[],
     region:[],
     staffs:[],
-    gridTypes:[]
+    gridTypes:[],
+    fields:{},
+    validate:{}
   }
   componentWillMount(){
     let getProvinces = ajax.Get(API.GET_AREA_SELECT(1))
     let getGridTypes = ajax.Get(API.GET_COMMON_DROPDOWN('gridType'))
     let getOrganization = ajax.Get(API.GET_AREAS_ADD_DEPARTMENTS)
-    let arry = this.props.area.address.value.split(' ')
-
-    this.setState({
-      provinceText:arry[0],
-      cityText:arry[1],
-      regionText:arry[2]
-    })
-
-    ajax.all([getProvinces,getGridTypes,getOrganization])
+   ajax.all([getProvinces,getGridTypes,getOrganization])
       .then((res) =>{
         this.setState({
           province:res[0].data.data,
@@ -39,59 +46,86 @@ class AreaForm extends Component{
           organization:res[2].data.data
         })
       })
-
-    if(this.props.area.orgId.value !==undefined){
-      this.getStaffsByDepartmentId(this.props.area.orgId.value)
-    }
-
-    if(this.props.area.province.value !==undefined){
-      this.getCity(this.props.area.province.value)
-    }
-
-    if(this.props.area.city.value !==undefined){
-      this.getRegion(this.props.area.city.value)
-    }
-
-    // ajax.Get(API.GET_AREA_SELECT(1))
-    //   .then(res => {
-    //     this.setState({
-    //       province:res.data.data
-    //     })
-    //   })
-    //
-    // ajax.Get(API.GET_COMMON_DROPDOWN('gridType'))
-    //   .then((res)=>{
-    //     this.setState({
-    //       gridTypes:res.data.data
-    //     })
-    //   })
+    this.resetState(this.props.area)
   }
 
+  //处理输入的数据格式
+  resetState = (obj) =>{
+    let arry = obj.address.split(' ')
+    let regionArry = obj.regionCode.split(' ')
+    if(this.props.area.orgId !==undefined){
+      this.getStaffsByDepartmentId(this.props.area.orgId)
+    }
+
+    let getRegionPromise = []
+    if(regionArry[0] !==undefined){
+     let getCity =  ajax.Get(API.GET_AREA_SELECT(regionArry[0]))
+      getRegionPromise.push(getCity)
+    }
+
+    if(regionArry[1] !==undefined){
+      let getRegion = ajax.Get(API.GET_AREA_SELECT(regionArry[1]))
+      getRegionPromise.push(getRegion)
+    }
+
+    ajax.all(getRegionPromise).then((res)=>{
+      let newState;
+      if(res.length === 1){
+        newState = update(this.state,{city:{$set:res[0].data.data}})
+      }
+      if(res.length === 2){
+        newState = update(this.state,{city:{$set:res[0].data.data},region:{$set:res[1].data.data}})
+      }
+      this.setState(newState)
+    })
+
+    let fields = this.transformData(obj);
+    let validate = this.createValidate(fields)
+
+    this.setState({
+      fields:fields,
+      validate:validate,
+      provinceText:arry[0],
+      cityText:arry[1],
+      regionText:arry[2]
+    })
+
+  }
+
+  createValidate = (obj) =>{
+    return Object.keys(obj).reduce(function(pre,key){
+      pre[key] = {validateStatus:"",message:""}
+      return pre
+    },{})
+  }
 
   componentWillReceiveProps(nextProps){
-    // if(this.props.id !== nextProps.id && nextProps.area !==''){
-    //   let arry = nextProps.area.address.value.split(' ')
-    //   this.setState({
-    //     provinceText:arry[0],
-    //     cityText:arry[1],
-    //     regionText:arry[2]
-    //   })
-    //
-    // }
+    info('this.props.id'+this.props.id,'red')
+    info('nextProps'+nextProps.id,'blue')
+    if(this.props.area.id !== nextProps.area.id){
+      console.log('do reset')
+      this.resetState(nextProps.area)
+    }
+  }
 
-    // if(this.props.id !== nextProps.id){
-    //   this.getStaffsByDepartmentId(nextProps.area.orgId.value)
-    // }
-    //
-    // if((this.props.area ==='' && nextProps.area !=='') || (nextProps.area !== '' && this.props.area !=='' && nextProps.area.city.value !==this.props.area.city.value)){
-    //   if(nextProps.area.province.value !==undefined){
-    //     this.getCity(nextProps.area.province.value)
-    //   }
-    //
-    //   if(nextProps.area.city.value !==undefined){
-    //     this.getRegion(nextProps.area.city.value)
-    //   }
-    // }
+  transformData = (obj) => {
+    let intToStringKeys= ['director','orgId','areaType']
+    let result = {}
+    for(let key in obj){
+      if(intToStringKeys.indexOf(key) > -1) {
+        result[key] = obj[key] ? obj[key].toString() : undefined
+      }else if(key === 'regionCode'){
+        let arry = obj.regionCode.split(' ')
+        result.province = arry[0]
+        result.city = arry[1]
+        result.region = arry[2]
+      }else if(key === 'address'){
+        result.addressDetail = obj[key].split(' ')[3]
+      }else{
+        result[key] = obj[key]
+      }
+    }
+    return result;
   }
 
   getCity = (value) => {
@@ -105,9 +139,9 @@ class AreaForm extends Component{
 
   handleProvinceChange = (value)=>{
     this.getCity(value);
-    this.setState({
-      region:[]
-    })
+    let newState = update(this.state,{fields:{province:{$set:value},city:{$set:''},region:{$set:''}},region:{$set:[]}})
+    this.props.dispatch(gridBeEdited())
+    this.setState(newState)
   }
 
   getRegion = (value) => {
@@ -119,11 +153,25 @@ class AreaForm extends Component{
       })
   }
 
+
+  handleCityChange = (value) =>{
+    this.getRegion(value)
+    let newState = update(this.state,{fields:{city:{$set:value},region:{$set:''}}})
+    this.setState(newState)
+    this.props.dispatch(gridBeEdited())
+  }
+
+  handleRegionChange = (value) =>{
+    let newState = update(this.state,{fields:{region:{$set:value}}})
+    this.setState(newState)
+    this.props.dispatch(gridBeEdited())
+  }
+
   orgIdChange = (value) => {
     this.getStaffsByDepartmentId(value);
-    this.props.form.setFieldsValue({
-      director:{value:undefined}
-    })
+    let newState = update(this.state,{fields:{orgId:{$set:value},director:{$set:''}}})
+    this.setState(newState)
+    this.props.dispatch(gridBeEdited())
   }
 
   getStaffsByDepartmentId = (id) => {
@@ -148,22 +196,59 @@ class AreaForm extends Component{
         content:"您有修改没有保存，确认关闭?",
         onOk:okHandler
       })
+    }else{
+      this.props.close()
     }
   }
 
+  validateSigleValue = (field,value) => {
+    for(let index in validateConfig[field]){
+      let rule = validateConfig[field][index]
+      if(rule.pattern !== undefined){
+        if(rule.pattern.test(value)){
+          return {[field]:{validateStatus:'',message:''}}
+        }else{
+          return {[field]:{validateStatus:'error',message:rule.message}}
+        }
+      }else if(rule.len !== undefined){
+        if(value.length <= rule.len){
+          return {[field]:{validateStatus:'',message:''}}
+        }else{
+          return {[field]:{validateStatus:'error',message:rule.message}}
+        }
+      }
+    }
+  }
+
+  handleChange = (e)=>{
+    let errors = this.validateSigleValue(e.target.name,e.target.value)
+    let field = e.target.name;
+    let newState = update(this.state,{fields:{[field]:{$set:e.target.value}}})
+    if(errors){
+      newState = update(newState,{validate:{[field]:{$set:{...errors[field]}}}})
+    }
+    this.props.dispatch(gridBeEdited())
+    this.setState(newState)
+  }
+
+  handleSelectChange(field,value){
+    this.props.dispatch(gridBeEdited())
+    let newState = update(this.state,{fields:{[field]:{$set:value}}})
+    this.setState(newState)
+  }
+
   handleSubmit = () => {
+
     // const id = this.props.id;
-    const { getFieldsValue , getFieldValue} = this.props.form;
     // const FieldsValue = getFieldsValue();
     // const pid = getFieldValue('province')
     // const cid = getFieldValue('city')
     // const rid = getFieldValue('region')
     //
-    this.props.form.validateFields()
     //
     // let formErrors = this.props.form.getFieldsError()
     // console.dir(formErrors)
-    // this.props.getTableData()
+    this.props.getTableData()
     // if(pid === undefined || cid === undefined || rid === undefined){
     //   Modal.error({
     //     content:'请仔细检查您填写的地址'
@@ -189,32 +274,36 @@ class AreaForm extends Component{
   }
 
 	render(){
-
+    console.log(this.state.validate.landArea.validateStatus)
     const Province = <Select
       placeholder="选择省份"
       notFoundContent="没有省份"
       onChange={this.handleProvinceChange}
+      value={this.state.fields.province}
     >
       {this.state.province.map((item,index)=>(<Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>))}
     </Select>
 
 
-    const City = getFieldDecorator('city')(
-      <Select
-        placeholder="选择城市"
-        notFoundContent="没有城市"
-        onChange={this.getRegion}
-      >
-        {this.state.city.map((item,index)=>(<Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>))}
-      </Select>)
+    const City = <Select
+      placeholder="选择城市"
+      notFoundContent="没有城市"
+      onChange={this.handleCityChange}
+      name="city"
+      value={this.state.fields.city || undefined}
+    >
+      {this.state.city.map((item,index)=>(<Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>))}
+    </Select>
 
-    const Region = getFieldDecorator('region')(
-      <Select
-        placeholder="选择地区"
-        notFoundContent="没有地区"
-      >
-        {this.state.region.map((item,index)=>(<Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>))}
-      </Select>)
+    const Region = <Select
+      placeholder="选择地区"
+      notFoundContent="没有地区"
+      name="region"
+      onChange={this.handleRegionChange}
+      value={this.state.fields.region || undefined}
+    >
+      {this.state.region.map((item,index)=>(<Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>))}
+    </Select>
 
     let forms = ()=>{
       if(this.state.province.length > 0){
@@ -226,7 +315,7 @@ class AreaForm extends Component{
                   wrapperCol={{span: 20}}
                   className="idnumber"
                 >
-                  <span className="gridname">{this.props.area.name &&  this.props.area.name.value}</span>
+                  <span className="gridname">{this.props.area.name}</span>
                 </FormItem>
               </Col>
               <Icon
@@ -242,11 +331,16 @@ class AreaForm extends Component{
                   <FormItem labelCol={{span: 8}}
                             wrapperCol={{span: 15}}
                             label="所属机构"
+
                   >
                     <Select
                       getPopupContainer={() => document.getElementById('RoleEdit')}
                       className="selectorgId"
                       name="orgId"
+                      onChange={this.orgIdChange}
+                      value={this.state.fields.orgId}
+                      validateStatus={this.state.validate.orgId.validateStatus}
+                      help={this.state.validate.orgId.message}
                     >
                       {
                         this.state.organization.map((item,index)=>(<Option key={item.id.toString()} value={item.id.toString()}>{item.name}</Option>))
@@ -261,20 +355,17 @@ class AreaForm extends Component{
                              label="网格负责人"
                              className="idnumber"
                   >
-                    {
-                      getFieldDecorator('director',{
-                        rules:[{required:false}]
-                      })(
-                        <Select
-                          placeholder="选择网格负责人"
-                          notFoundContent="没有找到对应员工"
-                          onChange={()=>{console.log('网格负责人变动')}}
-                        >
-                          {this.state.staffs.map((item,index)=>(<Option key={item.id.toString()}>{item.name}</Option>))}
-                        </Select>
-                      )
-                    }
-
+                    <Select
+                      placeholder="选择网格负责人"
+                      notFoundContent="没有找到对应员工"
+                      onChange={this.handleSelectChange.bind(this,'director')}
+                      name="director"
+                      value={this.state.fields.director || undefined}
+                      validateStatus={this.state.validate.director.validateStatus}
+                      help={this.state.validate.director.message}
+                    >
+                      {this.state.staffs.map((item,index)=>(<Option key={item.id.toString()}>{item.name}</Option>))}
+                    </Select>
                   </FormItem>
                 </Col>
               </Row>
@@ -284,28 +375,27 @@ class AreaForm extends Component{
                             wrapperCol={{span: 15}}
                             label="网格类型"
                             className="idnumber"
+                            validateStatus={this.state.validate.areaType.validateStatus}
+                            help={this.state.validate.areaType.message}
                   >
-                    {
-                      getFieldDecorator('areaType')(
-                        <Select>
-                          {this.state.gridTypes.map((item)=>(<Option key={item.id.toString()}>{item.name}</Option>))}
-                        </Select>
-                      )
-                    }
+                    <Select
+                      name="areaType"
+                      onChange={this.handleSelectChange.bind(this,'areaType')}
+                      value={this.state.fields.areaType}
+                    >
+                      {this.state.gridTypes.map((item)=>(<Option key={item.id.toString()}>{item.name}</Option>))}
+                    </Select>
                   </FormItem>
                 </Col>
 
                 <Col span={12} className="">
                   <FormItem labelCol={{span: 8,offset:1}}
                             wrapperCol={{span: 15}}
-                            label="网格面积">
-                    {
-                      getFieldDecorator('landArea',{
-                        rules: [{pattern:Reg.Integer, message: "请填写数字"}],
-                      })(
-                        <Input/>
-                      )
-                    }
+                            label="网格面积"
+                            validateStatus={this.state.validate.landArea.validateStatus}
+                            help={this.state.validate.landArea.message}
+                  >
+                    <Input name="landArea" value={this.state.fields.landArea} onChange={this.handleChange}/>
                   </FormItem>
                 </Col>
               </Row>
@@ -315,28 +405,21 @@ class AreaForm extends Component{
                             wrapperCol={{span: 15}}
                             label="网格户口数"
                             className="idnumber"
+                            validateStatus={this.state.validate.residenceCount.validateStatus}
+                            help={this.state.validate.residenceCount.message}
                   >
-                    {
-                      getFieldDecorator('residenceCount',{
-                        rules: [{pattern:Reg.Integer, message: "请填写数字"}],
-                      })(
-                        <Input/>
-                      )
-                    }
+                    <Input name="residenceCount" value={this.state.fields.residenceCount} onChange={this.handleChange} />
                   </FormItem>
                 </Col>
 
                 <Col span={12} className="">
                   <FormItem labelCol={{span: 8,offset:1}}
                             wrapperCol={{span: 15}}
-                            label="网格人口数">
-                    {
-                      getFieldDecorator('personCount',{
-                        rules: [{required:true,message:'填写'},{pattern:Reg.Integer, message: "请填写数字"}],
-                      })(
-                        <Input/>
-                      )
-                    }
+                            label="网格人口数"
+                            validateStatus={this.state.validate.personCount.validateStatus}
+                            help={this.state.validate.personCount.message}
+                  >
+                    <Input name="personCount" value={this.state.fields.personCount} onChange={this.handleChange} />
                   </FormItem>
                 </Col>
               </Row>
@@ -373,12 +456,10 @@ class AreaForm extends Component{
                     wrapperCol={{span: 20}}
                     label="详细地址"
                     className="idnumber"
+                    validateStatus={this.state.validate.addressDetail.validateStatus}
+                    help={this.state.validate.addressDetail.message}
                   >
-                    {
-                      getFieldDecorator('addressDetail')(
-                        <Input/>
-                      )
-                    }
+                    <Input name="addressDetail" value={this.state.fields.addressDetail} onChange={this.handleChange}/>
                   </FormItem>
                 </Col>
               </Row>
@@ -388,12 +469,10 @@ class AreaForm extends Component{
                             wrapperCol={{span: 20}}
                             label="网格描述"
                             className="idnumber"
+                            validateStatus={this.state.validate.remark.validateStatus}
+                            help={this.state.validate.remark.message}
                   >
-                    {
-                      getFieldDecorator('remark')(
-                        <Input/>
-                      )
-                    }
+                    <Input name="remark" type="textarea" autosize={{ minRows: 2, maxRows: 8 }} value={this.state.fields.remark} onChange={this.handleChange}/>
                   </FormItem>
                 </Col>
               </Row>
@@ -411,7 +490,6 @@ class AreaForm extends Component{
         return <Spin />
       }
     }
-
     return forms()
 	}
 }

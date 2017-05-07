@@ -16,7 +16,6 @@ class JobInfoForm extends Component{
   }
 
   componentWillReceiveProps(nextProps) {
-    console.dir(nextProps.parentDepartmentDropDown)
   }
   onHandleSubmit = () =>{
     this.setState({
@@ -33,7 +32,7 @@ class JobInfoForm extends Component{
     for(let [key,value] of Object.entries(fieldErrors)){
       if(Array.isArray(value)){
         hasError = true;
-       break; 
+       break;
       }
     }
     if(hasError){

@@ -54,7 +54,7 @@ class GridsList extends Component {
    this.getTableData();
   }
 
-  getTableData =() => {
+  getTableData = () => {
     this.setState(update(this.state,{table:{loading:{$set:true}}}))
     ajax.Post(API.POST_GRIDS_AREAS,{areaType:72})
     .then( res => {
@@ -83,6 +83,7 @@ class GridsList extends Component {
 
   // 表格点击事件
   rowClick(rowData) {
+    console.log('rowClick:'+rowData.id)
     const newRow = ()=>{
       this.setState({
         dock: {

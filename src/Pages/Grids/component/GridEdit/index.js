@@ -32,16 +32,20 @@ class GridEdit extends Component {
   getGridData = (id) => {
     return ajax.Get(API.GET_GRIDS_ID(id))
     .then(res => {
-      res.data.data.orgId = res.data.data.orgId.toString()
-      let regionCodes = res.data.data.regionCode.split(' ');
-      res.data.data.province = regionCodes[0];
-      res.data.data.city = regionCodes[1]
-      res.data.data.region = regionCodes[2]
-      res.data.data.addressDetail = res.data.data.address.split(' ')[3]
-      res.data.data.areaType = res.data.data.areaType.toString()
-      res.data.data.director = res.data.data.director ? res.data.data.director.toString():undefined
+      // res.data.data.orgId = res.data.data.orgId.toString()
+      // let regionCodes = res.data.data.regionCode.split(' ');
+      // res.data.data.province = regionCodes[0];
+      // res.data.data.city = regionCodes[1]
+      // res.data.data.region = regionCodes[2]
+      // res.data.data.addressDetail = res.data.data.address.split(' ')[3]
+      // res.data.data.areaType = res.data.data.areaType.toString()
+      // res.data.data.director = res.data.data.director ? res.data.data.director.toString():undefined
+      // this.setState({
+      //   area : this.transformData(res.data.data)
+      // })
+
       this.setState({
-        area : this.transformData(res.data.data)
+        area:res.data.data
       })
     })
    }
