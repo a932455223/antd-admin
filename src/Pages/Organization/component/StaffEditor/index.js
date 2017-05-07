@@ -40,12 +40,12 @@ class BranchesEditor extends Component {
   state = {
     staff: {
       base: {},
-      job:{},
+      job:false,
       educationInfo:{}
     },
     parentDepartmentDropDown: [],
     changed: false,
-    leadersDropdown: [],
+    // leadersDropdown: [],
     business: {
       "customerCount": 0,
       "offlineAmount": 0,
@@ -56,14 +56,14 @@ class BranchesEditor extends Component {
 
 
   componentWillMount() {
-    console.log('baseEditor will mount.')
+    console.log('%cbaseEditor will mount.','color:red')
     this.getStaffInfo(this.props.id);
-    ajax.Get(API.GET_STAFF_LEADERS)
-      .then(res => {
-        this.setState({
-          leadersDropdown: res.data.data
-        })
-      })
+    // ajax.Get(API.GET_STAFF_LEADERS)
+    //   .then(res => {
+    //     this.setState({
+    //       leadersDropdown: res.data.data
+    //     })
+    //   })
     this.actions.getDropdown('gender', actionTypes.GENDER);
     this.actions.getDropdown('jobStatus', actionTypes.JOB_STATUS);
     this.actions.getDropdown('bankJobCategory', actionTypes.JOB_CATEGORY);
@@ -85,7 +85,7 @@ class BranchesEditor extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('staffEditor will receive props.')
+    console.log('%cstaffEditor will receive props.'+nextProps.id)
     this.getStaffInfo(nextProps.id)
   }
 
@@ -188,13 +188,9 @@ class BranchesEditor extends Component {
     console.log('bye bye');
     this.props.closeDock()
   }
-
-  hasChange() {
-    this.setState({
-      changed: true
-    })
-  }
-
+  // hasChange = () => {
+  //   this.props.hasChange()
+  // }
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -262,7 +258,7 @@ class BranchesEditor extends Component {
             </Col>
           </Row>
           {/*组织信息*/}
-          <BaseInoForm onChange={this.baseInfoChange} baseInfo={baseInfo} id={this.props.id} getStaffs={this.props.getStaffs}/>
+          <BaseInoForm onChange={this.baseInfoChange} baseInfo={baseInfo} id={this.props.id} getStaffs={this.props.getStaffs} hasChangeBase={this.props.hasChangeBase} hasNoChangeBase={this.props.hasNoChangeBase}/>
           {/*业务信息*/}
           <Card className="business" title={<h3>业务信息</h3>}>
             <Row>
@@ -300,10 +296,10 @@ class BranchesEditor extends Component {
           </Card>
 
           {/*工作信息*/}
-        <JobInfoForm onChange={this.jobInfoChange} jobInfo={jobInfo} id={this.props.id} getStaffs={this.props.getStaffs} parentDepartmentDropDown={this.state.parentDepartmentDropDown} />
+        <JobInfoForm onChange={this.jobInfoChange} jobInfo={jobInfo} id={this.props.id} getStaffs={this.props.getStaffs} parentDepartmentDropDown={this.state.parentDepartmentDropDown} hasChangeJob={this.props.hasChangeJob} hasNoChangeJob={this.props.hasNoChangeJob} />
 
           {/*教育经历*/}
-        <EducationInfoForm onChange={this.educationInfoChange} educationInfo={educationInfo} id={this.props.id} getStaffs={this.props.getStaffs}/>
+        <EducationInfoForm onChange={this.educationInfoChange} educationInfo={educationInfo} id={this.props.id} getStaffs={this.props.getStaffs} hasChangeEdu={this.props.hasChangeEdu} hasNoChangeEdu={this.props.hasNoChangeEdu} />
 
 
           {/*操作日志*/}
