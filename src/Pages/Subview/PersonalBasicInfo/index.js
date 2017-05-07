@@ -41,9 +41,10 @@ function info(msg,color){
 //个人信息表单................
 class BasicInfo extends Component {
   state = {
+    id: '',
+
     eachCustomerInfo: '',
     modalVisible: false,
-    edited: false,
 
     joinersBeEdited: false,
     joiners: [],
@@ -250,26 +251,18 @@ class BasicInfo extends Component {
           'loanPurpose'
         ];
         commonDropDownType.map(item => {
-          // 判断对应的值是否为 null
-          if(res.data.data[item] !== null) {
-            let newState = update(this.state, {
-              detailsInfo: {
-                [item]: {
-                  value: {$set: res.data.data[item] + ''}
-                },
-              }
-            })
-            return this.state = newState; // 将 newState赋值给原先的 state
+          let newState = update(this.state, {
+            detailsInfo: {
+              [item]: {
+                // 判断对应的值是否为 null
+                value: {$set: res.data.data[item] !== null ? res.data.data[item] + '' : undefined}
+              },
+            }
+          })
+          return this.state = newState; // 将 newState赋值给原先的 state
 
-            if(item === commonDropDownType[commonDropDownType.length - 1]) {
-              this.setState(newState);
-            }
-          } else {
-            // 当该属性的 value为 null的时候，且该对象的属性发生了变化
-            // 删除 detailsInfo中的 value属性
-            if(this.state.detailsInfo[item].value) {
-              delete this.state.detailsInfo[item].value
-            }
+          if(item === commonDropDownType[commonDropDownType.length - 1]) {
+            this.setState(newState);
           }
         })
 
@@ -293,6 +286,7 @@ class BasicInfo extends Component {
         let newJoiners = _.cloneDeep(res.data.data.joiners);
 
         let newState = update(this.state, {
+          id: {$set: res.data.data.id},
           accounts: {$set: accountsObj},
           originAccounts: {$set: originAccounts},
           originAccountsArr: {$set: originAccountsArr},
@@ -639,11 +633,11 @@ class BasicInfo extends Component {
       increaseBeEditArray,
       decreaseBeEditArray
     } = this.props;
-    const { step, mode, id, beEditedArray } = this.props.currentCustomerInfo;
+    const { step, mode, beEditedArray } = this.props.currentCustomerInfo;
     const {
+      id,
       modalVisible,
       eachCustomerInfo,
-      edited,
       detailsInfo,
       briefInfo,
       joiners,
@@ -652,7 +646,7 @@ class BasicInfo extends Component {
       accounts,
       originAccounts
     } = this.state;
-    console.log(accountsArr);
+    console.log(id);
 
     const modal = {
       // modal
@@ -700,7 +694,9 @@ class BasicInfo extends Component {
 
     return(
       <div style={{textAlign: 'left'}}>
-        <AddCrewModal key={id} {...modal}/>
+        {/*
+          <AddCrewModal key={id} {...modal}/>
+        */}
 
         <div className="">
           {mode && mode === 'view' &&
