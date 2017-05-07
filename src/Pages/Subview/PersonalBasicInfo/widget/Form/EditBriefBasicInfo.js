@@ -63,6 +63,12 @@ class EditBriefBasicInfoForm extends Component{
         basicInfoBeEdit: {$set: false}
       })
       this.setState(newState)
+    } else {
+      // 重置 InfoBeEdited
+      let newState = update(this.state, {
+        basicInfoBeEdit: {$set: true}
+      })
+      this.setState(newState)
     }
 
     // 更新 accountsArr
@@ -175,7 +181,6 @@ class EditBriefBasicInfoForm extends Component{
   // 删除 tags
   handleClose = (joiner) => {
     if(!this.state.basicInfoBeEdit) {
-      console.log('11111111111')
       this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
       let newState = update(this.state, {
         basicInfoBeEdit: {$set: true}

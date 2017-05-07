@@ -552,7 +552,10 @@ class BasicInfo extends Component {
 
   // 参与人员被修改了
   joinersBeModified = () => {
-    if(!this.state.joinersBeEdited) {
+    const { beEditedArray } = this.props.currentCustomerInfo;
+
+    if(!this.state.joinersBeEdited && beEditedArray && !beEditedArray.includes('basicInfo')) {
+      this.props.increaseBeEditArray('basicInfo');
       this.setState({
         joinersBeEdited: true
       })
