@@ -44,7 +44,10 @@ class EditBriefBasicInfoForm extends Component{
   componentWillReceiveProps(next) {
     // console.log('personalBasicInfo will recieve props');
     const { getFieldValue } = next.form;
-    if(next.beEditedArray && !next.beEditedArray.includes('basicInfo')) {
+    // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
+    if(next.joinersBeEdited && !next.beEditedArray.includes('basicInfo')) {
+      this.props.increaseBeEditArray('basicInfo');
+    } else if(next.beEditedArray && !next.beEditedArray.includes('basicInfo')) {
       // 重置 InfoBeEdited
       let newState = update(this.state, {
         basicInfoBeEdit: {$set: false}
@@ -180,21 +183,18 @@ class EditBriefBasicInfoForm extends Component{
   render() {
     const {
       eachCustomerInfo,
-      edited,
+
       mode,
-      currentId,
-      createCustomerSuccess,
+      id,
       beEditedArray,
+
       joinersBeEdited,
-      accounts } = this.props;
+      staffs,
+      accounts
+    } = this.props;
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue, validateFields} = this.props.form;
-    const { department, manager, grid, tags } = this.props.briefInfo;
+    const { department, manager, grid } = this.props.briefInfo;
     const { departmentOptions, managerOptions, gridOptions, accountsArr } = this.state;
-
-    // console.log(accountsArr);
-
-    // validateFields()
-    // console.log(validateFields());
 
     const formItemLayout = {
       labelCol: {
@@ -214,7 +214,7 @@ class EditBriefBasicInfoForm extends Component{
     /* 编辑状态下
      ** basic info
      */
-    const EditParticipate = tags && tags.map((item,index) => {
+    const EditParticipate = staffs && staffs.map((item,index) => {
       return (
         <Tag key={`${item.id}${index}`} closable="true" afterClose={() => this.handleClose(item)}>
           {item.name}
@@ -266,7 +266,7 @@ class EditBriefBasicInfoForm extends Component{
 
     return (
       <Form id="editMyBase" className="basicInfolist">
-        <Row className={currentId === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
+        <Row className={id === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
             <Col span={7}>
               <FormItem labelCol={{span: 11}}
                         wrapperCol={{span: 13}}
@@ -351,7 +351,7 @@ class EditBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={12} className={currentId === -1 ? "phoneCreate" : "phoneEdit"}>
+            <Col span={12} className={id === -1 ? "phoneCreate" : "phoneEdit"}>
               <FormItem labelCol={{span: 8}}
                         wrapperCol={{span: 15}}
                         label="手机号：">
@@ -368,7 +368,7 @@ class EditBriefBasicInfoForm extends Component{
               </FormItem>
             </Col>
 
-            <Col span={12} className={currentId === -1 ? "wechatCreate" : "wechatEdit"}>
+            <Col span={12} className={id === -1 ? "wechatCreate" : "wechatEdit"}>
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="微信号：">
@@ -383,7 +383,7 @@ class EditBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={12} className={currentId === -1 ? "idCreate" : "idEdit"}>
+            <Col span={12} className={id === -1 ? "idCreate" : "idEdit"}>
               <FormItem
                 labelCol={{span: 8}}
                 wrapperCol={{span: 15}}
@@ -399,7 +399,7 @@ class EditBriefBasicInfoForm extends Component{
               </FormItem>
             </Col>
 
-            <Col span={12} className={currentId === -1 ? "birthCreate" : "birthEdit"}>
+            <Col span={12} className={id === -1 ? "birthCreate" : "birthEdit"}>
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="生日：">
@@ -417,7 +417,7 @@ class EditBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={12} className={currentId === -1 ? "originCreate" : "originEdit"}>
+            <Col span={12} className={id === -1 ? "originCreate" : "originEdit"}>
               <FormItem
                 labelCol={{span: 8}}
                 wrapperCol={{span: 15}}
@@ -433,7 +433,7 @@ class EditBriefBasicInfoForm extends Component{
               </FormItem>
             </Col>
 
-            <Col span={12} className={currentId === -1 ? "ageCreate" : "ageEdit"}>
+            <Col span={12} className={id === -1 ? "ageCreate" : "ageEdit"}>
               <FormItem
                 labelCol={{span: 8, offset: 1}}
                 wrapperCol={{span: 15}}
@@ -451,7 +451,7 @@ class EditBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={24} className={currentId === -1 ? "addressCreate" : "addressEdit"}>
+            <Col span={24} className={id === -1 ? "addressCreate" : "addressEdit"}>
               <FormItem
                 labelCol={{span: 4}}
                 wrapperCol={{span: 19}}

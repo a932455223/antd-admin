@@ -29,7 +29,7 @@ class ViewBriefBasicInfoForm extends Component{
 
   componentWillReceiveProps(next) {
     // console.log('personalBasicInfo will recieve props');
-    // if(this.props.currentId !== next.currentId) {
+    // if(this.props.id !== next.id) {
       this.getFiledsName();
       this.getDepartments(1, 1)
     // }
@@ -81,9 +81,19 @@ class ViewBriefBasicInfoForm extends Component{
   }
 
   render() {
-    const { eachCustomerInfo, edited, mode, currentId, createCustomerSuccess, beEdited} = this.props;
+    const {
+      eachCustomerInfo,
+
+      mode,
+      id,
+      beEditedArray,
+
+      joinersBeEdited,
+      staffs,
+      accounts
+    } = this.props;
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    const { department, manager, grid, phone, wechat, certificate, address, tags } = this.props.briefInfo;
+    const { department, manager, grid, phone, wechat, certificate, address } = this.props.briefInfo;
     const { departmentOptions, managerOptions, gridOptions } = this.state;
 
     const formItemLayout = {
@@ -100,7 +110,7 @@ class ViewBriefBasicInfoForm extends Component{
       },
     };
 
-    const ViewParticipate = tags && tags.map((item, index) => {
+    const ViewParticipate = staffs && staffs.map((item, index) => {
       return (
         <Tag key={item.id}>
           {item.name}
@@ -154,7 +164,7 @@ class ViewBriefBasicInfoForm extends Component{
 
     return (
       <Form className="basicInfolist">
-        <Row className={currentId === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
+        <Row className={id === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
           <Col span={7}>
             <FormItem
               labelCol={{span: 11}}
@@ -189,7 +199,7 @@ class ViewBriefBasicInfoForm extends Component{
         <div className="personInfo">
           {ViewFormItems()}
           <Row>
-            <Col span={12} className={currentId === -1 ? "phonecreate" : "phoneedit"}>
+            <Col span={12} className={id === -1 ? "phonecreate" : "phoneedit"}>
               <FormItem
                 labelCol={{span: 7, offset: 1}}
                 wrapperCol={{span: 15}}
@@ -199,7 +209,7 @@ class ViewBriefBasicInfoForm extends Component{
               </FormItem>
             </Col>
 
-            <Col span={12} className={currentId === -1 ? "wechatcreate" : "wechatedit"}>
+            <Col span={12} className={id === -1 ? "wechatcreate" : "wechatedit"}>
               <FormItem
                 labelCol={{span: 8,offset: 1}}
                 wrapperCol={{span: 15}}
@@ -211,7 +221,7 @@ class ViewBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={12} className={currentId === -1 ? "idCreate" : "idEdit"}>
+            <Col span={12} className={id === -1 ? "idCreate" : "idEdit"}>
               <FormItem
                 labelCol={{span: 8}}
                 wrapperCol={{span: 15}}
@@ -222,7 +232,7 @@ class ViewBriefBasicInfoForm extends Component{
               </FormItem>
             </Col>
 
-            <Col span={12} className={currentId === -1 ? "birthCreate" : "birthEdit"}>
+            <Col span={12} className={id === -1 ? "birthCreate" : "birthEdit"}>
               <FormItem
                 labelCol={{span: 8,offset:1}}
                 wrapperCol={{span: 15}}
@@ -234,7 +244,7 @@ class ViewBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={12} className={currentId === -1 ? "originCreate" : "originEdit"}>
+            <Col span={12} className={id === -1 ? "originCreate" : "originEdit"}>
               <FormItem
                 labelCol={{span: 8}}
                 wrapperCol={{span: 15}}
@@ -245,7 +255,7 @@ class ViewBriefBasicInfoForm extends Component{
               </FormItem>
             </Col>
 
-            <Col span={12} className={currentId === -1 ? "ageCreate" : "ageEdit"}>
+            <Col span={12} className={id === -1 ? "ageCreate" : "ageEdit"}>
               <FormItem
                 labelCol={{span: 8, offset: 1}}
                 wrapperCol={{span: 15}}
@@ -257,7 +267,7 @@ class ViewBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={24} className={currentId === -1 ? "addressCreate" : "addressEdit"}>
+            <Col span={24} className={id === -1 ? "addressCreate" : "addressEdit"}>
               <FormItem
                 labelCol={{span: 4}}
                 wrapperCol={{span: 19}}

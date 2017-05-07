@@ -114,8 +114,8 @@ export default class AddCrewModal extends Component {
 
   // modal handle
   handleOk = () => {
-    this.props.hide();
-    this.props.joinersBeModified();
+    let newState = this.props.hide();
+    this.props.joinersBeModified(newState);
   };
 
   // modal handle cancle
@@ -158,10 +158,10 @@ export default class AddCrewModal extends Component {
   }
 
   render() {
-    // console.log(this.state.selectedRowKeys);
-    // console.log(this.state.staffs);
     const { visible } = this.props;
     const { selectedRowKeys, staffs } = this.state;
+    // console.log(selectedRowKeys);
+    // console.log(staffs);
     const participate = staffs && staffs.map((item, index) => {
       return (
         <Tag

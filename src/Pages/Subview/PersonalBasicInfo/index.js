@@ -48,6 +48,7 @@ class BasicInfo extends Component {
 
     joinersBeEdited: false,
     joiners: [],
+    staffs: [],
 
     accountsArr: ['row-0'],
     accounts: {},
@@ -86,8 +87,7 @@ class BasicInfo extends Component {
       },
       address: {
         value: ''
-      },
-      tags: [],
+      }
     },
     detailsInfo: {
       yearIncome: {
@@ -219,6 +219,7 @@ class BasicInfo extends Component {
       this.setState({
         joinersBeEdited: false
       })
+      // this.resetJoiners();
     }
   }
 
@@ -236,7 +237,7 @@ class BasicInfo extends Component {
   // 获取客户基本信息
   getBaseInfo = (id) => {
     if(id !== -1) {
-      ajax.Get(API.GET_CUSTOMER_BASE(id))
+      ajax.Get(API.GET_CUSTOMER_BASE(2))
       .then((res) => {
         const dateFormat = 'YYYY-MM-DD'; // 日期格式
         const commonDropDownType = [
@@ -287,12 +288,14 @@ class BasicInfo extends Component {
 
         let newState = update(this.state, {
           id: {$set: res.data.data.id},
+
           accounts: {$set: accountsObj},
           originAccounts: {$set: originAccounts},
           originAccountsArr: {$set: originAccountsArr},
           accountsArr: {$set: accountsArr && accountsArr.length !== 0 ? accountsArr : this.state.accountsArr},
 
           joiners: {$set: res.data.data.joiners},
+          staffs: {$set: newJoiners},
 
           briefInfo: {
             department: {
@@ -347,9 +350,6 @@ class BasicInfo extends Component {
               $set: {
                 value: res.data.data.address
               }
-            },
-            tags: {
-              $set: newJoiners
             }
           },
           detailsInfo: {
@@ -377,7 +377,7 @@ class BasicInfo extends Component {
     const { accountsArr } = this.state;
     const dateFormat = 'YYYY-MM-DD'; // 日期格式
     // 参与人数信息
-    let joiners = this.state.briefInfo.tags.map(item => item.id);
+    let joiners = this.state.staffs.map(item => item.id);
     // 账户信息
     let accountsInfo = accountsArr.map((item, index) => {
       return {
@@ -416,7 +416,7 @@ class BasicInfo extends Component {
         }
       });
     } else {
-      ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1(id), json).then((res)=>{
+      ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1(2), json).then((res)=>{
         if(res.message === 'OK') {
           message.success('编辑用户成功');
           this.props.decreaseBeEditArray('basicInfo');
@@ -561,13 +561,11 @@ class BasicInfo extends Component {
 
   // change joiners
   changeJoiners = (joiner) => {
-    // console.log(joiner);
-    const { tags } = this.state.briefInfo;
-    const newJoiners = tags.filter(item => item.id !== joiner.id);
+    console.log(joiner);
+    const { staffs } = this.state;
+    const newJoiners = staffs.filter(item => item.id !== joiner.id);
     let newState = update(this.state, {
-      briefInfo: {
-        tags: {$set: newJoiners}
-      }
+      staffs: {$set: newJoiners}
     })
     this.setState(newState);
   };
@@ -579,23 +577,23 @@ class BasicInfo extends Component {
     // console.log(newJoiners);
     // console.log(state);
     let newState = update(st, {
-      briefInfo: {
-        tags: {$set: newJoiners}
-      }
+      staffs: {$set: newJoiners}
     })
     this.setState(newState);
     return newState
   }
 
   // 参与人员被修改了
-  joinersBeModified = () => {
-    const { beEditedArray } = this.props.currentCustomerInfo;
+  joinersBeModified = (state) => {
+    // const { beEditedArray } = this.props.currentCustomerInfo;
+    let st = state || this.state;
+    console.log(st);
 
-    if(!this.state.joinersBeEdited && beEditedArray && !beEditedArray.includes('basicInfo')) {
-      this.props.increaseBeEditArray('basicInfo');
-      this.setState({
-        joinersBeEdited: true
+    if(!st.joinersBeEdited) {
+      let newState = update(st, {
+        joinersBeEdited: {$set: true}
       })
+      this.setState(newState);
     }
   }
 
@@ -629,7 +627,6 @@ class BasicInfo extends Component {
 
   render() {
     const {
-      customerInfoBeEdit,
       increaseBeEditArray,
       decreaseBeEditArray
     } = this.props;
@@ -638,15 +635,19 @@ class BasicInfo extends Component {
       id,
       modalVisible,
       eachCustomerInfo,
+
       detailsInfo,
       briefInfo,
+
+      staffs,
       joiners,
       joinersBeEdited,
+
       accountsArr,
       accounts,
       originAccounts
     } = this.state;
-    console.log(id);
+    // console.log(id);
 
     const modal = {
       // modal
@@ -655,7 +656,7 @@ class BasicInfo extends Component {
 
       // brief info
       id: id,
-      staffs: briefInfo.tags,
+      staffs: staffs,
 
       // joiners
       changeJoiners: this.changeJoiners,
@@ -678,6 +679,7 @@ class BasicInfo extends Component {
 
       // joiners
       joiners: joiners,
+      staffs: staffs,
       changeJoiners: this.changeJoiners,
       joinersBeEdited: joinersBeEdited,
 
@@ -688,16 +690,14 @@ class BasicInfo extends Component {
       addAccountsInfo: this.addAccountsInfo
     }
 
+    // console.log(staffs);
+
     const maintainRecordProps = {
       mode: mode
     }
 
     return(
       <div style={{textAlign: 'left'}}>
-        {/*
-          <AddCrewModal key={id} {...modal}/>
-        */}
-
         <div className="">
           {mode && mode === 'view' &&
             <div>
@@ -714,6 +714,9 @@ class BasicInfo extends Component {
 
           {mode && mode !== 'view' &&
             <div>
+            {
+              <AddCrewModal key={id} {...modal}/>
+            }
               <EditBriefBasicInfo
                 briefInfo={briefInfo}
                 {...basicInfoProps}
