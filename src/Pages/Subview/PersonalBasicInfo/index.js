@@ -204,7 +204,7 @@ class BasicInfo extends Component {
   }
 
   componentWillReceiveProps(next){
-    // info('basicInfo will receive props.');
+    info('basicInfo will receive props.');
     // 当前的客户 id发生变化时，或者当前用户的信息 beEditedNumber === true时，重置 state
     const { id, beEditedArray } = this.props.currentCustomerInfo;
     if(id !== next.currentCustomerInfo.id ||
@@ -224,20 +224,21 @@ class BasicInfo extends Component {
   }
 
   // reset accounts
-  resetAccounts = () => {
-    let originAccounts = _.cloneDeep(this.state.originAccounts);
-    let originAccountsArr = _.cloneDeep(this.state.originAccountsArr);
-
-    this.setState({
-      originAccounts: originAccounts,
-      accountsArr: ['row-0']
-    });
-  };
+  // resetAccounts = () => {
+  //   let originAccounts = _.cloneDeep(this.state.originAccounts);
+  //   let originAccountsArr = _.cloneDeep(this.state.originAccountsArr);
+  //   console.log(originAccountsArr);
+  //
+  //   this.setState({
+  //     accounts: originAccounts,
+  //     accountsArr: originAccountsArr
+  //   });
+  // };
 
   // 获取客户基本信息
   getBaseInfo = (id) => {
     if(id !== -1) {
-      ajax.Get(API.GET_CUSTOMER_BASE(2))
+      ajax.Get(API.GET_CUSTOMER_BASE(id))
       .then((res) => {
         const dateFormat = 'YYYY-MM-DD'; // 日期格式
         const commonDropDownType = [
@@ -268,20 +269,20 @@ class BasicInfo extends Component {
         })
 
         // 客户账户
-        let accounts = res.data.data.accounts.map((item,index) => ({
+        let originAccounts = res.data.data.accounts.map((item,index) => ({
           [`row-${index}-accountNo`]: {value: item.accountNo},
           [`row-${index}-remark`]: {value: item.remark}
         }));
-        let accountsArr = res.data.data.accounts.map((item,index) => `row-${index}`);
+        let originAccountsArr = res.data.data.accounts.map((item,index) => `row-${index}`);
         // 展平 accounts
-        const accountsObj = accounts.reduce((pre, next) => {
+        const originAccountsObj = originAccounts.reduce((pre, next) => {
           return {
             ...pre,
             ...next
           }
         },{});
-        let originAccounts = _.cloneDeep(accountsObj);
-        let originAccountsArr = _.cloneDeep(accountsArr);
+        let accountsObj = _.cloneDeep(originAccountsObj);
+        let accountsArr = _.cloneDeep(originAccountsArr);
 
         // 更新 briefInfo, detailsInfo, eachCustomerInfo
         let newJoiners = _.cloneDeep(res.data.data.joiners);
@@ -291,8 +292,8 @@ class BasicInfo extends Component {
 
           accounts: {$set: accountsObj},
           originAccounts: {$set: originAccounts},
-          originAccountsArr: {$set: originAccountsArr},
-          accountsArr: {$set: accountsArr && accountsArr.length !== 0 ? accountsArr : this.state.accountsArr},
+          originAccountsArr: {$set: originAccountsArr.length !== 0 ? originAccountsArr : ['row-0']},
+          accountsArr: {$set: accountsArr.length !== 0 ? accountsArr : ['row-0']},
 
           joiners: {$set: res.data.data.joiners},
           staffs: {$set: newJoiners},
@@ -378,12 +379,13 @@ class BasicInfo extends Component {
     const dateFormat = 'YYYY-MM-DD'; // 日期格式
     // 参与人数信息
     let joiners = this.state.staffs.map(item => item.id);
+    console.log(briefInfo['row-0-accountNo'] == undefined);
     // 账户信息
     let accountsInfo = accountsArr.map((item, index) => {
       return {
-        accountNo: briefInfo[`${item}-accountNo`],
+        accountNo: briefInfo[`${item}-accountNo`] != undefined ? briefInfo[`${item}-accountNo`] : '',
         priority: index + 1,
-        remark: briefInfo[`${item}-remark`]
+        remark: briefInfo[`${item}-remark`] != undefined ? briefInfo[`${item}-remark`] : ''
       }
     })
 
@@ -416,7 +418,7 @@ class BasicInfo extends Component {
         }
       });
     } else {
-      ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1(2), json).then((res)=>{
+      ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1(id), json).then((res)=>{
         if(res.message === 'OK') {
           message.success('编辑用户成功');
           this.props.decreaseBeEditArray('basicInfo');
@@ -561,7 +563,6 @@ class BasicInfo extends Component {
 
   // change joiners
   changeJoiners = (joiner) => {
-    console.log(joiner);
     const { staffs } = this.state;
     const newJoiners = staffs.filter(item => item.id !== joiner.id);
     let newState = update(this.state, {
@@ -574,8 +575,6 @@ class BasicInfo extends Component {
   resetJoiners = (state) => {
     let st = state || this.state;
     let newJoiners = _.cloneDeep(st.joiners);
-    // console.log(newJoiners);
-    // console.log(state);
     let newState = update(st, {
       staffs: {$set: newJoiners}
     })
@@ -585,9 +584,7 @@ class BasicInfo extends Component {
 
   // 参与人员被修改了
   joinersBeModified = (state) => {
-    // const { beEditedArray } = this.props.currentCustomerInfo;
     let st = state || this.state;
-    console.log(st);
 
     if(!st.joinersBeEdited) {
       let newState = update(st, {
@@ -645,9 +642,11 @@ class BasicInfo extends Component {
 
       accountsArr,
       accounts,
+      originAccountsArr,
       originAccounts
     } = this.state;
-    // console.log(id);
+    // console.log(accountsArr);
+    // console.log(originAccountsArr);
 
     const modal = {
       // modal
@@ -696,6 +695,8 @@ class BasicInfo extends Component {
       mode: mode
     }
 
+    console.log(id);
+
     return(
       <div style={{textAlign: 'left'}}>
         <div className="">
@@ -714,9 +715,9 @@ class BasicInfo extends Component {
 
           {mode && mode !== 'view' &&
             <div>
-            {
+            {/*
               <AddCrewModal key={id} {...modal}/>
-            }
+            */}
               <EditBriefBasicInfo
                 briefInfo={briefInfo}
                 {...basicInfoProps}

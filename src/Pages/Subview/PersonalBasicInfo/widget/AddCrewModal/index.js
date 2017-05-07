@@ -147,14 +147,6 @@ export default class AddCrewModal extends Component {
     this.setState({
       selectedRowKeys: selectedRowKeys
     });
-
-    // 选择经理，同步到 tags
-    // const crews = this.state.table.dataSource && this.state.table.dataSource.filter(item => selectedRowKeys.includes(item.id) === true);
-    // console.log(this.state.table.dataSource);
-    // console.log(crews);
-    // this.setState({
-    //   staffs: crews
-    // })
   }
 
   render() {

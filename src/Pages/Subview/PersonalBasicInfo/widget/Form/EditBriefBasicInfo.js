@@ -26,14 +26,10 @@ function hasErrors(fieldsError) {
 
 class EditBriefBasicInfoForm extends Component{
   state = {
-    tags : [],
     basicInfoBeEdit: false,
-    phone: '',
     departmentOptions: [],
     managerOptions: [],
-    gridOptions: [],
-    accountsArr: ['row-0'],
-    addkey: 1
+    gridOptions: []
   }
 
   componentWillMount(){
@@ -121,10 +117,9 @@ class EditBriefBasicInfoForm extends Component{
 
   // add accounts info
   add = () => {
-    const { addAccountsInfo } = this.props;
+    const { addAccountsInfo, accountsArr } = this.props;
     addAccountsInfo(addkey);
 
-    const { accountsArr } = this.state;
     accountsArr.push(`row-${addkey}`);
     if(!this.state.basicInfoBeEdit) {
       this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
@@ -139,10 +134,9 @@ class EditBriefBasicInfoForm extends Component{
 
   // remove accounts info
   remove = (k) => {
-    const { deleteAccountsInfo } = this.props;
+    const { deleteAccountsInfo, accountsArr } = this.props;
     deleteAccountsInfo(k);
 
-    const { accountsArr } = this.state;
     const position = accountsArr.indexOf(k);
     accountsArr.splice(position, 1);
     if(!this.state.basicInfoBeEdit) {
@@ -190,11 +184,12 @@ class EditBriefBasicInfoForm extends Component{
 
       joinersBeEdited,
       staffs,
-      accounts
+      accounts,
+      accountsArr
     } = this.props;
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue, validateFields} = this.props.form;
     const { department, manager, grid } = this.props.briefInfo;
-    const { departmentOptions, managerOptions, gridOptions, accountsArr } = this.state;
+    const { departmentOptions, managerOptions, gridOptions } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -251,8 +246,6 @@ class EditBriefBasicInfoForm extends Component{
       >
         {getFieldDecorator(`${k}-accountNo`, {
           rules: [{
-            required: true
-          },{
             pattern: /^\d+$/,
             message: '账户只能为数字'
           }],
