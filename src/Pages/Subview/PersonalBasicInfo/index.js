@@ -361,23 +361,21 @@ class BasicInfo extends Component {
   // 新建/编辑客户
   addNewCustomer = (briefInfo) => {
     const { name, id } = this.props.currentCustomerInfo;
+    const { accountsArr } = this.state;
     const dateFormat = 'YYYY-MM-DD'; // 日期格式
-
+    // 参与人数信息
     let joiners = this.state.briefInfo.tags.map(item => item.id);
+    // 账户信息
+    let accountsInfo = accountsArr.map((item, index) => {
+      return {
+        accountNo: briefInfo[`${item}-accountNo`],
+        priority: index + 1,
+        remark: briefInfo[`${item}-remark`]
+      }
+    })
 
     let json = {
-      accounts: [
-        {
-          accountNo: '7654321',
-          priority: 1,
-          remark: '工商银行'
-        },
-        {
-          accountNo: '62227',
-          priority: 2,
-          remark: '工商银行'
-        }
-      ],
+      accounts: accountsInfo,
       address: briefInfo.address ? briefInfo.address : '',
       birth: briefInfo.birth != null ? moment(briefInfo.birth).format(dateFormat) : '',
       certificate: briefInfo.certificate ? briefInfo.certificate : '',
@@ -488,9 +486,9 @@ class BasicInfo extends Component {
     }
 
     // console.dir(briefInfo.manager);
-    let oldWithCar = this.state.briefInfo.withCar.value;
+    let oldWithCar = this.state.detailsInfo.withCar.value;
     let newWithCar = changedFields.withCar && changedFields.withCar.value;
-    let oldNeedLoan = this.state.briefInfo.needLoan.value;
+    let oldNeedLoan = this.state.detailsInfo.needLoan.value;
     let newNeedLoan = changedFields.needLoan && changedFields.needLoan.value;
 
     let detailsInfo;
