@@ -50,7 +50,7 @@ class BasicInfo extends Component {
 
     accountsArr: ['row-0'],
     accounts: {},
-    // originAccountsArr: ['row-0'],
+    originAccountsArr: ['row-0'],
     originAccounts: {},
     briefInfo: {
       department: {
@@ -156,40 +156,59 @@ class BasicInfo extends Component {
     info('basicInfo will mount');
     this.getBaseInfo(this.props.currentCustomerInfo.id);
 
-    const commonDropDownType = [
-      'marryStatus',
-      'houseType',
-      'withCar',
-      'carPrice',
-      'withDebt',
-      'debtAmount',
-      'needLoan',
-      'loanAmount',
-      'loanPurpose'
-    ];
-
-    commonDropDownType.map(item => {
-      ajax.Get(API.GET_COMMON_DROPDOWN(item))
-      .then((res) => {
-        let newState = update(this.state, {
-          detailsInfo: {
-            [item]: {
-              options: {$set: res.data.data}
-            }
+    ajax.all([
+      ajax.Get(API.GET_COMMON_DROPDOWN('marryStatus')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('houseType')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('withCar')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('carPrice')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('withDebt')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('debtAmount')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('needLoan')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('loanAmount')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('loanPurpose'))
+    ]).then((res)=>{
+      let newState = update(this.state, {
+        detailsInfo: {
+          marryStatus: {
+            options: {$set: res[0].data.data}
+          },
+          houseType: {
+            options: {$set: res[1].data.data}
+          },
+          withCar: {
+            options: {$set: res[2].data.data}
+          },
+          carPrice: {
+            options: {$set: res[3].data.data}
+          },
+          withDebt: {
+            options: {$set: res[4].data.data}
+          },
+          debtAmount: {
+            options: {$set: res[5].data.data}
+          },
+          needLoan: {
+            options: {$set: res[6].data.data}
+          },
+          loanAmount: {
+            options: {$set: res[7].data.data}
+          },
+          loanPurpose: {
+            options: {$set: res[8].data.data}
           }
-        })
-
-        this.setState(newState);
-      })
-    });
+        }
+      });
+      this.setState(newState);
+    })
   }
 
   componentWillReceiveProps(next){
     // info('basicInfo will receive props.');
     // 当前的客户 id发生变化时，或者当前用户的信息 beEditedNumber === true时，重置 state
     const { id, beEditedArray } = this.props.currentCustomerInfo;
-    if(id !== next.currentCustomerInfo.id || (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) ) {
-      console.log('get info');
+    if(id !== next.currentCustomerInfo.id ||
+      (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) ) {
+      // console.log('get info');
       this.getBaseInfo(next.currentCustomerInfo.id);
       // this.resetAccounts();
     }
@@ -205,11 +224,11 @@ class BasicInfo extends Component {
   // reset accounts
   resetAccounts = () => {
     let originAccounts = _.cloneDeep(this.state.originAccounts);
-    let accountsArr = _.cloneDeep(this.state.accountsArr);
+    let originAccountsArr = _.cloneDeep(this.state.originAccountsArr);
 
     this.setState({
       originAccounts: originAccounts,
-      accountsArr: accountsArr
+      accountsArr: ['row-0']
     });
   };
 
@@ -259,9 +278,7 @@ class BasicInfo extends Component {
           [`row-${index}-accountNo`]: {value: item.accountNo},
           [`row-${index}-remark`]: {value: item.remark}
         }));
-
         let accountsArr = res.data.data.accounts.map((item,index) => `row-${index}`);
-
         // 展平 accounts
         const accountsObj = accounts.reduce((pre, next) => {
           return {
@@ -270,17 +287,19 @@ class BasicInfo extends Component {
           }
         },{});
         let originAccounts = _.cloneDeep(accountsObj);
-
-        this.setState({
-          accounts: accountsObj,
-          originAccounts: originAccounts,
-          accountsArr: accountsArr
-        });
+        let originAccountsArr = _.cloneDeep(accountsArr);
 
         // 更新 briefInfo, detailsInfo, eachCustomerInfo
         let newJoiners = _.cloneDeep(res.data.data.joiners);
+
         let newState = update(this.state, {
+          accounts: {$set: accountsObj},
+          originAccounts: {$set: originAccounts},
+          originAccountsArr: {$set: originAccountsArr},
+          accountsArr: {$set: accountsArr && accountsArr.length !== 0 ? accountsArr : this.state.accountsArr},
+
           joiners: {$set: res.data.data.joiners},
+
           briefInfo: {
             department: {
               $set: {
@@ -633,6 +652,7 @@ class BasicInfo extends Component {
       accounts,
       originAccounts
     } = this.state;
+    console.log(accountsArr);
 
     const modal = {
       // modal

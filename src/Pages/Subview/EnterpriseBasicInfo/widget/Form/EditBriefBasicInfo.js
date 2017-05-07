@@ -79,31 +79,40 @@ class CompanyBasicInfo extends Component{
   // 获取 department，
   getDepartments = (departmentId, managerId) => {
     // 所属机构下拉菜单
-    ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
-    .then((res) => {
-      let newState = update(this.state, {
-        departmentOptions: {$set: res.data.data},
-      });
-      this.setState(newState);
-    })
-
-    // 所属客户经理下拉菜单
-    ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId))
-    .then((res) => {
-      let newState = update(this.state, {
-        managerOptions: {$set: res.data.data},
-      });
-      this.setState(newState);
-    })
-
-    // 重置网格
-    ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))
-    .then((res) => {
-      let newState = update(this.state, {
-        gridOptions: {$set: res.data.data},
-      });
-      this.setState(newState);
-    })
+    ajax.all([ajax.Get(API.GET_CUSTOMER_DEPARTMENT),ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)),ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))])
+      .then((res)=>{
+        let newState = update(this.state, {
+                departmentOptions: {$set: res[0].data.data},
+                managerOptions:{$set:res[1].data.data},
+                gridOptions:{$set:res[2].data.data}
+              });
+        this.setState(newState);
+      })
+    // ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
+    // .then((res) => {
+    //   let newState = update(this.state, {
+    //     departmentOptions: {$set: res.data.data},
+    //   });
+    //   this.setState(newState);
+    // })
+    //
+    // // 所属客户经理下拉菜单
+    // ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId))
+    // .then((res) => {
+    //   let newState = update(this.state, {
+    //     managerOptions: {$set: res.data.data},
+    //   });
+    //   this.setState(newState);
+    // })
+    //
+    // // 重置网格
+    // ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))
+    // .then((res) => {
+    //   let newState = update(this.state, {
+    //     gridOptions: {$set: res.data.data},
+    //   });
+    //   this.setState(newState);
+    // })
   }
 
   // 输入框发生变化
@@ -136,7 +145,7 @@ class CompanyBasicInfo extends Component{
   // 删除 tags
   handleClose = (joiner) => {
     if(!this.state.basicInfoBeEdit) {
-      this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
+      this.props.increaseBeEditArray('enterpriseBasicInfo'); // 修改 store树上的 beEditedArray
       let newState = update(this.state, {
         basicInfoBeEdit: {$set: true}
       })
@@ -209,6 +218,7 @@ class CompanyBasicInfo extends Component{
         sm: { span: 15, offset: 8 },
       },
     };
+    const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
     const tagsitems  = tags && tags.map((item,index) => {
       return (
@@ -258,7 +268,7 @@ class CompanyBasicInfo extends Component{
         )}
       </FormItem>
     );
-    
+
     return (
         <Form id="editMyBase" className="basicInfolist">
           <Row className={currentId === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
@@ -361,7 +371,10 @@ class CompanyBasicInfo extends Component{
                     message: '请填写注册时间'
                   }]
                   })(
-                    <Input />
+                    <DatePicker
+                      format={dateFormat}
+                      getCalendarContainer={() => document.getElementById('editMyBase')}
+                    />
                   )}
                 </FormItem>
               </Col>

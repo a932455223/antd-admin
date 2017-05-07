@@ -11,7 +11,8 @@ import {
   Tag,
   Select,
   DatePicker,
-  Cascader
+  Cascader,
+  message
 } from 'antd';
 import { connect } from 'react-redux';
 import API from '../../../../../../API';
@@ -19,7 +20,9 @@ import ajax from '../../../../../tools/POSTF';
 const FormItem = Form.Item;
 const Option = Select.Option;
 let addkey = 100;
-
+function hasErrors(fieldsError) {
+  return Object.keys(fieldsError).some(field => fieldsError[field]);
+}
 
 class EditBriefBasicInfoForm extends Component{
   state = {
@@ -29,7 +32,7 @@ class EditBriefBasicInfoForm extends Component{
     departmentOptions: [],
     managerOptions: [],
     gridOptions: [],
-    accountsArr: [],
+    accountsArr: ['row-0'],
     addkey: 1
   }
 
@@ -55,6 +58,8 @@ class EditBriefBasicInfoForm extends Component{
       this.setState(newState)
     }
 
+    // console.log(this.props.accountsArr);
+    // console.log(next.accountsArr);
     // 更新 accountsArr
     this.setState({
       accountsArr: next.accountsArr
@@ -70,42 +75,18 @@ class EditBriefBasicInfoForm extends Component{
 
   // 获取 department，
   getDepartments = (departmentId, managerId) => {
-    // 所属机构下拉菜单
-
-    ajax.all([ajax.Get(API.GET_CUSTOMER_DEPARTMENT),ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)),ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))])
-      .then((res)=>{
-        let newState = update(this.state, {
-                departmentOptions: {$set: res[0].data.data},
-                managerOptions:{$set:res[1].data.data},
-                gridOptions:{$set:res[2].data.data}
-              });
-        this.setState(newState);
-      })
-    // ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
-    //   .then((res) => {
-    //     let newState = update(this.state, {
-    //       departmentOptions: {$set: res.data.data},
-    //     });
-    //     this.setState(newState);
-    //   })
-    //
-    // // 所属客户经理下拉菜单
-    // ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId))
-    //   .then((res) => {
-    //     let newState = update(this.state, {
-    //       managerOptions: {$set: res.data.data},
-    //     });
-    //     this.setState(newState);
-    //   })
-    //
-    // // 重置网格
-    // ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))
-    //   .then((res) => {
-    //     let newState = update(this.state, {
-    //       gridOptions: {$set: res.data.data},
-    //     });
-    //     this.setState(newState);
-    //   })
+    ajax.all([
+      ajax.Get(API.GET_CUSTOMER_DEPARTMENT), // 所属机构下拉菜单
+      ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)), // 所属客户经理下拉菜单
+      ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId)) // 重置网格
+    ]).then((res)=>{
+      let newState = update(this.state, {
+        departmentOptions: {$set: res[0].data.data},
+        managerOptions:{$set:res[1].data.data},
+        gridOptions:{$set:res[2].data.data}
+      });
+      this.setState(newState);
+    })
   }
 
   // basic 输入框内容被修改了
@@ -186,10 +167,14 @@ class EditBriefBasicInfoForm extends Component{
 
   // 更新信息
   updateInfo = (briefInfo) => {
-    const { validateFields } = this.props.form;
+    const { validateFields,getFieldsError } = this.props.form;
     const { addNewCustomer } = this.props;
     validateFields();
-    addNewCustomer(briefInfo);
+    if(hasErrors(getFieldsError())) {
+      message.error('表单填写有误，请仔细检查表单');
+    } else {
+      addNewCustomer(briefInfo);
+    }
   }
 
   render() {
@@ -205,6 +190,8 @@ class EditBriefBasicInfoForm extends Component{
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue, validateFields} = this.props.form;
     const { department, manager, grid, tags } = this.props.briefInfo;
     const { departmentOptions, managerOptions, gridOptions, accountsArr } = this.state;
+
+    // console.log(accountsArr);
 
     // validateFields()
     // console.log(validateFields());
@@ -264,9 +251,10 @@ class EditBriefBasicInfoForm extends Component{
       >
         {getFieldDecorator(`${k}-accountNo`, {
           rules: [{
-            required: true,
+            required: true
           },{
-            pattern: /^\d+$/
+            pattern: /^\d+$/,
+            message: '账户只能为数字'
           }],
           // validateTrigger: ['onChange', 'onBlur'],
           onChange: this.inputBasicInfoChange
@@ -514,7 +502,7 @@ class EditBriefBasicInfoForm extends Component{
 
 function mapPropsToFields (props) {
   const { briefInfo, accounts } = props;
-  console.log(accounts);
+  // console.log(accounts);
   return {
     ...accounts,
     department: {

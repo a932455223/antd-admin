@@ -12,6 +12,7 @@ import {
   Button,
   Tag,
   DatePicker,
+  message
  } from 'antd';
 import axios from 'axios';
 import _ from 'lodash';
@@ -46,7 +47,7 @@ class EnterpriseBasicInfo extends Component {
 
     joinersBeEdited: false,
     joiners: [],
-    tags: '',
+    tags: [],
 
     accountsArr: [],
     accounts: {},
@@ -64,7 +65,7 @@ class EnterpriseBasicInfo extends Component {
       },
       accounts: [],
       registeTime: {
-        value: ''
+        value: null
       },
       industory: {
         value: ''
@@ -124,7 +125,7 @@ class EnterpriseBasicInfo extends Component {
       ajax.Get(API.GET_CUSTOMER_ENTERPRISE_BASE(5))
       .then((res) => {
         // console.log(res.data.data)
-        // const dateFormat = 'YYYY-MM-DD'; // 日期格式
+        const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
         // 客户账户
         let accounts = res.data.data.accounts.map((item,index) => ({
@@ -147,7 +148,7 @@ class EnterpriseBasicInfo extends Component {
         let newState = update(this.state, {
           accounts: {$set: accountsObj},
           originAccounts: {$set: originAccounts},
-          accountsArr: {$set: accountsArr},
+          accountsArr: {$set: accountsArr && accountsArr.length !== 0 ? accountsArr : ['row-0']},
           joiners: {$set: res.data.data.joiners},
           tags: {$set: newJoiners},
           eachCompanyInfo: {
@@ -171,7 +172,7 @@ class EnterpriseBasicInfo extends Component {
             },
             registeTime: {
               $set: {
-                value: res.data.data.registeTime
+                value: res.data.data.registeTime != null ? moment(res.data.data.registeTime, dateFormat) : undefined
               }
             },
             industory: {
@@ -310,7 +311,10 @@ class EnterpriseBasicInfo extends Component {
 
   // 参与人员被修改了
   joinersBeModified = () => {
-    if(!this.state.joinersBeEdited) {
+    const { beEditedArray } = this.props.currentCustomerInfo;
+
+    if(!this.state.joinersBeEdited && beEditedArray && !beEditedArray.includes('basicInfo')) {
+      this.props.increaseBeEditArray('enterpriseBasicInfo');
       this.setState({
         joinersBeEdited: true
       })
@@ -372,7 +376,7 @@ class EnterpriseBasicInfo extends Component {
       yearIncome
     } = briefInfo
 
-    // console.log(briefInfo);
+    console.log(briefInfo);
     let json = {
       accounts: accountsInfo,
       address: address ? address : '',
@@ -382,9 +386,9 @@ class EnterpriseBasicInfo extends Component {
       joinerIds: joiners ? joiners : '',
       manager: manager ? manager - 0 : '',
       name: name ? name : '',
-      industory: industory ? industory : 0,
+      industory: industory ? industory : '',
       legalPerson: legalPerson ? legalPerson : 0,
-      registeTime: registeTime ? registeTime : 0,
+      registeTime: registeTime != null ? moment(registeTime).format(dateFormat) : '',
       staffCount: staffCount ? staffCount : 0,
       telephone: telephone ? telephone : 0,
       yearIncome: yearIncome != null && yearIncome != '' ? yearIncome - 0 : ''
@@ -393,26 +397,26 @@ class EnterpriseBasicInfo extends Component {
     console.log(json);
 
     // 如果 id不存在，则调用创建用户接口
-    // if(id === -1) {
-    //   ajax.PostJson(API.POST_CUSTOMER_INDIVIDUAL_BASE, json).then((res) => {
-    //     if(res.message === 'OK') {
-    //       message.success('创建用户成功');
-    //       this.props.createCustomerSuccess(res.data);
-    //       this.props.decreaseBeEditArray('basicInfo');
-    //     } else {
-    //       message.error(res.message);
-    //     }
-    //   });
-    // } else {
-    //   ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1(id), json).then((res)=>{
-    //     if(res.message === 'OK') {
-    //       message.success('编辑用户成功');
-    //       this.props.decreaseBeEditArray('basicInfo');
-    //     } else {
-    //       message.error(res.message);
-    //     }
-    //   })
-    // }
+    if(id === -1) {
+      ajax.PostJson(API.POST_CUSTOMER_ENTERPRISE_BASE, json).then((res) => {
+        if(res.message === 'OK') {
+          message.success('创建用户成功');
+          this.props.createCustomerSuccess(res.data);
+          this.props.decreaseBeEditArray('enterpriseBasicInfo');
+        } else {
+          message.error(res.message);
+        }
+      });
+    } else {
+      ajax.PutJson(API.PUT_CUSTOMER_ENTERPRISE_BASE(5), json).then((res)=>{
+        if(res.code === 200) {
+          message.success('编辑用户成功');
+          this.props.decreaseBeEditArray('enterpriseBasicInfo');
+        } else {
+          message.error(res.message);
+        }
+      })
+    }
   }
 
   render() {
@@ -438,6 +442,8 @@ class EnterpriseBasicInfo extends Component {
       joinersBeModified: this.joinersBeModified,
       resetJoiners: this.resetJoiners,
     };
+
+    // console.log(tags);
 
     const basicInfoProps = {
       // basic info

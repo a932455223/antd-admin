@@ -23,7 +23,7 @@ export default class AddCrewModal extends Component {
   };
 
   componentWillMount() {
-    // console.log('add crew modal')
+    console.log('add crew modal')
     // 获取 treeNode department
     ajax.Get(API.GET_DEPARTMENT_HIERARCHY)
     .then(res => {
@@ -36,19 +36,16 @@ export default class AddCrewModal extends Component {
   }
 
   componentWillReceiveProps(next){
-    console.log('next');
-    const { staffs } = this.props;
-    if(staffs.length > 0){
-      let a = [];
-      staffs.map((item) => {
-        a.push(item.id);
-        this.setState({
-          selectedRowKeys: a
-        })
-      })
-    }
+    // console.log('next');
+    const { staffs } = next;
+    let a = [];
+    staffs.map((item) => {
+      a.push(item.id);
+    })
+    this.setState({
+      selectedRowKeys: a
+    })
 
-    const { selectedRowKeys } = this.state;
     // 选择经理，同步到 tags
     this.setState({
       staffs: staffs
@@ -81,7 +78,6 @@ export default class AddCrewModal extends Component {
   // }
 
   componentWillUnmout(){
-    console.log('unmount');
     removeEventListener('resize', this.initTableScroll)
   }
 
@@ -283,7 +279,7 @@ export default class AddCrewModal extends Component {
             <div className="tags-wrapper">
               <div className="tags-title">
                 <h3>已选成员</h3>
-                <span>{staffs && staffs.length} 人</span>
+                <span>{staffs.length} 人</span>
               </div>
               <div>
                 {participate}

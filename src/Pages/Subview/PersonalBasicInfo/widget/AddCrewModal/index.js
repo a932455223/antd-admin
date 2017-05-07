@@ -36,7 +36,7 @@ export default class AddCrewModal extends Component {
   }
 
   componentWillReceiveProps(next){
-    // console.log('next');
+    console.log('next');
     const { staffs } = next;
     let a = [];
     staffs.map((item) => {
