@@ -106,7 +106,11 @@ export default class Branches extends Component {
       zIndex: 100
     };
 
-
+    const tree = Object.keys(this.state.classify).length > 0 ? <Tree
+      defaultExpandAll={true}
+    >
+      {this.createTree(this.state.classify)}
+    </Tree>:null
 
     return (
       <div className="organization">
@@ -115,11 +119,7 @@ export default class Branches extends Component {
           <Sider style={{width: "260px", flex:" 0 0 260px"}}
             id="organizationSider"
           >
-            <Tree
-              defaultExpandAll={true}
-            >
-              {this.createTree(this.state.classify)}
-            </Tree>
+            {tree}
           </Sider>
           <Content id="content">
 

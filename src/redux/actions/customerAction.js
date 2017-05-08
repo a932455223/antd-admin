@@ -35,14 +35,37 @@ export const createCustomerSuccess = (id) => (
   }
 )
 
-// customer info be edited
-export const customerInfoBeEdit = () => (
+// edit customer success
+export const editCustomerSuccess = () => (
   {
-    type: actionTypes.CUSTOMER_INFO_BE_EDITED
+    type: actionTypes.EDIT_CUSTOMER_SUCCESS,
   }
 )
 
 // customer info be edited
+export const increaseBeEditArray = (item) => (
+  {
+    type: actionTypes.INCREASE_BE_EDITED_ARRAY,
+    payload: item
+  }
+)
+
+// customer info be edited
+export const decreaseBeEditArray = (item) => (
+  {
+    type: actionTypes.DECREASE_BE_EDITED_ARRAY,
+    payload: item
+  }
+)
+
+// customer info be edited
+export const resetBeEditArray = () => (
+  {
+    type: actionTypes.RESET_BE_EDITED_ARRAY
+  }
+)
+
+// reset Customer Info
 export const resetCustomerInfo = () => (
   {
     type: actionTypes.RESET_CUSTOMER_INFO

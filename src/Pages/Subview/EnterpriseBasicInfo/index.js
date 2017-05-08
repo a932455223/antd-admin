@@ -15,11 +15,16 @@ import {
  } from 'antd';
 import axios from 'axios';
 import _ from 'lodash';
+import moment from 'moment';
 import API from '../../../../API';
 import ajax from '../../../tools/POSTF';
 
 import { connect } from 'react-redux';
-import { createCustomerSuccess, customerInfoBeEdit } from '../../../redux/actions/customerAction';
+import {
+  createCustomerSuccess,
+  increaseBeEditArray,
+  decreaseBeEditArray,
+} from '../../../redux/actions/customerAction';
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -43,42 +48,56 @@ class EnterpriseBasicInfo extends Component {
     joiners: [],
     tags: '',
 
+    accountsArr: [],
+    accounts: {},
+    originAccounts: {},
+
     eachCompanyInfo: {
-      registertime: {
+      department: {
         value: ''
       },
-      industry: {
+      manager: {
         value: ''
       },
-      business: {
+      grid: {
         value: ''
       },
-      yearmoney: {
+      accounts: [],
+      registeTime: {
         value: ''
       },
-      owner: {
+      industory: {
         value: ''
       },
-      phone: {
+      mainBusiness: {
         value: ''
       },
-      people: {
+      yearIncome: {
         value: ''
       },
-      saliary: {
+      legalPerson: {
+        value: ''
+      },
+      telephone: {
+        value: ''
+      },
+      staffCount: {
+        value: ''
+      },
+      avgSalary: {
         value: ''
       },
       address: {
         value: ''
       },
-      addressinfo: {
+      addressCode: {
         value: ''
       }
     }
   }
 
   componentWillMount(){
-    console.log('will mount');
+    // console.log('will mount');
 
     this.getBaseInfo(this.props.currentCustomerInfo.id);
   }
@@ -86,13 +105,13 @@ class EnterpriseBasicInfo extends Component {
   componentWillReceiveProps(next){
     console.log('will recieve props');
 
-    const { id, beEdited } = this.props.currentCustomerInfo;
-    if(id !== next.currentCustomerInfo.id || beEdited === true ) {
+    const { id, beEditedArray } = this.props.currentCustomerInfo;
+    if(id !== next.currentCustomerInfo.id || (beEditedArray && beEditedArray.length === 0) ) {
       this.getBaseInfo(next.currentCustomerInfo.id);
     }
 
     // 重置 joinersBeEdited
-    if(beEdited === false) {
+    if(beEditedArray && beEditedArray.length === 0) {
       this.setState({
         joinersBeEdited: false
       })
@@ -102,47 +121,107 @@ class EnterpriseBasicInfo extends Component {
   // 获取客户基本信息
   getBaseInfo = (id) => {
     if(id !== -1) {
-      ajax.Get(API.GET_COMPANY_BASE(id))
+      ajax.Get(API.GET_CUSTOMER_ENTERPRISE_BASE(5))
       .then((res) => {
+        // console.log(res.data.data)
         // const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
-        let newJoiners = _.cloneDeep(res.data.data.joiner);
+        // 客户账户
+        let accounts = res.data.data.accounts.map((item,index) => ({
+          [`row-${index}-accountNo`]: {value: item.accountNo},
+          [`row-${index}-remark`]: {value: item.remark}
+        }));
+
+        let accountsArr = res.data.data.accounts.map((item,index) => `row-${index}`);
+
+        // 展平 accounts
+        const accountsObj = accounts.reduce((pre, next) => {
+          return {
+            ...pre,
+            ...next
+          }
+        },{});
+        let originAccounts = _.cloneDeep(accountsObj);
+
+        let newJoiners = _.cloneDeep(res.data.data.joiners);
         let newState = update(this.state, {
-          joiners: {$set: res.data.data.joiner},
+          accounts: {$set: accountsObj},
+          originAccounts: {$set: originAccounts},
+          accountsArr: {$set: accountsArr},
+          joiners: {$set: res.data.data.joiners},
           tags: {$set: newJoiners},
           eachCompanyInfo: {
-            registertime: {
-              value: {$set: res.data.data.registertime}
+            department: {
+              $set: {
+                value: res.data.data.department + ''
+              }
             },
-            industry: {
-              value: {$set: res.data.data.industry}
+            manager: {
+              $set: {
+                value: res.data.data.manager + ''
+              }
             },
-            business: {
-              value: {$set: res.data.data.business}
+            grid: {
+              $set: {
+                value: res.data.data.grid + ''
+              }
             },
-            yearmoney: {
-              value: {$set: res.data.data.yearmoney}
+            accounts: {
+              $set: res.data.data.accounts
             },
-            owner: {
-              value: {$set: res.data.data.owner}
+            registeTime: {
+              $set: {
+                value: res.data.data.registeTime
+              }
             },
-            phone: {
-              value: {$set: res.data.data.phone}
+            industory: {
+              $set: {
+                value: res.data.data.industory
+              }
             },
-            people: {
-              value: {$set: res.data.data.people}
+            mainBusiness: {
+              $set: {
+                value: res.data.data.mainBusiness
+              }
             },
-            saliary: {
-              value: {$set: res.data.data.saliary}
+            yearIncome: {
+              $set: {
+                value: res.data.data.yearIncome
+              }
+            },
+            legalPerson: {
+              $set: {
+                value: res.data.data.legalPerson
+              }
+            },
+            telephone: {
+              $set: {
+                value: res.data.data.telephone
+              }
+            },
+            staffCount: {
+              $set: {
+                value: res.data.data.staffCount
+              }
+            },
+            avgSalary: {
+              $set: {
+                value: res.data.data.avgSalary
+              }
             },
             address: {
-              value: {$set: res.data.data.address}
+              $set: {
+                value: res.data.data.address
+              }
             },
-            addressinfo: {
-              value: {$set: res.data.data.addressinfo}
+            addressCode: {
+              $set: {
+                value: res.data.data.addressCode
+              }
             }
           }
         })
+
         this.setState(newState);
       })
     }
@@ -150,10 +229,12 @@ class EnterpriseBasicInfo extends Component {
 
   // 表单数据的双向绑定
   handleFormChange = (changedFields) => {
-    console.log(changedFields);
+    let oldDepartment = this.state.eachCompanyInfo.department.value;
+    let newDepartment = changedFields.department && changedFields.department.value;
+
     // 所属机构，客户经理，所属网格三级联动
     let eachCompanyInfo;
-    if(changedFields.department) {
+    if(changedFields.department && oldDepartment !== newDepartment) {
       eachCompanyInfo = {
         ...this.state.eachCompanyInfo,
         ...changedFields,
@@ -171,7 +252,13 @@ class EnterpriseBasicInfo extends Component {
       }
     }
 
-    let newState = update(this.state,{
+    let accounts = {
+      ...this.state.accounts,
+      ...changedFields
+    }
+
+    let newState = update(this.state, {
+      accounts: {$set: {...accounts}},
       eachCompanyInfo: {$set: {...eachCompanyInfo}}
     })
     this.setState(newState);
@@ -191,6 +278,34 @@ class EnterpriseBasicInfo extends Component {
     })
     this.setState(newState);
     return newState;
+  }
+
+  // 删除对应的 accounts字段
+  deleteAccountsInfo = (row) => {
+    const newState= _.cloneDeep(this.state.accounts) ;
+
+    delete newState[`${row}-accountNo`];
+    delete newState[`${row}-remark`];
+    this.setState({
+      accounts: newState
+    })
+  }
+
+  // 新建 accounts字段
+  addAccountsInfo = (key) => {
+    const { accounts } = this.state;
+
+    this.setState({
+      accounts: {
+        ...accounts,
+        [`row-${key}-accountNo`]: {
+          value: ''
+        },
+        [`row-${key}-remark`]: {
+          value: ''
+        },
+      }
+    })
   }
 
   // 参与人员被修改了
@@ -224,17 +339,96 @@ class EnterpriseBasicInfo extends Component {
     return newState
   }
 
+  // 新建/编辑客户
+  addNewCustomer = (briefInfo) => {
+    const { id, name } = this.props.currentCustomerInfo;
+    const { accountsArr } = this.state;
+    const dateFormat = 'YYYY-MM-DD'; // 日期格式
+
+    // 参与人数信息
+    let joiners = this.state.tags.map(item => item.id);
+    // 账户信息
+    let accountsInfo = accountsArr.map((item, index) => {
+      return {
+        accountNo: briefInfo[`${item}-accountNo`],
+        priority: index + 1,
+        remark: briefInfo[`${item}-remark`]
+      }
+    })
+
+    const {
+      address,
+      avgSalary,
+      department,
+      grid,
+      industory,
+      joinerIds,
+      legalPerson,
+      mainBusiness,
+      manager,
+      registeTime,
+      staffCount,
+      telephone,
+      yearIncome
+    } = briefInfo
+
+    // console.log(briefInfo);
+    let json = {
+      accounts: accountsInfo,
+      address: address ? address : '',
+      avgSalary: avgSalary != null && avgSalary != '' ? avgSalary - 0 : '',
+      department: department ? department - 0 : '',
+      grid: grid ? grid - 0 : '',
+      joinerIds: joiners ? joiners : '',
+      manager: manager ? manager - 0 : '',
+      name: name ? name : '',
+      industory: industory ? industory : 0,
+      legalPerson: legalPerson ? legalPerson : 0,
+      registeTime: registeTime ? registeTime : 0,
+      staffCount: staffCount ? staffCount : 0,
+      telephone: telephone ? telephone : 0,
+      yearIncome: yearIncome != null && yearIncome != '' ? yearIncome - 0 : ''
+    }
+
+    console.log(json);
+
+    // 如果 id不存在，则调用创建用户接口
+    // if(id === -1) {
+    //   ajax.PostJson(API.POST_CUSTOMER_INDIVIDUAL_BASE, json).then((res) => {
+    //     if(res.message === 'OK') {
+    //       message.success('创建用户成功');
+    //       this.props.createCustomerSuccess(res.data);
+    //       this.props.decreaseBeEditArray('basicInfo');
+    //     } else {
+    //       message.error(res.message);
+    //     }
+    //   });
+    // } else {
+    //   ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1(id), json).then((res)=>{
+    //     if(res.message === 'OK') {
+    //       message.success('编辑用户成功');
+    //       this.props.decreaseBeEditArray('basicInfo');
+    //     } else {
+    //       message.error(res.message);
+    //     }
+    //   })
+    // }
+  }
+
   render() {
-    const { customerInfoBeEdit } = this.props;
-    const { step, mode, id, beEdited } = this.props.currentCustomerInfo;
+    const { increaseBeEditArray, decreaseBeEditArray } = this.props;
+    const { step, mode, id, beEditedArray } = this.props.currentCustomerInfo;
     const {
       modalVisible,
       eachCompanyInfo,
       // edited,
       tags,
-      joinersBeEdited
+      joinersBeEdited,
+
+      accountsArr,
+      accounts,
+      originAccounts
     } = this.state;
-    // console.log(eachCompanyInfo);
 
     const modal = {
       visible: modalVisible,
@@ -248,9 +442,16 @@ class EnterpriseBasicInfo extends Component {
     const basicInfoProps = {
       // basic info
       currentId: id,
-      beEdited: beEdited,
-      customerInfoBeEdit: customerInfoBeEdit,
+      beEditedArray: beEditedArray,
+      increaseBeEditArray: increaseBeEditArray,
+      decreaseBeEditArray: decreaseBeEditArray,
       eachCompanyInfo: eachCompanyInfo,
+      addNewCustomer: this.addNewCustomer,
+
+      accountsArr: accountsArr,
+      accounts: accounts,
+      deleteAccountsInfo: this.deleteAccountsInfo,
+      addAccountsInfo: this.addAccountsInfo,
 
       tags: tags,
       changeJoiners: this.changeJoiners,
@@ -259,7 +460,6 @@ class EnterpriseBasicInfo extends Component {
       modalShow: this.modalShow,
     }
 
-    // console.log(this.props);
     return(
       <div style={{textAlign: 'left'}}>
         <AddCrewModal
@@ -268,10 +468,15 @@ class EnterpriseBasicInfo extends Component {
         />
 
         <div>
-          <EditBriefBasicInfo
-            {...basicInfoProps}
-            onChange={this.handleFormChange}
-          />
+          {mode && mode !== 'view' &&
+            <EditBriefBasicInfo
+              {...basicInfoProps}
+              onChange={this.handleFormChange}
+            />
+          }
+          {mode && mode === 'view' &&
+            <ViewBriefBasicInfo {...basicInfoProps}/>
+          }
         </div>
 
         <div className="maintain">
@@ -341,7 +546,8 @@ const mapStateToProps = (store) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     createCustomerSuccess:(id) => {dispatch(createCustomerSuccess(id))},
-    customerInfoBeEdit: () => {dispatch(customerInfoBeEdit())}
+    increaseBeEditArray: (item) => {dispatch(increaseBeEditArray(item))},
+    decreaseBeEditArray: (item) => {dispatch(decreaseBeEditArray(item))}
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(EnterpriseBasicInfo);

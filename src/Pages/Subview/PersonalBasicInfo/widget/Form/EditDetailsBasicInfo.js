@@ -33,7 +33,7 @@ class EditDetailsBasicInfoForm extends Component{
     // console.log('personalBasicInfo will recieve props');
 
     // 重置 InfoBeEdited
-    if(!next.beEdited) {
+    if(next.beEditedArray && !next.beEditedArray.includes('detailsInfo')) {
       let newState = update(this.state, {
         detailsInfoBeEdit: {$set: false}
       })
@@ -44,7 +44,8 @@ class EditDetailsBasicInfoForm extends Component{
   // 监听 inputChange事件
   inputDetailsInfoChange = (e) => {
     // 当 id 不等于负一时，内容修改激活保存按钮
-    if(this.props.id !== -1) {
+    if(this.props.id !== -1 && !this.state.detailsInfoBeEdit) {
+      this.props.increaseBeEditArray('detailsInfo');
       let newState = update(this.state, {
         detailsInfoBeEdit: {$set: true}
       })
@@ -54,7 +55,9 @@ class EditDetailsBasicInfoForm extends Component{
 
   // 监听 selectChange事件
   selectDetailsInfoChange = () => {
-    if(this.props.id !== -1) {
+    // 当 id 不等于负一时，内容修改激活保存按钮
+    if(this.props.id !== -1 && !this.state.detailsInfoBeEdit) {
+      this.props.increaseBeEditArray('detailsInfo');
       let newState = update(this.state, {
         detailsInfoBeEdit: {$set: true}
       })
@@ -62,54 +65,8 @@ class EditDetailsBasicInfoForm extends Component{
     }
   };
 
-  // with car and show its value
-  showCarValue = (carValue) => {
-    // typeof e = String
-    if(carValue === 'true') {
-      this.setState({
-        withCar: true
-      });
-    } else {
-      this.setState({
-        withCar: false
-      });
-    }
-
-    this.props.customerInfoBeEdit();
-  }
-
-  // have debt and show the debt
-  showDebtAmount = (debtAmount) => {
-    if(debtAmount === 'true') {
-      this.setState({
-        withDebt: true
-      });
-    } else {
-      this.setState({
-        withDebt: false
-      });
-    }
-
-    this.props.customerInfoBeEdit();
-  }
-
-  // show loan need
-  showLoanNeed = (loanNeed) => {
-    if(loanNeed === 'true') {
-      this.setState({
-        needLoan: true
-      });
-    } else {
-      this.setState({
-        needLoan: false
-      });
-    }
-
-    this.props.customerInfoBeEdit();
-  }
-
-  fillCustomerDetailsInfo = () => {
-
+  fillCustomerDetailsInfo = (detailsInfo) => {
+    this.props.updateCustomerInfo(detailsInfo)
   }
 
   render() {
@@ -437,7 +394,7 @@ class EditDetailsBasicInfoForm extends Component{
               </Col>
               <Button
                 type="primary"
-                onClick={this.fillCustomerDetailsInfo}
+                onClick={this.fillCustomerDetailsInfo.bind(this, getFieldsValue())}
                 disabled={!this.state.detailsInfoBeEdit}
               >保存</Button>
             </Col>
@@ -489,9 +446,9 @@ function mapPropsToFields (props) {
 }
 
 function onFieldsChange(props, changedFields) {
-  if(!props.beEdited) {
-    props.customerInfoBeEdit(); // 修改 store树上的 beEdited
-  }
+  // if(!props.beEdited) {
+  //   props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+  // }
 
   props.onChange(changedFields);
 };

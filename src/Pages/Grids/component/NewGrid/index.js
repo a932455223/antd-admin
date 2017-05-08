@@ -25,7 +25,6 @@ class NewGrid extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log(values);
         this.setState({
           roleName: values.username,
           formGroupVisible: true
@@ -80,7 +79,8 @@ class NewGrid extends Component {
               {...formItemLayout}
             >
               {getFieldDecorator('username', {
-                rules: [{required: true, message: '网格名称不得为空!'}],
+                rules: [{pattern:/^.{4,100}$/,message:"网格名4-100字符"}],
+                validateTrigger:'onBlur'
               })(
                 <Input />
               )}

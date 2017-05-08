@@ -9,10 +9,12 @@ import React, {Component} from "react";
 import {Button, Card, Col, Form, Input, Row, Select} from "antd";
 import classNames from 'classnames'
 import axios from 'axios';
+import {connect} from "react-redux";
 import ajax from '../../../../tools/POSTF.js';
 //=================================================
 import "./less/branchesEditor.less";
 import API from '../../../../../API';
+import BranchBaseInfo from './Forms/BranchBaseInfo'
 
 
 const FormItem = Form.Item;
@@ -22,14 +24,13 @@ const Option = Select.Option;
 class BranchesEditor extends Component {
 
   state = {
-    id: this.props.id,
     changed: false,
-    department: {},
     categoryDropdown: [],
     parentDepartmentDropDown: [],
     province:[],
     city:[],
-    area:[]
+    area:[],
+    branchInfo: false
   };
 
   componentWillMount(){
@@ -40,35 +41,63 @@ class BranchesEditor extends Component {
         })
       })
 
-    ajax.Get(API.GET_AREA_SELECT(1))
-      .then(res => {
-        this.setState({
-          province:res.data.data
-        })
-      })
+    this.getDepartmnent(this.props.id)
   }
 
   componentDidMount(){
-    this.getDepartmnent()
+    // this.getDepartmnent()
   }
 
   componentWillReceiveProps(nextProps){
-
     if(this.props.id !==nextProps.id){
       this.getDepartmnent(nextProps.id);
     }
-
   }
 
-  getDepartmnent(id = this.props.id){
+  getDepartmnent = (id) => {
     axios.get(API.GET_DEPARTMENT_DETAIL(id))
       .then( res => {
         console.log(res);
+        let branchBase = res.data.data;
+        let arry = branchBase.regionCode ? branchBase.regionCode.split(' '):[]
+        let addressDetail = branchBase.adress ? branchBase.adress.split(' ')[3]:''
         this.setState({
-          department: res.data.data
+          branchInfo:{
+            name:{
+              value:branchBase.name
+            },
+            category:{
+              value:branchBase.category.id ? branchBase.category.id.toString() : undefined
+            },
+            parentOrg:{
+              value:branchBase.parentOrg.id ? branchBase.parentOrg.id.toString() : undefined
+            },
+            director:{
+              value:branchBase.director
+            },
+            phone:{
+              value:branchBase.phone
+            },
+            adress:{
+              value:branchBase.adress
+            },
+            province:{
+              value:arry[0]
+            },
+            city:{
+              value:arry[1]
+            },
+            area:{
+              value:arry[2]
+            },
+            addressDetail:{
+              value:addressDetail
+            }
+          }
         })
       })
   }
+
 
   closeDock() {
     console.log('bye bye');
@@ -79,24 +108,6 @@ class BranchesEditor extends Component {
     this.setState({
       changed: true
     })
-  }
-
-  getCity = (value) => {
-    ajax.Get(API.GET_AREA_SELECT(value))
-      .then(res => {
-        this.setState({
-          city:res.data.data
-        })
-      })
-  }
-
-  getArea = (value) => {
-    ajax.Get(API.GET_AREA_SELECT(value))
-      .then(res => {
-        this.setState({
-          area:res.data.data
-        })
-      })
   }
 
   handleSubmit = (e) => {
@@ -121,215 +132,18 @@ class BranchesEditor extends Component {
   };
 
   render() {
-    const {getFieldDecorator} = this.props.form;
-
-    const Province = getFieldDecorator('province')(
-      <Select
-        placeholder="选择省份"
-        notFoundContent="没有省份"
-        onChange={this.getCity}
-      >
-        {this.state.province.map((item,index)=>(<Option key={item.id.toString()}>{item.name}</Option>))}
-      </Select>)
-
-
-    const City = getFieldDecorator('city')(
-      <Select
-       placeholder="选择城市"
-       notFoundContent="没有城市"
-       onChange={this.getArea}
-      >
-        {this.state.city.map((item,index)=>(<Option key={item.id.toString()}>{item.name}</Option>))}
-      </Select>)
-
-    const Area = getFieldDecorator('area')(
-      <Select
-        placeholder="选择地区"
-        notFoundContent="没有地区"
-      >
-        {this.state.area.map((item,index)=>(<Option key={item.id.toString()}>{item.name}</Option>))}
-      </Select>)
-
-
-    const formItemLayout = {
-      labelCol: {
-        span: 6
-      },
-      wrapperCol: {
-        span: 14
-      }
-    };
-
-    const departmentInfo = this.state.department;
+    const branchInfo = this.state.branchInfo;
+    // const departmentInfo = this.state.department;
 
     return (
-      <Form onSubmit={this.handleSubmit.bind(this)}>
         <div
           className={classNames('dock-container','departmentEditor')}
           id="departmentEditor"
           onKeyDown={this.hasChange.bind(this)}
           ref={ departmentEditor => this.departmentEditor = departmentEditor}
         >
-          <Row className="dock-title">
-            <Col span={22}>
-              详情
-            </Col>
-            <Col span={2}>
-            <span
-              className="close"
-              onClick={this.closeDock.bind(this)}
-            >
-              &times;
-            </span>
-            </Col>
-          </Row>
-
-          {/*组织信息*/}
-          <Card
-            title={(
-
-              <Row>
-                <Col span="18">
-                  <h3>编辑</h3>
-                </Col>
-                <Col span="3">
-                  <Button
-                    className="cancel"
-                    disabled={this.state.changed ? false : true}
-                  >取消</Button>
-                </Col>
-                <Col span="3">
-                  <Button
-                    className="save"
-                    disabled={this.state.changed ? false : true}
-                    htmlType="submit"
-                  >保存</Button>
-                </Col>
-              </Row>
-            )}
-          >
-            <Row>
-              <Col span={12}>
-                <FormItem
-                  label={<span>组织名称</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('name', {
-                    rules: [{required: false, message: '组织名称!'}],
-                    initialValue: departmentInfo.name
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={12}>
-                <FormItem
-                  label={<span>负责人</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('director', {
-                    rules: [{required: false, message: '负责人!'}],
-                    initialValue: departmentInfo.director
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <FormItem
-                  label={<span>组织类别</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('category', {
-                    rules: [{required: false, message: '组织类别!'}],
-                    // initialValue: departmentInfo.category
-                  })(
-                    <Select
-                      onSelect={(value) => {
-                        ajax.Get(API.GET_ADD_DEPARTMENT_PARENT, {
-                          level: value
-                        }).then(res => {
-                          this.setState({
-                            parentDepartmentDropDown: res.data.data
-                          })
-                        })
-                      }}
-                    >
-                      {
-                        this.state.categoryDropdown.map((option, index) => {
-                          return <Option value={option.id.toString()} key={ option.id + option.name}>{option.name}</Option>
-                        })
-                      }
-                    </Select>
-                  )}
-                </FormItem>
-
-              </Col>
-              <Col span={12}>
-                <FormItem
-                  label={<span>所属组织</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('parentDepartment', {
-                    rules: [{required: false, message: '所属组织!'}],
-                    // initialValue: departmentInfo.parentOrg
-                  })(
-                    <Select>
-                      {
-                        this.state.parentDepartmentDropDown.map(item => {
-                          return <Option value={item.id.toString()} key={item.name + item.id}>{item.name}</Option>
-                        })
-                      }
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <FormItem
-                  label={<span>联系电话</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('phone', {
-                    rules: [{required: false, message: '联系电话!'}],
-                    initialValue: departmentInfo.phone
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={8}>
-
-              <Col span={6}>
-                <FormItem
-                  label={<span>地址</span>}
-                  labelCol={{span:12}}
-                  wrapperCol={{span:12}}
-                >
-                  {Province}
-                </FormItem>
-              </Col>
-              <Col span={3}>
-                <FormItem
-                  wrapperCol={{span:24}}
-                >
-                  {City}
-                </FormItem>
-              </Col>
-              <Col span={3}>
-                <FormItem
-                  wrapperCol={{span:24}}
-                >
-                  {Area}
-                </FormItem>
-              </Col>
-            </Row>
-          </Card>
-
+   
+          <BranchBaseInfo branchInfo= {branchInfo} id={this.props.id} getDepartments={this.props.getDepartments} closeDock={this.props.closeDock}/>
           {/*业务信息*/}
           <Card className="business" title={<h3>业务信息</h3>}>
             <Row>
@@ -337,7 +151,7 @@ class BranchesEditor extends Component {
                 客户规模：
               </Col>
               <Col span={20}>
-                {this.state.department.customerCount}
+                {this.state.branchInfo.customerCount}
               </Col>
             </Row>
             <Row>
@@ -345,7 +159,7 @@ class BranchesEditor extends Component {
                 存款规模：
               </Col>
               <Col span={20}>
-                ￥{this.state.department.depositCount}
+                ￥{this.state.branchInfo.depositCount}
               </Col>
             </Row>
             <Row>
@@ -353,7 +167,7 @@ class BranchesEditor extends Component {
                 贷款规模：
               </Col>
               <Col span={20}>
-                ￥{this.state.department.loanCount}
+                ￥{this.state.branchInfo.loanCount}
               </Col>
             </Row>
           </Card>
@@ -396,11 +210,10 @@ class BranchesEditor extends Component {
             </Row>
           </Card>
         </div>
-      </Form>
     )
   }
 
 }
 
 
-export default Form.create()(BranchesEditor)
+export default connect()(BranchesEditor)

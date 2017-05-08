@@ -30,7 +30,6 @@ export default class Branches extends Component {
   componentWillMount() {
     axios.get(API.GET_ALL_PRODUCT)
       .then(res => {
-        console.log(res.data.data)
         this.setState({
           table: {
             dataSource: res.data.data
@@ -52,7 +51,7 @@ export default class Branches extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: <NewProduct id="-1" closeDock={this.closeDock.bind(this)}/>
+        children:<ProductEditor id="id" closeDock={this.closeDock.bind(this)}/>
       }
     })
   }

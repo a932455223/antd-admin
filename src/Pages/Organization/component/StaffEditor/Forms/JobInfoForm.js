@@ -10,15 +10,20 @@ const Option = Select.Option;
 
 class JobInfoForm extends Component{
   state = {
-    changed : false,
+    changed :false,
     loading:false,
     leaders:[]
   }
 
   componentWillReceiveProps(nextProps) {
-    console.dir(nextProps.parentDepartmentDropDown)
+    if (!this.props.jobInfo && nextProps.jobInfo) {
+      let value = nextProps.jobInfo.departmentIds.value;
+      console.log('%cdepartmensChange will fired. ','color:red')
+      this.departmensChange(value,true);
+    }
   }
   onHandleSubmit = () =>{
+    this.props.hasNoChangeJob()
     this.setState({
       loading:true
     })
@@ -26,14 +31,13 @@ class JobInfoForm extends Component{
     const { getFieldsValue} = this.props.form;
     const FieldsValue = getFieldsValue();
     FieldsValue.inductionTime = FieldsValue.inductionTime && FieldsValue.inductionTime.format('YYYY-MM-DD')
-    console.log(FieldsValue);
     this.props.form.validateFields()
     let fieldErrors = this.props.form.getFieldsError();
     let hasError = false;
     for(let [key,value] of Object.entries(fieldErrors)){
       if(Array.isArray(value)){
         hasError = true;
-       break; 
+       break;
       }
     }
     if(hasError){
@@ -52,13 +56,14 @@ class JobInfoForm extends Component{
   }
   inputChange=()=>{
     this.setState({
-      changed:true
+      changed:true,
+      loading : false
     })
+    this.props.hasChangeJob()
   }
 
-  departmensChange = (value)=>{
-    console.dir(value)
-    this.inputChange();
+  departmensChange = (value,isFirst)=>{
+    console.log('%cdepartchagne fired','color:red')
     ajax.Get(API.GET_DEPARTMENTS_STAFFS,{"departmentIds[]":value.join(',')})
     .then((res)=>{
       this.setState({
@@ -69,10 +74,13 @@ class JobInfoForm extends Component{
     // $.get(API.GET_DEPARTMENTS_STAFFS,{"departmentIds[]":value}).then((res)=>{
     //   console.dir(res)
     // })
-
-    this.props.form.setFieldsValue({
+    if(isFirst !== true){
+      this.inputChange();
+      this.props.form.setFieldsValue({
       leader:undefined
     })
+    }
+
   }
 
   render(){
@@ -203,6 +211,7 @@ class JobInfoForm extends Component{
               })(
                 <Select
                   getPopupContainer={ () => document.getElementById('staffEditor')}
+                  placeholder="选择直属上级"
                 >
                   {
                     this.state.leaders && this.state.leaders.map(item => {
@@ -219,7 +228,7 @@ class JobInfoForm extends Component{
             <Col span="20">
               <Button
                 className={this.state.changed ? "ablesavebtn" : "disablesavebtn"}
-                disabled={this.state.changed ? false : true}
+                disabled={!this.state.changed}
                 htmlType="submit"
                 onClick={this.onHandleSubmit}
               >保存</Button>

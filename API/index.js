@@ -20,6 +20,7 @@ export default {
   //获取金融业务信息产品下拉：
   GET_CUSTOMER_FINANCE_CATEGORY:'/api/customer/finance/category',
   //*===============================GET=======================================*
+  GET_CUSTOMER_ENTERPRISE_BASE: customerId => `/api/customer/enterprise/${customerId}/base`,
   // 客户列表
   GET_CUSTOMERS: '/asd/customers',
   // customer/individual/:customerId/families
@@ -43,6 +44,8 @@ export default {
 
   // 新增客户
   POST_CUSTOMER_INDIVIDUAL_BASE: '/api/customer/individual/base',
+  PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1: id => `/api/customer/individual/${id}/base/tab1`,
+  PUT_CUSTOMER_INDIVIDUAL_BASE_TAB2: id => `/api/customer/individual/${id}/base/tab2`,
 
   GET_DEPARTMENT_AREAS: id => `/api/department/${id}/areas`,
   GET_CUSTOMER_DEPARTMENT: '/api/customer/add/departments/noHierarchy',

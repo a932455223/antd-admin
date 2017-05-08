@@ -13,12 +13,13 @@ import {
   DatePicker,
   Cascader
 } from 'antd';
+import { connect } from 'react-redux';
+import API from '../../../../../../API';
+import ajax from '../../../../../tools/POSTF';
 const FormItem = Form.Item;
 const Option = Select.Option;
 let addkey = 100;
 
-import API from '../../../../../../API';
-import ajax from '../../../../../tools/POSTF';
 
 class EditBriefBasicInfoForm extends Component{
   state = {
@@ -28,7 +29,8 @@ class EditBriefBasicInfoForm extends Component{
     departmentOptions: [],
     managerOptions: [],
     gridOptions: [],
-    accountsArr: []
+    accountsArr: [],
+    addkey: 1
   }
 
   componentWillMount(){
@@ -39,21 +41,16 @@ class EditBriefBasicInfoForm extends Component{
   componentWillReceiveProps(next) {
     // console.log('personalBasicInfo will recieve props');
     const { getFieldValue } = next.form;
-
-    if(!next.beEdited && next.joinersBeEdited) {
-      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
-    }
-
-    // 确认参与人员按钮被点击时
-    if(next.joinersBeEdited && (!this.props.beEdited || next.beEdited) ) {
-      let newState = update(this.state, {
-        basicInfoBeEdit: {$set: true}
-      })
-      this.setState(newState)
-    } else if(!next.beEdited) {
+    if(next.beEditedArray && !next.beEditedArray.includes('basicInfo')) {
       // 重置 InfoBeEdited
       let newState = update(this.state, {
         basicInfoBeEdit: {$set: false}
+      })
+      this.setState(newState)
+    } else {
+      // 重置 InfoBeEdited
+      let newState = update(this.state, {
+        basicInfoBeEdit: {$set: true}
       })
       this.setState(newState)
     }
@@ -74,51 +71,63 @@ class EditBriefBasicInfoForm extends Component{
   // 获取 department，
   getDepartments = (departmentId, managerId) => {
     // 所属机构下拉菜单
-    ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
-      .then((res) => {
-        let newState = update(this.state, {
-          departmentOptions: {$set: res.data.data},
-        });
-        this.setState(newState);
-      })
 
-    // 所属客户经理下拉菜单
-    ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId))
-      .then((res) => {
+    ajax.all([ajax.Get(API.GET_CUSTOMER_DEPARTMENT),ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)),ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))])
+      .then((res)=>{
         let newState = update(this.state, {
-          managerOptions: {$set: res.data.data},
-        });
+                departmentOptions: {$set: res[0].data.data},
+                managerOptions:{$set:res[1].data.data},
+                gridOptions:{$set:res[2].data.data}
+              });
         this.setState(newState);
       })
-
-    // 重置网格
-    ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))
-      .then((res) => {
-        let newState = update(this.state, {
-          gridOptions: {$set: res.data.data},
-        });
-        this.setState(newState);
-      })
+    // ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
+    //   .then((res) => {
+    //     let newState = update(this.state, {
+    //       departmentOptions: {$set: res.data.data},
+    //     });
+    //     this.setState(newState);
+    //   })
+    //
+    // // 所属客户经理下拉菜单
+    // ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId))
+    //   .then((res) => {
+    //     let newState = update(this.state, {
+    //       managerOptions: {$set: res.data.data},
+    //     });
+    //     this.setState(newState);
+    //   })
+    //
+    // // 重置网格
+    // ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))
+    //   .then((res) => {
+    //     let newState = update(this.state, {
+    //       gridOptions: {$set: res.data.data},
+    //     });
+    //     this.setState(newState);
+    //   })
   }
 
   // basic 输入框内容被修改了
   inputBasicInfoChange = () => {
-    if(!this.props.beEdited) {
-      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    if(!this.state.basicInfoBeEdit) {
+      this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
+      let newState = update(this.state, {
+        basicInfoBeEdit: {$set: true}
+      })
+      this.setState(newState)
     }
-
-    let newState = update(this.state, {
-      basicInfoBeEdit: {$set: true}
-    })
-    this.setState(newState)
   }
 
   // basic 选择框内容被修改了
   selectBasicInfoChange = (value) => {
-    let newState = update(this.state, {
-      basicInfoBeEdit: {$set: true}
-    })
-    this.setState(newState);
+    if(!this.state.basicInfoBeEdit) {
+      this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
+      let newState = update(this.state, {
+        basicInfoBeEdit: {$set: true}
+      })
+      this.setState(newState)
+    }
   };
 
   // select staff
@@ -133,8 +142,8 @@ class EditBriefBasicInfoForm extends Component{
 
     const { accountsArr } = this.state;
     accountsArr.push(`row-${addkey}`);
-    if(!this.props.beEdited) {
-      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    if(!this.state.basicInfoBeEdit) {
+      this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
     }
     let newState = update(this.state, {
       accountsArr: {$set: accountsArr},
@@ -150,11 +159,10 @@ class EditBriefBasicInfoForm extends Component{
     deleteAccountsInfo(k);
 
     const { accountsArr } = this.state;
-
     const position = accountsArr.indexOf(k);
     accountsArr.splice(position, 1);
-    if(!this.props.beEdited) {
-      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    if(!this.state.basicInfoBeEdit) {
+      this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
     }
     let newState = update(this.state, {
       accountsArr: {$set: accountsArr},
@@ -165,22 +173,22 @@ class EditBriefBasicInfoForm extends Component{
 
   // 删除 tags
   handleClose = (joiner) => {
-    if(!this.props.beEdited) {
-      this.props.customerInfoBeEdit(); // 修改 store树上的 beEdited
+    if(!this.state.basicInfoBeEdit) {
+      this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
+      let newState = update(this.state, {
+        basicInfoBeEdit: {$set: true}
+      })
+      this.setState(newState);
     }
-
-    let newState = update(this.state, {
-      basicInfoBeEdit: {$set: true}
-    })
-    this.setState(newState);
 
     this.props.changeJoiners(joiner);
   }
 
   // 更新信息
   updateInfo = (briefInfo) => {
+    const { validateFields } = this.props.form;
     const { addNewCustomer } = this.props;
-
+    validateFields();
     addNewCustomer(briefInfo);
   }
 
@@ -191,14 +199,15 @@ class EditBriefBasicInfoForm extends Component{
       mode,
       currentId,
       createCustomerSuccess,
-      beEdited,
+      beEditedArray,
       joinersBeEdited,
       accounts } = this.props;
-    const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue} = this.props.form;
+    const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue, validateFields} = this.props.form;
     const { department, manager, grid, tags } = this.props.briefInfo;
     const { departmentOptions, managerOptions, gridOptions, accountsArr } = this.state;
-    const accountsArray = accountsArr.length == 0 ? ['row-0'] : accountsArr
 
+    // validateFields()
+    // console.log(validateFields());
 
     const formItemLayout = {
       labelCol: {
@@ -219,189 +228,140 @@ class EditBriefBasicInfoForm extends Component{
      ** basic info
      */
     const EditParticipate = tags && tags.map((item,index) => {
-        return (
-          <Tag key={`${item.id}${index}`} closable="true" afterClose={() => this.handleClose(item)}>
-            {item.name}
-          </Tag>
-        )
-      })
+      return (
+        <Tag key={`${item.id}${index}`} closable="true" afterClose={() => this.handleClose(item)}>
+          {item.name}
+        </Tag>
+      )
+    })
 
-    const EditFormItems = () => {
-      let formItemArray;
-      // if(accountsArr.length === 0) {
-      //   formItemArray = (
-      //     <Row key={0}>
-      //       <Col span={12}>
-      //         <FormItem
-      //           label='账户'
-      //           required={false}
-      //           key={`row-0-accountNo`}
-      //           {...formItemLayout}
-      //           className="accounts"
-      //         >
-      //           {getFieldDecorator(`row-0-accountNo`, {
-      //             // validateTrigger: ['onChange', 'onBlur'],
-      //             // initialValue:len > index ? eachCustomerInfo.accounts[index].accountNo : "",
-      //             onChange: this.inputBasicInfoChange
-      //           })(
-      //             <Input placeholder="填写账号信息"  />
-      //           )}
-      //         </FormItem>
-      //       </Col>
-      //
-      //       <Col span={12} className="addMessage">
-      //         <FormItem wrapperCol={{span: 24}}>
-      //           {getFieldDecorator(`row-0-remark`, {
-      //             // initialValue:len > index ? eachCustomerInfo.accounts[index].remark : "",
-      //             onChange: this.inputBasicInfoChange
-      //           })(
-      //             <Input placeholder="填写备注信息"/>
-      //           )}
-      //             <i
-      //               className="dynamic-add-button iconfont"
-      //               onClick={this.add}
-      //             >&#xe688;</i>
-      //         </FormItem>
-      //       </Col>
-      //
-      //     </Row>
-      //   )
-      // } else {
-      // var len = accounts && accounts.length;
-      formItemArray = accountsArr.map((k, index) => {
-        return (
-          <Row key={index}>
-            <Col span={12}>
-              <FormItem
-                label={index === 0 ? '账户' : ''}
-                required={false}
-                key={k}
-                {...(index===0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                className="accounts"
-              >
-                {getFieldDecorator(`${k}-accountNo`, {
-                  // validateTrigger: ['onChange', 'onBlur'],
-                  // initialValue:len > index ? eachCustomerInfo.accounts[index].accountNo : "",
-                  onChange: this.inputBasicInfoChange
-                })(
-                  <Input placeholder="填写账号信息"  />
-                )}
-              </FormItem>
-            </Col>
+    const AccountsRemark = accountsArr.map((k, index) =>
+      <FormItem
+        key={k + 'remark'}
+        wrapperCol={{span: 24}}
+      >
+        {getFieldDecorator(`${k}-remark`, {
+          onChange: this.inputBasicInfoChange
+        })(
+          <Input placeholder="填写备注信息"/>
+        )}
 
-            <Col span={12} className="addMessage">
-              <FormItem
-                wrapperCol={{span: 24}}
-              >
-                {getFieldDecorator(`${k}-remark`, {
-                  // initialValue:len > index ? eachCustomerInfo.accounts[index].remark : "",
-                  onChange: this.inputBasicInfoChange
-                })(
-                  <Input placeholder="填写备注信息"/>
-                )}
-
-                {index === 0
-                  ?
-                  <i
-                    className="dynamic-add-button iconfont"
-                    onClick={this.add}
-                  >&#xe688;</i>
-                  :
-                  <i
-                    className="dynamic-delete-button iconfont"
-                    onClick={() => this.remove(k)}
-                  >&#xe697;</i>
-                }
-              </FormItem>
-            </Col>
-
-          </Row>
-        )
-      });
-      // }
-
-      return formItemArray;
-    }
+        {index === 0
+          ?
+          <i className="dynamic-add-button iconfont" onClick={this.add}>&#xe688;</i>
+          :
+          <i className="dynamic-delete-button iconfont" onClick={() => this.remove(k)}>&#xe697;</i>
+        }
+      </FormItem>
+    );
+    const AccountsNumber = accountsArr.map((k, index) =>
+      <FormItem
+        label={index === 0 ? '账户' : ''}
+        required={false}
+        key={k + 'accountNo'}
+        {...(index===0 ? formItemLayout : formItemLayoutWithOutLabel)}
+        className="accounts"
+      >
+        {getFieldDecorator(`${k}-accountNo`, {
+          rules: [{
+            required: true,
+          },{
+            pattern: /^\d+$/
+          }],
+          // validateTrigger: ['onChange', 'onBlur'],
+          onChange: this.inputBasicInfoChange
+        })(
+          <Input placeholder="填写账号信息"  />
+        )}
+      </FormItem>
+    );
 
     return (
       <Form id="editMyBase" className="basicInfolist">
         <Row className={currentId === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
-          <Col span={7}>
-            <FormItem labelCol={{span: 11}}
-                      wrapperCol={{span: 13}}
-                      label="所属机构">
-              {getFieldDecorator('department', {
-                rules: [{
-                  required: true,
-                  message: '选择所属机构!'
-                }],
-                // initialValue: eachCustomerInfo.department,
-                onChange: this.selectBasicInfoChange
-              })(
-                <Select
-                  showSearch
-                  placeholder="选择所属机构"
-                  optionFilterProp="children"
-                  filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                  getPopupContainer={() => document.getElementById('editMyBase')}
-                >
-                  {departmentOptions && departmentOptions.map(departmentItem =>
-                    <Option key={departmentItem.id} value={departmentItem.id + ''}>{departmentItem.name}</Option>
-                  )}
-                </Select>
-              )}
-            </FormItem>
-          </Col>
+            <Col span={7}>
+              <FormItem labelCol={{span: 11}}
+                        wrapperCol={{span: 13}}
+                        label="所属机构">
+                {getFieldDecorator('department', {
+                  rules: [{
+                    required: true,
+                    message: '选择所属机构!'
+                  }],
+                  // initialValue: eachCustomerInfo.department,
+                  onChange: this.selectBasicInfoChange
+                })(
+                  <Select
+                    showSearch
+                    placeholder="选择所属机构"
+                    optionFilterProp="children"
+                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    getPopupContainer={() => document.getElementById('editMyBase')}
+                  >
+                    {departmentOptions && departmentOptions.map(departmentItem =>
+                      <Option key={departmentItem.id} value={departmentItem.id + ''}>{departmentItem.name}</Option>
+                    )}
+                  </Select>
+                )}
+              </FormItem>
+            </Col>
 
-          <Col span={7}>
-            <FormItem labelCol={{span: 11}}
-                      wrapperCol={{span: 13}}
-                      label="客户经理">
-              {getFieldDecorator('manager', {
-                // initialValue: eachCustomerInfo.manager,
-                onChange: this.selectBasicInfoChange
-              })(
-                <Select
-                  showSearch
-                  placeholder="选择客户经理"
-                  optionFilterProp="children"
-                  filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                  getPopupContainer={() => document.getElementById('editMyBase')}
-                >
-                  {managerOptions && managerOptions.map(managerItem =>
-                    <Option key={managerItem.id} value={managerItem.id + ''}>{managerItem.name}</Option>
-                  )}
-                </Select>
-              )}
-            </FormItem>
-          </Col>
+            <Col span={7}>
+              <FormItem labelCol={{span: 11}}
+                        wrapperCol={{span: 13}}
+                        label="客户经理">
+                {getFieldDecorator('manager', {
+                  onChange: this.selectBasicInfoChange
+                })(
+                  <Select
+                    showSearch
+                    placeholder="选择客户经理"
+                    optionFilterProp="children"
+                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    getPopupContainer={() => document.getElementById('editMyBase')}
+                  >
+                    {managerOptions && managerOptions.map(managerItem =>
+                      <Option key={managerItem.id} value={managerItem.id + ''}>{managerItem.name}</Option>
+                    )}
+                  </Select>
+                )}
+              </FormItem>
+            </Col>
 
-          <Col span={7}>
-            <FormItem labelCol={{span: 11}}
-                      wrapperCol={{span: 13}}
-                      label="所属网格">
-              {getFieldDecorator('grid', {
-                // initialValue: eachCustomerInfo.grid,
-                onChange: this.selectBasicInfoChange
-              })(
-                <Select
-                  showSearch
-                  placeholder="选择所属网格"
-                  optionFilterProp="children"
-                  filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                  getPopupContainer={() => document.getElementById('editMyBase')}
-                >
-                  {gridOptions && gridOptions.map(gridItem =>
-                    <Option key={gridItem.id} value={gridItem.id + ''}>{gridItem.name}</Option>
-                  )}
-                </Select>
-              )}
-            </FormItem>
-          </Col>
+            <Col span={7}>
+              <FormItem labelCol={{span: 11}}
+                        wrapperCol={{span: 13}}
+                        label="所属网格">
+                {getFieldDecorator('grid', {
+                  onChange: this.selectBasicInfoChange
+                })(
+                  <Select
+                    showSearch
+                    placeholder="选择所属网格"
+                    optionFilterProp="children"
+                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    getPopupContainer={() => document.getElementById('editMyBase')}
+                  >
+                    {gridOptions && gridOptions.map(gridItem =>
+                      <Option key={gridItem.id} value={gridItem.id + ''}>{gridItem.name}</Option>
+                    )}
+                  </Select>
+                )}
+              </FormItem>
+            </Col>
         </Row>
 
         <div className="personInfo">
-          {EditFormItems()}
+          <Row>
+            <Col span={12}>
+              {AccountsNumber}
+            </Col>
+
+            <Col span={12} className="addMessage">
+              {AccountsRemark}
+            </Col>
+          </Row>
+
           <Row>
             <Col span={12} className={currentId === -1 ? "phoneCreate" : "phoneEdit"}>
               <FormItem labelCol={{span: 8}}
@@ -442,7 +402,6 @@ class EditBriefBasicInfoForm extends Component{
                 label="身份证号："
                 className="certificate"
               >
-
                 {getFieldDecorator('certificate', {
                   // initialValue: eachCustomerInfo.certificate,
                   onChange: this.inputBasicInfoChange
@@ -555,7 +514,7 @@ class EditBriefBasicInfoForm extends Component{
 
 function mapPropsToFields (props) {
   const { briefInfo, accounts } = props;
-  // console.log(accounts);
+  console.log(accounts);
   return {
     ...accounts,
     department: {
@@ -592,16 +551,18 @@ function mapPropsToFields (props) {
 }
 
 function onFieldsChange(props, changedFields) {
-  if(!props.beEdited) {
-    props.customerInfoBeEdit(); // 修改 store树上的 beEdited
-  }
-
   props.onChange(changedFields);
 };
 
+function onValuesChange(props, values) {
+  // console.log(props)
+  // console.log(values)
+}
+
 const EditBriefBasicInfo = Form.create({
   mapPropsToFields,
-  onFieldsChange
+  onFieldsChange,
+  onValuesChange
 })(EditBriefBasicInfoForm)
 
-export default EditBriefBasicInfo;
+export default connect()(EditBriefBasicInfo);

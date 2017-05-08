@@ -36,19 +36,16 @@ export default class AddCrewModal extends Component {
   }
 
   componentWillReceiveProps(next){
-    console.log('next');
-    const { staffs } = this.props;
-    if(staffs.length > 0){
-      let a = [];
-      staffs.map((item) => {
-        a.push(item.id);
-        this.setState({
-          selectedRowKeys: a
-        })
-      })
-    }
+    // console.log('next');
+    const { staffs } = next;
+    let a = [];
+    staffs.map((item) => {
+      a.push(item.id);
+    })
+    this.setState({
+      selectedRowKeys: a
+    })
 
-    const { selectedRowKeys } = this.state;
     // 选择经理，同步到 tags
     this.setState({
       staffs: staffs
@@ -80,9 +77,9 @@ export default class AddCrewModal extends Component {
   //   this.initTableScroll();
   // }
 
-  // componentWillUnmout(){
-  //   removeEventListener('resize', this.initTableScroll)
-  // }
+  componentWillUnmout(){
+    removeEventListener('resize', this.initTableScroll)
+  }
 
   initTableScroll() {
     let addCrew = document.getElementById('addCrew');
