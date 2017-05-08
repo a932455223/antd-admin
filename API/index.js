@@ -167,5 +167,8 @@ export default {
   GET_ROLES : '/api/roles',
 
   // 员工业务信息
-  GET_STAFF_BUSSINESS_INFO: id => `/api/staff/${id}/businessInfo`
+  GET_STAFF_BUSSINESS_INFO: id => `/api/staff/${id}/businessInfo`,
+
+  //分配时全部的权限数据
+  GET_ALL_RPIVILIGE:'/asd/privilege/abc'
 }
