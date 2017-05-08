@@ -79,40 +79,18 @@ class CompanyBasicInfo extends Component{
   // 获取 department，
   getDepartments = (departmentId, managerId) => {
     // 所属机构下拉菜单
-    ajax.all([ajax.Get(API.GET_CUSTOMER_DEPARTMENT),ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)),ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))])
-      .then((res)=>{
-        let newState = update(this.state, {
-                departmentOptions: {$set: res[0].data.data},
-                managerOptions:{$set:res[1].data.data},
-                gridOptions:{$set:res[2].data.data}
-              });
-        this.setState(newState);
-      })
-    // ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
-    // .then((res) => {
-    //   let newState = update(this.state, {
-    //     departmentOptions: {$set: res.data.data},
-    //   });
-    //   this.setState(newState);
-    // })
-    //
-    // // 所属客户经理下拉菜单
-    // ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId))
-    // .then((res) => {
-    //   let newState = update(this.state, {
-    //     managerOptions: {$set: res.data.data},
-    //   });
-    //   this.setState(newState);
-    // })
-    //
-    // // 重置网格
-    // ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))
-    // .then((res) => {
-    //   let newState = update(this.state, {
-    //     gridOptions: {$set: res.data.data},
-    //   });
-    //   this.setState(newState);
-    // })
+    ajax.all([
+      ajax.Get(API.GET_CUSTOMER_DEPARTMENT),
+      ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)),
+      ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))
+    ]).then((res)=>{
+      let newState = update(this.state, {
+        departmentOptions: {$set: res[0].data.data},
+        managerOptions:{$set:res[1].data.data},
+        gridOptions:{$set:res[2].data.data}
+      });
+      this.setState(newState);
+    })
   }
 
   // 输入框发生变化
@@ -160,7 +138,7 @@ class CompanyBasicInfo extends Component{
     const { addAccountsInfo } = this.props;
     addAccountsInfo(addkey);
 
-    const { accountsArr } = this.state;
+    const { accountsArr } = this.props;
     accountsArr.push(`row-${addkey}`);
     if(!this.state.basicInfoBeEdit) {
       this.props.increaseBeEditArray('enterpriseBasicInfo'); // 修改 store树上的 beEditedArray
@@ -178,7 +156,7 @@ class CompanyBasicInfo extends Component{
     const { deleteAccountsInfo } = this.props;
     deleteAccountsInfo(k);
 
-    const { accountsArr } = this.state;
+    const { accountsArr } = this.props;
 
     const position = accountsArr.indexOf(k);
     accountsArr.splice(position, 1);
@@ -201,9 +179,16 @@ class CompanyBasicInfo extends Component{
   }
 
   render() {
-    const {eachCompanyInfo,currentId, createCustomerSuccess, tags} = this.props;
+    const {
+      eachCompanyInfo,
+      currentId,
+      createCustomerSuccess,
+      tags,
+      accountsArr
+    } = this.props;
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
-    const { departmentOptions, managerOptions, gridOptions, basicInfoBeEdit, accountsArr } = this.state;
+    const { departmentOptions, managerOptions, gridOptions, basicInfoBeEdit } = this.state;
+    console.log(accountsArr);
 
     const formItemLayout = {
       labelCol: {

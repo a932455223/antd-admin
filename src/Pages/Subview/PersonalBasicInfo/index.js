@@ -219,7 +219,6 @@ class BasicInfo extends Component {
       this.setState({
         joinersBeEdited: false
       })
-      // this.resetJoiners();
     }
   }
 
@@ -404,7 +403,7 @@ class BasicInfo extends Component {
       wechat: briefInfo.wechat ? briefInfo.wechat : '',
     }
 
-    // console.log(json);
+    console.log(json);
 
     // 如果 id不存在，则调用创建用户接口
     if(id === -1) {
@@ -695,7 +694,7 @@ class BasicInfo extends Component {
       mode: mode
     }
 
-    console.log(id);
+    // console.log(id);
 
     return(
       <div style={{textAlign: 'left'}}>
