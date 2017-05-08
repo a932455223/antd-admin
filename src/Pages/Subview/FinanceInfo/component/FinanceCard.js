@@ -13,7 +13,7 @@ import api from './../../../../../API';
 import ajax from '../../../../tools/POSTF.js';
 const FormItem = Form.Item;
 const Option = Select.Option;
-export default class familyCard extends Component{
+export default class FinanceCard extends Component{
     
     constructor(props) {
         super(props);
@@ -22,9 +22,7 @@ export default class familyCard extends Component{
         
     }
     componentWillReceiveProps(){
-        // console.log(
-    //    this.findDropDownItem(61,'commonJobCategory'));
-    //    console.log(this.props.commonJobCategory);
+
     }
     findDropDownItem(value,dropDownType){
         return this.props[dropDownType].filter((item)=>{
@@ -42,18 +40,19 @@ export default class familyCard extends Component{
         return (
             <Card
                 className="my-card"
-                title={this.props.item.name.value}
+                //title={this.props.item.name.value}
+               // title={this.findDropDownItem(this.props.item.financeCategory.value,'financeCategoryDropdown').name}
+               title={'金融业务产品'}
                 key={this.props.item.id.value}
                 extra={
                     <div>
                         <span
-                            onClick={()=>{this.props.toggleEdit(this.props.index)}}
+                              onClick={()=>{this.props.toggleEdit(this.props.index)}}
                         >
                             <i className="iconfont icon-edit"></i>编辑
                         </span>
 
                         <span
-                            onClick={()=>{this.props.deleteFamilyValue(this.props.item.id.value)}}
                         >
                             <i className="iconfont icon-delete"></i>删除
                         </span>
@@ -62,34 +61,42 @@ export default class familyCard extends Component{
                 >
                 <Row>
                     <Col span={8}>
-                        关系：
+                        业务机构名称：
                     </Col>
                     <Col span={16}>
-                        {this.findDropDownItem(this.props.item.relation.value,'familyRelation').name}
+                        {this.props.item.org.value===1?'我行':'他行'}
                     </Col>
                 </Row>
                 <Row>
                     <Col span={8}>
-                        联系方式：
+                        业务额：
                     </Col>
                     <Col span={16}>
-                        {this.props.item.phone.value}
+                        {this.props.item.money.value}
                     </Col>
                 </Row>
                 <Row>
                     <Col span={8}>
-                        身份证号：
+                        利益／收益：
                     </Col>
                     <Col span={16}>
-                        {this.props.item.certificate.value}
+                        {this.props.item.profit.value}
                     </Col>
                 </Row>
                 <Row>
                     <Col span={8}>
-                        工作属性：
+                        购买日：
                     </Col>
                     <Col span={16}>
-                        {this.props.item.jobCategory.value===""?"":this.findDropDownItem(this.props.item.jobCategory.value,'commonJobCategory').name}
+                        {this.props.item.buyDate.value}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={8}>
+                        到期日／销毁日：
+                    </Col>
+                    <Col span={16}>
+                        {this.props.item.expireDate.value}
                     </Col>
                 </Row>
             </Card>

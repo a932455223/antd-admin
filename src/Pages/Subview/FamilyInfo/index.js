@@ -10,11 +10,10 @@ import {
   Modal,
   message
 } from 'antd';
-import _ from 'lodash';
 import styles from './indexStyle.less';
 import api from './../../../../API';
-import update from 'immutability-helper';
 import { connect } from 'react-redux';
+import update from 'immutability-helper';
 import ajax from '../../../tools/POSTF.js';
 import AddFamilyCard from './component/addFamilyCard'
 import FamilyCard from './component/familyCard'
@@ -47,16 +46,100 @@ class FamilyInfo extends Component {
       }
     }
   }
-  changeAddFamilyCardLoading(){
-    this.setState({"addFamilyCardLoading":!this.state.addFamilyCardLoading})
+//-----------------APIS----------------------
+  //家庭成员数组
+  getFamilyInfo = (id) => {
+    ajax.Get(api.GET_CUSTOMERS_FAMILY(id))
+    .then((data) => {
+      if(data.status===200&&data.statusText==='OK'){
+        console.log(data.status)
+        let newFamilyList= data.data.data.map((item)=>{
+          return Object.keys(item).reduce((pre,ky)=>{
+            if(item[ky]===null){
+              pre[ky] = {value:""}
+            }else{
+              pre[ky] = {value:item[ky]+""}
+            }
+            // console.log(item[ky]===null)
+            // pre[ky] = {value:item[ky]+""}
+            return pre;
+          },{})
+        });
+        this.setState({
+          familyList:newFamilyList,
+          isModify:new Array(newFamilyList.length).fill(false),
+          isLoading:false,
+        })
+        this.resetAddCard();
+        // this.AddFamilyCard.toggleAdd();
+        console.log(this)
+        console.log("getfamilies")
+      }
+    })
   }
-  //查看和修改状态切换
-  toggleEdit=(index)=>{
-    let newState=update(
-      this.state,{isModify:{[index]:{$set:!this.state.isModify[index]}}}
-    )
-    this.setState(newState);
-  };
+  //成员关系下拉菜单
+  getFamilyRelation(){
+    ajax.Get(api.GET_COMMON_DROPDOWN('familyRelation'))
+    .then((data) => {
+      if (data.status === 200 && data.statusText === 'OK' && data.data) {
+        let familyRelation = data.data.data;
+        this.setState({
+          familyRelation: familyRelation
+        })
+      }
+    })
+  }
+  //工作属性下拉菜单
+  getCommonJobCategory(){
+    ajax.Get(api.GET_COMMON_DROPDOWN('commonJobCategory'))
+    .then((data) => {
+      if (data.status === 200 && data.statusText === 'OK' && data.data) {
+        let commonJobCategory = data.data.data;
+        this.setState({
+          commonJobCategory: commonJobCategory
+        })
+      }
+    })
+  }
+  //删除family信息
+  deleteFamilyValue=(familyId)=>{
+    ajax.Delete(api.DELETE_CUSTOMERS_FAMILY(familyId))
+      .then(res=>{
+        console.log(res)
+            if(res.data.code===200){
+              if(res.data.message==='OK'){
+                console.log('成功')
+                this.getFamilyInfo(this.props.currentId);
+              }
+            }else{
+              console.log(res.data.message)
+            }
+      })
+  }
+  //增加新的card
+  addNewFamilyValue=(data)=>{
+    this.changeAddFamilyCardLoading();
+    console.log(data);
+    setTimeout(()=>{
+      ajax.Post(api.POST_CUSTOMERS_FAMILY(this.props.currentId),data)
+        .then( res => {
+              // if(res.data.message === 'OK'){
+              //   this.getFamilyInfo(this.props.currentId);
+              // }
+              console.log(res)
+              if(res.data.code===200){
+                if(res.data.message==='OK'){
+                  console.log('成功')
+                  this.getFamilyInfo(this.props.currentId);
+                }
+              }else{
+                console.log(res.data.message)
+              }
+              this.changeAddFamilyCardLoading();
+            })
+
+    },2000)
+  }
   //保存修改
   saveChangeValue=(index,values,num)=>{
     setTimeout(()=>{
@@ -91,45 +174,20 @@ class FamilyInfo extends Component {
     },2000)
     
   };
-  //增加新的card
-  addNewFamilyValue=(data)=>{
-    this.changeAddFamilyCardLoading();
-    console.log(data);
-    setTimeout(()=>{
-      ajax.Post(api.POST_CUSTOMERS_FAMILY(this.props.currentId),data)
-        .then( res => {
-              // if(res.data.message === 'OK'){
-              //   this.getFamilyInfo(this.props.currentId);
-              // }
-              console.log(res)
-              if(res.data.code===200){
-                if(res.data.message==='OK'){
-                  console.log('成功')
-                  this.getFamilyInfo(this.props.currentId);
-                }
-              }else{
-                console.log(res.data.message)
-              }
-              this.changeAddFamilyCardLoading();
-            })
-
-    },2000)
+//状态修改：
+  //add按钮loading
+  changeAddFamilyCardLoading(){
+    this.setState({"addFamilyCardLoading":!this.state.addFamilyCardLoading})
   }
-  //删除family信息
-  deleteFamilyValue=(familyId)=>{
-    ajax.Delete(api.DELETE_CUSTOMERS_FAMILY(familyId))
-      .then(res=>{
-        console.log(res)
-            if(res.data.code===200){
-              if(res.data.message==='OK'){
-                console.log('成功')
-                this.getFamilyInfo(this.props.currentId);
-              }
-            }else{
-              console.log(res.data.message)
-            }
-      })
-  }
+  //查看和修改状态切换
+  toggleEdit=(index)=>{
+    let newState=update(
+      this.state,{isModify:{[index]:{$set:!this.state.isModify[index]}}}
+    )
+    this.setState(newState);
+  };
+  
+  
   cancelChangeValue=()=>{
     this.getFamilyInfo(this.props.currentId);
   };
@@ -155,61 +213,6 @@ class FamilyInfo extends Component {
       }
     })
   }
-  //-----------------APIS----------------------
-  //家庭成员数组
-  getFamilyInfo = (id) => {
-    ajax.Get(api.GET_CUSTOMERS_FAMILY(id))
-    .then((data) => {
-      if(data.status===200&&data.statusText==='OK'){
-        console.log(data.status)
-        let newFamilyList= data.data.data.map((item)=>{
-          return Object.keys(item).reduce((pre,ky)=>{
-            if(item[ky]===null){
-              pre[ky] = {value:""}
-            }else{
-              pre[ky] = {value:item[ky]+""}
-            }
-            // console.log(item[ky]===null)
-            // pre[ky] = {value:item[ky]+""}
-            return pre;
-          },{})
-        });
-        this.setState({
-          familyList:newFamilyList,
-          isModify:new Array(newFamilyList.length).fill(false),
-          isLoading:false,
-        })
-        this.resetAddCard();
-        // this.AddFamilyCard.toggleAdd();
-        console.log(this)
-        console.log("getfamilies")
-      }
-    })
-  }
-  //成员关系下拉菜单,api接口
-  getFamilyRelation(){
-    ajax.Get(api.GET_COMMON_DROPDOWN('familyRelation'))
-    .then((data) => {
-      if (data.status === 200 && data.statusText === 'OK' && data.data) {
-        let familyRelation = data.data.data;
-        this.setState({
-          familyRelation: familyRelation
-        })
-      }
-    })
-  }
-  //工作属性下拉菜单,api接口
-  getCommonJobCategory(){
-    ajax.Get(api.GET_COMMON_DROPDOWN('commonJobCategory'))
-    .then((data) => {
-      if (data.status === 200 && data.statusText === 'OK' && data.data) {
-        let commonJobCategory = data.data.data;
-        this.setState({
-          commonJobCategory: commonJobCategory
-        })
-      }
-    })
-  }
   handleFormChange = (index,changedFields) => {
     // console.log(index)
     // this.setState({
@@ -226,6 +229,7 @@ class FamilyInfo extends Component {
     let fields={...this.state.newFamily,...changedFields};
     this.setState({newFamily:fields});
   }
+
   componentWillMount() {
     console.log("======","familyinfo willmount ")
     this.getFamilyInfo(this.props.currentId);
@@ -289,11 +293,9 @@ class FamilyInfo extends Component {
               })
             }
             <AddFamilyCard
-              familyRelation={this.state.familyRelation}
               commonJobCategory={this.state.commonJobCategory}
               addNewFamilyValue={this.addNewFamilyValue}
               familyRelation={this.state.familyRelation}
-              commonJobCategory={this.state.commonJobCategory}
               addFamilyCardLoading={this.state.addFamilyCardLoading}
               changeAddFamilyCardLoading={this.changeAddFamilyCardLoading}
               {...this.state.newFamily}
@@ -306,11 +308,9 @@ class FamilyInfo extends Component {
             </pre>
           </div>:
           <AddFamilyCard
-            familyRelation={this.state.familyRelation}
             commonJobCategory={this.state.commonJobCategory}
             addNewFamilyValue={this.addNewFamilyValue}
             familyRelation={this.state.familyRelation}
-            commonJobCategory={this.state.commonJobCategory}
             addFamilyCardLoading={this.state.addFamilyCardLoading}
             changeAddFamilyCardLoading={this.changeAddFamilyCardLoading}
             {...this.state.newFamily}

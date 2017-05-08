@@ -1,23 +1,25 @@
 export default {
-  //个人客户家庭信息：
-  //查看
+  //个人客户：
+  //户家庭信息：查看、增加、删除、修改
   GET_CUSTOMERS_FAMILY:customerId =>`/api/customer/individual/${customerId}/families`,
-  //增加
   POST_CUSTOMERS_FAMILY:customerId => `/api/customer/individual/${customerId}/family`,
-  //删除
   DELETE_CUSTOMERS_FAMILY:familyId=>`/api/customer/individual/family/${familyId}`,
-  //修改
   PUT_CUSTOMERS_FAMILY:familyId => `/api/customer/individual/family/${familyId}`,
-  //企业客户关键人信息
-  //查看
+  //企业客户：
+  //关键人信息查看、增加、删除、修改
   GET_CUSTOMETS_KEYPERSONS:customerId=>`/api/customer/enterprise/${customerId}/keyPersons`,
-  //增加
   POST_CUSTOMERS_KEYPERSONS:customerId=>`/api/customer/enterprise/${customerId}/keyPerson`,
-  //删除
-  DELETE_CUSTOMERS_KEYPERSONS:customerId=>`/api/customer/enterprise/keyPerson/${customerId}`,
-  //修改
-  PUT_CUSTOMERS_KEYPERSONS:customerId=>`/api/customer/enterprise/keyPerson/${customerId}`,
-  /*===============================GET=======================================*/
+  DELETE_CUSTOMERS_KEYPERSONS:keypersonId=>`/api/customer/enterprise/keyPerson/${keypersonId}`,
+  PUT_CUSTOMERS_KEYPERSONS:keypersonId=>`/api/customer/enterprise/keyPerson/${keypersonId}`,
+  //个人客户金融业务信息、企业用户线下业务：
+  // 查看、增加、删除、修改
+  GET_CUSTOMER_FINANCES:customerId=>`/api/customer/${customerId}/finances`,
+  POST_CUSTOMER_FINANCES:customerId=>`/api/customer/${customerId}/finance`,
+  DELETE_CUSTOMERS_FINANCES:financesId=>`/api/customer/finance/${financesId}`,
+  PUT_CUSTOMERS_FINANCES:financesId=>`/api/customer/finance/${financesId}`,
+  //获取金融业务信息产品下拉：
+  GET_CUSTOMER_FINANCE_CATEGORY:'/api/customer/finance/category',
+  //*===============================GET=======================================*
   // 客户列表
   GET_CUSTOMERS: '/asd/customers',
   // customer/individual/:customerId/families
