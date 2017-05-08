@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import update from 'immutability-helper';
 import {
   Button,
   Icon,
@@ -68,16 +69,61 @@ export default class MyCustomer extends Component {
       }
     })
 
-      this.getCustomers();
+    this.getCustomers();
   }
 
+  componentWillReceiveProps() {
+    console.log('ccc');
+  }
+
+  // get customer lists
   getCustomers = (params) => {
     // 请求数据
     let reqJson = {
       router: 'myAllCustomer',
-      index: (params && params.page) || 1,
-      size: 10
+      index: 1,
+      size: 10,
+      ...params
+    };
+
+    let newReqJson = {};
+    if(params && params.customerType && params.customerType.length !== 0) {
+      newReqJson = {
+        ...reqJson,
+        customerType: params.customerType
+      }
     }
+
+    if(params && params.customerLevel && params.customerLevel.length !== 0) {
+      newReqJson = {
+        ...reqJson,
+        customerLevel: params.customerLevel
+      }
+    }
+
+    if(params && params.riskLevel && params.riskLevel.length !== 0) {
+      newReqJson = {
+        ...reqJson,
+        riskLevel: params.riskLevel
+      }
+    }
+
+    console.log(reqJson);
+
+    // if(params && params.page) {
+    //   reqJson = {
+    //     router: 'myAllCustomer',
+    //     index: params.page,
+    //     size: 10
+    //   }
+    // } else {
+    //   reqJson = {
+    //     router: 'myAllCustomer',
+    //     index: 1,
+    //     size: 10,
+    //     // customerType: params && params.customerType && params.customerType[0].id || [11, 12],
+    //   }
+    // }
 
     // 请求客户列表数据
     ajax.Get(API.GET_CUSTOMERS, reqJson)
@@ -109,6 +155,11 @@ export default class MyCustomer extends Component {
     })
   }
 
+  filterCustomers = (filters) => {
+    // console.log(filters);
+    this.getCustomers(filters)
+  }
+
   // 关注客户／取消关注
   customerFocus = (id, e) => {
     e.stopPropagation(); // 阻止事件冒泡
@@ -118,6 +169,7 @@ export default class MyCustomer extends Component {
 
   render() {
     const { customers, pagination, loading, columnsLists, privilege } = this.state;
+    // console.log(pagination)
 
     // 渲染 Table表格的表头数据
     const columns = [
@@ -200,9 +252,7 @@ export default class MyCustomer extends Component {
     return (
       <div className="customer" id="customer">
         <div>
-          <CustomerFilter onChange={(filters)=>{
-
-          }} />
+          <CustomerFilter onChange={this.filterCustomers} />
           <TablePage {...myCustomerProps}/>
         </div>
       </div>

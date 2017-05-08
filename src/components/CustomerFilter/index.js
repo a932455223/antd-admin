@@ -6,53 +6,102 @@ import {
   Input
 } from 'antd';
 import update from 'immutability-helper';
+
+import ajax from '../../tools/POSTF';
+import axios from 'axios';
+import API from '../../../API';
+
 const Search       = Input.Search;
 const CheckableTag = Tag.CheckableTag;
-const filterNames = {category:'客户类别',level:'客户评级',risk:'风险偏好',job:'工作类型'}
+const filterNames = {customerType: '客户类型', customerLevel: '客户级别', riskLevel: '风险类型'}
 
 
 class CustomerFilter extends Component {
   state = {
-      filters:[
-          {name:'category',content:[{text:'企业客户',id:1},{text:'私人客户',id:2}]},
-          {name:'level',content:[{text:'普通客户',id:1},{text:'VIP1',id:2},{text:'VIP2',id:3}]},
-          {name:'risk',content:[{text:'保守型',id:1},{text:'稳健型',id:2}]},
-          {name:'job',content:[{text:'务农',id:1},{text:'工人',id:2},{text:'职员',id:3}]}
-      ],
+    filters: [],
     selectedTags: {
-        category:[],
-        level:[],
-        risk:[],
-        job:[]
+      customerType: [],
+      customerLevel: [],
+      riskLevel: []
+    },
+    params: {
+      customerType: [],
+      customerLevel: [],
+      riskLevel: []
     }
-
   };
+
+  componentWillMount() {
+    // 获取筛选条件的选项
+    ajax.all([
+      ajax.Post(API.GET_COMMON_DROPDOWN('customerType')),
+      ajax.Post(API.GET_COMMON_DROPDOWN('customerLevel')),
+      ajax.Post(API.GET_COMMON_DROPDOWN('riskLevel')),
+    ]).then((res)=>{
+      let newState = update(this.state, {
+        filters: {
+          $push: [
+            {
+              name: res[0].data.data[0].type,
+              content: res[0].data.data.map(item => ({
+                text: item.name,
+                id: item.id
+              }))
+            },
+            {
+              name: res[1].data.data[0].type,
+              content: res[1].data.data.map(item => ({
+                text: item.name,
+                id: item.id
+              }))
+            },
+            {
+              name: res[2].data.data[0].type,
+              content: res[2].data.data.map(item => ({
+                text: item.name,
+                id: item.id
+              }))
+            }
+          ]
+        }
+      });
+      this.setState(newState);
+    })
+  }
 
   handleChange(filterName,tag, checked) {
     let filters = this.state.selectedTags[filterName];
     let newState = {};
     if(checked){
-        newState = update(this.state,{selectedTags:{[filterName]:{$push:[tag]}}})
+        newState = update(this.state,{
+          selectedTags: {[filterName]:{$push:[tag]}},
+          params:{[filterName]:{$push:[tag.id]}}
+        })
     }else{
         let index = filters.findIndex(item => item.id === tag.id)
-        newState = update(this.state,{selectedTags:{[filterName]:{$splice:[[index,1]]}}})
+        newState = update(this.state,{
+          selectedTags:{[filterName]:{$splice:[[index,1]]}},
+          params:{[filterName]:{$push:[tag.id]}}
+        })
     }
+
     this.setState(newState);
-      this.props.onChange(this.state.selectedTags);
+    this.props.onChange(newState.params); // 触发筛选
   }
 
   handleClose = (filterName,removedTag) => {
-      let index = this.state.selectedTags[filterName].findIndex(item =>item.id===removedTag.id)
-      let newState = update(this.state,{selectedTags:{[filterName]:{$splice:[[index,1]]}}})
+    let index = this.state.selectedTags[filterName].findIndex(item =>item.id===removedTag.id)
+    let newState = update(this.state,{selectedTags:{[filterName]:{$splice:[[index,1]]}}})
     this.setState(newState)
-      this.props.onChange(this.state.selectedTags)
+    // this.props.onChange(newState.selectedTags)
   }
 
 	render() {
     const pathname = window.location.pathname; // 获取当前路由参数
     const path = pathname.split('/')[2];
 
-		const { selectedTags } = this.state;
+		const { selectedTags, filters } = this.state;
+
 		return (
       <div className={style.droplist} id="customerFilter">
       	<div className={style.filter}>
@@ -86,7 +135,7 @@ class CustomerFilter extends Component {
                         return (
                             <div key={filter.name}>
                             <h4 className={style.seconcoustomer}><span></span>{filterNames[filter.name]}</h4>
-                        {
+                        {filter.content &&
                             filter.content.map(tag => (
                                 <CheckableTag className={style.tag}
                                               key={filter.name.toString() + tag.id}
