@@ -37,9 +37,11 @@ class EditBriefBasicInfoForm extends Component{
     this.getDepartments(1, 1);
   }
 
+
   componentWillReceiveProps(next) {
-    // console.log('personalBasicInfo will recieve props');
+    // console.log('briefBasicInfo will recieve props');
     const { getFieldValue } = next.form;
+    // console.log(next);
     // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
     if(next.joinersBeEdited && !next.beEditedArray.includes('basicInfo')) {
       this.props.increaseBeEditArray('basicInfo');
@@ -65,10 +67,14 @@ class EditBriefBasicInfoForm extends Component{
     })
 
     // 三级联动，更新 manager和 grid
-    let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : '';
-    let managerId = getFieldValue('manager') ? getFieldValue('manager') - 0 : '';
-    if(departmentId > 0) {
-      this.getDepartments(departmentId, managerId);
+    if((next && next.briefInfo && next.briefInfo.department && next.briefInfo.department.value)
+      !==
+      (this.props && this.props.briefInfo && this.props.briefInfo.department && this.props.briefInfo.department.value)) {
+      let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : '';
+      let managerId = getFieldValue('manager') ? getFieldValue('manager') - 0 : '';
+      if(departmentId > 0) {
+        this.getDepartments(departmentId, managerId);
+      }
     }
   };
 
@@ -495,39 +501,10 @@ class EditBriefBasicInfoForm extends Component{
 
 function mapPropsToFields (props) {
   const { briefInfo, accounts } = props;
-  // console.log(accounts);
+  // console.log(briefInfo);
   return {
     ...accounts,
-    department: {
-      ...briefInfo.department
-    },
-    manager: {
-      ...briefInfo.manager
-    },
-    grid: {
-      ...briefInfo.grid
-    },
-    phone: {
-      ...briefInfo.phone
-    },
-    wechat: {
-      ...briefInfo.wechat
-    },
-    certificate: {
-      ...briefInfo.certificate
-    },
-    birth: {
-      ...briefInfo.birth
-    },
-    origin: {
-      ...briefInfo.origin
-    },
-    age: {
-      ...briefInfo.age
-    },
-    address: {
-      ...briefInfo.address
-    }
+    ...briefInfo
   }
 }
 
@@ -542,8 +519,8 @@ function onValuesChange(props, values) {
 
 const EditBriefBasicInfo = Form.create({
   mapPropsToFields,
-  onFieldsChange,
-  onValuesChange
+  onFieldsChange
+  // onValuesChange
 })(EditBriefBasicInfoForm)
 
-export default connect()(EditBriefBasicInfo);
+export default EditBriefBasicInfo;

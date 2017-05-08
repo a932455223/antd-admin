@@ -20,7 +20,12 @@ const Option = Select.Option;
 
 import styles from './indexStyle.scss';
 import './indexStyle.less';
-import { fillCustomerInfo, resetCustomerInfo } from '../../../redux/actions/customerAction';
+import {
+  fillCustomerInfo,
+  resetCustomerInfo,
+  editCustomerName,
+  increaseBeEditArray
+} from '../../../redux/actions/customerAction';
 
 class NewCustomer extends Component {
   state = {
@@ -85,11 +90,11 @@ class NewCustomer extends Component {
             <FormItem>
               {getFieldDecorator('category', {
                 initialValue: '个人客户',
-                rules: [{
-                  type: 'string',
-                  required: true,
-                  // message: 'Please select the movie type!'
-                }],
+                // rules: [{
+                //   type: 'string',
+                //   required: true,
+                //   // message: 'Please select the movie type!'
+                // }],
                 onChange: this.selectChange
               })(
                 <Select placeholder="请选择客户类别">
@@ -107,8 +112,10 @@ class NewCustomer extends Component {
                 rules: [{
                   type: 'string',
                   required: true,
-                  // message: 'Please select the movie type!'
+                  message: '姓名需在4-16位字符之内'
                 }],
+                validateTrigger:'onBlur',
+
                 onChange: this.inputChange
               })(
                 <Input placeholder="请输入用户姓名" onKeyDown={this.createCustomer}/>
@@ -339,6 +346,28 @@ class CustomerSlider extends Component {
     )
   }
 
+  // 用户姓名编辑
+  nameChange = (e) => {
+    const { dispatch, currentCustomerInfo } = this.props;
+    if(currentCustomerInfo.category == '个人客户') {
+      dispatch(editCustomerName(e.target.value, 'basicInfo'));
+    }
+
+    if(currentCustomerInfo.category == '企业客户') {
+      dispatch(editCustomerName(e.target.value, 'enterpriseBasicInfo'));
+    }
+
+    // if(!currentCustomerInfo.beEditedArray.includes('basicInfo') && currentCustomerInfo.category == '个人客户') {
+    //   console.log('basicInfo be edited')
+    //   dispatch(increaseBeEditArray('basicInfo'))
+    // }
+    //
+    // if(!currentCustomerInfo.beEditedArray.includes('enterpriseBasicInfo') && currentCustomerInfo.category == '企业客户') {
+    //   console.log('enterpriseBasicInfo be edited')
+    //   // dispatch(increaseBeEditArray('enterpriseBasicInfo'))
+    // }
+  }
+
   componentWillReceiveProps(next) {
     console.log('%c/ CustomerSlider /_____Receive Props', 'color: red');
     const { id, mode } = this.props.currentCustomerInfo;
@@ -375,7 +404,28 @@ class CustomerSlider extends Component {
             <div className={styles.img}>
               <i className="iconfont icon-customer1"></i>
             </div>
-            <span className={styles.name}>{name}</span>
+
+            {mode === 'view' &&
+              <span className={styles.name}>{name}</span>
+            }
+
+            {step != 1 && mode !== 'view' &&
+              <Input
+                key={id}
+                onChange={this.nameChange}
+                className={styles.inputName}
+                value={name}
+              />
+            }
+
+            {name === '' && mode === 'edit' &&
+              <p style={{
+                textAlign: 'left',
+                paddingLeft: 50,
+                fontSize: 12,
+                color: 'red'
+              }}>姓名为必填项</p>
+            }
           </div>
 
           <div className={styles.options}>

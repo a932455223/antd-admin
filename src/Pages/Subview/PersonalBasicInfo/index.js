@@ -204,7 +204,7 @@ class BasicInfo extends Component {
   }
 
   componentWillReceiveProps(next){
-    // info('basicInfo will receive props.');
+    info('basicInfo will receive props.');
     // 当前的客户 id发生变化时，或者当前用户的信息 beEditedNumber === true时，重置 state
     const { id, beEditedArray } = this.props.currentCustomerInfo;
     if(id !== next.currentCustomerInfo.id ||
@@ -221,18 +221,6 @@ class BasicInfo extends Component {
       })
     }
   }
-
-  // reset accounts
-  // resetAccounts = () => {
-  //   let originAccounts = _.cloneDeep(this.state.originAccounts);
-  //   let originAccountsArr = _.cloneDeep(this.state.originAccountsArr);
-  //   console.log(originAccountsArr);
-  //
-  //   this.setState({
-  //     accounts: originAccounts,
-  //     accountsArr: originAccountsArr
-  //   });
-  // };
 
   // 获取客户基本信息
   getBaseInfo = (id) => {
@@ -644,8 +632,6 @@ class BasicInfo extends Component {
       originAccountsArr,
       originAccounts
     } = this.state;
-    // console.log(accountsArr);
-    // console.log(originAccountsArr);
 
     const modal = {
       // modal
@@ -664,6 +650,9 @@ class BasicInfo extends Component {
 
     const basicInfoProps = {
       // brief info
+      briefInfo: briefInfo,
+      detailsInfo: detailsInfo,
+
       id: id,
       beEditedArray: beEditedArray,
       increaseBeEditArray: increaseBeEditArray,
@@ -685,20 +674,18 @@ class BasicInfo extends Component {
       accounts: accounts,
       accountsArr: accountsArr,
       deleteAccountsInfo: this.deleteAccountsInfo,
-      addAccountsInfo: this.addAccountsInfo
-    }
+      addAccountsInfo: this.addAccountsInfo,
 
-    // console.log(staffs);
+      onChange: this.handleFormChange
+    }
 
     const maintainRecordProps = {
       mode: mode
     }
 
-    // console.log(id);
-
     return(
       <div style={{textAlign: 'left'}}>
-        <div className="">
+        <div>
           {mode && mode === 'view' &&
             <div>
               <ViewBriefBasicInfo
@@ -714,18 +701,12 @@ class BasicInfo extends Component {
 
           {mode && mode !== 'view' &&
             <div>
-            {
               <AddCrewModal key={id} {...modal}/>
-            }
               <EditBriefBasicInfo
-                briefInfo={briefInfo}
                 {...basicInfoProps}
-                onChange={this.handleFormChange}
               />
               <EditDetailsBasicInfo
-                detailsInfo={detailsInfo}
                 {...basicInfoProps}
-                onChange={this.handleFormChange}
               />
             </div>
           }

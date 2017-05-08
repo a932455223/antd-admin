@@ -19,7 +19,7 @@ import update from 'immutability-helper';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-class addFamilyCard extends Component{
+class addFinanceCard extends Component{
     state = {
         isAdd:false,
     }
@@ -51,7 +51,7 @@ class addFamilyCard extends Component{
             }
         })
         if(noError){
-            this.props.addNewFamilyValue(this.props.form.getFieldsValue())
+            this.props.addNewFinanceValue(this.props.form.getFieldsValue())
         }
     }
     clickCancelBtn=()=>{
@@ -98,7 +98,7 @@ class addFamilyCard extends Component{
                             <Button
                                 className="save-btn"
                                 onClick={this.clickSavaBtn}
-                                loading={this.props.addFamilyCardLoading}
+                                loading={this.props.addFinanceCardLoading}
                             >
                             
                                 保存
@@ -119,7 +119,7 @@ class addFamilyCard extends Component{
                                 
                             >
                                 {
-                                    this.props.familyRelation.map((rel) => {
+                                    this.props.financeRelation.map((rel) => {
                                         return (
                                             <Option 
                                                 value={rel.id.toString()}
@@ -202,7 +202,7 @@ class addFamilyCard extends Component{
         )
     }
 }
-const AddFamilyCard =Form.create({
+const AddFinanceCard =Form.create({
     onFieldsChange(props, changedFields) {
         props.onAddChange(changedFields);
     },
@@ -228,8 +228,8 @@ const AddFamilyCard =Form.create({
     },
     onValuesChange(_, values) {
         // console.log(_, values)
-        // console.log(familyForm)
-        // familyForm.setState({values,values})
+        // console.log(financeForm)
+        // financeForm.setState({values,values})
     },
-})(addFamilyCard);
-export default AddFamilyCard;
+})(addFinanceCard);
+export default AddFinanceCard;

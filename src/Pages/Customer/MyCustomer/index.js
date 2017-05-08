@@ -11,7 +11,9 @@ import TablePage from '../../../components/TablePage';
 import CustomerFilter from '../../../components/CustomerFilter';
 import './less/myCustomerStyle.less';
 import './indexStyle.less';
-import ajax from '../../../tools/POSTF'
+import ajax from '../../../tools/POSTF';
+import queryString from 'query-string'
+
 
 export default class MyCustomer extends Component {
   state = {
@@ -70,32 +72,41 @@ export default class MyCustomer extends Component {
   }
 
   getCustomers = (params) => {
-      ajax.Get(API.GET_CUSTOMERS,params||{page:1})
-          .then((json) => {
-              // 将数据存入私有的 state中
-              this.setState({
-                  loading: false,
-                  customers: json.data.data.customers || [],
-                  pagination: json.data.pagination
-              })
-              return json.data.data.customers || []
-          })
-          .then((customers) => {
-              let permission = customers.map((cstm) => ({customerId:cstm.id,permission:['system:update']}))
-              axios.post(API.POST_CUSTOMER_PRIVILEGE,permission)
-                  .then((rest) => {
-                      // 将id 抽取到数据上一级
-                      const privilegeArray = rest.data.data.reduce((pre,next) => {
-                        pre[next.id] = next;
-                        return pre;
-                      },[]);
+    // 请求数据
+    let reqJson = {
+      router: 'myAllCustomer',
+      index: (params && params.page) || 1,
+      size: 10
+    }
 
-                      // 扁平化数据内部结构
-                      this.setState({
-                          privilege: privilegeArray.map(item => item.permissions)
-                      })
-                  })
+    // 请求客户列表数据
+    ajax.Get(API.GET_CUSTOMERS, reqJson)
+        .then((json) => {
+
+          // 将数据存入私有的 state中
+          this.setState({
+              loading: false,
+              customers: json.data.data.customers || [],
+              pagination: json.data.data.pagination
           })
+          return json.data.data.customers || []
+        })
+        .then((customers) => {
+          let permission = customers.map((cstm) => ({customerId:cstm.id,permission:['system:update']}))
+          axios.post(API.POST_CUSTOMER_PRIVILEGE, permission)
+              .then((rest) => {
+                  // 将id 抽取到数据上一级
+                  const privilegeArray = rest.data.data.reduce((pre,next) => {
+                    pre[next.id] = next;
+                    return pre;
+                  },[]);
+
+                  // 扁平化数据内部结构
+                  this.setState({
+                      privilege: privilegeArray.map(item => item.permissions)
+                  })
+              })
+    })
   }
 
   // 关注客户／取消关注
@@ -107,6 +118,7 @@ export default class MyCustomer extends Component {
 
   render() {
     const { customers, pagination, loading, columnsLists, privilege } = this.state;
+
     // 渲染 Table表格的表头数据
     const columns = [
       {
@@ -182,7 +194,7 @@ export default class MyCustomer extends Component {
               loading:true
           })
 
-          this.getCustomers({page:pageNumber});
+          this.getCustomers({page: pageNumber});
       }
     };
     return (

@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import Reg from "../../../../tools/Reg"
 const FormItem = Form.Item;
 const Option = Select.Option;
-class familyForm extends Component{
+class financeForm extends Component{
     state={
         btnLoading:false
     }
@@ -27,12 +27,12 @@ class familyForm extends Component{
     }
     componentWillReceiveProps(newProps){
         // console.log(this.props)
-        this.setState({btnLoading:false})
+        // this.setState({btnLoading:false})
     }
     clickSavaBtn=()=>{
-        this.props.saveChangeValue(this.props.id.value,this.props.form.getFieldsValue(),this.props.index)
+        // this.props.saveChangeValue(this.props.id.value,this.props.form.getFieldsValue(),this.props.index)
         // this.props.toggleEdit(this.props.index)
-        this.setState({btnLoading:true})
+        // this.setState({btnLoading:true})
         // console.log(this.props.form.getFieldsValue())
         // console.log(this.props.id.value)
     }
@@ -40,19 +40,19 @@ class familyForm extends Component{
         this.props.cancelChangeValue();
         this.props.toggleEdit(this.props.index);
     }
-    findDropDownItem(value,dropDownType){
-        console.log(value);
-        let dropDown='';
-        this.props[dropDownType].map((item)=>{
-            for(let prop in item) {
-                // console.log('prop:',prop,",item[prop]:"+item[prop])
-                if(item[prop]==value){
-                    dropDown=item;
-                }
-            }
-        })[0];
-        return(dropDown);
-    }
+    // findDropDownItem(value,dropDownType){
+    //     console.log(value);
+    //     let dropDown='';
+    //     this.props[dropDownType].map((item)=>{
+    //         for(let prop in item) {
+    //             // console.log('prop:',prop,",item[prop]:"+item[prop])
+    //             if(item[prop]==value){
+    //                 dropDown=item;
+    //             }
+    //         }
+    //     })[0];
+    //     return(dropDown);
+    // }
     render(){
         const { getFieldDecorator } = this.props.form;
         return (
@@ -61,7 +61,7 @@ class familyForm extends Component{
                     title={
                         <div className="my-card-title">
                             <FormItem>
-                                {getFieldDecorator('name', {
+                                {getFieldDecorator('financeCategory', {
                                     rules: [{ required: true, message: '姓名不能为空' }],
                                 })(<Input 
                                     prefix={<i className="iconfont icon-customer1" />}
@@ -86,39 +86,23 @@ class familyForm extends Component{
                 >
                 <Row>
                     <Col span={8}>
-                    关系：
+                        业务机构名称：
                     </Col>
                     <Col span={16}>
                         <FormItem>
-                        {getFieldDecorator('relation', {
-                            rules: [{ required: true, message: '关系不能为空' }],
-                        })(
-                            <Select 
-                                
-                            >
-                                {
-                                    this.props.familyRelation.map((rel) => {
-                                        return (
-                                            <Option 
-                                                value={rel.id.toString()}
-                                                key={rel.id.toString()}
-                                            >
-                                                {rel.name}
-                                            </Option >
-                                        )
-                                    })
-                                }
-                            </Select>)}
+                            {getFieldDecorator('org',{
+                                rules: [{pattern:Reg.mobile, message: "联系方式格式不正确"}],
+                            })(<Input />)}
                         </FormItem>
                     </Col>
                 </Row>
                     <Row>
                         <Col span={8}>
-                            联系方式：
+                            业务额：
                         </Col>
                         <Col span={16}>
                             <FormItem>
-                                {getFieldDecorator('phone',{
+                                {getFieldDecorator('money',{
                                     rules: [{pattern:Reg.mobile, message: "联系方式格式不正确"}],
                                 })(<Input />)}
                             </FormItem>
@@ -127,37 +111,37 @@ class familyForm extends Component{
                     </Row>
                     <Row>
                         <Col span={8}>
-                        身份证号
+                            收益／利润：
                         </Col>
                         <Col span={16}>
-                            <FormItem>
-                                {getFieldDecorator('certificate', {
-                                    rules: [{ pattern:Reg.certificate, message: '身份证格式不正确' }],
+                           <FormItem>
+                                {getFieldDecorator('profit',{
+                                    rules: [{pattern:Reg.mobile, message: "联系方式格式不正确"}],
                                 })(<Input />)}
                             </FormItem>
                         </Col>
                     </Row>
                     <Row>
                         <Col span={8}>
-                        工作属性：
+                            购买日：
                         </Col>
                         <Col span={16}>
                             <FormItem>
-                                {getFieldDecorator('jobCategory')(
-                                    <Select >
-                                        {
-                                            this.props.commonJobCategory.map((rel) => {
-                                                return (
-                                                    <Option 
-                                                        value={rel.id.toString()}
-                                                        key={rel.id.toString()}
-                                                    >
-                                                        {rel.name}
-                                                    </Option >
-                                                )
-                                            })
-                                        }
-                                    </Select>)}
+                                {getFieldDecorator('buyDate',{
+                                    rules: [{pattern:Reg.mobile, message: "联系方式格式不正确"}],
+                                })(<Input />)}
+                            </FormItem>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={8}>
+                            到期日／销毁日：
+                        </Col>
+                        <Col span={16}>
+                            <FormItem>
+                                {getFieldDecorator('expireDate',{
+                                    rules: [{pattern:Reg.mobile, message: "联系方式格式不正确"}],
+                                })(<Input />)}
                             </FormItem>
                         </Col>
                     </Row>
@@ -167,36 +151,38 @@ class familyForm extends Component{
         )
     }
 }
-// var that=this
-const FamilyForm = Form.create({
+const FinanceForm = Form.create({
     onFieldsChange(props, changedFields) {
         props.onChange(changedFields);
     },
     mapPropsToFields(props) {
         // console.log('map triggered.',props)
         return {
-            name: {
-                ...props.name
+            buyDate: {
+                ...props.buyDate
             },
-            relation: {
-                ...props.relation
+            expireDate: {
+                ...props.expireDate
             },
-            certificate: {
-                ...props.certificate
+            financeCategory: {
+                ...props.financeCategory
             },
-            jobCategory: {
-                ...props.jobCategory
+            money: {
+                ...props.money
             },
-            phone:{
-                ...props.phone
+            org:{
+                ...props.org
+            },
+            profit:{
+                ...props.profit
             }
         };
     },
     onValuesChange(_, values) {
         // console.log(_, values)
-        // console.log(familyForm)
-        // familyForm.setState({values,values})
+        // console.log(financeForm)
+        // financeForm.setState({values,values})
     },
-})(familyForm);
+})(financeForm);
 
-export default FamilyForm;
+export default FinanceForm;
