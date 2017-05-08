@@ -19,8 +19,11 @@ export default {
   PUT_CUSTOMERS_FINANCES:financesId=>`/api/customer/finance/${financesId}`,
   //获取金融业务信息产品下拉：
   GET_CUSTOMER_FINANCE_CATEGORY:'/api/customer/finance/category',
-  //*===============================GET=======================================*
+  //enterprise:
   GET_CUSTOMER_ENTERPRISE_BASE: customerId => `/api/customer/enterprise/${customerId}/base`,
+  PUT_CUSTOMER_ENTERPRISE_BASE: id =>  `/api/customer/enterprise/${id}/base`,
+  POST_CUSTOMER_ENTERPRISE_BASE: '/api/customer/enterprise/base',
+  //*===============================GET=======================================*
   // 客户列表
   GET_CUSTOMERS: '/asd/customers',
   // customer/individual/:customerId/families

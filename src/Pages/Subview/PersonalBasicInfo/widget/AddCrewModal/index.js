@@ -36,7 +36,7 @@ export default class AddCrewModal extends Component {
   }
 
   componentWillReceiveProps(next){
-    // console.log('next');
+    console.log('next');
     const { staffs } = next;
     let a = [];
     staffs.map((item) => {
@@ -114,8 +114,8 @@ export default class AddCrewModal extends Component {
 
   // modal handle
   handleOk = () => {
-    this.props.hide();
-    this.props.joinersBeModified();
+    let newState = this.props.hide();
+    this.props.joinersBeModified(newState);
   };
 
   // modal handle cancle
@@ -147,21 +147,13 @@ export default class AddCrewModal extends Component {
     this.setState({
       selectedRowKeys: selectedRowKeys
     });
-
-    // 选择经理，同步到 tags
-    // const crews = this.state.table.dataSource && this.state.table.dataSource.filter(item => selectedRowKeys.includes(item.id) === true);
-    // console.log(this.state.table.dataSource);
-    // console.log(crews);
-    // this.setState({
-    //   staffs: crews
-    // })
   }
 
   render() {
-    // console.log(this.state.selectedRowKeys);
-    // console.log(this.state.staffs);
     const { visible } = this.props;
     const { selectedRowKeys, staffs } = this.state;
+    // console.log(selectedRowKeys);
+    // console.log(staffs);
     const participate = staffs && staffs.map((item, index) => {
       return (
         <Tag

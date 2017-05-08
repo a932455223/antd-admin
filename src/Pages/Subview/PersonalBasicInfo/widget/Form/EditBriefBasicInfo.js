@@ -11,7 +11,8 @@ import {
   Tag,
   Select,
   DatePicker,
-  Cascader
+  Cascader,
+  message
 } from 'antd';
 import { connect } from 'react-redux';
 import API from '../../../../../../API';
@@ -19,18 +20,16 @@ import ajax from '../../../../../tools/POSTF';
 const FormItem = Form.Item;
 const Option = Select.Option;
 let addkey = 100;
-
+function hasErrors(fieldsError) {
+  return Object.keys(fieldsError).some(field => fieldsError[field]);
+}
 
 class EditBriefBasicInfoForm extends Component{
   state = {
-    tags : [],
     basicInfoBeEdit: false,
-    phone: '',
     departmentOptions: [],
     managerOptions: [],
-    gridOptions: [],
-    accountsArr: [],
-    addkey: 1
+    gridOptions: []
   }
 
   componentWillMount(){
@@ -41,7 +40,10 @@ class EditBriefBasicInfoForm extends Component{
   componentWillReceiveProps(next) {
     // console.log('personalBasicInfo will recieve props');
     const { getFieldValue } = next.form;
-    if(next.beEditedArray && !next.beEditedArray.includes('basicInfo')) {
+    // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
+    if(next.joinersBeEdited && !next.beEditedArray.includes('basicInfo')) {
+      this.props.increaseBeEditArray('basicInfo');
+    } else if(next.beEditedArray && !next.beEditedArray.includes('basicInfo')) {
       // 重置 InfoBeEdited
       let newState = update(this.state, {
         basicInfoBeEdit: {$set: false}
@@ -55,6 +57,8 @@ class EditBriefBasicInfoForm extends Component{
       this.setState(newState)
     }
 
+    // console.log(this.props.accountsArr);
+    // console.log(next.accountsArr);
     // 更新 accountsArr
     this.setState({
       accountsArr: next.accountsArr
@@ -70,42 +74,18 @@ class EditBriefBasicInfoForm extends Component{
 
   // 获取 department，
   getDepartments = (departmentId, managerId) => {
-    // 所属机构下拉菜单
-
-    ajax.all([ajax.Get(API.GET_CUSTOMER_DEPARTMENT),ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)),ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))])
-      .then((res)=>{
-        let newState = update(this.state, {
-                departmentOptions: {$set: res[0].data.data},
-                managerOptions:{$set:res[1].data.data},
-                gridOptions:{$set:res[2].data.data}
-              });
-        this.setState(newState);
-      })
-    // ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
-    //   .then((res) => {
-    //     let newState = update(this.state, {
-    //       departmentOptions: {$set: res.data.data},
-    //     });
-    //     this.setState(newState);
-    //   })
-    //
-    // // 所属客户经理下拉菜单
-    // ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId))
-    //   .then((res) => {
-    //     let newState = update(this.state, {
-    //       managerOptions: {$set: res.data.data},
-    //     });
-    //     this.setState(newState);
-    //   })
-    //
-    // // 重置网格
-    // ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))
-    //   .then((res) => {
-    //     let newState = update(this.state, {
-    //       gridOptions: {$set: res.data.data},
-    //     });
-    //     this.setState(newState);
-    //   })
+    ajax.all([
+      ajax.Get(API.GET_CUSTOMER_DEPARTMENT), // 所属机构下拉菜单
+      ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)), // 所属客户经理下拉菜单
+      ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId)) // 重置网格
+    ]).then((res)=>{
+      let newState = update(this.state, {
+        departmentOptions: {$set: res[0].data.data},
+        managerOptions:{$set:res[1].data.data},
+        gridOptions:{$set:res[2].data.data}
+      });
+      this.setState(newState);
+    })
   }
 
   // basic 输入框内容被修改了
@@ -137,10 +117,9 @@ class EditBriefBasicInfoForm extends Component{
 
   // add accounts info
   add = () => {
-    const { addAccountsInfo } = this.props;
+    const { addAccountsInfo, accountsArr } = this.props;
     addAccountsInfo(addkey);
 
-    const { accountsArr } = this.state;
     accountsArr.push(`row-${addkey}`);
     if(!this.state.basicInfoBeEdit) {
       this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
@@ -155,10 +134,9 @@ class EditBriefBasicInfoForm extends Component{
 
   // remove accounts info
   remove = (k) => {
-    const { deleteAccountsInfo } = this.props;
+    const { deleteAccountsInfo, accountsArr } = this.props;
     deleteAccountsInfo(k);
 
-    const { accountsArr } = this.state;
     const position = accountsArr.indexOf(k);
     accountsArr.splice(position, 1);
     if(!this.state.basicInfoBeEdit) {
@@ -186,28 +164,32 @@ class EditBriefBasicInfoForm extends Component{
 
   // 更新信息
   updateInfo = (briefInfo) => {
-    const { validateFields } = this.props.form;
+    const { validateFields,getFieldsError } = this.props.form;
     const { addNewCustomer } = this.props;
     validateFields();
-    addNewCustomer(briefInfo);
+    if(hasErrors(getFieldsError())) {
+      message.error('表单填写有误，请仔细检查表单');
+    } else {
+      addNewCustomer(briefInfo);
+    }
   }
 
   render() {
     const {
       eachCustomerInfo,
-      edited,
-      mode,
-      currentId,
-      createCustomerSuccess,
-      beEditedArray,
-      joinersBeEdited,
-      accounts } = this.props;
-    const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue, validateFields} = this.props.form;
-    const { department, manager, grid, tags } = this.props.briefInfo;
-    const { departmentOptions, managerOptions, gridOptions, accountsArr } = this.state;
 
-    // validateFields()
-    // console.log(validateFields());
+      mode,
+      id,
+      beEditedArray,
+
+      joinersBeEdited,
+      staffs,
+      accounts,
+      accountsArr
+    } = this.props;
+    const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue, validateFields} = this.props.form;
+    const { department, manager, grid } = this.props.briefInfo;
+    const { departmentOptions, managerOptions, gridOptions } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -227,7 +209,7 @@ class EditBriefBasicInfoForm extends Component{
     /* 编辑状态下
      ** basic info
      */
-    const EditParticipate = tags && tags.map((item,index) => {
+    const EditParticipate = staffs && staffs.map((item,index) => {
       return (
         <Tag key={`${item.id}${index}`} closable="true" afterClose={() => this.handleClose(item)}>
           {item.name}
@@ -264,9 +246,8 @@ class EditBriefBasicInfoForm extends Component{
       >
         {getFieldDecorator(`${k}-accountNo`, {
           rules: [{
-            required: true,
-          },{
-            pattern: /^\d+$/
+            pattern: /^\d+$/,
+            message: '账户只能为数字'
           }],
           // validateTrigger: ['onChange', 'onBlur'],
           onChange: this.inputBasicInfoChange
@@ -278,7 +259,7 @@ class EditBriefBasicInfoForm extends Component{
 
     return (
       <Form id="editMyBase" className="basicInfolist">
-        <Row className={currentId === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
+        <Row className={id === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
             <Col span={7}>
               <FormItem labelCol={{span: 11}}
                         wrapperCol={{span: 13}}
@@ -363,7 +344,7 @@ class EditBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={12} className={currentId === -1 ? "phoneCreate" : "phoneEdit"}>
+            <Col span={12} className={id === -1 ? "phoneCreate" : "phoneEdit"}>
               <FormItem labelCol={{span: 8}}
                         wrapperCol={{span: 15}}
                         label="手机号：">
@@ -380,7 +361,7 @@ class EditBriefBasicInfoForm extends Component{
               </FormItem>
             </Col>
 
-            <Col span={12} className={currentId === -1 ? "wechatCreate" : "wechatEdit"}>
+            <Col span={12} className={id === -1 ? "wechatCreate" : "wechatEdit"}>
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="微信号：">
@@ -395,7 +376,7 @@ class EditBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={12} className={currentId === -1 ? "idCreate" : "idEdit"}>
+            <Col span={12} className={id === -1 ? "idCreate" : "idEdit"}>
               <FormItem
                 labelCol={{span: 8}}
                 wrapperCol={{span: 15}}
@@ -411,7 +392,7 @@ class EditBriefBasicInfoForm extends Component{
               </FormItem>
             </Col>
 
-            <Col span={12} className={currentId === -1 ? "birthCreate" : "birthEdit"}>
+            <Col span={12} className={id === -1 ? "birthCreate" : "birthEdit"}>
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="生日：">
@@ -429,7 +410,7 @@ class EditBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={12} className={currentId === -1 ? "originCreate" : "originEdit"}>
+            <Col span={12} className={id === -1 ? "originCreate" : "originEdit"}>
               <FormItem
                 labelCol={{span: 8}}
                 wrapperCol={{span: 15}}
@@ -445,7 +426,7 @@ class EditBriefBasicInfoForm extends Component{
               </FormItem>
             </Col>
 
-            <Col span={12} className={currentId === -1 ? "ageCreate" : "ageEdit"}>
+            <Col span={12} className={id === -1 ? "ageCreate" : "ageEdit"}>
               <FormItem
                 labelCol={{span: 8, offset: 1}}
                 wrapperCol={{span: 15}}
@@ -463,7 +444,7 @@ class EditBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={24} className={currentId === -1 ? "addressCreate" : "addressEdit"}>
+            <Col span={24} className={id === -1 ? "addressCreate" : "addressEdit"}>
               <FormItem
                 labelCol={{span: 4}}
                 wrapperCol={{span: 19}}
@@ -514,7 +495,7 @@ class EditBriefBasicInfoForm extends Component{
 
 function mapPropsToFields (props) {
   const { briefInfo, accounts } = props;
-  console.log(accounts);
+  // console.log(accounts);
   return {
     ...accounts,
     department: {
