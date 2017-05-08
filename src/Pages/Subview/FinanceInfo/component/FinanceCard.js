@@ -25,16 +25,17 @@ export default class FinanceCard extends Component{
 
     }
     findDropDownItem(value,dropDownType){
-        return this.props[dropDownType].filter((item)=>{
-            let bool;
-            Object.getOwnPropertyNames(item).
-                forEach((val, idx, array)=> {
-                    if(item[val]==value){
-                        bool=true;
-                    }
-                });
-            return bool;
+        console.log(value);
+        let dropDown='';
+        this.props[dropDownType].map((item)=>{
+            for(let prop in item) {
+                // console.log('prop:',prop,",item[prop]:"+item[prop])
+                if(item[prop]==value){
+                    dropDown=item;
+                }
+            }
         })[0];
+        return(dropDown);
     }
     render(){
         return (
