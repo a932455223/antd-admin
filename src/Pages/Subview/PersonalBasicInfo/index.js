@@ -204,7 +204,7 @@ class BasicInfo extends Component {
   }
 
   componentWillReceiveProps(next){
-    info('basicInfo will receive props.');
+    // info('basicInfo will receive props.');
     // 当前的客户 id发生变化时，或者当前用户的信息 beEditedNumber === true时，重置 state
     const { id, beEditedArray } = this.props.currentCustomerInfo;
     if(id !== next.currentCustomerInfo.id ||
@@ -714,9 +714,9 @@ class BasicInfo extends Component {
 
           {mode && mode !== 'view' &&
             <div>
-            {/*
+            {
               <AddCrewModal key={id} {...modal}/>
-            */}
+            }
               <EditBriefBasicInfo
                 briefInfo={briefInfo}
                 {...basicInfoProps}

@@ -46,10 +46,13 @@ class CompanyBasicInfo extends Component{
   }
 
   componentWillReceiveProps(next) {
+    console.log('next')
     const { getFieldValue } = next.form;
 
-    // 确认参与人员按钮被点击时
-    if(next.beEditedArray && !next.beEditedArray.includes('enterpriseBasicInfo')) {
+    // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
+    if(next.joinersBeEdited && !next.beEditedArray.includes('enterpriseBasicInfo')) {
+      this.props.increaseBeEditArray('basicInfo');
+    } else if(next.beEditedArray && !next.beEditedArray.includes('enterpriseBasicInfo')) {
       // 重置 InfoBeEdited
       let newState = update(this.state, {
         basicInfoBeEdit: {$set: false}
@@ -181,7 +184,7 @@ class CompanyBasicInfo extends Component{
   render() {
     const {
       eachCompanyInfo,
-      currentId,
+      id,
       createCustomerSuccess,
       tags,
       accountsArr
@@ -256,7 +259,7 @@ class CompanyBasicInfo extends Component{
 
     return (
         <Form id="editMyBase" className="basicInfolist">
-          <Row className={currentId === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
+          <Row className={id === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
             <Col span={7}>
               <FormItem labelCol={{span: 11}}
                         wrapperCol={{span: 13}}
@@ -344,7 +347,7 @@ class CompanyBasicInfo extends Component{
             </Row>
 
             <Row>
-              <Col span={12} className={currentId === -1 ? "phonecreate" : "phoneedit"}>
+              <Col span={12} className={id === -1 ? "phonecreate" : "phoneedit"}>
                 <FormItem labelCol={{span: 8}}
                           wrapperCol={{span: 15}}
                           label="注册时间">
@@ -364,7 +367,7 @@ class CompanyBasicInfo extends Component{
                 </FormItem>
               </Col>
 
-              <Col span={12} className={currentId === -1 ? "wechatcreate" : "wechatedit"}>
+              <Col span={12} className={id === -1 ? "wechatcreate" : "wechatedit"}>
                 <FormItem labelCol={{span: 8,offset:1}}
                           wrapperCol={{span: 15}}
                           label="所属行业">
@@ -382,7 +385,7 @@ class CompanyBasicInfo extends Component{
               </Col>
             </Row>
             <Row>
-              <Col span={12} className={currentId === -1 ? "phoneCreate" : "phoneEdit"}>
+              <Col span={12} className={id === -1 ? "phoneCreate" : "phoneEdit"}>
                 <FormItem labelCol={{span: 8}}
                           wrapperCol={{span: 15}}
                           label="主营业务">
@@ -399,7 +402,7 @@ class CompanyBasicInfo extends Component{
                 </FormItem>
               </Col>
 
-              <Col span={12} className={currentId === -1 ? "wechatCreate" : "wechatEdit"}>
+              <Col span={12} className={id === -1 ? "wechatCreate" : "wechatEdit"}>
                 <FormItem labelCol={{span: 8,offset:1}}
                           wrapperCol={{span: 15}}
                           label="年营业额">
@@ -417,7 +420,7 @@ class CompanyBasicInfo extends Component{
               </Col>
             </Row>
             <Row>
-              <Col span={12} className={currentId === -1 ? "phoneCreate" : "phoneEdit"}>
+              <Col span={12} className={id === -1 ? "phoneCreate" : "phoneEdit"}>
                 <FormItem labelCol={{span: 8}}
                           wrapperCol={{span: 15}}
                           label="法人法名">
@@ -434,7 +437,7 @@ class CompanyBasicInfo extends Component{
                 </FormItem>
               </Col>
 
-              <Col span={12} className={currentId === -1 ? "wechatCreate" : "wechatEdit"}>
+              <Col span={12} className={id === -1 ? "wechatCreate" : "wechatEdit"}>
                 <FormItem labelCol={{span: 8,offset:1}}
                           wrapperCol={{span: 15}}
                           label="企业电话">
@@ -452,7 +455,7 @@ class CompanyBasicInfo extends Component{
               </Col>
             </Row>
             <Row>
-              <Col span={12} className={currentId === -1 ? "phoneCreate" : "phoneEdit"}>
+              <Col span={12} className={id === -1 ? "phoneCreate" : "phoneEdit"}>
                 <FormItem labelCol={{span: 8}}
                           wrapperCol={{span: 15}}
                           label="员工人数">
@@ -469,7 +472,7 @@ class CompanyBasicInfo extends Component{
                 </FormItem>
               </Col>
 
-              <Col span={12} className={currentId === -1 ? "wechatCreate" : "wechatEdit"}>
+              <Col span={12} className={id === -1 ? "wechatCreate" : "wechatEdit"}>
                 <FormItem labelCol={{span: 8,offset:1}}
                           wrapperCol={{span: 15}}
                           label="平均工资">
@@ -488,7 +491,7 @@ class CompanyBasicInfo extends Component{
             </Row>
 
             <Row>
-              <Col span={12} className={currentId === -1 ? "phoneCreate" : "phoneEdit"}>
+              <Col span={12} className={id === -1 ? "phoneCreate" : "phoneEdit"}>
                 <FormItem labelCol={{span: 8}}
                           wrapperCol={{span: 15}}
                           label="企业住址">
@@ -505,7 +508,7 @@ class CompanyBasicInfo extends Component{
                 </FormItem>
               </Col>
 
-              <Col span={12} className={currentId === -1 ? "wechatCreate" : "wechatEdit"}>
+              <Col span={12} className={id === -1 ? "wechatCreate" : "wechatEdit"}>
                 <FormItem
                           wrapperCol={{span: 24}}
                           >

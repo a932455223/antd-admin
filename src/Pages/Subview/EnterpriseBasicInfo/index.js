@@ -42,6 +42,7 @@ import AddCrewModal from '../PersonalBasicInfo/widget/AddCrewModal'
 
 class EnterpriseBasicInfo extends Component {
   state = {
+    id: '',
     modalVisible: false,
     // edited: false,
 
@@ -105,7 +106,7 @@ class EnterpriseBasicInfo extends Component {
   }
 
   componentWillReceiveProps(next){
-    console.log('will recieve props');
+    // console.log('will recieve props');
 
     const { id, beEditedArray } = this.props.currentCustomerInfo;
     if(id !== next.currentCustomerInfo.id ||
@@ -317,14 +318,14 @@ class EnterpriseBasicInfo extends Component {
   }
 
   // 参与人员被修改了
-  joinersBeModified = () => {
-    const { beEditedArray } = this.props.currentCustomerInfo;
+  joinersBeModified = (state) => {
+    let st = state || this.state;
 
-    if(!this.state.joinersBeEdited && beEditedArray && !beEditedArray.includes('basicInfo')) {
-      this.props.increaseBeEditArray('enterpriseBasicInfo');
-      this.setState({
-        joinersBeEdited: true
+    if(!st.joinersBeEdited) {
+      let newState = update(st, {
+        joinersBeEdited: {$set: true}
       })
+      this.setState(newState);
     }
   }
 
@@ -428,11 +429,12 @@ class EnterpriseBasicInfo extends Component {
 
   render() {
     const { increaseBeEditArray, decreaseBeEditArray } = this.props;
-    const { step, mode, id, beEditedArray } = this.props.currentCustomerInfo;
+    const { step, mode, beEditedArray } = this.props.currentCustomerInfo;
     const {
+      id,
       modalVisible,
       eachCompanyInfo,
-      // edited,
+
       tags,
       joinersBeEdited,
 
@@ -451,11 +453,9 @@ class EnterpriseBasicInfo extends Component {
       resetJoiners: this.resetJoiners,
     };
 
-    console.log(accountsArr);
-
     const basicInfoProps = {
       // basic info
-      currentId: id,
+      id: id,
       beEditedArray: beEditedArray,
       increaseBeEditArray: increaseBeEditArray,
       decreaseBeEditArray: decreaseBeEditArray,
