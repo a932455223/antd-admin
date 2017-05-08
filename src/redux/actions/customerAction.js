@@ -28,10 +28,11 @@ export const fillCustomerInfo = (category, name) => (
 )
 
 // 编辑用户姓名
-export const editCustomerName = (name) => (
+export const editCustomerName = (name, beEditedArray) => (
   {
     type: actionTypes.EDIT_CUSTOMER_NAME,
-    name: name
+    name: name,
+    payload: beEditedArray
   }
 )
 

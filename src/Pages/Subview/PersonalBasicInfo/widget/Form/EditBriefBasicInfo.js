@@ -37,9 +37,11 @@ class EditBriefBasicInfoForm extends Component{
     this.getDepartments(1, 1);
   }
 
+
   componentWillReceiveProps(next) {
-    // console.log('personalBasicInfo will recieve props');
+    console.log('briefBasicInfo will recieve props');
     const { getFieldValue } = next.form;
+    // console.log(next);
     // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
     if(next.joinersBeEdited && !next.beEditedArray.includes('basicInfo')) {
       this.props.increaseBeEditArray('basicInfo');
@@ -190,6 +192,8 @@ class EditBriefBasicInfoForm extends Component{
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue, validateFields} = this.props.form;
     const { department, manager, grid } = this.props.briefInfo;
     const { departmentOptions, managerOptions, gridOptions } = this.state;
+    console.log(beEditedArray);
+
 
     const formItemLayout = {
       labelCol: {
@@ -495,39 +499,10 @@ class EditBriefBasicInfoForm extends Component{
 
 function mapPropsToFields (props) {
   const { briefInfo, accounts } = props;
-  // console.log(accounts);
+  // console.log(briefInfo);
   return {
     ...accounts,
-    department: {
-      ...briefInfo.department
-    },
-    manager: {
-      ...briefInfo.manager
-    },
-    grid: {
-      ...briefInfo.grid
-    },
-    phone: {
-      ...briefInfo.phone
-    },
-    wechat: {
-      ...briefInfo.wechat
-    },
-    certificate: {
-      ...briefInfo.certificate
-    },
-    birth: {
-      ...briefInfo.birth
-    },
-    origin: {
-      ...briefInfo.origin
-    },
-    age: {
-      ...briefInfo.age
-    },
-    address: {
-      ...briefInfo.address
-    }
+    ...briefInfo
   }
 }
 
@@ -542,8 +517,8 @@ function onValuesChange(props, values) {
 
 const EditBriefBasicInfo = Form.create({
   mapPropsToFields,
-  onFieldsChange,
-  onValuesChange
+  onFieldsChange
+  // onValuesChange
 })(EditBriefBasicInfoForm)
 
-export default connect()(EditBriefBasicInfo);
+export default EditBriefBasicInfo;

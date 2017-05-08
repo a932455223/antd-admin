@@ -37,9 +37,14 @@ const customerOperation = (state = initialState, action) => {
       }
 
     case actionTypes.EDIT_CUSTOMER_NAME:
+      if(!state.beEditedArray.includes(action.payload)) {
+        state.beEditedArray.push(action.payload);
+      }
+
       return {
         ...state,
-        name: action.name
+        name: action.name,
+        beEditedArray: state.beEditedArray
       }
 
     case actionTypes.CREATE_CUSTOMER_SUCCESS:
@@ -56,7 +61,10 @@ const customerOperation = (state = initialState, action) => {
       }
 
     case actionTypes.INCREASE_BE_EDITED_ARRAY:
-      state.beEditedArray.push(action.payload)
+      if(!state.beEditedArray.includes(action.payload)) {
+        state.beEditedArray.push(action.payload)
+      }
+
       return {
         ...state,
         beEditedArray: state.beEditedArray

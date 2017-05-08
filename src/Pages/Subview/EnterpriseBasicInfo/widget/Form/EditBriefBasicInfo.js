@@ -46,7 +46,7 @@ class CompanyBasicInfo extends Component{
   }
 
   componentWillReceiveProps(next) {
-    console.log('next')
+    // console.log('next')
     const { getFieldValue } = next.form;
 
     // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
@@ -175,10 +175,14 @@ class CompanyBasicInfo extends Component{
 
   // 更新信息
   updateInfo = (briefInfo) => {
-    const { validateFields } = this.props.form;
+    const { validateFields, getFieldsError } = this.props.form;
     const { addNewCustomer } = this.props;
     validateFields();
-    addNewCustomer(briefInfo);
+    if(hasErrors(getFieldsError())) {
+      message.error('表单填写有误，请仔细检查表单');
+    } else {
+      addNewCustomer(briefInfo);
+    }
   }
 
   render() {
