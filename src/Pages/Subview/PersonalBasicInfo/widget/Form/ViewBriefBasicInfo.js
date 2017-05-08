@@ -37,28 +37,15 @@ class ViewBriefBasicInfoForm extends Component{
 
   getDepartments = (departmentId, managerId) => {
     // 所属机构下拉菜单
-    ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
-    .then((res) => {
+    ajax.all([
+      ajax.Get(API.GET_CUSTOMER_DEPARTMENT),
+      ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)),
+      ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))
+    ]).then((res)=>{
       let newState = update(this.state, {
-        departmentOptions: {$set: res.data.data},
-      });
-      this.setState(newState);
-    })
-
-    // 所属客户经理下拉菜单
-    ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId))
-    .then((res) => {
-      let newState = update(this.state, {
-        managerOptions: {$set: res.data.data},
-      });
-      this.setState(newState);
-    })
-
-    // 重置网格
-    ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))
-    .then((res) => {
-      let newState = update(this.state, {
-        gridOptions: {$set: res.data.data},
+        departmentOptions: {$set: res[0].data.data},
+        managerOptions:{$set:res[1].data.data},
+        gridOptions:{$set:res[2].data.data}
       });
       this.setState(newState);
     })

@@ -479,9 +479,7 @@ class EnterpriseBasicInfo extends Component {
         <div>
           {mode && mode !== 'view' &&
             <div>
-            {
               <AddCrewModal key={id} {...modal}/>
-            }
               <EditBriefBasicInfo
                 {...basicInfoProps}
                 onChange={this.handleFormChange}
