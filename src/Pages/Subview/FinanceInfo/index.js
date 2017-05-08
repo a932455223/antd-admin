@@ -18,6 +18,7 @@ import ajax from '../../../tools/POSTF.js';
 import AddFinanceCard from './component/AddFinanceCard'
 import FinanceCard from './component/FinanceCard'
 import FinanceForm from './component/FinanceForm'
+import moment from 'moment';
 const FormItem = Form.Item;
 const Option = Select.Option;
 class FinanceInfo extends Component {
@@ -64,10 +65,16 @@ class FinanceInfo extends Component {
               if(item[ky]===null){
                 pre[ky] = {value:""}
               }else{
-                pre[ky] = {value:item[ky]+""}
+                if(ky==='buyDate'||ky==='expireDate'){
+
+                  let time=moment(item[ky]);
+                  console.log(time)
+                  pre[ky] = {value:time};
+                }else{
+                  pre[ky] = {value:item[ky]+""}
+
+                }
               }
-              // console.log(item[ky]===null)
-              // pre[ky] = {value:item[ky]+""}
               return pre;
             },{})
           });
@@ -85,13 +92,13 @@ class FinanceInfo extends Component {
   }
   // 增加
   postCustomersFinances=()=>{
-      ajax.Post(api.POST_CUSTOMER_FINANCES(3),{
-        buyDate	:'2017-09-02',
-        expireDate	:'2018-09-09',
-        financeCategory:18,
-        money	:20000,
-        org	:1,
-        profit :2000,
+      ajax.Post(api.POST_CUSTOMER_FINANCES(2),{
+        buyDate	:'2017-10-02',
+        expireDate	:'2019-02-09',
+        financeCategory:11,
+        money	:99000,
+        org	:2,
+        profit :34000,
       })
         .then( res => {
               console.log(res)
@@ -191,6 +198,7 @@ class FinanceInfo extends Component {
       })
       this.getCustomersFinances(newProps.currentId);
       console.log('重置数据')
+      
     }
     
   }
@@ -216,7 +224,7 @@ class FinanceInfo extends Component {
                         //item={item}
                         onChange={(e)=>{this.handleFormChange(index,e)}}
                         index={index}
-                        //financeCategoryDropdown={this.state.financeCategoryDropdown}
+                        financeCategoryDropdown={this.state.financeCategoryDropdown}
                         //saveChangeValue={this.saveChangeValue}
                         cancelChangeValue={this.cancelChangeValue}
                       />

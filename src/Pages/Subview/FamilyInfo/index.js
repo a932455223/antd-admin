@@ -28,6 +28,7 @@ class FamilyInfo extends Component {
     familyRelation: [],//家庭成员关系
     commonJobCategory: [],//工作属性
     addFamilyCardLoading:false,
+    isAdd:false,
     newFamily:{//放到组件中
       "certificate": {
         "value": ""
@@ -69,6 +70,7 @@ class FamilyInfo extends Component {
           familyList:newFamilyList,
           isModify:new Array(newFamilyList.length).fill(false),
           isLoading:false,
+          
         })
         this.resetAddCard();
         // this.AddFamilyCard.toggleAdd();
@@ -175,6 +177,13 @@ class FamilyInfo extends Component {
     
   };
 //状态修改：
+//添加状态切换
+    toggleAdd = () => {
+        let newState=update(
+            this.state,{isAdd:{$set:!this.state.isAdd}}
+        )
+        this.setState(newState);
+    }
   //add按钮loading
   changeAddFamilyCardLoading(){
     this.setState({"addFamilyCardLoading":!this.state.addFamilyCardLoading})
@@ -242,10 +251,12 @@ class FamilyInfo extends Component {
     //重置数据
     if(newProps.currentId!==this.props.currentId){
       this.setState({
-        isLoading:true
+        isLoading:true,
       })
       this.getFamilyInfo(newProps.currentId);
+      this.toggleAdd();
       console.log('重置数据')
+      console.log(this.props.AddFamilyCard)
     }
   }
 
@@ -301,7 +312,8 @@ class FamilyInfo extends Component {
               {...this.state.newFamily}
               resetAddCard={this.resetAddCard}
               onAddChange={this.onAddChange}
-              
+              isAdd={this.state.isAdd}
+              toggleAdd={this.toggleAdd}
             />
             <pre className="language-bash" style={{textAlign:'left'}}>
               {JSON.stringify(this.state.addFamilyCardLoading, null, 2)}
@@ -316,7 +328,8 @@ class FamilyInfo extends Component {
             {...this.state.newFamily}
             resetAddCard={this.resetAddCard}
             onAddChange={this.onAddChange}
-            
+            isAdd={this.state.isAdd}
+            toggleAdd={this.toggleAdd}
           />
         }
       </div>

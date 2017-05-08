@@ -7,10 +7,12 @@ import {
   Input,
   Form,
   Button,
-  Select
+  Select,
+  DatePicker
 } from 'antd';
 import { connect } from 'react-redux';
 import Reg from "../../../../tools/Reg"
+import moment from 'moment';
 const FormItem = Form.Item;
 const Option = Select.Option;
 class financeForm extends Component{
@@ -55,17 +57,33 @@ class financeForm extends Component{
     // }
     render(){
         const { getFieldDecorator } = this.props.form;
+        // console.log(moment(this.props.buyDate.value, 'YYYY-MM-DD'));
+        // console.log(moment('2017-08-08', 'YYYY-MM-DD'));
+        
         return (
             <Form  className="my-form-card">
                 <Card
                     title={
                         <div className="my-card-title">
                             <FormItem>
-                                {getFieldDecorator('financeCategory', {
-                                    rules: [{ required: true, message: '姓名不能为空' }],
-                                })(<Input 
-                                    prefix={<i className="iconfont icon-customer1" />}
-                                />)}
+                                {getFieldDecorator('financeCategory')(
+                                    <Select 
+                                    >
+                                        {
+                                            this.props.financeCategoryDropdown.map((fcd) => {
+                                                return (
+                                                    <Option 
+                                                        value={fcd.id.toString()}
+                                                        key={fcd.id.toString()}
+                                                    >
+                                                        {fcd.name}
+                                                    </Option >
+                                                )
+                                            })
+                                        }
+                                    </Select>)
+                                    
+                                }
                             </FormItem>
                             <span
                                 className="cancel-btn"
@@ -90,9 +108,24 @@ class financeForm extends Component{
                     </Col>
                     <Col span={16}>
                         <FormItem>
-                            {getFieldDecorator('org',{
-                                rules: [{pattern:Reg.mobile, message: "联系方式格式不正确"}],
-                            })(<Input />)}
+                            {/*{getFieldDecorator('org')(<Input />)}*/}
+                            {getFieldDecorator('org')(
+                                <Select 
+                                >
+                                        <Option 
+                                            value='1'
+                                        >
+                                            我行
+                                        </Option>
+                                        <Option 
+                                            value='2'
+                                        >
+                                            他行
+                                        </Option>
+                                    
+                                </Select>)
+                                
+                            }
                         </FormItem>
                     </Col>
                 </Row>
@@ -102,9 +135,7 @@ class financeForm extends Component{
                         </Col>
                         <Col span={16}>
                             <FormItem>
-                                {getFieldDecorator('money',{
-                                    rules: [{pattern:Reg.mobile, message: "联系方式格式不正确"}],
-                                })(<Input />)}
+                                {getFieldDecorator('money')(<Input />)}
                             </FormItem>
                         </Col>
                         
@@ -115,9 +146,7 @@ class financeForm extends Component{
                         </Col>
                         <Col span={16}>
                            <FormItem>
-                                {getFieldDecorator('profit',{
-                                    rules: [{pattern:Reg.mobile, message: "联系方式格式不正确"}],
-                                })(<Input />)}
+                                {getFieldDecorator('profit')(<Input />)}
                             </FormItem>
                         </Col>
                     </Row>
@@ -127,9 +156,16 @@ class financeForm extends Component{
                         </Col>
                         <Col span={16}>
                             <FormItem>
-                                {getFieldDecorator('buyDate',{
-                                    rules: [{pattern:Reg.mobile, message: "联系方式格式不正确"}],
-                                })(<Input />)}
+                                {
+                                    getFieldDecorator('buyDate',{
+                                        initialValue:this.props.buyDate.value.format('YYYY/MM/DD')
+                                    })(
+                                        <DatePicker
+                                            getCalendarContainer={ () => document.getElementsByClassName('my-cards-page')[0]}
+                                        />
+                                    )
+                                    
+                                }
                             </FormItem>
                         </Col>
                     </Row>
@@ -139,9 +175,16 @@ class financeForm extends Component{
                         </Col>
                         <Col span={16}>
                             <FormItem>
-                                {getFieldDecorator('expireDate',{
-                                    rules: [{pattern:Reg.mobile, message: "联系方式格式不正确"}],
-                                })(<Input />)}
+
+                                {
+                                    getFieldDecorator('expireDate',{
+                                        initialValue:this.props.buyDate.value.format('YYYY/MM/DD')
+                                    })(
+                                        <DatePicker
+                                            getCalendarContainer={ () => document.getElementsByClassName('my-cards-page')[0]}
+                                        />
+                                    ) 
+                                }
                             </FormItem>
                         </Col>
                     </Row>

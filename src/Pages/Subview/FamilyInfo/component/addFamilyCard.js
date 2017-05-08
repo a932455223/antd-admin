@@ -20,19 +20,10 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 
 class addFamilyCard extends Component{
-    state = {
-        isAdd:false,
-    }
     constructor(props) {
         super(props);
     };
-    //添加状态切换
-    toggleAdd = () => {
-        let newState=update(
-            this.state,{isAdd:{$set:!this.state.isAdd}}
-        )
-        this.setState(newState);
-    }
+    
     clickSavaBtn=()=>{
         // let newState=update(
         //     this.state,{btnLoading:{$set:true}}
@@ -55,7 +46,7 @@ class addFamilyCard extends Component{
         }
     }
     clickCancelBtn=()=>{
-        this.toggleAdd()
+        this.props.toggleAdd()
         this.props.resetAddCard();
     }
     componentWillMount(){
@@ -75,7 +66,7 @@ class addFamilyCard extends Component{
     render(){
         let addArea;
         const { getFieldDecorator } = this.props.form;
-        if(this.state.isAdd){
+        if(this.props.isAdd){
         addArea=
             
             (<Form  className="my-form-card">
@@ -192,7 +183,7 @@ class addFamilyCard extends Component{
         //添加按钮
         addArea=
             (<Card  className="my-card my-add-card">
-                <i className="iconfont icon-create"   onClick={()=>{this.toggleAdd()}}></i>
+                <i className="iconfont icon-create"   onClick={()=>{this.props.toggleAdd()}}></i>
                 <p>新建家庭关系</p>
             </Card>)
         }
