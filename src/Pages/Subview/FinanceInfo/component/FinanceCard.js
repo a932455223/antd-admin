@@ -11,6 +11,7 @@ import {
 import { connect } from 'react-redux';
 import api from './../../../../../API';
 import ajax from '../../../../tools/POSTF.js';
+import moment from 'moment';
 const FormItem = Form.Item;
 const Option = Select.Option;
 export default class FinanceCard extends Component{
@@ -42,8 +43,7 @@ export default class FinanceCard extends Component{
             <Card
                 className="my-card"
                 //title={this.props.item.name.value}
-               // title={this.findDropDownItem(this.props.item.financeCategory.value,'financeCategoryDropdown').name}
-               title={'金融业务产品'}
+                title={this.findDropDownItem(this.props.item.financeCategory.value,'financeCategoryDropdown').name}
                 key={this.props.item.id.value}
                 extra={
                     <div>
@@ -65,7 +65,7 @@ export default class FinanceCard extends Component{
                         业务机构名称：
                     </Col>
                     <Col span={16}>
-                        {this.props.item.org.value===1?'我行':'他行'}
+                        {this.props.item.org.value==='1'?'我行':'他行'}
                     </Col>
                 </Row>
                 <Row>
@@ -89,7 +89,10 @@ export default class FinanceCard extends Component{
                         购买日：
                     </Col>
                     <Col span={16}>
-                        {this.props.item.buyDate.value}
+                        
+                        {
+                            this.props.item.buyDate.value===undefined?'':this.props.item.buyDate.value.format('YYYY/MM/DD')
+                        }
                     </Col>
                 </Row>
                 <Row>
@@ -97,7 +100,9 @@ export default class FinanceCard extends Component{
                         到期日／销毁日：
                     </Col>
                     <Col span={16}>
-                        {this.props.item.expireDate.value}
+                        {
+                             this.props.item.expireDate.value===undefined?'':this.props.item.buyDate.value.format('YYYY/MM/DD')
+                        }
                     </Col>
                 </Row>
             </Card>

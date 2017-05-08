@@ -21,7 +21,7 @@ const Option = Select.Option;
 
 class addFinanceCard extends Component{
     state = {
-        isAdd:false,
+        isAdd:true,
     }
     constructor(props) {
         super(props);
@@ -83,11 +83,24 @@ class addFinanceCard extends Component{
                     title={
                         <div className="my-card-title">
                             <FormItem>
-                                {getFieldDecorator('name', {
-                                    rules: [{ required: true, message: '姓名不能为空' }],
-                                })(<Input 
-                                    prefix={<i className="iconfont icon-customer1" />}
-                                />)}
+                                {getFieldDecorator('financeCategory')(
+                                    <Select 
+                                    >
+                                        {
+                                            this.props.financeCategoryDropdown.map((fcd) => {
+                                                return (
+                                                    <Option 
+                                                        value={fcd.id.toString()}
+                                                        key={fcd.id.toString()}
+                                                    >
+                                                        {fcd.name}
+                                                    </Option >
+                                                )
+                                            })
+                                        }
+                                    </Select>)
+                                    
+                                }
                             </FormItem>
                             <span
                                 className="cancel-btn"
@@ -108,81 +121,88 @@ class addFinanceCard extends Component{
                 >
                 <Row>
                     <Col span={8}>
-                    <span>关系：</span>
+                     业务机构名称
                     </Col>
                     <Col span={16}>
                         <FormItem>
-                        {getFieldDecorator('relation', {
-                            rules: [{ required: true, message: '关系不能为空' }],
-                        })(
-                            <Select 
+                            {getFieldDecorator('org')(
+                                <Select 
+                                >
+                                        <Option 
+                                            value='1'
+                                        >
+                                            我行
+                                        </Option>
+                                        <Option 
+                                            value='2'
+                                        >
+                                            他行
+                                        </Option>
+                                    
+                                </Select>)
                                 
-                            >
-                                {
-                                    this.props.financeRelation.map((rel) => {
-                                        return (
-                                            <Option 
-                                                value={rel.id.toString()}
-                                                key={rel.id.toString()}
-                                            >
-                                                {rel.name}
-                                            </Option >
-                                        )
-                                    })
-                                }
-                            </Select>)}
+                            }
                         </FormItem>
                     </Col>
                 </Row>
-                    <Row>
-                        <Col span={8}>
-                        <span>联系方式：</span>
-                        </Col>
-                        <Col span={16}>
-                            <FormItem>
-                                {getFieldDecorator('phone',{
-                                    rules: [{pattern:Reg.mobile, message: "联系方式格式不正确"}],
-                                })(<Input />)}
-                            </FormItem>
-                        </Col>
-                        
-                    </Row>
-                    <Row>
-                        <Col span={8}>
-                        <span>身份证号：</span>
-                        </Col>
-                        <Col span={16}>
-                            <FormItem>
-                                {getFieldDecorator('certificate', {
-                                    rules: [{ pattern:Reg.certificate, message: '身份证格式不正确' }],
-                                })(<Input />)}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={8}>
-                        <span>工作属性：</span>
-                        </Col>
-                        <Col span={16}>
-                            <FormItem>
-                                {getFieldDecorator('jobCategory')(
-                                    <Select >
-                                        {
-                                            this.props.commonJobCategory.map((rel) => {
-                                                return (
-                                                    <Option 
-                                                        value={rel.id.toString()}
-                                                        key={rel.id.toString()}
-                                                    >
-                                                        {rel.name}
-                                                    </Option >
-                                                )
-                                            })
-                                        }
-                                    </Select>)}
-                            </FormItem>
-                        </Col>
-                    </Row>
+               <Row>
+                    <Col span={8}>
+                        业务额：
+                    </Col>
+                    <Col span={16}>
+                        <FormItem>
+                            {getFieldDecorator('money')(<Input />)}
+                        </FormItem>
+                    </Col>
+                    
+                </Row>
+                <Row>
+                    <Col span={8}>
+                        收益／利润：
+                    </Col>
+                    <Col span={16}>
+                        <FormItem>
+                            {getFieldDecorator('profit')(<Input />)}
+                        </FormItem>
+                    </Col>
+                </Row>
+               {/*  <Row>
+                    <Col span={8}>
+                        购买日：
+                    </Col>
+                    <Col span={16}>
+                        <FormItem>
+                            {
+                                getFieldDecorator('buyDate',{
+                                    initialValue:this.props.buyDate.value
+                                })(
+                                    <DatePicker
+                                        getCalendarContainer={ () => document.getElementsByClassName('my-cards-page')[0]}
+                                    />
+                                )
+                                
+                            }
+                        </FormItem>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={8}>
+                        到期日／销毁日：
+                    </Col>
+                    <Col span={16}>
+                        <FormItem>
+                            {
+                                getFieldDecorator('expireDate',{
+                                    initialValue:undefined
+                                })(
+                                    <DatePicker
+                                        getCalendarContainer={ () => document.getElementsByClassName('my-cards-page')[0]}
+                                    />
+                                ) 
+                            }
+                        </FormItem>
+                    </Col>
+                </Row>*/}
                 </Card>
                 <pre className="language-bash" style={{textAlign:'left'}}>
                 {JSON.stringify(this.state, null, 2)}
@@ -209,20 +229,23 @@ const AddFinanceCard =Form.create({
     mapPropsToFields(props) {
         // console.log('map triggered.',props)
         return {
-            name: {
-                ...props.name
+            buyDate: {
+                ...props.buyDate
             },
-            relation: {
-                ...props.relation
+            expireDate: {
+                ...props.expireDate
             },
-            certificate: {
-                ...props.certificate
+            financeCategory: {
+                ...props.financeCategory
             },
-            jobCategory: {
-                ...props.jobCategory
+            money: {
+                ...props.money
             },
-            phone:{
-                ...props.phone
+            org:{
+                ...props.org
+            },
+            profit:{
+                ...props.profit
             }
         };
     },
