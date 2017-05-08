@@ -12,25 +12,6 @@ import "./less/rolesStyle.less";
 import API from "../../../../API";
 
 export default class SystemRoles extends Component {
-  constructor(props) {
-    super(props);
-    this.roleEdit = (id,mode) => {
-      return (
-        <RoleEdit
-          id={id}
-          close={() => {
-            this.setState({
-              dock: {
-                visible: false
-              }
-            })
-          }}
-          rolePermission={this.rolePermission.bind(this,id,mode)}
-          addUser={this.addUser.bind(this)}
-        />
-      )
-    }
-  }
 
   state = {
     table: {
@@ -53,6 +34,26 @@ export default class SystemRoles extends Component {
           }
         })
       })
+
+    this.rolePermission(-1,'create')
+  }
+
+
+  roleEdit = (id,mode) => {
+    return (
+      <RoleEdit
+        id={id}
+        close={() => {
+          this.setState({
+            dock: {
+              visible: false
+            }
+          })
+        }}
+        rolePermission={this.rolePermission.bind(this,id,mode)}
+        addUser={this.addUser.bind(this)}
+      />
+    )
   }
 
   // 新增角色

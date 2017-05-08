@@ -502,7 +502,103 @@ module.exports = {
       count: /[0-9]{3}/
     }]
   }),
+  'GET /asd/privilege/abc': {
+    "code": 200,
+    "message": "OK",
+    "data": [{
+      "id": 1,
+      "isLeaf": 0,
+      "name": "客户管理",
+      "needLevel": null,
+      "options": null,
+      "pid": 0,
+      "priority": 1,
+      "childs": [{
+        "id": 10,
+        "childs": null,
+        "isLeaf": 1,
+        "name": "客户信息查看",
+        "needLevel": 1,
+        "options": [{
+          "id": 1,
+          "name": "总行"
+        }, {
+          "id": 2,
+          "name": "分行"
+        }, {
+          "id": 3,
+          "name": "支行"
+        }],
+        "pid": 1,
+        "priority": null
+      },{
+        "id": 6,
+        "childs": null,
+        "isLeaf": 1,
+        "name": "客户信息查看",
+        "needLevel": 1,
+        "options": [{
+          "id": 1,
+          "name": "总行"
+        }, {
+          "id": 2,
+          "name": "分行"
+        }, {
+          "id": 3,
+          "name": "支行"
+        }],
+        "pid": 1,
+        "priority": null
+      },{
+        "id": 7,
+        "childs": null,
+        "isLeaf": 1,
+        "name": "客户信息查看",
+        "needLevel": 1,
+        "options": [{
+          "id": 1,
+          "name": "总行"
+        }, {
+          "id": 2,
+          "name": "分行"
+        }, {
+          "id": 3,
+          "name": "支行"
+        }],
+        "pid": 1,
+        "priority": null
+      }]
 
+    }, {
+      "id": 2,
+      "isLeaf": 0,
+      "name": "客户管理",
+      "needLevel": null,
+      "options": null,
+      "pid": 0,
+      "priority": 1,
+      "childs": [{
+        "childs": null,
+        "id": 5,
+        "isLeaf": 1,
+        "name": "客户信息查看",
+        "needLevel": 1,
+        "options": [{
+          "id": 1,
+          "name": "总行"
+        }, {
+          "id": 2,
+          "name": "分行"
+        }, {
+          "id": 3,
+          "name": "支行"
+        }],
+        "pid": 1,
+        "priority": null
+      }]
+
+    }]
+  },
   // //网格列表
   // 'POST /api/areas':{
   //   data:'error'
@@ -537,9 +633,7 @@ module.exports = {
     }],
     'message': 'finance message!'
   }),
-  // 'POST /api/demo': {
-  //   err: 'ad'
-  // }
+
 };
 
 

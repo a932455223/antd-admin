@@ -44,7 +44,6 @@ export default class Content extends Component{
   }
 
   render(){
-    console.log(this.props.dockConf.visible);
     const dockConfig = {
       position: 'right',
       isVisible: this.props.dockConf.visible,

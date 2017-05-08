@@ -55,7 +55,6 @@ export default class RoleEdit extends Component {
 
     return (
       <div className="role-edit">
-
         <div className="role-edit-title">
           <h3>角色</h3>
           <span>
