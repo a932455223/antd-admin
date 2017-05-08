@@ -32,7 +32,7 @@ class financeForm extends Component{
         // this.setState({btnLoading:false})
     }
     clickSavaBtn=()=>{
-        // this.props.saveChangeValue(this.props.id.value,this.props.form.getFieldsValue(),this.props.index)
+         this.props.putCustomersFinances(this.props.id.value,this.props.form.getFieldsValue(),this.props.index)
         // this.props.toggleEdit(this.props.index)
         // this.setState({btnLoading:true})
         // console.log(this.props.form.getFieldsValue())
@@ -129,27 +129,27 @@ class financeForm extends Component{
                         </FormItem>
                     </Col>
                 </Row>
-                    <Row>
-                        <Col span={8}>
-                            业务额：
-                        </Col>
-                        <Col span={16}>
-                            <FormItem>
-                                {getFieldDecorator('money')(<Input />)}
-                            </FormItem>
-                        </Col>
-                        
-                    </Row>
-                    <Row>
-                        <Col span={8}>
-                            收益／利润：
-                        </Col>
-                        <Col span={16}>
-                           <FormItem>
-                                {getFieldDecorator('profit')(<Input />)}
-                            </FormItem>
-                        </Col>
-                    </Row>
+                <Row>
+                    <Col span={8}>
+                        业务额：
+                    </Col>
+                    <Col span={16}>
+                        <FormItem>
+                            {getFieldDecorator('money')(<Input />)}
+                        </FormItem>
+                    </Col>
+                    
+                </Row>
+                <Row>
+                    <Col span={8}>
+                        收益／利润：
+                    </Col>
+                    <Col span={16}>
+                        <FormItem>
+                            {getFieldDecorator('profit')(<Input />)}
+                        </FormItem>
+                    </Col>
+                </Row>
                     <Row>
                         <Col span={8}>
                             购买日：
@@ -158,7 +158,7 @@ class financeForm extends Component{
                             <FormItem>
                                 {
                                     getFieldDecorator('buyDate',{
-                                        initialValue:this.props.buyDate.value.format('YYYY/MM/DD')
+                                         initialValue:this.props.buyDate.value==undefined?undefined:this.props.buyDate.value.format('YYYY/MM/DD')
                                     })(
                                         <DatePicker
                                             getCalendarContainer={ () => document.getElementsByClassName('my-cards-page')[0]}
@@ -175,10 +175,9 @@ class financeForm extends Component{
                         </Col>
                         <Col span={16}>
                             <FormItem>
-
                                 {
                                     getFieldDecorator('expireDate',{
-                                        initialValue:this.props.buyDate.value.format('YYYY/MM/DD')
+                                        initialValue:this.props.expireDate.value==undefined?undefined:this.props.expireDate.value
                                     })(
                                         <DatePicker
                                             getCalendarContainer={ () => document.getElementsByClassName('my-cards-page')[0]}

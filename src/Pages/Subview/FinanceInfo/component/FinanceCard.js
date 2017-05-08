@@ -89,8 +89,9 @@ export default class FinanceCard extends Component{
                         购买日：
                     </Col>
                     <Col span={16}>
+                        
                         {
-                           this.props.item.buyDate.value.format('YYYY/MM/DD')
+                            this.props.item.buyDate.value===undefined?'':this.props.item.buyDate.value.format('YYYY/MM/DD')
                         }
                     </Col>
                 </Row>
@@ -99,7 +100,9 @@ export default class FinanceCard extends Component{
                         到期日／销毁日：
                     </Col>
                     <Col span={16}>
-                        {this.props.item.expireDate.value.format('YYYY/MM/DD')}
+                        {
+                             this.props.item.expireDate.value===undefined?'':this.props.item.buyDate.value.format('YYYY/MM/DD')
+                        }
                     </Col>
                 </Row>
             </Card>
