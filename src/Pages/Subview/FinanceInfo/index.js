@@ -8,7 +8,7 @@ import {
   Form,
   Select,
   Modal,
-  message
+  message,
 } from 'antd';
 import styles from './indexStyle.less';
 import api from './../../../../API';
@@ -18,6 +18,7 @@ import ajax from '../../../tools/POSTF.js';
 import AddFinanceCard from './component/AddFinanceCard'
 import FinanceCard from './component/FinanceCard'
 import FinanceForm from './component/FinanceForm'
+import moment from 'moment';
 const FormItem = Form.Item;
 const Option = Select.Option;
 class FinanceInfo extends Component {
@@ -27,12 +28,13 @@ class FinanceInfo extends Component {
     financeList:[],//家庭信息数组
     financeCategoryDropdown:[],//金融业务信息产品下拉菜单
     addFinanceCardLoading:false,
+    isAdd:true,
     newFinance:{//放到组件中
         "buyDate": {
-            "value": ""
+            "value": undefined
           },
           "expireDate": {
-            "value": ""
+            "value": undefined
           },
           "financeCategory": {
             "value": ""
@@ -62,12 +64,24 @@ class FinanceInfo extends Component {
           let newFinanceList= data.data.data.map((item)=>{
             return Object.keys(item).reduce((pre,ky)=>{
               if(item[ky]===null){
-                pre[ky] = {value:""}
+                
+                if(ky==='buyDate'||ky==='expireDate'){
+
+                  pre[ky] = {value:undefined}
+                }else{
+                  pre[ky] = {value:""}
+                }
               }else{
-                pre[ky] = {value:item[ky]+""}
+                if(ky==='buyDate'||ky==='expireDate'){
+
+                  let time=moment(item[ky]);
+                  console.log(time)
+                  pre[ky] = {value:time};
+                }else{
+                  pre[ky] = {value:item[ky]+""}
+
+                }
               }
-              // console.log(item[ky]===null)
-              // pre[ky] = {value:item[ky]+""}
               return pre;
             },{})
           });
@@ -85,13 +99,13 @@ class FinanceInfo extends Component {
   }
   // 增加
   postCustomersFinances=()=>{
-      ajax.Post(api.POST_CUSTOMER_FINANCES(3),{
-        buyDate	:'2017-09-02',
-        expireDate	:'2018-09-09',
-        financeCategory:18,
-        money	:20000,
-        org	:1,
-        profit :2000,
+      ajax.Post(api.POST_CUSTOMER_FINANCES(2),{
+        buyDate	:'2017-10-02',
+        expireDate	:'2019-02-09',
+        financeCategory:11,
+        money	:99000,
+        org	:2,
+        profit :34000,
       })
         .then( res => {
               console.log(res)
@@ -111,8 +125,50 @@ class FinanceInfo extends Component {
 
   }
   // 修改
-  putCustomersFinances=()=>{
+  putCustomersFinances=(id,values,index)=>{
+    setTimeout(()=>{
+          console.log(index,values)
+          // let newValues= Object.keys(values).map((pre,ky)=>{
+          //     if(values[ky]===undefined){
+        
+          //       pre[ky]=""
+          //     }
+          //     console.log(pre,ky)
+          //     return pre;
+          //   })
+          for(let key in values){
+            if(values[key] === undefined){
+              values[key]=''
+            }
+          }
+      ajax.Put(api.PUT_CUSTOMERS_FINANCES(index),values)
+        .then( res => {
+            console.log(res);
+            switch(res.status){
+                case(200):
+                  {
+                    if(res.data.code===200&&res.data.message==='OK')
+                      message.success('更改成功');
+                      // this.getFamilyInfo(this.props.currentId);
+                    if(res.data.code!==200){
+                      // message.error(res.data.message)
+                      Modal.error({
+                        title:res.data.message,
+                      });
+                    }
+                  }
+                  break;
+                default:
+                  {
+                    Modal.error({
+                      title: res.statusText,
+                    });
+                  }
+            }
+          })
 
+          console.log(values);
+      },0)
   }
   // 金融业务信息下拉
   getCustomFinanceCategory=()=>{
@@ -137,10 +193,10 @@ class FinanceInfo extends Component {
     this.setState({
       newFinance:{
         "buyDate": {
-            "value": ""
+            "value": undefined
           },
           "expireDate": {
-            "value": ""
+            "value": undefined
           },
           "financeCategory": {
             "value": ""
@@ -191,6 +247,7 @@ class FinanceInfo extends Component {
       })
       this.getCustomersFinances(newProps.currentId);
       console.log('重置数据')
+      
     }
     
   }
@@ -202,6 +259,7 @@ class FinanceInfo extends Component {
     return (
       <div className="my-cards-page">
         {loading}
+        
         {
           this.state.financeList.length?
           <div className="my-cards-area">
@@ -216,8 +274,8 @@ class FinanceInfo extends Component {
                         //item={item}
                         onChange={(e)=>{this.handleFormChange(index,e)}}
                         index={index}
-                        //financeCategoryDropdown={this.state.financeCategoryDropdown}
-                        //saveChangeValue={this.saveChangeValue}
+                        financeCategoryDropdown={this.state.financeCategoryDropdown}
+                        putCustomersFinances={this.putCustomersFinances}
                         cancelChangeValue={this.cancelChangeValue}
                       />
                     )
@@ -236,8 +294,13 @@ class FinanceInfo extends Component {
                 })
               }
               <AddFinanceCard 
-                 financeCategoryDropdown={this.state.financeCategoryDropdown}
-
+                financeCategoryDropdown={this.state.financeCategoryDropdown}
+                addNewFinanceCategoryValue={this.addFinanceCategoryValue}
+                postCustomersFinances={this.postCustomersFinances}
+                addFinanceCategoryLoading={this.addFinanceCategoryLoading}
+                {...this.state.newFinance}
+                resetAddCard={this.resetAddCard}
+                onAddChange={this.onAddChange}
               />
 
               
@@ -256,6 +319,7 @@ class FinanceInfo extends Component {
         <pre className="language-bash" style={{textAlign:'left'}}>
           {JSON.stringify(this.state, null, 2)}
         </pre>
+        
 
       </div>
     )
