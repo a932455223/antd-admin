@@ -1,4 +1,7 @@
 export default {
+  // 获取权限
+  POST_PRIVILEGE_COMMON: '/api/privilege/common',
+
   //个人客户：
   //户家庭信息：查看、增加、删除、修改
   GET_CUSTOMERS_FAMILY:customerId =>`/api/customer/individual/${customerId}/families`,
@@ -25,7 +28,7 @@ export default {
   POST_CUSTOMER_ENTERPRISE_BASE: '/api/customer/enterprise/base',
   //*===============================GET=======================================*
   // 客户列表
-  GET_CUSTOMERS: '/asd/customers',
+  GET_CUSTOMERS: '/api/customers',
   // customer/individual/:customerId/families
   // 用户与权限 角色 列表
   GET_SYSTEM_ROLES_LIST: '/asd/system/roles/list',
@@ -34,7 +37,7 @@ export default {
 
   GET_CUSTOMER_ADD_DEPARTMENT_HIERARCHY: '/api/customer/add/departments/hierarchy',
 
-  POST_CUSTOMER_PRIVILEGE: '/asd/privilege/customer',
+  POST_CUSTOMER_PRIVILEGE: '/api/privilege/customer',
   //===========dropDown option========================================
   GET_SYSTEM_SLIDER_BAR: '/asd/common/dropdown/list/system',
   GET_CUSTOMER_SLIDER_BAR: '/asd/common/dropdown/list/customer',

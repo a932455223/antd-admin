@@ -20,7 +20,12 @@ const Option = Select.Option;
 
 import styles from './indexStyle.scss';
 import './indexStyle.less';
-import { fillCustomerInfo, resetCustomerInfo, editCustomerName } from '../../../redux/actions/customerAction';
+import {
+  fillCustomerInfo,
+  resetCustomerInfo,
+  editCustomerName,
+  increaseBeEditArray
+} from '../../../redux/actions/customerAction';
 
 class NewCustomer extends Component {
   state = {
@@ -343,8 +348,24 @@ class CustomerSlider extends Component {
 
   // 用户姓名编辑
   nameChange = (e) => {
-    const { dispatch } = this.props;
-    dispatch(editCustomerName(e.target.value))
+    const { dispatch, currentCustomerInfo } = this.props;
+    if(currentCustomerInfo.category == '个人客户') {
+      dispatch(editCustomerName(e.target.value, 'basicInfo'));
+    }
+
+    if(currentCustomerInfo.category == '企业客户') {
+      dispatch(editCustomerName(e.target.value, 'enterpriseBasicInfo'));
+    }
+
+    // if(!currentCustomerInfo.beEditedArray.includes('basicInfo') && currentCustomerInfo.category == '个人客户') {
+    //   console.log('basicInfo be edited')
+    //   dispatch(increaseBeEditArray('basicInfo'))
+    // }
+    //
+    // if(!currentCustomerInfo.beEditedArray.includes('enterpriseBasicInfo') && currentCustomerInfo.category == '企业客户') {
+    //   console.log('enterpriseBasicInfo be edited')
+    //   // dispatch(increaseBeEditArray('enterpriseBasicInfo'))
+    // }
   }
 
   componentWillReceiveProps(next) {
@@ -383,13 +404,27 @@ class CustomerSlider extends Component {
             <div className={styles.img}>
               <i className="iconfont icon-customer1"></i>
             </div>
-            {step != 1 &&
+
+            {mode === 'view' &&
+              <span className={styles.name}>{name}</span>
+            }
+
+            {step != 1 && mode !== 'view' &&
               <Input
                 key={id}
                 onChange={this.nameChange}
-                className={styles.name}
-                defaultValue={name}
+                className={styles.inputName}
+                value={name}
               />
+            }
+
+            {name === '' && mode === 'edit' &&
+              <p style={{
+                textAlign: 'left',
+                paddingLeft: 50,
+                fontSize: 12,
+                color: 'red'
+              }}>姓名为必填项</p>
             }
           </div>
 

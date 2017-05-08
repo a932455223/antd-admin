@@ -129,6 +129,7 @@ class EnterpriseBasicInfo extends Component {
       .then((res) => {
         if(res.data.data == null) {
         } else {
+          console.log(res.data.data);
           const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
           // 客户账户
@@ -166,12 +167,12 @@ class EnterpriseBasicInfo extends Component {
               },
               manager: {
                 $set: {
-                  value: res.data.data.manager + ''
+                  value: res.data.data.manager != null ? res.data.data.manager + '' : undefined
                 }
               },
               grid: {
                 $set: {
-                  value: res.data.data.grid + ''
+                  value: res.data.data.grid != null ? res.data.data.grid + '' : undefined
                 }
               },
               accounts: {
@@ -394,6 +395,7 @@ class EnterpriseBasicInfo extends Component {
       joinerIds: joiners ? joiners : '',
       manager: manager ? manager - 0 : '',
       name: name ? name : '',
+      mainBusiness: mainBusiness ? mainBusiness : '',
       industory: industory ? industory : '',
       legalPerson: legalPerson ? legalPerson : 0,
       registeTime: registeTime != null ? moment(registeTime).format(dateFormat) : '',

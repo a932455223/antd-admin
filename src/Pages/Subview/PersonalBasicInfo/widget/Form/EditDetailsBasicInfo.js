@@ -20,6 +20,10 @@ const Option = Select.Option;
 import API from '../../../../../../API';
 import ajax from '../../../../../tools/POSTF';
 
+function hasErrors(fieldsError) {
+  return Object.keys(fieldsError).some(field => fieldsError[field]);
+}
+
 class EditDetailsBasicInfoForm extends Component{
   state = {
     detailsInfoBeEdit: false
@@ -66,7 +70,14 @@ class EditDetailsBasicInfoForm extends Component{
   };
 
   fillCustomerDetailsInfo = (detailsInfo) => {
-    this.props.updateCustomerInfo(detailsInfo)
+    const { validateFields, getFieldsError } = this.props.form;
+    const { updateCustomerInfo } = this.props;
+    validateFields();
+    if(hasErrors(getFieldsError())) {
+      message.error('表单填写有误，请仔细检查表单');
+    } else {
+      updateCustomerInfo(detailsInfo)
+    }
   }
 
   render() {

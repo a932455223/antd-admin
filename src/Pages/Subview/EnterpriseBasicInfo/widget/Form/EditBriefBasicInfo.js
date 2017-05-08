@@ -28,6 +28,10 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 let addkey = 100;
 
+function hasErrors(fieldsError) {
+  return Object.keys(fieldsError).some(field => fieldsError[field]);
+}
+
 //个人信息表单................
 class CompanyBasicInfo extends Component{
   state = {
@@ -46,7 +50,7 @@ class CompanyBasicInfo extends Component{
   }
 
   componentWillReceiveProps(next) {
-    console.log('next')
+    // console.log('next')
     const { getFieldValue } = next.form;
 
     // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
@@ -72,10 +76,12 @@ class CompanyBasicInfo extends Component{
     })
 
     // 三级联动，更新 manager和 grid
-    let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : '';
-    let managerId = getFieldValue('manager') ? getFieldValue('manager') - 0 : '';
-    if(departmentId > 0) {
-      this.getDepartments(departmentId, managerId);
+    if((next && next.briefInfo && next.briefInfo.department && next.briefInfo.department.value) !== (this.props && this.props.briefInfo && this.props.briefInfo.department && this.props.briefInfo.department.value)) {
+      let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : '';
+      let managerId = getFieldValue('manager') ? getFieldValue('manager') - 0 : '';
+      if(departmentId > 0) {
+        this.getDepartments(departmentId, managerId);
+      }
     }
   }
 
@@ -175,10 +181,14 @@ class CompanyBasicInfo extends Component{
 
   // 更新信息
   updateInfo = (briefInfo) => {
-    const { validateFields } = this.props.form;
+    const { validateFields, getFieldsError } = this.props.form;
     const { addNewCustomer } = this.props;
     validateFields();
-    addNewCustomer(briefInfo);
+    if(hasErrors(getFieldsError())) {
+      message.error('表单填写有误，请仔细检查表单');
+    } else {
+      addNewCustomer(briefInfo);
+    }
   }
 
   render() {

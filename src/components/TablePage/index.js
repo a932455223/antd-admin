@@ -5,6 +5,10 @@ import { Table, Pagination, Spin, Button, Icon, message, Modal } from 'antd';
 import Dock from 'react-dock';
 import './indexStyle.less';
 
+import ajax from '../../tools/POSTF';
+import axios from 'axios';
+import API from '../../../API';
+
 import {
   saveCurrentCustomerInfo,
   createCustomer,
@@ -35,7 +39,9 @@ class TablePage extends Component {
     batchProcessing: false,
 
     changeId: false,
-    onlyCloseModal: false
+    onlyCloseModal: false,
+
+    addCustomerPrivilege: false // 添加客户的权限
   };
 
   componentWillMount() {
@@ -50,6 +56,14 @@ class TablePage extends Component {
         BatchParticipate: BatchParticipate
       })
     }, 'CustomerSlider');
+
+    let permissions = {permissions:['system:user:add']}
+    ajax.Post(API.POST_PRIVILEGE_COMMON, permissions)
+        .then((res) => {
+          this.setState({
+            addCustomerPrivilege: res.data.data['system:user:add']
+          })
+        })
   }
 
   // 获取被选中的 row的 Id，打印当前的 Id
@@ -300,14 +314,16 @@ class TablePage extends Component {
         }
 
         <header id="customerTableHeader">
-          <Button
-            className="addNewCustomer"
-            type="primary"
-            onClick={this.addNewCustomer}
-          >
-            <Icon type="plus" />
-            <span>新建客户</span>
-          </Button>
+          {this.state.addCustomerPrivilege &&
+            <Button
+              className="addNewCustomer"
+              type="primary"
+              onClick={this.addNewCustomer}
+            >
+              <Icon type="plus" />
+              <span>新建客户</span>
+            </Button>
+          }
           <Button>
             <Icon type="download" />
             <span>导入客户</span>
