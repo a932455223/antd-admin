@@ -12,6 +12,7 @@ import {
   Button,
   Tag,
   DatePicker,
+  message
  } from 'antd';
 import axios from 'axios';
 import _ from 'lodash';
@@ -41,15 +42,17 @@ import AddCrewModal from '../PersonalBasicInfo/widget/AddCrewModal'
 
 class EnterpriseBasicInfo extends Component {
   state = {
+    id: '',
     modalVisible: false,
     // edited: false,
 
     joinersBeEdited: false,
     joiners: [],
-    tags: '',
+    tags: [],
 
-    accountsArr: [],
+    accountsArr: ['row-0'],
     accounts: {},
+    originAccountsArr: ['row-0'],
     originAccounts: {},
 
     eachCompanyInfo: {
@@ -64,7 +67,7 @@ class EnterpriseBasicInfo extends Component {
       },
       accounts: [],
       registeTime: {
-        value: ''
+        value: null
       },
       industory: {
         value: ''
@@ -103,10 +106,11 @@ class EnterpriseBasicInfo extends Component {
   }
 
   componentWillReceiveProps(next){
-    console.log('will recieve props');
+    // console.log('will recieve props');
 
     const { id, beEditedArray } = this.props.currentCustomerInfo;
-    if(id !== next.currentCustomerInfo.id || (beEditedArray && beEditedArray.length === 0) ) {
+    if(id !== next.currentCustomerInfo.id ||
+      (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) ) {
       this.getBaseInfo(next.currentCustomerInfo.id);
     }
 
@@ -121,108 +125,113 @@ class EnterpriseBasicInfo extends Component {
   // 获取客户基本信息
   getBaseInfo = (id) => {
     if(id !== -1) {
-      ajax.Get(API.GET_CUSTOMER_ENTERPRISE_BASE(5))
+      ajax.Get(API.GET_CUSTOMER_ENTERPRISE_BASE(id))
       .then((res) => {
-        // console.log(res.data.data)
-        // const dateFormat = 'YYYY-MM-DD'; // 日期格式
+        if(res.data.data == null) {
+        } else {
+          const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
-        // 客户账户
-        let accounts = res.data.data.accounts.map((item,index) => ({
-          [`row-${index}-accountNo`]: {value: item.accountNo},
-          [`row-${index}-remark`]: {value: item.remark}
-        }));
+          // 客户账户
+          let originAccounts = res.data.data.accounts.map((item,index) => ({
+            [`row-${index}-accountNo`]: {value: item.accountNo},
+            [`row-${index}-remark`]: {value: item.remark}
+          }));
+          let originAccountsArr = res.data.data.accounts.map((item,index) => `row-${index}`);
+          // 展平 accounts
+          const originAccountsObj = originAccounts.reduce((pre, next) => {
+            return {
+              ...pre,
+              ...next
+            }
+          },{});
+          let accountsObj = _.cloneDeep(originAccountsObj);
+          let accountsArr = _.cloneDeep(originAccountsArr);
 
-        let accountsArr = res.data.data.accounts.map((item,index) => `row-${index}`);
+          let newJoiners = _.cloneDeep(res.data.data.joiners);
+          let newState = update(this.state, {
+            id: {$set: res.data.data.id},
 
-        // 展平 accounts
-        const accountsObj = accounts.reduce((pre, next) => {
-          return {
-            ...pre,
-            ...next
-          }
-        },{});
-        let originAccounts = _.cloneDeep(accountsObj);
+            accounts: {$set: accountsObj},
+            originAccounts: {$set: originAccounts},
+            originAccountsArr: {$set: originAccountsArr.length !== 0 ? originAccountsArr : ['row-0']},
+            accountsArr: {$set: accountsArr.length !== 0 ? accountsArr : ['row-0']},
 
-        let newJoiners = _.cloneDeep(res.data.data.joiners);
-        let newState = update(this.state, {
-          accounts: {$set: accountsObj},
-          originAccounts: {$set: originAccounts},
-          accountsArr: {$set: accountsArr},
-          joiners: {$set: res.data.data.joiners},
-          tags: {$set: newJoiners},
-          eachCompanyInfo: {
-            department: {
-              $set: {
-                value: res.data.data.department + ''
-              }
-            },
-            manager: {
-              $set: {
-                value: res.data.data.manager + ''
-              }
-            },
-            grid: {
-              $set: {
-                value: res.data.data.grid + ''
-              }
-            },
-            accounts: {
-              $set: res.data.data.accounts
-            },
-            registeTime: {
-              $set: {
-                value: res.data.data.registeTime
-              }
-            },
-            industory: {
-              $set: {
-                value: res.data.data.industory
-              }
-            },
-            mainBusiness: {
-              $set: {
-                value: res.data.data.mainBusiness
-              }
-            },
-            yearIncome: {
-              $set: {
-                value: res.data.data.yearIncome
-              }
-            },
-            legalPerson: {
-              $set: {
-                value: res.data.data.legalPerson
-              }
-            },
-            telephone: {
-              $set: {
-                value: res.data.data.telephone
-              }
-            },
-            staffCount: {
-              $set: {
-                value: res.data.data.staffCount
-              }
-            },
-            avgSalary: {
-              $set: {
-                value: res.data.data.avgSalary
-              }
-            },
-            address: {
-              $set: {
-                value: res.data.data.address
-              }
-            },
-            addressCode: {
-              $set: {
-                value: res.data.data.addressCode
+            joiners: {$set: res.data.data.joiners},
+            tags: {$set: newJoiners},
+            eachCompanyInfo: {
+              department: {
+                $set: {
+                  value: res.data.data.department + ''
+                }
+              },
+              manager: {
+                $set: {
+                  value: res.data.data.manager + ''
+                }
+              },
+              grid: {
+                $set: {
+                  value: res.data.data.grid + ''
+                }
+              },
+              accounts: {
+                $set: res.data.data.accounts
+              },
+              registeTime: {
+                $set: {
+                  value: res.data.data.registeTime != null ? moment(res.data.data.registeTime, dateFormat) : undefined
+                }
+              },
+              industory: {
+                $set: {
+                  value: res.data.data.industory
+                }
+              },
+              mainBusiness: {
+                $set: {
+                  value: res.data.data.mainBusiness
+                }
+              },
+              yearIncome: {
+                $set: {
+                  value: res.data.data.yearIncome
+                }
+              },
+              legalPerson: {
+                $set: {
+                  value: res.data.data.legalPerson
+                }
+              },
+              telephone: {
+                $set: {
+                  value: res.data.data.telephone
+                }
+              },
+              staffCount: {
+                $set: {
+                  value: res.data.data.staffCount
+                }
+              },
+              avgSalary: {
+                $set: {
+                  value: res.data.data.avgSalary
+                }
+              },
+              address: {
+                $set: {
+                  value: res.data.data.address
+                }
+              },
+              addressCode: {
+                $set: {
+                  value: res.data.data.addressCode
+                }
               }
             }
-          }
-        })
+          })
 
-        this.setState(newState);
+          this.setState(newState);
+        }
       })
     }
   }
@@ -309,11 +318,14 @@ class EnterpriseBasicInfo extends Component {
   }
 
   // 参与人员被修改了
-  joinersBeModified = () => {
-    if(!this.state.joinersBeEdited) {
-      this.setState({
-        joinersBeEdited: true
+  joinersBeModified = (state) => {
+    let st = state || this.state;
+
+    if(!st.joinersBeEdited) {
+      let newState = update(st, {
+        joinersBeEdited: {$set: true}
       })
+      this.setState(newState);
     }
   }
 
@@ -372,7 +384,7 @@ class EnterpriseBasicInfo extends Component {
       yearIncome
     } = briefInfo
 
-    // console.log(briefInfo);
+    console.log(briefInfo);
     let json = {
       accounts: accountsInfo,
       address: address ? address : '',
@@ -382,9 +394,9 @@ class EnterpriseBasicInfo extends Component {
       joinerIds: joiners ? joiners : '',
       manager: manager ? manager - 0 : '',
       name: name ? name : '',
-      industory: industory ? industory : 0,
+      industory: industory ? industory : '',
       legalPerson: legalPerson ? legalPerson : 0,
-      registeTime: registeTime ? registeTime : 0,
+      registeTime: registeTime != null ? moment(registeTime).format(dateFormat) : '',
       staffCount: staffCount ? staffCount : 0,
       telephone: telephone ? telephone : 0,
       yearIncome: yearIncome != null && yearIncome != '' ? yearIncome - 0 : ''
@@ -393,40 +405,42 @@ class EnterpriseBasicInfo extends Component {
     console.log(json);
 
     // 如果 id不存在，则调用创建用户接口
-    // if(id === -1) {
-    //   ajax.PostJson(API.POST_CUSTOMER_INDIVIDUAL_BASE, json).then((res) => {
-    //     if(res.message === 'OK') {
-    //       message.success('创建用户成功');
-    //       this.props.createCustomerSuccess(res.data);
-    //       this.props.decreaseBeEditArray('basicInfo');
-    //     } else {
-    //       message.error(res.message);
-    //     }
-    //   });
-    // } else {
-    //   ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1(id), json).then((res)=>{
-    //     if(res.message === 'OK') {
-    //       message.success('编辑用户成功');
-    //       this.props.decreaseBeEditArray('basicInfo');
-    //     } else {
-    //       message.error(res.message);
-    //     }
-    //   })
-    // }
+    if(id === -1) {
+      ajax.PostJson(API.POST_CUSTOMER_ENTERPRISE_BASE, json).then((res) => {
+        if(res.message === 'OK') {
+          message.success('创建用户成功');
+          this.props.createCustomerSuccess(res.data);
+          this.props.decreaseBeEditArray('enterpriseBasicInfo');
+        } else {
+          message.error(res.message);
+        }
+      });
+    } else {
+      ajax.PutJson(API.PUT_CUSTOMER_ENTERPRISE_BASE(5), json).then((res)=>{
+        if(res.code === 200) {
+          message.success('编辑用户成功');
+          this.props.decreaseBeEditArray('enterpriseBasicInfo');
+        } else {
+          message.error(res.message);
+        }
+      })
+    }
   }
 
   render() {
     const { increaseBeEditArray, decreaseBeEditArray } = this.props;
-    const { step, mode, id, beEditedArray } = this.props.currentCustomerInfo;
+    const { step, mode, beEditedArray } = this.props.currentCustomerInfo;
     const {
+      id,
       modalVisible,
       eachCompanyInfo,
-      // edited,
+
       tags,
       joinersBeEdited,
 
       accountsArr,
       accounts,
+      originAccountsArr,
       originAccounts
     } = this.state;
 
@@ -441,7 +455,7 @@ class EnterpriseBasicInfo extends Component {
 
     const basicInfoProps = {
       // basic info
-      currentId: id,
+      id: id,
       beEditedArray: beEditedArray,
       increaseBeEditArray: increaseBeEditArray,
       decreaseBeEditArray: decreaseBeEditArray,
@@ -462,17 +476,15 @@ class EnterpriseBasicInfo extends Component {
 
     return(
       <div style={{textAlign: 'left'}}>
-        <AddCrewModal
-          key={id}
-          {...modal}
-        />
-
         <div>
           {mode && mode !== 'view' &&
-            <EditBriefBasicInfo
-              {...basicInfoProps}
-              onChange={this.handleFormChange}
-            />
+            <div>
+              <AddCrewModal key={id} {...modal}/>
+              <EditBriefBasicInfo
+                {...basicInfoProps}
+                onChange={this.handleFormChange}
+              />
+            </div>
           }
           {mode && mode === 'view' &&
             <ViewBriefBasicInfo {...basicInfoProps}/>

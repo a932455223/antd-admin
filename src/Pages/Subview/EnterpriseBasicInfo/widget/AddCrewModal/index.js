@@ -23,7 +23,7 @@ export default class AddCrewModal extends Component {
   };
 
   componentWillMount() {
-    // console.log('add crew modal')
+    console.log('add crew modal')
     // 获取 treeNode department
     ajax.Get(API.GET_DEPARTMENT_HIERARCHY)
     .then(res => {
@@ -37,18 +37,15 @@ export default class AddCrewModal extends Component {
 
   componentWillReceiveProps(next){
     console.log('next');
-    const { staffs } = this.props;
-    if(staffs.length > 0){
-      let a = [];
-      staffs.map((item) => {
-        a.push(item.id);
-        this.setState({
-          selectedRowKeys: a
-        })
-      })
-    }
+    const { staffs } = next;
+    let a = [];
+    staffs.map((item) => {
+      a.push(item.id);
+    })
+    this.setState({
+      selectedRowKeys: a
+    })
 
-    const { selectedRowKeys } = this.state;
     // 选择经理，同步到 tags
     this.setState({
       staffs: staffs
@@ -81,7 +78,6 @@ export default class AddCrewModal extends Component {
   // }
 
   componentWillUnmout(){
-    console.log('unmount');
     removeEventListener('resize', this.initTableScroll)
   }
 
@@ -118,8 +114,8 @@ export default class AddCrewModal extends Component {
 
   // modal handle
   handleOk = () => {
-    this.props.hide();
-    this.props.joinersBeModified();
+    let newState = this.props.hide();
+    this.props.joinersBeModified(newState);
   };
 
   // modal handle cancle
@@ -151,21 +147,13 @@ export default class AddCrewModal extends Component {
     this.setState({
       selectedRowKeys: selectedRowKeys
     });
-
-    // 选择经理，同步到 tags
-    // const crews = this.state.table.dataSource && this.state.table.dataSource.filter(item => selectedRowKeys.includes(item.id) === true);
-    // console.log(this.state.table.dataSource);
-    // console.log(crews);
-    // this.setState({
-    //   staffs: crews
-    // })
   }
 
   render() {
-    // console.log(this.state.selectedRowKeys);
-    // console.log(this.state.staffs);
     const { visible } = this.props;
     const { selectedRowKeys, staffs } = this.state;
+    // console.log(selectedRowKeys);
+    // console.log(staffs);
     const participate = staffs && staffs.map((item, index) => {
       return (
         <Tag
@@ -283,7 +271,7 @@ export default class AddCrewModal extends Component {
             <div className="tags-wrapper">
               <div className="tags-title">
                 <h3>已选成员</h3>
-                <span>{staffs && staffs.length} 人</span>
+                <span>{staffs.length} 人</span>
               </div>
               <div>
                 {participate}
