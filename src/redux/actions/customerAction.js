@@ -27,6 +27,14 @@ export const fillCustomerInfo = (category, name) => (
   }
 )
 
+// 编辑用户姓名
+export const editCustomerName = (name) => (
+  {
+    type: actionTypes.EDIT_CUSTOMER_NAME,
+    name: name
+  }
+)
+
 // create customer success
 export const createCustomerSuccess = (id) => (
   {

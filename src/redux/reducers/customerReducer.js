@@ -36,6 +36,12 @@ const customerOperation = (state = initialState, action) => {
         category: action.category
       }
 
+    case actionTypes.EDIT_CUSTOMER_NAME:
+      return {
+        ...state,
+        name: action.name
+      }
+
     case actionTypes.CREATE_CUSTOMER_SUCCESS:
       return {
         ...state,
@@ -97,6 +103,7 @@ const currentCustomerInfo = (state = {}, action) => {
         ...customerOperation(state[0], action)
       }
 
+    case actionTypes.EDIT_CUSTOMER_NAME:
     case actionTypes.CREATE_CUSTOMER_SUCCESS:
     case actionTypes.INCREASE_BE_EDITED_ARRAY:
     case actionTypes.DECREASE_BE_EDITED_ARRAY:

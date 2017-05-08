@@ -52,10 +52,17 @@
     }
 
     .name {
+      width: 200px;
       margin-left: 13px;
       font-size: 16px;
     	font-weight: 600;
     	color: #1b2432;
+      border: none;
+      background-color: rgb(244, 245, 246);
+
+      &:hover {
+        border: 1px solid #d9d9d9;
+      }
     }
   }
 }
