@@ -39,7 +39,7 @@ class EditBriefBasicInfoForm extends Component{
 
 
   componentWillReceiveProps(next) {
-    console.log('briefBasicInfo will recieve props');
+    // console.log('briefBasicInfo will recieve props');
     const { getFieldValue } = next.form;
     // console.log(next);
     // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
@@ -67,10 +67,14 @@ class EditBriefBasicInfoForm extends Component{
     })
 
     // 三级联动，更新 manager和 grid
-    let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : '';
-    let managerId = getFieldValue('manager') ? getFieldValue('manager') - 0 : '';
-    if(departmentId > 0) {
-      this.getDepartments(departmentId, managerId);
+    if((next && next.briefInfo && next.briefInfo.department && next.briefInfo.department.value)
+      !==
+      (this.props && this.props.briefInfo && this.props.briefInfo.department && this.props.briefInfo.department.value)) {
+      let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : '';
+      let managerId = getFieldValue('manager') ? getFieldValue('manager') - 0 : '';
+      if(departmentId > 0) {
+        this.getDepartments(departmentId, managerId);
+      }
     }
   };
 
@@ -192,8 +196,6 @@ class EditBriefBasicInfoForm extends Component{
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue, validateFields} = this.props.form;
     const { department, manager, grid } = this.props.briefInfo;
     const { departmentOptions, managerOptions, gridOptions } = this.state;
-    console.log(beEditedArray);
-
 
     const formItemLayout = {
       labelCol: {

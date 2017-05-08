@@ -654,7 +654,7 @@ class BasicInfo extends Component {
       detailsInfo: detailsInfo,
 
       id: id,
-      // beEditedArray: beEditedArray,
+      beEditedArray: beEditedArray,
       increaseBeEditArray: increaseBeEditArray,
       decreaseBeEditArray: decreaseBeEditArray,
       addNewCustomer: this.addNewCustomer,
@@ -678,9 +678,6 @@ class BasicInfo extends Component {
 
       onChange: this.handleFormChange
     }
-
-    console.log(beEditedArray);
-    console.log({...basicInfoProps});
 
     const maintainRecordProps = {
       mode: mode
@@ -706,9 +703,10 @@ class BasicInfo extends Component {
             <div>
               <AddCrewModal key={id} {...modal}/>
               <EditBriefBasicInfo
-                beEditedArray={beEditedArray}
                 {...basicInfoProps}
-                onChange={this.handleFormChange}
+              />
+              <EditDetailsBasicInfo
+                {...basicInfoProps}
               />
             </div>
           }

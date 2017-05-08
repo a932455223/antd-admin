@@ -20,6 +20,10 @@ const Option = Select.Option;
 import API from '../../../../../../API';
 import ajax from '../../../../../tools/POSTF';
 
+function hasErrors(fieldsError) {
+  return Object.keys(fieldsError).some(field => fieldsError[field]);
+}
+
 class EditDetailsBasicInfoForm extends Component{
   state = {
     detailsInfoBeEdit: false
