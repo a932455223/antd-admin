@@ -1,4 +1,7 @@
 export default {
+  // 获取权限
+  POST_PRIVILEGE_COMMON: '/api/privilege/common',
+
   //个人客户：
   //户家庭信息：查看、增加、删除、修改
   GET_CUSTOMERS_FAMILY:customerId =>`/api/customer/individual/${customerId}/families`,
