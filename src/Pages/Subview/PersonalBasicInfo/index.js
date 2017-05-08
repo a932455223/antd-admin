@@ -41,16 +41,18 @@ function info(msg,color){
 //个人信息表单................
 class BasicInfo extends Component {
   state = {
+    id: '',
+
     eachCustomerInfo: '',
     modalVisible: false,
-    edited: false,
 
     joinersBeEdited: false,
     joiners: [],
+    staffs: [],
 
     accountsArr: ['row-0'],
     accounts: {},
-    // originAccountsArr: ['row-0'],
+    originAccountsArr: ['row-0'],
     originAccounts: {},
     briefInfo: {
       department: {
@@ -85,8 +87,7 @@ class BasicInfo extends Component {
       },
       address: {
         value: ''
-      },
-      tags: [],
+      }
     },
     detailsInfo: {
       yearIncome: {
@@ -156,40 +157,59 @@ class BasicInfo extends Component {
     info('basicInfo will mount');
     this.getBaseInfo(this.props.currentCustomerInfo.id);
 
-    const commonDropDownType = [
-      'marryStatus',
-      'houseType',
-      'withCar',
-      'carPrice',
-      'withDebt',
-      'debtAmount',
-      'needLoan',
-      'loanAmount',
-      'loanPurpose'
-    ];
-
-    commonDropDownType.map(item => {
-      ajax.Get(API.GET_COMMON_DROPDOWN(item))
-      .then((res) => {
-        let newState = update(this.state, {
-          detailsInfo: {
-            [item]: {
-              options: {$set: res.data.data}
-            }
+    ajax.all([
+      ajax.Get(API.GET_COMMON_DROPDOWN('marryStatus')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('houseType')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('withCar')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('carPrice')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('withDebt')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('debtAmount')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('needLoan')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('loanAmount')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('loanPurpose'))
+    ]).then((res)=>{
+      let newState = update(this.state, {
+        detailsInfo: {
+          marryStatus: {
+            options: {$set: res[0].data.data}
+          },
+          houseType: {
+            options: {$set: res[1].data.data}
+          },
+          withCar: {
+            options: {$set: res[2].data.data}
+          },
+          carPrice: {
+            options: {$set: res[3].data.data}
+          },
+          withDebt: {
+            options: {$set: res[4].data.data}
+          },
+          debtAmount: {
+            options: {$set: res[5].data.data}
+          },
+          needLoan: {
+            options: {$set: res[6].data.data}
+          },
+          loanAmount: {
+            options: {$set: res[7].data.data}
+          },
+          loanPurpose: {
+            options: {$set: res[8].data.data}
           }
-        })
-
-        this.setState(newState);
-      })
-    });
+        }
+      });
+      this.setState(newState);
+    })
   }
 
   componentWillReceiveProps(next){
     // info('basicInfo will receive props.');
     // 当前的客户 id发生变化时，或者当前用户的信息 beEditedNumber === true时，重置 state
     const { id, beEditedArray } = this.props.currentCustomerInfo;
-    if(id !== next.currentCustomerInfo.id || (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) ) {
-      console.log('get info');
+    if(id !== next.currentCustomerInfo.id ||
+      (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) ) {
+      // console.log('get info');
       this.getBaseInfo(next.currentCustomerInfo.id);
       // this.resetAccounts();
     }
@@ -203,15 +223,16 @@ class BasicInfo extends Component {
   }
 
   // reset accounts
-  resetAccounts = () => {
-    let originAccounts = _.cloneDeep(this.state.originAccounts);
-    let accountsArr = _.cloneDeep(this.state.accountsArr);
-
-    this.setState({
-      originAccounts: originAccounts,
-      accountsArr: accountsArr
-    });
-  };
+  // resetAccounts = () => {
+  //   let originAccounts = _.cloneDeep(this.state.originAccounts);
+  //   let originAccountsArr = _.cloneDeep(this.state.originAccountsArr);
+  //   console.log(originAccountsArr);
+  //
+  //   this.setState({
+  //     accounts: originAccounts,
+  //     accountsArr: originAccountsArr
+  //   });
+  // };
 
   // 获取客户基本信息
   getBaseInfo = (id) => {
@@ -231,56 +252,51 @@ class BasicInfo extends Component {
           'loanPurpose'
         ];
         commonDropDownType.map(item => {
-          // 判断对应的值是否为 null
-          if(res.data.data[item] !== null) {
-            let newState = update(this.state, {
-              detailsInfo: {
-                [item]: {
-                  value: {$set: res.data.data[item] + ''}
-                },
-              }
-            })
-            return this.state = newState; // 将 newState赋值给原先的 state
+          let newState = update(this.state, {
+            detailsInfo: {
+              [item]: {
+                // 判断对应的值是否为 null
+                value: {$set: res.data.data[item] !== null ? res.data.data[item] + '' : undefined}
+              },
+            }
+          })
+          return this.state = newState; // 将 newState赋值给原先的 state
 
-            if(item === commonDropDownType[commonDropDownType.length - 1]) {
-              this.setState(newState);
-            }
-          } else {
-            // 当该属性的 value为 null的时候，且该对象的属性发生了变化
-            // 删除 detailsInfo中的 value属性
-            if(this.state.detailsInfo[item].value) {
-              delete this.state.detailsInfo[item].value
-            }
+          if(item === commonDropDownType[commonDropDownType.length - 1]) {
+            this.setState(newState);
           }
         })
 
         // 客户账户
-        let accounts = res.data.data.accounts.map((item,index) => ({
+        let originAccounts = res.data.data.accounts.map((item,index) => ({
           [`row-${index}-accountNo`]: {value: item.accountNo},
           [`row-${index}-remark`]: {value: item.remark}
         }));
-
-        let accountsArr = res.data.data.accounts.map((item,index) => `row-${index}`);
-
+        let originAccountsArr = res.data.data.accounts.map((item,index) => `row-${index}`);
         // 展平 accounts
-        const accountsObj = accounts.reduce((pre, next) => {
+        const originAccountsObj = originAccounts.reduce((pre, next) => {
           return {
             ...pre,
             ...next
           }
         },{});
-        let originAccounts = _.cloneDeep(accountsObj);
-
-        this.setState({
-          accounts: accountsObj,
-          originAccounts: originAccounts,
-          accountsArr: accountsArr
-        });
+        let accountsObj = _.cloneDeep(originAccountsObj);
+        let accountsArr = _.cloneDeep(originAccountsArr);
 
         // 更新 briefInfo, detailsInfo, eachCustomerInfo
         let newJoiners = _.cloneDeep(res.data.data.joiners);
+
         let newState = update(this.state, {
+          id: {$set: res.data.data.id},
+
+          accounts: {$set: accountsObj},
+          originAccounts: {$set: originAccounts},
+          originAccountsArr: {$set: originAccountsArr.length !== 0 ? originAccountsArr : ['row-0']},
+          accountsArr: {$set: accountsArr.length !== 0 ? accountsArr : ['row-0']},
+
           joiners: {$set: res.data.data.joiners},
+          staffs: {$set: newJoiners},
+
           briefInfo: {
             department: {
               $set: {
@@ -334,9 +350,6 @@ class BasicInfo extends Component {
               $set: {
                 value: res.data.data.address
               }
-            },
-            tags: {
-              $set: newJoiners
             }
           },
           detailsInfo: {
@@ -364,13 +377,14 @@ class BasicInfo extends Component {
     const { accountsArr } = this.state;
     const dateFormat = 'YYYY-MM-DD'; // 日期格式
     // 参与人数信息
-    let joiners = this.state.briefInfo.tags.map(item => item.id);
+    let joiners = this.state.staffs.map(item => item.id);
+    console.log(briefInfo['row-0-accountNo'] == undefined);
     // 账户信息
     let accountsInfo = accountsArr.map((item, index) => {
       return {
-        accountNo: briefInfo[`${item}-accountNo`],
+        accountNo: briefInfo[`${item}-accountNo`] != undefined ? briefInfo[`${item}-accountNo`] : '',
         priority: index + 1,
-        remark: briefInfo[`${item}-remark`]
+        remark: briefInfo[`${item}-remark`] != undefined ? briefInfo[`${item}-remark`] : ''
       }
     })
 
@@ -389,7 +403,7 @@ class BasicInfo extends Component {
       wechat: briefInfo.wechat ? briefInfo.wechat : '',
     }
 
-    // console.log(json);
+    console.log(json);
 
     // 如果 id不存在，则调用创建用户接口
     if(id === -1) {
@@ -548,13 +562,10 @@ class BasicInfo extends Component {
 
   // change joiners
   changeJoiners = (joiner) => {
-    // console.log(joiner);
-    const { tags } = this.state.briefInfo;
-    const newJoiners = tags.filter(item => item.id !== joiner.id);
+    const { staffs } = this.state;
+    const newJoiners = staffs.filter(item => item.id !== joiner.id);
     let newState = update(this.state, {
-      briefInfo: {
-        tags: {$set: newJoiners}
-      }
+      staffs: {$set: newJoiners}
     })
     this.setState(newState);
   };
@@ -563,26 +574,22 @@ class BasicInfo extends Component {
   resetJoiners = (state) => {
     let st = state || this.state;
     let newJoiners = _.cloneDeep(st.joiners);
-    // console.log(newJoiners);
-    // console.log(state);
     let newState = update(st, {
-      briefInfo: {
-        tags: {$set: newJoiners}
-      }
+      staffs: {$set: newJoiners}
     })
     this.setState(newState);
     return newState
   }
 
   // 参与人员被修改了
-  joinersBeModified = () => {
-    const { beEditedArray } = this.props.currentCustomerInfo;
+  joinersBeModified = (state) => {
+    let st = state || this.state;
 
-    if(!this.state.joinersBeEdited && beEditedArray && !beEditedArray.includes('basicInfo')) {
-      this.props.increaseBeEditArray('basicInfo');
-      this.setState({
-        joinersBeEdited: true
+    if(!st.joinersBeEdited) {
+      let newState = update(st, {
+        joinersBeEdited: {$set: true}
       })
+      this.setState(newState);
     }
   }
 
@@ -616,23 +623,29 @@ class BasicInfo extends Component {
 
   render() {
     const {
-      customerInfoBeEdit,
       increaseBeEditArray,
       decreaseBeEditArray
     } = this.props;
-    const { step, mode, id, beEditedArray } = this.props.currentCustomerInfo;
+    const { step, mode, beEditedArray } = this.props.currentCustomerInfo;
     const {
+      id,
       modalVisible,
       eachCustomerInfo,
-      edited,
+
       detailsInfo,
       briefInfo,
+
+      staffs,
       joiners,
       joinersBeEdited,
+
       accountsArr,
       accounts,
+      originAccountsArr,
       originAccounts
     } = this.state;
+    // console.log(accountsArr);
+    // console.log(originAccountsArr);
 
     const modal = {
       // modal
@@ -641,7 +654,7 @@ class BasicInfo extends Component {
 
       // brief info
       id: id,
-      staffs: briefInfo.tags,
+      staffs: staffs,
 
       // joiners
       changeJoiners: this.changeJoiners,
@@ -664,6 +677,7 @@ class BasicInfo extends Component {
 
       // joiners
       joiners: joiners,
+      staffs: staffs,
       changeJoiners: this.changeJoiners,
       joinersBeEdited: joinersBeEdited,
 
@@ -674,14 +688,16 @@ class BasicInfo extends Component {
       addAccountsInfo: this.addAccountsInfo
     }
 
+    // console.log(staffs);
+
     const maintainRecordProps = {
       mode: mode
     }
 
+    // console.log(id);
+
     return(
       <div style={{textAlign: 'left'}}>
-        <AddCrewModal key={id} {...modal}/>
-
         <div className="">
           {mode && mode === 'view' &&
             <div>
@@ -698,6 +714,9 @@ class BasicInfo extends Component {
 
           {mode && mode !== 'view' &&
             <div>
+            {
+              <AddCrewModal key={id} {...modal}/>
+            }
               <EditBriefBasicInfo
                 briefInfo={briefInfo}
                 {...basicInfoProps}

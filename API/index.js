@@ -11,6 +11,9 @@ export default {
 
   GET_CUSTOMER_ENTERPRISE_BASE: customerId => `/api/customer/enterprise/${customerId}/base`,
   //企业客户关键人信息
+  PUT_CUSTOMER_ENTERPRISE_BASE: id =>  `/api/customer/enterprise/${id}/base`,
+
+  POST_CUSTOMER_ENTERPRISE_BASE: '/api/customer/enterprise/base',
   //查看
   GET_CUSTOMETS_KEYPERSONS:customerId=>`/api/customer/enterprise/${customerId}/keyPersons`,
   //增加
