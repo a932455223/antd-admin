@@ -129,37 +129,40 @@ export default class AreaSelect extends Component {
       <div className="area-select">
           <Select
             onChange={this.privinceSelected.bind(this)}
-            value={this.state.value.province}
+            // defaultValue={this.state.value.province}
             onSelect={(a,b)=> {
               console.log(a,b)
             }}
             className="area-select-province"
+            placeholder="省份"
           >
             {
-              this.state.province.map(item => {
-                return <Option value={item.id} key={item.id}>{item.name}</Option>
+              this.state.province && this.state.province.map(item => {
+                return <Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>
               })
             }
           </Select>
           <Select
             onChange={this.citySelected.bind(this)}
-            value={this.state.value.city}
+            // defaultValue={this.state.value.city}
             className="area-select-city"
+            placeholder="城市"
           >
             {
-              this.state.city.map(item => {
-                return <Option value={item.id} key={item.id}>{item.name}</Option>
+              this.state.city && this.state.city.map(item => {
+                return <Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>
               })
             }
         </Select>
         <Select
           onChange={this.countySelected.bind(this)}
-          value={this.state.value.county}
+          // defaultValue={this.state.value.county}
           className="area-select-county"
+          placeholder="地区"
         >
           {
-            this.state.county.map(item => {
-              return <Option value={item.id} key={item.id}>{item.name}</Option>
+            this.state.county && this.state.county.map(item => {
+              return <Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>
             })
           }
         </Select>

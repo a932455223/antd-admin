@@ -5,7 +5,7 @@
  * 时间： 17.3.2
  */
 import React, {Component} from "react";
-import {Button, Card, Col, Form, Icon, Row,Radio,TreeSelect,DatePicker,Select,Input} from "antd";
+import {Button, Card, Col, Form, Icon, Row,Radio,TreeSelect,DatePicker,Select,Input,message,Modal} from "antd";
 import classNames from "classnames";
 import axios from 'axios';
 import qs from 'qs';
@@ -28,7 +28,8 @@ class BranchesDetail extends Component {
     educationLevel: [],
     parentDepartmentDropDown: [],
     rolesDropDown:[],
-    rolesHide:false
+    rolesHide:false,
+    coloseIcon:false
 
   };
 
@@ -75,11 +76,31 @@ class BranchesDetail extends Component {
 
   closeDock() {
     console.log('bye bye');
+    // if(this.state.coloseIcon){
+    //   let that = this;
+    //   Modal.confirm({
+    //     title: '您确定要离开吗?',
+    //     content: '离开将会丢失您填写的内容',
+    //     onOk() {
+    //       that.setState({
+    //         coloseIcon:false
+    //       })
+    //       that.props.closeDock();
+    //     },
+    //     onCancel() {
+    //       console.log('Cancel');
+    //     },
+    //   });
+    // }else{
+    //   this.props.closeDock()
+    // }
     this.props.closeDock()
+    
   }
   onHandleChange = () => {
     this.setState({
-       rolesHide:  !this.state.rolesHide
+       rolesHide:  !this.state.rolesHide,
+       coloseIcon:true
     })
   }
   handleSubmit = (e) => {
@@ -103,11 +124,11 @@ class BranchesDetail extends Component {
             console.log(res)
             console.log('MESSAGE',res.data.message);
             if(res.data.message === 'OK'){
-              alert('添加成功');
-              this.closeDock();
+              message.success('您已经创建成功！');
+              this.props.closeDock();
               this.props.refresh()
             }else {
-              alert(res.data.message)
+              Modal.error({content: res.data.message,})
             }
           })
           .catch( err => {
@@ -116,7 +137,11 @@ class BranchesDetail extends Component {
       }
     });
   };
-
+  inputChange = () => {
+    this.setState({
+      coloseIcon:true
+    })
+  }
   render() {
     console.log()
     const {getFieldDecorator} = this.props.form;
@@ -388,21 +413,21 @@ class BranchesDetail extends Component {
 
 
     return (
-      <Form id="newstaffroles">
+      <Form id="newstaffroles" className="newstaffroles">
         <div className={classNames('dock-container', 'staffDetail')} id="staffDetail">
           <div className="dock-title">
             <Row>
               <Col span={22}>
-                <i className="iconfont">&#xe696;</i>
-                <strong>新增员工</strong>
+               
+                <strong style={{marginLeft:"10px"}}>新增员工</strong>
               </Col>
               <Col span={2}>
-            <span
+            <Icon
               className="close"
               onClick={this.closeDock.bind(this)}
-            >
-              &times;
-            </span>
+              type="close"
+              style={{cursor:"pointer"}}
+            />
               </Col>
             </Row>
           </div>
@@ -420,6 +445,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('name', {
                       rules: [{required: true, message: '请填写姓名!'}],
+                      onChange:this.inputChange
                       // initialValue: '请填写姓名'
                     })(
                       <Input/>
@@ -432,6 +458,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('certificate', {
                       rules: [{required: false, message: '请填身写份证'}],
+                      onChange:this.inputChange
                       // initialValue: '请填身写份证'
                     })(
                       <Input/>
@@ -444,6 +471,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator("gender", {
                       rules: [{required:false, message: "请选择性别"}],
+                      onChange:this.inputChange
                       // initialValue: "请选择性别"
                     })(
                       <Select
@@ -473,6 +501,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('birth', {
                       rules: [{required:false, message: '请填写出生日期'}],
+                      onChange:this.inputChange
                       // initialValue: '出生日期'
                     })(
                       <DatePicker getCalendarContainer={ () => document.getElementById('staffDetail')}/>
@@ -484,10 +513,10 @@ class BranchesDetail extends Component {
 
 
               <Row className="form-group">
-                <div>
+                <Col span={9}>
                   <h1>基本信息</h1>
-                </div>
-               <div>
+                </Col>
+               <Col span={15}>
                  <FormItem
                     label={<span>手机</span>}
                     {...formItemLayoutS}
@@ -495,6 +524,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('phone', {
                       rules: [{required: true, message: '请填写手机号!'}],
+                      onChange:this.inputChange
                       // initialValue: '请填写手机号'
                     })(
                       <Input/>
@@ -507,6 +537,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('wechat', {
                       rules: [{required: false, message: '请填写微信号!'}],
+                      onChange:this.inputChange
                       // initialValue: '请填写微信号'
                     })(
                       <Input/>
@@ -519,6 +550,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('email', {
                       rules: [{required: false, message: '请填写邮箱!'}],
+                      onChange:this.inputChange
                       // initialValue: '请填写邮箱'
                     })(
                       <Input/>
@@ -531,6 +563,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('address', {
                       rules: [{required: false, message: '请填写住址!'}],
+                      onChange:this.inputChange
                       // initialValue: '请填写住址'
                     })(
                       <Input/>
@@ -559,6 +592,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('roles', {
                       rules: [{required: true, message: '请选择所属角色'}],
+                      onChange:this.inputChange
                     })(
                        <Select
                           mode="multiple"
@@ -572,7 +606,7 @@ class BranchesDetail extends Component {
                         </Select>
                     )}
                   </FormItem>
-               </div>
+               </Col>
               </Row>
 
 
@@ -589,6 +623,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('code', {
                       rules: [{required: true, message: '请填写工号!'}],
+                      onChange:this.inputChange
                       // initialValue: '请填写工号'
                     })(
                       <Input/>
@@ -601,6 +636,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('position', {
                       rules: [{required: true, message: '请选择目前职位'}],
+                      onChange:this.inputChange
                       // initialValue: ''
                     })(
                       <Select
@@ -621,6 +657,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('jobStatus', {
                       rules: [{required: false, message: '请选择任职状态'}],
+                      onChange:this.inputChange
                       // initialValue: ''
                     })(
                       <Select
@@ -641,6 +678,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('departments', {
                       rules: [{required: true, message: '请选择所属机构'}],
+                      onChange:this.inputChange
                       // initialValue: ''
                     })(
                        <Select
@@ -662,6 +700,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('inductionTime', {
                       rules: [{required:true, message: '请填写入职时间'}],
+                      onChange:this.inputChange
                       // initialValue: ''
                     })(
                       <DatePicker getCalendarContainer={ () => document.getElementById('staffDetail')}/>
@@ -682,7 +721,8 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('educationLevel', {
                       rules: [{required: false, message: '请选择学历'}],
-                      initialValue: ''
+                      onChange:this.inputChange
+                      // initialValue: ''
                     })(
                       <Select
                         getPopupContainer={
@@ -702,6 +742,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('school', {
                       rules: [{required: false, message: '请填写毕业院校!',min:1,max:100}],
+                      onChange:this.inputChange
                       // initialValue: '请填写毕业院校'
                     })(
                       <Input/>
@@ -714,6 +755,7 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('major', {
                       rules: [{required: false, message: '请填写专业!',min:1,max:100}],
+                      onChange:this.inputChange
                       // initialValue: '请填写专业'
                     })(
                       <Input/>
@@ -726,7 +768,8 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('graduationTime', {
                       rules: [{required:false, message: '请填写毕业时间'}],
-                      initialValue: ''
+                      onChange:this.inputChange
+                      // initialValue: ''
                     })(
                       <DatePicker getCalendarContainer={ () => document.getElementById('staffDetail')}/>
                     )}
