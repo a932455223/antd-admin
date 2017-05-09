@@ -396,19 +396,21 @@ class BasicInfo extends Component {
     // 如果 id不存在，则调用创建用户接口
     if(id === -1) {
       ajax.PostJson(API.POST_CUSTOMER_INDIVIDUAL_BASE, json).then((res) => {
-        if(res.message === 'OK') {
+        if(res.code === 200) {
           message.success('创建用户成功');
           this.props.createCustomerSuccess(res.data);
           this.props.decreaseBeEditArray('basicInfo');
+          this.props.refreshCustomerLists(); // 实时刷新
         } else {
           message.error(res.message);
         }
       });
     } else {
       ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1(id), json).then((res)=>{
-        if(res.message === 'OK') {
+        if(res.code === 200) {
           message.success('编辑用户成功');
           this.props.decreaseBeEditArray('basicInfo');
+          this.props.refreshCustomerLists(); // 实时刷新
         } else {
           message.error(res.message);
         }
@@ -451,9 +453,10 @@ class BasicInfo extends Component {
       message.error('请先创建用户');
     } else {
       ajax.PutJson(API.PUT_CUSTOMER_INDIVIDUAL_BASE_TAB2(id), json).then((res)=>{
-        if(res.message === 'OK') {
+        if(res.code === 200) {
           message.success('编辑用户成功');
           this.props.decreaseBeEditArray('detailsInfo');
+          this.props.refreshCustomerLists(); // 实时刷新
         } else {
           message.error(res.message);
         }
@@ -612,7 +615,8 @@ class BasicInfo extends Component {
   render() {
     const {
       increaseBeEditArray,
-      decreaseBeEditArray
+      decreaseBeEditArray,
+      refreshCustomerLists
     } = this.props;
     const { step, mode, beEditedArray } = this.props.currentCustomerInfo;
     const {

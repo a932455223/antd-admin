@@ -231,6 +231,7 @@ class CustomerSlider extends Component {
   // 个人用户的 Tabs
   personalUserTabs = () => {
     const { mode, id } = this.props.currentCustomerInfo;
+    const { refreshCustomerLists } = this.props; // 实时刷新
     const { personalClient } = this.state;
 
     const tabsProps = {
@@ -246,7 +247,9 @@ class CustomerSlider extends Component {
           key="personalBasicInfo"
         >
           {personalClient && personalClient.personalBasicInfo &&
-            <personalClient.personalBasicInfo />
+            <personalClient.personalBasicInfo
+              refreshCustomerLists={refreshCustomerLists}
+            />
           }
         </TabPane>
         <TabPane
@@ -292,6 +295,7 @@ class CustomerSlider extends Component {
   // 企业用户的 tabs
   enterpriseUserTabs = () => {
     const { mode, id } = this.props.currentCustomerInfo;
+    const { refreshCustomerLists } = this.props; // 实时刷新
     const { enterpriseClient } = this.state;
 
     // tabs props
@@ -305,7 +309,9 @@ class CustomerSlider extends Component {
       <Tabs {...tabsProps} >
         <TabPane tab="基本信息" key="enterpriseBasicInfo">
           {enterpriseClient.enterpriseBasicInfo &&
-            <enterpriseClient.enterpriseBasicInfo />
+            <enterpriseClient.enterpriseBasicInfo
+              refreshCustomerLists={refreshCustomerLists}
+            />
           }
         </TabPane>
         <TabPane
