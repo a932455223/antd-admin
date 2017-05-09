@@ -70,7 +70,7 @@ export const baseDataForForm = [
 ];
 
 
-// 联系方式
+// 基础——联系方式
 export const connectDataForForm = [
   {
     label: '手机',
@@ -121,10 +121,25 @@ export const connectDataForForm = [
         text: '否'
       }
     ]
+  },
+  {
+    label: '选择角色',
+    type: 'other',
+    required: true,
+    message: '请选择角色！',
+    formItemLayout: formItemLayout,
+    field: 'roles',
+    render: (
+      <TreeSelect
+        getPopupContainer = { () => document.getElementById('staffDetail')}
+        treeData={treeData} 
+        multiple={true}
+      />
+    )
   }
 ];
 
-
+//教育信息
 export const eductionDataForForm = [
   {
     label: '学历',
@@ -208,6 +223,7 @@ const treeData = [{
   }],
 }];
 
+//工作信息
 export const wordDataForForm = [
   {
     label: '工号',
@@ -255,21 +271,6 @@ export const wordDataForForm = [
         text: '离职'
       }
     ]
-  },
-  {
-    label: '所属机构',
-    type: 'other',
-    required: true,
-    message: '请选择所属机构！',
-    formItemLayout: formItemLayout,
-    field: 'departments',
-    render: (
-      <TreeSelect
-        getPopupContainer = { () => document.getElementById('staffDetail')}
-        treeData={treeData}
-        multiple={true}
-      />
-    )
   },
   {
     label: '入职时间',

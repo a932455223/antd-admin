@@ -6,7 +6,7 @@
  */
 
 import React, {Component} from "react";
-import {Button, Card, Col, Form, Row, Select} from "antd";
+import {Button, Card, Col, Form, Row, Select,Icon} from "antd";
 import classNames from "classnames";
 //=========================================================================
 import FormCreator from "../FormCreator";
@@ -123,8 +123,8 @@ class BranchesDetail extends Component {
             }}
           >
             {
-              this.state.categoryDropdown.map((option, index) => {
-                return <Option value={option.id} key={ option.id + option.name}>{option.name}</Option>
+              this.state.categoryDropdown && this.state.categoryDropdown.map((option, index) => {
+                return <Option value={option.id.toString()} key={ option.id + option.name}>{option.name}</Option>
               })
             }
           </Select>
@@ -140,8 +140,8 @@ class BranchesDetail extends Component {
         render: (
           <Select>
             {
-              this.state.parentDepartmentDropDown.map(item => {
-                return <Option value={item.id} key={item.name + item.id}>{item.name}</Option>
+              this.state.parentDepartmentDropDown && this.state.parentDepartmentDropDown.map(item => {
+                return <Option value={item.id.toString()} key={item.name + item.id}>{item.name}</Option>
               })
             }
           </Select>
@@ -191,7 +191,8 @@ class BranchesDetail extends Component {
 
     const {getFieldDecorator} = this.props.form;
     return (
-      <Form onSubmit={this.handleSubmit.bind(this)}>
+      <Form onSubmit={this.handleSubmit.bind(this)}
+      className= "branchesformbox">
         <div
           className={classNames('dock-container', 'departmentDetail')}
           id="branchesDetail"
@@ -201,12 +202,12 @@ class BranchesDetail extends Component {
               {this.props.id === -1 ? '添加组织机构' : '编辑'}
             </Col>
             <Col span={2}>
-            <span
+            <Icon
               className="close"
               onClick={this.closeDock.bind(this)}
-            >
-              &times;
-            </span>
+              type="close"
+              style={{cursor:"pointer"}}
+            />
             </Col>
           </Row>
           <Card
@@ -219,8 +220,7 @@ class BranchesDetail extends Component {
                 containerID="branchesDetail"
               />
               <div>
-                <Button className="cancel">取消</Button>
-                <Button className="save" htmlType="submit">保存</Button>
+                <Button className="save" htmlType="submit" >保存</Button>
               </div>
             </div>
           </Card>

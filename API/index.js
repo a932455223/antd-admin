@@ -8,6 +8,12 @@ export default {
   POST_CUSTOMERS_FAMILY:customerId => `/api/customer/individual/${customerId}/family`,
   DELETE_CUSTOMERS_FAMILY:familyId=>`/api/customer/individual/family/${familyId}`,
   PUT_CUSTOMERS_FAMILY:familyId => `/api/customer/individual/family/${familyId}`,
+  //工作信息：查看、修改
+  GET_JOBINFO_BASE:customerId=>`/api/customer/individual/${customerId}/job`,
+  PUT_JOBINFO_BASE:customerId=>`/api/customer/individual/${customerId}/job`,
+  //风险测试：
+  GET_RISKQUESTIONS:`/api/riskQuestions`,//请求问卷
+  GET_CALCULATESCORE:`/api/calculateScore`,//计算分数
   //企业客户：
   //关键人信息查看、增加、删除、修改
   GET_CUSTOMETS_KEYPERSONS:customerId=>`/api/customer/enterprise/${customerId}/keyPersons`,
@@ -22,6 +28,7 @@ export default {
   PUT_CUSTOMERS_FINANCES:financesId=>`/api/customer/finance/${financesId}`,
   //获取金融业务信息产品下拉：
   GET_CUSTOMER_FINANCE_CATEGORY:'/api/customer/finance/category',
+  
   //enterprise:
   GET_CUSTOMER_ENTERPRISE_BASE: customerId => `/api/customer/enterprise/${customerId}/base`,
   PUT_CUSTOMER_ENTERPRISE_BASE: id =>  `/api/customer/enterprise/${id}/base`,
@@ -58,9 +65,9 @@ export default {
   GET_DEPARTMENT_STAFFS: id => `/api/department/${id}/staffs`,
 
   GET_CUSTOMER_BASE: id =>  `/api/customer/individual/${id}/base`, // 客户基本信息
-  GET_JOBINFO_BASE: id =>  `/asd/jobinfo/${id}/base`, // 客户工作信息
+  // GET_JOBINFO_BASE: id =>  `/asd/jobinfo/${id}/base`, // 客户工作信息
   // GET_CUSTOMER_BASE: id => `/asd/customer/${id}/base`,
-  GET_JOBINFO_BASE: id => `/asd/jobinfo/${id}/base`,
+  // GET_JOBINFO_BASE: id => `/asd/jobinfo/${id}/base`,
 
   GET_COMPANY_BASE: id => `/asd/company/${id}/base`,
   GET_FINANCE_BASE: id => `/asd/finance/${id}/base`,
@@ -168,7 +175,7 @@ export default {
   GET_STAFF_LEADERS: '/api/staff/leaders',
 
   //新增员工角色下拉
-  GET_ROLES : '/api/roles',
+  GET_STAFF_ADD_ROLES : '/api/staff/add/roles',
 
   // 员工业务信息
   GET_STAFF_BUSSINESS_INFO: id => `/api/staff/${id}/businessInfo`,

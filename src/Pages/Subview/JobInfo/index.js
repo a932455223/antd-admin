@@ -71,9 +71,6 @@ class MyJobInfo extends Component{
               </FormItem>
             </Col>
           </Row>
-
-
-
           <div className="personinfo">
             <Row>
               <Col span={24} className={currentId === -1 ? "phonecreate" : "phoneedit"}>
@@ -185,7 +182,7 @@ class JobInfo extends Component {
 
 
   getBaseInfo = (id) => {
-      axios.get(API.GET_JOBINFO_BASE(id))
+      axios.get(API.GET_JOBINFO_BASE())
       .then((res) => {
           this.setState({
               ...this.state,

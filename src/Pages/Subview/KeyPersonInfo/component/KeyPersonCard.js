@@ -6,7 +6,8 @@ import {
   Icon,
   Input,
   Form,
-  Select
+  Select,
+  Popconfirm
 } from 'antd';
 import { connect } from 'react-redux';
 import api from './../../../../../API';
@@ -25,6 +26,9 @@ export default class KeyPersonCard extends Component{
     //    this.findDropDownItem(61,'commonJobCategory'));
     //    console.log(this.props.commonJobCategory);
     }
+    confirm=()=>{
+        this.props.deleteKeyPersonValue(this.props.item.id.value)
+    }
     render(){
         return (
             <Card
@@ -39,11 +43,10 @@ export default class KeyPersonCard extends Component{
                             <i className="iconfont icon-edit"></i>编辑
                         </span>
 
-                        <span
-                            onClick={()=>{this.props.deleteKeyPersonValue(this.props.item.id.value)}}
-                        >
+                        
+                        <Popconfirm placement="bottomRight" title={'是否删除？'} onConfirm={this.confirm} okText="删除" cancelText="取消">
                             <i className="iconfont icon-delete"></i>删除
-                        </span>
+                        </Popconfirm>
                     </div>
                 }
                 >

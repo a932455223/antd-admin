@@ -227,7 +227,7 @@ class FamilyInfo extends Component {
   handleFormChange = (index,changedFields) => {
     // console.log(index)
     // this.setState({
-    //   fields: { ...this.state.fields, ...changedFields },
+    //   fields: { ...this.state.fields, ...changedFicelds },
     // });
     let fields={ ...this.state.familyList[index], ...changedFields };
     let newState=update(
@@ -254,9 +254,10 @@ class FamilyInfo extends Component {
     if(newProps.currentId!==this.props.currentId){
       this.setState({
         isLoading:true,
+        isAdd:false,
       })
       this.getFamilyInfo(newProps.currentId);
-      this.toggleAdd();
+      // this.toggleAdd();
       // console.log('重置数据')
       // console.log(this.props.AddFamilyCard)
     }

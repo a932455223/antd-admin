@@ -6,7 +6,9 @@ import {
   Icon,
   Input,
   Form,
-  Select
+  Select,
+  Modal,
+  message,
 } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -22,7 +24,9 @@ class KeyPersonInfo extends Component {
   state={
     isLoading:false,
     isModify:[],
+    isAdd:false,
     keyPersonList:[],
+    isAddCardLoading:false,
     newKeyPerson:{
       "phone": {
         "value": ""
@@ -38,6 +42,14 @@ class KeyPersonInfo extends Component {
       }
     }
   }
+  toggleIsAddCardLoading=()=>{
+    this.setState({isAddCardLoading:!this.state.isAddCardLoading})
+  }
+  //添加状态切换
+    toggleAdd = () => {
+      console.log('toggle add')
+      this.setState({isAdd:!this.state.isAdd});
+    }
   //重置addcard信息
   resetAddCard=()=>{
     this.setState({
@@ -66,10 +78,6 @@ class KeyPersonInfo extends Component {
   };
 //更改表单
   handleFormChange = (index,changedFields) => {
-    // console.log(index)
-    // this.setState({
-    //   fields: { ...this.state.fields, ...changedFields },
-    // });
     let fields={ ...this.state.keyPersonList[index], ...changedFields };
     let newState=update(
       this.state,{keyPersonList:{[index]:{$set:fields}}}
@@ -87,7 +95,7 @@ class KeyPersonInfo extends Component {
     ajax.Get(api.GET_CUSTOMETS_KEYPERSONS(id))
     .then((data) => {
       if(data.status===200&&data.statusText==='OK'){
-        console.log(data.status)
+        // console.log(data.status)
         let newKeyPersonList= data.data.data.map((item)=>{
           return Object.keys(item).reduce((pre,ky)=>{
             pre[ky] = {value:item[ky]+""}
@@ -100,76 +108,110 @@ class KeyPersonInfo extends Component {
           isLoading:false,
         })
         // this.resetAddCard();
-        console.log("getkeypersons")
+        // console.log("getkeypersons")
       }
     })
   }
   //添加关键人
   addKeyPersonValue=(data)=>{
-    ajax.Post(api.POST_CUSTOMERS_KEYPERSONS(this.props.currentId),data)
-      .then( res => {
-            // if(res.data.message === 'OK'){
-            //   this.getFamilyInfo(this.props.currentId);
-            // }
-            console.log(res)
-            if(res.data.code===200){
-              if(res.data.message==='OK'){
-                console.log('添加成功')
-                this.getKeyPersonInfo(this.props.currentId);
+    setTimeout(()=>{
+      ajax.Post(api.POST_CUSTOMERS_KEYPERSONS(this.props.currentId),data)
+        .then( res => {
+              // if(res.data.message === 'OK'){
+              //   this.getFamilyInfo(this.props.currentId);
+              // }
+              // console.log(res)
+              if(res.data.code===200){
+                if(res.data.message==='OK'){
+                  // console.log('添加成功')
+                  this.toggleAdd()
+                  this.resetAddCard();
+                  this.getKeyPersonInfo(this.props.currentId);
+                  this.toggleIsAddCardLoading();
+                }
+              }else{
+                // console.log(res.data.message)
               }
-            }else{
-              console.log(res.data.message)
-            }
-          })
+            })
+
+    },2000)
   }
    //删除关键人
   deleteKeyPersonValue=(keyPersonId)=>{
+    console.log('delect')
     ajax.Delete(api.DELETE_CUSTOMERS_KEYPERSONS(keyPersonId))
       .then(res=>{
-        console.log(res)
+        // console.log(res)
             if(res.data.code===200){
               if(res.data.message==='OK'){
                 console.log('删除成功')
                 this.getKeyPersonInfo(this.props.currentId);
               }
             }else{
-              console.log(res.data.message)
+              // console.log(res.data.message)
             }
       })
   }
   //保存修改
-  saveChangeValue=(index,values)=>{
-    ajax.Put(api.PUT_CUSTOMERS_KEYPERSONS(index),values)
-      .then( res => {
-            if(res.data.message === 'OK'){
-              this.getKeyPersonInfo(this.props.currentId);
-              console.log('savechange successful');
-            }
-          })
+  saveChangeValue=(id,values,index)=>{
+    setTimeout(()=>{
+      ajax.Put(api.PUT_CUSTOMERS_KEYPERSONS(id),values)
+        .then( res => {
+              // if(res.data.message === 'OK'){
+              //   this.getKeyPersonInfo(this.props.currentId);
+              //   // console.log('savechange successful');
+              // }
+              switch(res.status){
+                case(200):
+                  {
+                    if(res.data.code===200&&res.data.message==='OK')
+                      message.success('更改成功');
+                      // this.toggleIsAddCardLoading();
+                      console.log(index);
+                      this.toggleEdit(index);
+                      this.getKeyPersonInfo(this.props.currentId);
+                    if(res.data.code!==200){
+                      // message.error(res.data.message)
+                      Modal.error({
+                        title:res.data.message,
+                      });
+                    }
+                  }
+                  break;
+                default:
+                  {
+                    Modal.error({
+                      title: res.statusText,
+                    });
+                  }
+              }
+            })
+
+    },2000)
 
   };
   componentWillMount() {
-    console.log("======","familyinfo willmount ")
+    // console.log("======","familyinfo willmount ")
     this.getKeyPersonInfo(this.props.currentId);
     // this.getFamilyRelation();
     // this.getCommonJobCategory();
   }
   
   componentWillReceiveProps(newProps){
-    console.log("======","familyinfo receive props")
+    // console.log("======","familyinfo receive props")
     //重置数据
     if(newProps.currentId!==this.props.currentId){
       this.setState({
         isLoading:true
       })
       this.getKeyPersonInfo(newProps.currentId);
-      console.log('重置数据')
+      // console.log('重置数据')
     }
   }
   render() {
     const loading=this.state.isLoading?(<div>loading</div>):"";
     return(
-      <div className="my-cards-page">
+      <div className="my-cards-page key-person-page">
         {loading}
         {
           this.state.keyPersonList.length?
@@ -207,16 +249,24 @@ class KeyPersonInfo extends Component {
                onAddChange={this.onAddChange}
                resetAddCard={this.resetAddCard}
                addKeyPersonValue={this.addKeyPersonValue}
+               isAddCardLoading={this.state.isAddCardLoading}
+               toggleIsAddCardLoading={this.toggleIsAddCardLoading}
+               isAdd={this.state.isAdd}
+               toggleAdd={this.toggleAdd}
             />
-            <pre className="language-bash" style={{textAlign:'left'}}>
-              {JSON.stringify(this.state.newKeyPerson, null, 2)}
-            </pre>
+            {/*<pre className="language-bash" style={{textAlign:'left'}}>
+              {JSON.stringify(this.state.isAddCardLoading, null, 2)}
+            </pre>*/}
           </div>:
           <AddKeyPersonCard 
               {...this.state.newKeyPerson}
                onAddChange={this.onAddChange}
                resetAddCard={this.resetAddCard}
                addKeyPersonValue={this.addKeyPersonValue}
+               isAddCardLoading={this.state.isAddCardLoading}
+               toggleIsAddCardLoading={this.toggleIsAddCardLoading}
+               isAdd={this.state.isAdd}
+               toggleAdd={this.toggleAdd}
           />
         }
       </div>
