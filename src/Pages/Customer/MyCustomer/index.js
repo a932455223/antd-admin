@@ -154,11 +154,12 @@ export default class MyCustomer extends Component {
   // 高级筛选
   filterCustomers = (filters, search) => {
     let newState = update(this.state, {
+      loading: {$set: true},
       reqJson: {
         customerType: {$set: filters.customerType},
         customerLevel: {$set: filters.customerLevel},
         riskLevel: {$set: filters.riskLevel},
-        searchCustomer: {$set: search}
+        searchContent: {$set: search}
       }
     })
 
