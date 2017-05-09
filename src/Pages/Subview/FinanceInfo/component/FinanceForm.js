@@ -8,7 +8,8 @@ import {
   Form,
   Button,
   Select,
-  DatePicker
+  DatePicker,
+  InputNumber
 } from 'antd';
 import { connect } from 'react-redux';
 import Reg from "../../../../tools/Reg"
@@ -29,14 +30,12 @@ class financeForm extends Component{
     }
     componentWillReceiveProps(newProps){
         // console.log(this.props)
-        // this.setState({btnLoading:false})
+        this.setState({btnLoading:false})
+        // this.props.toggleEdit(this.props.index)
     }
     clickSavaBtn=()=>{
-         this.props.putCustomersFinances(this.props.id.value,this.props.form.getFieldsValue(),this.props.index)
-        // this.props.toggleEdit(this.props.index)
-        // this.setState({btnLoading:true})
-        // console.log(this.props.form.getFieldsValue())
-        // console.log(this.props.id.value)
+        this.setState({btnLoading:true})
+        this.props.putCustomersFinances(this.props.id.value,this.props.form.getFieldsValue(),this.props.index)
     }
     clickCancelBtn=()=>{
         this.props.cancelChangeValue();
@@ -57,8 +56,6 @@ class financeForm extends Component{
     // }
     render(){
         const { getFieldDecorator } = this.props.form;
-        // console.log(moment(this.props.buyDate.value, 'YYYY-MM-DD'));
-        // console.log(moment('2017-08-08', 'YYYY-MM-DD'));
         
         return (
             <Form  className="my-form-card">
@@ -66,7 +63,9 @@ class financeForm extends Component{
                     title={
                         <div className="my-card-title">
                             <FormItem>
-                                {getFieldDecorator('financeCategory')(
+                                {getFieldDecorator('financeCategory',{
+                                    rules: [{ required: true, message: '业务项目不能为空' }],
+                                })(
                                     <Select 
                                     >
                                         {
@@ -85,12 +84,13 @@ class financeForm extends Component{
                                     
                                 }
                             </FormItem>
-                            <span
+                            <Button
                                 className="cancel-btn"
                                 onClick={this.clickCancelBtn}
+                                loading={this.state.btnLoading}
                             >
                                 取消
-                            </span>
+                            </Button>
                             <Button
                                 className="save-btn"
                                 onClick={this.clickSavaBtn}
@@ -108,8 +108,9 @@ class financeForm extends Component{
                     </Col>
                     <Col span={16}>
                         <FormItem>
-                            {/*{getFieldDecorator('org')(<Input />)}*/}
-                            {getFieldDecorator('org')(
+                            {getFieldDecorator('org',{
+                                    rules: [{ required: true, message: '业务机构名称不能为空' }],
+                            })(
                                 <Select 
                                 >
                                         <Option 
@@ -146,7 +147,15 @@ class financeForm extends Component{
                     </Col>
                     <Col span={16}>
                         <FormItem>
-                            {getFieldDecorator('profit')(<Input />)}
+                            {getFieldDecorator('profit',{
+                                 rules: [{pattern:Reg.percentage,message:'小数点后精确到两位'}]
+                            })(
+                                <InputNumber min={0.01} max={99.99} step={0.01} 
+                                    formatter={value => `${value}%`}
+                                    parser={value => value.replace('%', '')}
+                                />
+                            )}
+
                         </FormItem>
                     </Col>
                 </Row>
