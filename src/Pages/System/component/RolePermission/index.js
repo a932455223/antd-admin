@@ -11,9 +11,6 @@ const Option = Select.Option
 import './rolePermission.less'
 // let Permission = <h1 onClick={this.props.mode === 'edit' ? this.props.backRoleEdit : this.props.close}>角色权限分配</h1>
 
-const x = 3;
-const y = 2;
-const z = 1;
 
 const generateSelect = nodes => nodes.map((item)=>{
   return
@@ -39,7 +36,14 @@ function deleteTreeNode(nodes,deleteIds){
   console.dir(deleteIds)
 
   deleteIds.forEach(function(deleteId){
-    console.log(deleteId)
+    let pathIds = deleteId.split('-')
+    let len = pathIds.length
+    let currentNodes = nodes
+
+    for(let i=0;i<len;i++){
+      // currentNodes = currentNodes.find(item => item.id == pathIds[i])
+      // console.dir(currentNodes)
+    }
   })
 }
 
@@ -61,7 +65,9 @@ export default class  RolePermission extends Component{
 
   getAllPrivilige = () => {
     ajax.Get(API.GET_ALL_RPIVILIGE).then((res) => {
-      this.setState({leftPrivilege:res.data.data,leftOriginPrivilege:res.data.data})
+      let index = res.data.data.childs[0].childs.findIndex(item => item.id===3)
+      res.data.data.childs[0].childs.splice(index,1)
+      this.setState({leftPrivilege:res.data.data.childs,leftOriginPrivilege:res.data.data.childs})
     })
   }
 
