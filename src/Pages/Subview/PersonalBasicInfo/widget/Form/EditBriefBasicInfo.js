@@ -33,7 +33,7 @@ class EditBriefBasicInfoForm extends Component{
   }
 
   componentWillMount(){
-    console.log('EditBriefBasicInfoForm will mount');
+    // console.log('EditBriefBasicInfoForm will mount');
     this.getDepartments(1, 1);
   }
 
@@ -229,6 +229,7 @@ class EditBriefBasicInfoForm extends Component{
         wrapperCol={{span: 24}}
       >
         {getFieldDecorator(`${k}-remark`, {
+          initialValue: accounts[`${k}-remark`] && accounts[`${k}-remark`].value,
           onChange: this.inputBasicInfoChange
         })(
           <Input placeholder="填写备注信息"/>
@@ -255,6 +256,7 @@ class EditBriefBasicInfoForm extends Component{
             pattern: /^\d+$/,
             message: '账户只能为数字'
           }],
+          initialValue: accounts[`${k}-accountNo`] && accounts[`${k}-accountNo`].value,
           // validateTrigger: ['onChange', 'onBlur'],
           onChange: this.inputBasicInfoChange
         })(
@@ -265,78 +267,80 @@ class EditBriefBasicInfoForm extends Component{
 
     return (
       <Form id="editMyBase" className="basicInfolist">
-        <Row className={mode === 'create' ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
-            <Col span={7}>
-              <FormItem labelCol={{span: 11}}
-                        wrapperCol={{span: 13}}
-                        label="所属机构">
-                {getFieldDecorator('department', {
-                  rules: [{
-                    required: true,
-                    message: '选择所属机构!'
-                  }],
-                  // initialValue: eachCustomerInfo.department,
-                  onChange: this.selectBasicInfoChange
-                })(
-                  <Select
-                    showSearch
-                    placeholder="选择所属机构"
-                    optionFilterProp="children"
-                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    getPopupContainer={() => document.getElementById('editMyBase')}
-                  >
-                    {departmentOptions && departmentOptions.map(departmentItem =>
-                      <Option key={departmentItem.id} value={departmentItem.id + ''}>{departmentItem.name}</Option>
-                    )}
-                  </Select>
-                )}
-              </FormItem>
-            </Col>
+    {/*
+      <Row className={mode === 'create' ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
+          <Col span={7}>
+            <FormItem labelCol={{span: 11}}
+                      wrapperCol={{span: 13}}
+                      label="所属机构">
+              {getFieldDecorator('department', {
+                rules: [{
+                  required: true,
+                  message: '选择所属机构!'
+                }],
+                // initialValue: eachCustomerInfo.department,
+                onChange: this.selectBasicInfoChange
+              })(
+                <Select
+                  showSearch
+                  placeholder="选择所属机构"
+                  optionFilterProp="children"
+                  filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  getPopupContainer={() => document.getElementById('editMyBase')}
+                >
+                  {departmentOptions && departmentOptions.map(departmentItem =>
+                    <Option key={departmentItem.id} value={departmentItem.id + ''}>{departmentItem.name}</Option>
+                  )}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
 
-            <Col span={7}>
-              <FormItem labelCol={{span: 11}}
-                        wrapperCol={{span: 13}}
-                        label="客户经理">
-                {getFieldDecorator('manager', {
-                  onChange: this.selectBasicInfoChange
-                })(
-                  <Select
-                    showSearch
-                    placeholder="选择客户经理"
-                    optionFilterProp="children"
-                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    getPopupContainer={() => document.getElementById('editMyBase')}
-                  >
-                    {managerOptions && managerOptions.map(managerItem =>
-                      <Option key={managerItem.id} value={managerItem.id + ''}>{managerItem.name}</Option>
-                    )}
-                  </Select>
-                )}
-              </FormItem>
-            </Col>
+          <Col span={7}>
+            <FormItem labelCol={{span: 11}}
+                      wrapperCol={{span: 13}}
+                      label="客户经理">
+              {getFieldDecorator('manager', {
+                onChange: this.selectBasicInfoChange
+              })(
+                <Select
+                  showSearch
+                  placeholder="选择客户经理"
+                  optionFilterProp="children"
+                  filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  getPopupContainer={() => document.getElementById('editMyBase')}
+                >
+                  {managerOptions && managerOptions.map(managerItem =>
+                    <Option key={managerItem.id} value={managerItem.id + ''}>{managerItem.name}</Option>
+                  )}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
 
-            <Col span={7}>
-              <FormItem labelCol={{span: 11}}
-                        wrapperCol={{span: 13}}
-                        label="所属网格">
-                {getFieldDecorator('grid', {
-                  onChange: this.selectBasicInfoChange
-                })(
-                  <Select
-                    showSearch
-                    placeholder="选择所属网格"
-                    optionFilterProp="children"
-                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    getPopupContainer={() => document.getElementById('editMyBase')}
-                  >
-                    {gridOptions && gridOptions.map(gridItem =>
-                      <Option key={gridItem.id} value={gridItem.id + ''}>{gridItem.name}</Option>
-                    )}
-                  </Select>
-                )}
-              </FormItem>
-            </Col>
-        </Row>
+          <Col span={7}>
+            <FormItem labelCol={{span: 11}}
+                      wrapperCol={{span: 13}}
+                      label="所属网格">
+              {getFieldDecorator('grid', {
+                onChange: this.selectBasicInfoChange
+              })(
+                <Select
+                  showSearch
+                  placeholder="选择所属网格"
+                  optionFilterProp="children"
+                  filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  getPopupContainer={() => document.getElementById('editMyBase')}
+                >
+                  {gridOptions && gridOptions.map(gridItem =>
+                    <Option key={gridItem.id} value={gridItem.id + ''}>{gridItem.name}</Option>
+                  )}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+      </Row>
+    */}
 
         <div className="personInfo">
           <Row>
@@ -348,7 +352,10 @@ class EditBriefBasicInfoForm extends Component{
               {AccountsRemark}
             </Col>
           </Row>
+        </div>
 
+      {/*
+        <div className="personInfo">
           <Row>
             <Col span={12} className={mode === 'create' ? "phoneCreate" : "phoneEdit"}>
               <FormItem labelCol={{span: 8}}
@@ -482,6 +489,8 @@ class EditBriefBasicInfoForm extends Component{
             </Col>
           </Row>
         </div>
+      */}
+
 
         <Row className="buttonSave">
           <Col span={24} >
@@ -501,7 +510,7 @@ class EditBriefBasicInfoForm extends Component{
 
 function mapPropsToFields (props) {
   const { briefInfo, accounts } = props;
-  console.dir(accounts)
+  console.log(accounts['row-0-accountNo'])
   return {
     ...accounts,
     ...briefInfo
@@ -518,8 +527,8 @@ function onValuesChange(props, values) {
 }
 
 const EditBriefBasicInfo = Form.create({
-  mapPropsToFields,
-  onFieldsChange
+  // mapPropsToFields,
+  // onFieldsChange
   // onValuesChange
 })(EditBriefBasicInfoForm)
 

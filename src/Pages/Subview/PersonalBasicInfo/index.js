@@ -388,6 +388,7 @@ class BasicInfo extends Component {
     // 参与人数信息
     let joiners = this.state.staffs.map(item => item.id);
     console.log(briefInfo['row-0-accountNo'] == undefined);
+
     // 账户信息
     let accountsInfo = accountsArr.map((item, index) => {
       return {
@@ -698,6 +699,14 @@ class BasicInfo extends Component {
 
       // accounts
       accounts: accounts,
+      // {
+      //   ['row-0-accountNo']: {
+      //     value: 222222
+      //   },
+      //   ['row-0-remark']: {
+      //     value: 333333
+      //   },
+      // },
       accountsArr: accountsArr,
       deleteAccountsInfo: this.deleteAccountsInfo,
       addAccountsInfo: this.addAccountsInfo,
