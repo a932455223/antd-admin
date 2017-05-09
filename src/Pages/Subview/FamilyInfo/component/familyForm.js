@@ -41,7 +41,7 @@ class familyForm extends Component{
         this.props.toggleEdit(this.props.index);
     }
     findDropDownItem(value,dropDownType){
-        console.log(value);
+        // console.log(value);
         let dropDown='';
         this.props[dropDownType].map((item)=>{
             for(let prop in item) {
@@ -67,12 +67,13 @@ class familyForm extends Component{
                                     prefix={<i className="iconfont icon-customer1" />}
                                 />)}
                             </FormItem>
-                            <span
+                            <Button
                                 className="cancel-btn"
                                 onClick={this.clickCancelBtn}
+                                loading={this.state.btnLoading}
                             >
                                 取消
-                            </span>
+                            </Button>
                             <Button
                                 className="save-btn"
                                 onClick={this.clickSavaBtn}

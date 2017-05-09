@@ -25,11 +25,6 @@ class addFamilyCard extends Component{
     };
     
     clickSavaBtn=()=>{
-        // let newState=update(
-        //     this.state,{btnLoading:{$set:true}}
-        // )
-        // this.setState(newState);
-        
         this.props.form.validateFields()
         let formErrors = this.props.form.getFieldsError()
         let noError=true;
@@ -77,15 +72,18 @@ class addFamilyCard extends Component{
                                 {getFieldDecorator('name', {
                                     rules: [{ required: true, message: '姓名不能为空' }],
                                 })(<Input 
-                                    prefix={<i className="iconfont icon-customer1" />}
+                                    prefix={<i className="iconfont icon-customer1"
+                                    placeholder='请输入姓名'
+                                     />}
                                 />)}
                             </FormItem>
-                            <span
+                            <Button
                                 className="cancel-btn"
                                 onClick={this.clickCancelBtn}
+                                loading={this.props.addFamilyCardLoading}
                             >
                                 取消
-                            </span>
+                            </Button>
                             <Button
                                 className="save-btn"
                                 onClick={this.clickSavaBtn}
@@ -105,9 +103,10 @@ class addFamilyCard extends Component{
                         <FormItem>
                         {getFieldDecorator('relation', {
                             rules: [{ required: true, message: '关系不能为空' }],
+                            
                         })(
                             <Select 
-                                
+                              placeholder='请选择关系'  
                             >
                                 {
                                     this.props.familyRelation.map((rel) => {
@@ -133,7 +132,9 @@ class addFamilyCard extends Component{
                             <FormItem>
                                 {getFieldDecorator('phone',{
                                     rules: [{pattern:Reg.mobile, message: "联系方式格式不正确"}],
-                                })(<Input />)}
+                                })(<Input
+                                     placeholder='请输入联系方式'
+                                 />)}
                             </FormItem>
                         </Col>
                         
@@ -146,7 +147,9 @@ class addFamilyCard extends Component{
                             <FormItem>
                                 {getFieldDecorator('certificate', {
                                     rules: [{ pattern:Reg.certificate, message: '身份证格式不正确' }],
-                                })(<Input />)}
+                                })(<Input 
+                                     placeholder='请输入身份证号'
+                                />)}
                             </FormItem>
                         </Col>
                     </Row>
@@ -175,9 +178,6 @@ class addFamilyCard extends Component{
                         </Col>
                     </Row>
                 </Card>
-                <pre className="language-bash" style={{textAlign:'left'}}>
-                {JSON.stringify(this.state, null, 2)}
-                </pre>
             </Form>)
         }else{
         //添加按钮

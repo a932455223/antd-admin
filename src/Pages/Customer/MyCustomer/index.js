@@ -83,30 +83,24 @@ export default class MyCustomer extends Component {
   }
 
   componentWillReceiveProps() {
-    console.log('ccc');
+    // console.log('ccc');
   }
 
   // get customer lists
   getCustomers = (params) => {
-    // 请求数据
-    if(params && params.customerType && params.customerType.length === 0) {
+    // 过滤请求数据
+    if(params.customerType && params.customerType.length === 0) {
       delete params.customerType
     }
-
-    if(params && params.customerLevel && params.customerLevel.length === 0) {
+    if(params.customerLevel && params.customerLevel.length === 0) {
       delete params.customerLevel
     }
-
     if(params.riskLevel && params.riskLevel.length === 0) {
       delete params.riskLevel
     }
-
     if(params.searchContent == '' || params.searchContent == undefined) {
-      console.log('12');
       delete params.searchContent
     }
-
-    console.log(params);
 
     // 请求客户列表数据
     ajax.Get(API.GET_CUSTOMERS, params)
@@ -154,11 +148,12 @@ export default class MyCustomer extends Component {
   // 高级筛选
   filterCustomers = (filters, search) => {
     let newState = update(this.state, {
+      loading: {$set: true},
       reqJson: {
         customerType: {$set: filters.customerType},
         customerLevel: {$set: filters.customerLevel},
         riskLevel: {$set: filters.riskLevel},
-        searchCustomer: {$set: search}
+        searchContent: {$set: search}
       }
     })
 
@@ -170,6 +165,10 @@ export default class MyCustomer extends Component {
   customerFocus = (id, e) => {
     e.stopPropagation(); // 阻止事件冒泡
     // 拿到用户的 id，发送请求，取消关注／关注
+  }
+
+  refreshCustomerLists = () => {
+    this.getCustomers(this.state.reqJson);
   }
 
 
@@ -246,7 +245,8 @@ export default class MyCustomer extends Component {
       pagination: pagination,
       loading: loading,
       privilege: privilege,
-      pageChange: this.pageChange
+      pageChange: this.pageChange,
+      refreshCustomerLists: this.refreshCustomerLists
     };
     return (
       <div className="customer" id="customer">
