@@ -25,16 +25,16 @@ class FinanceInfo extends Component {
   state = {
     isLoading:false,//是否正在加载
     isModify: [],//编辑状态
-    financeList:[],//家庭信息数组
+    financeList:[],
     financeCategoryDropdown:[],//金融业务信息产品下拉菜单
     addFinanceCardLoading:false,
-    isAdd:true,
+    isAdd:false,
     newFinance:{//放到组件中
         "buyDate": {
-            "value": undefined
+            "value":undefined
           },
           "expireDate": {
-            "value": undefined
+            "value":undefined
           },
           "financeCategory": {
             "value": ""
@@ -60,7 +60,6 @@ class FinanceInfo extends Component {
     ajax.Get(api.GET_CUSTOMER_FINANCES(customerId))
       .then((data)=>{
         if(data.status===200&&data.statusText==='OK'){
-          console.log(data.status)
           let newFinanceList= data.data.data.map((item)=>{
             return Object.keys(item).reduce((pre,ky)=>{
               if(item[ky]===null){
@@ -75,7 +74,6 @@ class FinanceInfo extends Component {
                 if(ky==='buyDate'||ky==='expireDate'){
 
                   let time=moment(item[ky]);
-                  console.log(time)
                   pre[ky] = {value:time};
                 }else{
                   pre[ky] = {value:item[ky]+""}
@@ -89,67 +87,80 @@ class FinanceInfo extends Component {
             financeList:newFinanceList,
             isModify:new Array(newFinanceList.length).fill(false),
             isLoading:false,
+            isAdd:false
           })
-          // this.resetAddCard();
+          this.resetAddCard(); 
           // this.AddFamilyCard.toggleAdd();
-          console.log(this)
-          console.log("getfamilies")
         }
       })
   }
   // 增加
-  postCustomersFinances=()=>{
-      ajax.Post(api.POST_CUSTOMER_FINANCES(2),{
-        buyDate	:'2017-10-02',
-        expireDate	:'2019-02-09',
-        financeCategory:11,
-        money	:99000,
-        org	:2,
-        profit :34000,
-      })
+  postCustomersFinances=(data)=>{
+    setTimeout(()=>{
+
+        for(let key in data){
+            if(data[key] === undefined){
+              data[key]=''
+            }else{
+              if(key==='buyDate'||key==='expireDate'){
+                data[key]=data[key].format('YYYY-MM-DD')
+                // console.log(data[key].format('YYYY-MM-DD').toString())
+              }
+            }
+          }
+      ajax.Post(api.POST_CUSTOMER_FINANCES(this.props.currentId),data)
         .then( res => {
-              console.log(res)
               if(res.data.code===200){
                 if(res.data.message==='OK'){
-                  console.log('成功')
+                  // console.log('增加成功')
                   this.getCustomersFinances(this.props.currentId);
+                  this.toggleAdd();
+                  this.toggleAddFinanceCardLoading();
                 }
               }else{
-                console.log(res.data.message)
+                // console.log(res.data.message)
               }
             })
+    },2000)
 
   }
   // 删除
-  deleteCustomersFinances=()=>{
-
+  deleteCustomersFinances=(financesId)=>{
+    ajax.Delete(api.DELETE_CUSTOMERS_FINANCES(financesId))
+      .then(res=>{
+            if(res.data.code===200){
+              if(res.data.message==='OK'){
+                // console.log('删除成功')
+                this.getCustomersFinances(this.props.currentId);
+              }
+            }else{
+              // console.log(res.data.message)
+            }
+      })
   }
   // 修改
   putCustomersFinances=(id,values,index)=>{
     setTimeout(()=>{
-          console.log(index,values)
-          // let newValues= Object.keys(values).map((pre,ky)=>{
-          //     if(values[ky]===undefined){
-        
-          //       pre[ky]=""
-          //     }
-          //     console.log(pre,ky)
-          //     return pre;
-          //   })
+          // console.log(index,values)
           for(let key in values){
             if(values[key] === undefined){
               values[key]=''
+            }else{
+              if(key==='buyDate'||key==='expireDate'){
+                values[key]=values[key].format('YYYY-MM-DD')
+                // console.log(values[key].format('YYYY-MM-DD').toString())
+              }
             }
           }
-      ajax.Put(api.PUT_CUSTOMERS_FINANCES(index),values)
+      ajax.Put(api.PUT_CUSTOMERS_FINANCES(id),values)
         .then( res => {
-            console.log(res);
+            // console.log(res);
             switch(res.status){
                 case(200):
                   {
                     if(res.data.code===200&&res.data.message==='OK')
                       message.success('更改成功');
-                      // this.getFamilyInfo(this.props.currentId);
+                      this.getCustomersFinances(this.props.currentId);
                     if(res.data.code!==200){
                       // message.error(res.data.message)
                       Modal.error({
@@ -167,8 +178,8 @@ class FinanceInfo extends Component {
             }
           })
 
-          console.log(values);
-      },0)
+          // console.log(values);
+      },2000)
   }
   // 金融业务信息下拉
   getCustomFinanceCategory=()=>{
@@ -188,15 +199,21 @@ class FinanceInfo extends Component {
     let fields={...this.state.newFinance,...changedFields};
     this.setState({newFinance:fields});
   }
+  //添加状态切换
+    toggleAdd = () => {
+      // console.log("click toggleAdd  ");
+      this.setState({isAdd:!this.state.isAdd})
+      
+    }
 //重置addcard信息
   resetAddCard=()=>{
     this.setState({
       newFinance:{
         "buyDate": {
-            "value": undefined
+            "value":undefined
           },
           "expireDate": {
-            "value": undefined
+            "value":undefined
           },
           "financeCategory": {
             "value": ""
@@ -216,6 +233,9 @@ class FinanceInfo extends Component {
       }
     })
   }
+  toggleAddFinanceCardLoading=()=>{
+    this.setState({addFinanceCardLoading:!this.state.addFinanceCardLoading})
+  }
   //查看和修改状态切换
   toggleEdit=(index)=>{
     let newState=update(
@@ -224,7 +244,6 @@ class FinanceInfo extends Component {
     this.setState(newState);
   };
   handleFormChange = (index,changedFields) => {
-    console.log("handleFormChange")
     let fields={ ...this.state.financeList[index], ...changedFields };
     let newState=update(
       this.state,{financeList:{[index]:{$set:fields}}}
@@ -239,14 +258,14 @@ class FinanceInfo extends Component {
    this.getCustomFinanceCategory();
   }
   componentWillReceiveProps(newProps){
-    console.log("======","familyinfo receive props")
+    // console.log("======","familyinfo receive props")
     //重置数据
     if(newProps.currentId!==this.props.currentId){
       this.setState({
         isLoading:true
       })
       this.getCustomersFinances(newProps.currentId);
-      console.log('重置数据')
+      // console.log('重置数据')
       
     }
     
@@ -287,7 +306,7 @@ class FinanceInfo extends Component {
                         item={item}
                         index={index}
                         financeCategoryDropdown={this.state.financeCategoryDropdown}
-                        //deleteFamilyValue={this.deleteFamilyValue}
+                        deleteCustomersFinances={this.deleteCustomersFinances}
                       />
                     )
                   }
@@ -301,6 +320,10 @@ class FinanceInfo extends Component {
                 {...this.state.newFinance}
                 resetAddCard={this.resetAddCard}
                 onAddChange={this.onAddChange}
+                toggleAdd={this.toggleAdd}
+                isAdd={this.state.isAdd}
+                toggleAddFinanceCardLoading={this.toggleAddFinanceCardLoading}
+                addFinanceCardLoading={this.state.addFinanceCardLoading}
               />
 
               
@@ -313,13 +336,17 @@ class FinanceInfo extends Component {
              {...this.state.newFinance}
              resetAddCard={this.resetAddCard}
              onAddChange={this.onAddChange}
+             toggleAdd={this.toggleAdd}
+             isAdd={this.state.isAdd}
+              toggleAddFinanceCardLoading={this.toggleAddFinanceCardLoading}
+              addFinanceCardLoading={this.state.addFinanceCardLoading}
           />
 
         }
-        <pre className="language-bash" style={{textAlign:'left'}}>
-          {JSON.stringify(this.state, null, 2)}
+        {/*<pre className="language-bash" style={{textAlign:'left'}}>
+          {JSON.stringify(this.state.addFinanceCardLoading, null, 2)}
         </pre>
-        
+        */}
 
       </div>
     )

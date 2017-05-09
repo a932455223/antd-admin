@@ -109,6 +109,7 @@
                             z-index: 1;
                             right: 1em;
                             top: 0.5em;
+                            pointer-events:none;
                         }
                         .ant-form-item-control.has-error{
                             .ant-input-affix-wrapper{
@@ -127,6 +128,7 @@
                         height: 2.2em;
                         line-height: 2.2em;
                         cursor: pointer;
+                        border:0px;
                     }
                     .save-btn {
                         background-color: @c-blue-darken;
@@ -215,6 +217,9 @@
     }
     .my-add-card{
         //添加按钮
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
         .ant-card-body{
             display: flex;
             flex-direction: column;

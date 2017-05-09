@@ -224,7 +224,7 @@ class TablePage extends Component {
   }
 
   render(){
-    const { columns, dataSource, loading, pagination } = this.props;
+    const { columns, dataSource, loading, pagination, refreshCustomerLists } = this.props;
 
     // table props lists
     const tableProps = {
@@ -282,7 +282,8 @@ class TablePage extends Component {
       showModal: this.showModal,
       closeDock: this.closeDock,
       onlyModalClose: this.onlyModalClose,
-      visible: this.state.dockVisible
+      visible: this.state.dockVisible,
+      refreshCustomerLists: refreshCustomerLists
     }
 
     const batchProps = {

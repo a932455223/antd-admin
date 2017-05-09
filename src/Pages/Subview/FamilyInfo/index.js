@@ -29,6 +29,7 @@ class FamilyInfo extends Component {
     commonJobCategory: [],//工作属性
     addFamilyCardLoading:false,
     isAdd:false,
+    financeAddLoading:false,//add form loading button
     newFamily:{//放到组件中
       "certificate": {
         "value": ""
@@ -53,7 +54,7 @@ class FamilyInfo extends Component {
     ajax.Get(api.GET_CUSTOMERS_FAMILY(id))
     .then((data) => {
       if(data.status===200&&data.statusText==='OK'){
-        console.log(data.status)
+        // console.log(data.status)
         let newFamilyList= data.data.data.map((item)=>{
           return Object.keys(item).reduce((pre,ky)=>{
             if(item[ky]===null){
@@ -74,8 +75,8 @@ class FamilyInfo extends Component {
         })
         this.resetAddCard();
         // this.AddFamilyCard.toggleAdd();
-        console.log(this)
-        console.log("getfamilies")
+        // console.log(this)
+        // console.log("getfamilies")
       }
     })
   }
@@ -107,37 +108,38 @@ class FamilyInfo extends Component {
   deleteFamilyValue=(familyId)=>{
     ajax.Delete(api.DELETE_CUSTOMERS_FAMILY(familyId))
       .then(res=>{
-        console.log(res)
+        // console.log(res)
             if(res.data.code===200){
               if(res.data.message==='OK'){
-                console.log('成功')
+                // console.log('成功')
                 this.getFamilyInfo(this.props.currentId);
               }
             }else{
-              console.log(res.data.message)
+              // console.log(res.data.message)
             }
       })
   }
   //增加新的card
   addNewFamilyValue=(data)=>{
     this.changeAddFamilyCardLoading();
-    console.log(data);
+    // console.log(data);
     setTimeout(()=>{
       ajax.Post(api.POST_CUSTOMERS_FAMILY(this.props.currentId),data)
         .then( res => {
               // if(res.data.message === 'OK'){
               //   this.getFamilyInfo(this.props.currentId);
               // }
-              console.log(res)
+              // console.log(res)
               if(res.data.code===200){
                 if(res.data.message==='OK'){
-                  console.log('成功')
+                  // console.log('成功')
                   this.getFamilyInfo(this.props.currentId);
                 }
               }else{
-                console.log(res.data.message)
+                // console.log(res.data.message)
               }
               this.changeAddFamilyCardLoading();
+              this.toggleAdd();
             })
 
     },2000)
@@ -147,7 +149,7 @@ class FamilyInfo extends Component {
     setTimeout(()=>{
     ajax.Put(api.PUT_CUSTOMERS_FAMILY(index),values)
       .then( res => {
-          console.log(res);
+          // console.log(res);
           switch(res.status){
               case(200):
                 {
@@ -240,14 +242,14 @@ class FamilyInfo extends Component {
   }
 
   componentWillMount() {
-    console.log("======","familyinfo willmount ")
+    // console.log("======","familyinfo willmount ")
     this.getFamilyInfo(this.props.currentId);
     this.getFamilyRelation();
     this.getCommonJobCategory();
     
   }
   componentWillReceiveProps(newProps){
-    console.log("======","familyinfo receive props")
+    // console.log("======","familyinfo receive props")
     //重置数据
     if(newProps.currentId!==this.props.currentId){
       this.setState({
@@ -255,8 +257,8 @@ class FamilyInfo extends Component {
       })
       this.getFamilyInfo(newProps.currentId);
       this.toggleAdd();
-      console.log('重置数据')
-      console.log(this.props.AddFamilyCard)
+      // console.log('重置数据')
+      // console.log(this.props.AddFamilyCard)
     }
   }
 
@@ -315,9 +317,9 @@ class FamilyInfo extends Component {
               isAdd={this.state.isAdd}
               toggleAdd={this.toggleAdd}
             />
-            <pre className="language-bash" style={{textAlign:'left'}}>
+            {/*<pre className="language-bash" style={{textAlign:'left'}}>
               {JSON.stringify(this.state.addFamilyCardLoading, null, 2)}
-            </pre>
+            </pre>*/}
           </div>:
           <AddFamilyCard
             commonJobCategory={this.state.commonJobCategory}

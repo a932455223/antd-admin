@@ -8,7 +8,10 @@ import {
   Form,
   Modal,
   Button,
-  Select
+  Select,
+  DatePicker,
+  message,
+  InputNumber
 } from 'antd';
 // import styles from './../indexStyle.less';
 import { connect } from 'react-redux';
@@ -16,23 +19,14 @@ import api from './../../../../../API';
 import ajax from '../../../../tools/POSTF.js';
 import Reg from "../../../../tools/Reg"
 import update from 'immutability-helper';
+import moment from 'moment';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
 class addFinanceCard extends Component{
-    state = {
-        isAdd:true,
-    }
     constructor(props) {
         super(props);
     };
-    //添加状态切换
-    toggleAdd = () => {
-        let newState=update(
-            this.state,{isAdd:{$set:!this.state.isAdd}}
-        )
-        this.setState(newState);
-    }
     clickSavaBtn=()=>{
         // let newState=update(
         //     this.state,{btnLoading:{$set:true}}
@@ -51,12 +45,14 @@ class addFinanceCard extends Component{
             }
         })
         if(noError){
-            this.props.addNewFinanceValue(this.props.form.getFieldsValue())
+            this.props.toggleAddFinanceCardLoading();
+            this.props.postCustomersFinances(this.props.form.getFieldsValue())
         }
     }
     clickCancelBtn=()=>{
-        this.toggleAdd()
+        this.props.toggleAdd()
         this.props.resetAddCard();
+        
     }
     componentWillMount(){
             
@@ -75,7 +71,7 @@ class addFinanceCard extends Component{
     render(){
         let addArea;
         const { getFieldDecorator } = this.props.form;
-        if(this.state.isAdd){
+        if(this.props.isAdd){
         addArea=
             
             (<Form  className="my-form-card">
@@ -83,7 +79,9 @@ class addFinanceCard extends Component{
                     title={
                         <div className="my-card-title">
                             <FormItem>
-                                {getFieldDecorator('financeCategory')(
+                                {getFieldDecorator('financeCategory', {
+                                    rules: [{ required: true, message: '业务项目不能为空' }],
+                                })(
                                     <Select 
                                     >
                                         {
@@ -102,12 +100,13 @@ class addFinanceCard extends Component{
                                     
                                 }
                             </FormItem>
-                            <span
+                            <Button
                                 className="cancel-btn"
                                 onClick={this.clickCancelBtn}
+                                loading={this.props.addFinanceCardLoading}
                             >
                                 取消
-                            </span>
+                            </Button>
                             <Button
                                 className="save-btn"
                                 onClick={this.clickSavaBtn}
@@ -125,7 +124,9 @@ class addFinanceCard extends Component{
                     </Col>
                     <Col span={16}>
                         <FormItem>
-                            {getFieldDecorator('org')(
+                            {getFieldDecorator('org', {
+                                    rules: [{ required: true, message: '业务机构不能为空' }],
+                                })(
                                 <Select 
                                 >
                                         <Option 
@@ -162,58 +163,68 @@ class addFinanceCard extends Component{
                     </Col>
                     <Col span={16}>
                         <FormItem>
-                            {getFieldDecorator('profit')(<Input />)}
+                            {getFieldDecorator('profit',{
+                                 rules: [{pattern:Reg.percentage,message:'小数点后精确到两位'}]
+                            })(
+                                <InputNumber min={0.01} max={99.99} step={0.01} 
+                                    formatter={value => `${value}%`}
+                                    parser={value => value.replace('%', '')}
+                                />
+                            )}
                         </FormItem>
                     </Col>
                 </Row>
-               {/*  <Row>
+               <Row>
                     <Col span={8}>
                         购买日：
                     </Col>
                     <Col span={16}>
                         <FormItem>
                             {
-                                getFieldDecorator('buyDate',{
-                                    initialValue:this.props.buyDate.value
-                                })(
-                                    <DatePicker
-                                        getCalendarContainer={ () => document.getElementsByClassName('my-cards-page')[0]}
-                                    />
-                                )
+                                   getFieldDecorator('buyDate',{
+                                         initialValue:undefined
+
+                                    })(
+                                        <DatePicker
+                                            getCalendarContainer={ () => document.getElementsByClassName('my-cards-page')[0]}
+                                        />
+                                    )
+                               
                                 
                             }
                         </FormItem>
                     </Col>
                 </Row>
-                <Row>
+                  <Row>
                     <Col span={8}>
                         到期日／销毁日：
                     </Col>
                     <Col span={16}>
                         <FormItem>
                             {
+                            
                                 getFieldDecorator('expireDate',{
-                                    initialValue:undefined
-                                })(
-                                    <DatePicker
-                                        getCalendarContainer={ () => document.getElementsByClassName('my-cards-page')[0]}
-                                    />
-                                ) 
+                                        initialValue:undefined
+                                    })(
+                                        <DatePicker
+                                            getCalendarContainer={ () => document.getElementsByClassName('my-cards-page')[0]}
+                                        />
+                                    )  
                             }
                         </FormItem>
                     </Col>
-                </Row>*/}
+                </Row>
                 </Card>
-                <pre className="language-bash" style={{textAlign:'left'}}>
-                {JSON.stringify(this.state, null, 2)}
-                </pre>
+                {/*<pre className="language-bash" style={{textAlign:'left'}}>
+                    {JSON.stringify(this.props, null, 2)}
+                </pre>*/}
             </Form>)
         }else{
-        //添加按钮
+        //添加按钮 
         addArea=
             (<Card  className="my-card my-add-card">
-                <i className="iconfont icon-create"   onClick={()=>{this.toggleAdd()}}></i>
-                <p>新建家庭关系</p>
+                <i className="iconfont icon-create"   onClick={()=>{this.props.toggleAdd()}}></i>
+                <p>新建金融业务信息</p>
             </Card>)
         }
         // const { getFieldDecorator } = this.props.form;

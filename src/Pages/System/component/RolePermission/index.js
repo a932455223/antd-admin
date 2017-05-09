@@ -2,9 +2,10 @@
  * Created by jufei on 2017/4/25.
  */
 import React,{Component} from 'react';
-import { Card ,Tree,Button,Icon,Select} from 'antd'
+import { Card ,Tree,Button,Icon,Select,message} from 'antd'
 import ajax from '../../../../tools/POSTF'
 import API from '../../../../../API/index'
+import cloneDeep from 'lodash/cloneDeep'
 const TreeNode = Tree.TreeNode;
 const Option = Select.Option
 import './rolePermission.less'
@@ -13,29 +14,6 @@ import './rolePermission.less'
 const x = 3;
 const y = 2;
 const z = 1;
-const gData = [];
-const generateData = (_level, _preKey, _tns) => {
-  const preKey = _preKey || '0';
-  const tns = _tns || gData;
-
-  const children = [];
-  for (let i = 0; i < x; i++) {
-    const key = `${preKey}-${i}`;
-    tns.push({ title: key, key });
-    if (i < y) {
-      children.push(key);
-    }
-  }
-  if (_level < 0) {
-    return tns;
-  }
-  const level = _level - 1;
-  children.forEach((key, index) => {
-    tns[index].children = [];
-    return generateData(level, key, tns[index].children);
-  });
-};
-generateData(z);
 
 const generateSelect = nodes => nodes.map((item)=>{
   return
@@ -43,22 +21,38 @@ const generateSelect = nodes => nodes.map((item)=>{
     <Option key={item.id.toString()}>{item.name}</Option>
   </Select>
 })
-const generateTree = (nodes,showOptions) => nodes.map((item) =>{
+const generateTree = (nodes,parentId,showOptions) => nodes.map((item) =>{
+  let pid = parentId==='0' ? item.id.toString() : parentId.toString()+'-'+item.id.toString()
   if(item.childs){
     return (
-      <TreeNode key={item.id.toString()} title={item.name}>
-        {generateTree(item.childs,showOptions)}
+      <TreeNode key={pid} title={item.name}>
+        {generateTree(item.childs,pid,showOptions)}
       </TreeNode>
     )
   }
 
-  return <TreeNode key={item.id.toString()} title={<span>{item.name} &nbsp;{showOptions ? generateSelect(item.options):'['+item.options[0].name+']'}</span>} />
+  return <TreeNode key={pid} title={<span>{item.name} &nbsp;{showOptions ? generateSelect(item.options):'['+item.options[0].name+']'}</span>} />
 })
+
+function deleteTreeNode(nodes,deleteIds){
+  console.dir(nodes)
+  console.dir(deleteIds)
+
+  deleteIds.forEach(function(deleteId){
+    console.log(deleteId)
+  })
+}
+
+
 export default class  RolePermission extends Component{
   state = {
-    checkedKeys: [],
+    leftCheckedKeys: [],
+    rightCheckedKeys: [],
     selectedKeys: [],
-    privilege:[]
+    leftPrivilege:[],
+    rightPrivilege:[],
+    leftOriginPrivilege:[],
+    rightOriginPrivilege:[]
   }
 
   componentWillMount(){
@@ -66,18 +60,27 @@ export default class  RolePermission extends Component{
   }
 
   getAllPrivilige = () => {
-    ajax.Get(API.GET_ALL_RPIVILIGE).then((res)=>{
-      this.setState({privilege:res.data.data})
+    ajax.Get(API.GET_ALL_RPIVILIGE).then((res) => {
+      this.setState({leftPrivilege:res.data.data,leftOriginPrivilege:res.data.data})
     })
   }
 
-  onCheck = (checkedKeys,e) => {
-    console.dir(e)
-    this.setState({
-      checkedKeys:checkedKeys
-    })
+  toRight = () =>{
+    if(this.state.leftCheckedKeys.length === 0){
+      message.info("没有选中任何节点")
+    }else{
+      let leftCheckedKeys = cloneDeep(this.state.leftCheckedKeys).sort((pre,next)=>pre.split('-').length - next.split('-').length)
+      deleteTreeNode(this.state.leftPrivilege,leftCheckedKeys);
+    }
+  }
 
-    console.dir(checkedKeys)
+  toLeft = () => {
+
+  }
+  onCheck = (checkedKeys,e) => {
+    this.setState({
+      leftCheckedKeys:checkedKeys
+    })
   }
   onSelect = (selectedKeys, info) => {
     console.log('onSelect', info);
@@ -87,15 +90,15 @@ export default class  RolePermission extends Component{
 
   render(){
 
-    const leftTree = this.state.privilege.length > 0 ? <Tree
+    const leftTree = this.state.leftPrivilege.length > 0 ? <Tree
       checkable
       defaultExpandAll={true}
       onExpand={this.onExpand}
       autoExpandParent={true}
-      onCheck={this.onCheck} checkedKeys={this.state.checkedKeys}
+      onCheck={this.onCheck} checkedKeys={this.state.leftCheckedKeys}
       onSelect={this.onSelect} selectedKeys={this.state.selectedKeys}
     >
-      {generateTree(this.state.privilege,false)}
+      {generateTree(this.state.leftPrivilege,'0',false)}
     </Tree>:null
 
     return (
@@ -106,9 +109,9 @@ export default class  RolePermission extends Component{
               {leftTree}
             </div>
             <div className="transfer-center">
-              <Button> <Icon type="double-right" /> </Button>
+              <Button onClick={this.toRight}> <Icon type="double-right" /> </Button>
 
-              <Button> <Icon type="double-left" /> </Button>
+              <Button onClick={this.toLeft}> <Icon type="double-left" /> </Button>
             </div>
             <div className="transfer-right">
               <Tree
