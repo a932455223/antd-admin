@@ -229,8 +229,6 @@ class BasicInfo extends Component {
     let newAccounts = _.cloneDeep(originAccounts);
     let newAccountsArr = _.cloneDeep(originAccountsArr);
 
-    console.log(originAccounts['row-0-accountNo']);
-
     let newState = update(this.state, {
       accounts: {$set: newAccounts},
       accountsArr: {$set: newAccountsArr}
@@ -288,8 +286,6 @@ class BasicInfo extends Component {
         },{});
         let accountsObj = _.cloneDeep(originAccountsObj);
         let accountsArr = _.cloneDeep(originAccountsArr);
-
-        console.log(originAccountsObj['row-0-accountNo']);
 
         // 更新 briefInfo, detailsInfo, eachCustomerInfo
         let newJoiners = _.cloneDeep(res.data.data.joiners);
@@ -387,7 +383,7 @@ class BasicInfo extends Component {
     const dateFormat = 'YYYY-MM-DD'; // 日期格式
     // 参与人数信息
     let joiners = this.state.staffs.map(item => item.id);
-    console.log(briefInfo['row-0-accountNo'] == undefined);
+    console.log(briefInfo['row-0-accountNo']);
 
     // 账户信息
     let accountsInfo = accountsArr.map((item, index) => {
@@ -488,6 +484,7 @@ class BasicInfo extends Component {
 
   // 表单数据的双向绑定
   handleFormChange = (changedFields) => {
+    console.log(changedFields);
     const { beEditedNumber } = this.props.currentCustomerInfo;
     let oldDepartment = this.state.briefInfo.department.value;
     let newDepartment = changedFields.department && changedFields.department.value;
@@ -560,17 +557,19 @@ class BasicInfo extends Component {
       }
     }
 
-    let accounts = {
-      ...this.state.accounts,
-      ...changedFields
-    }
+    // let accounts = {
+    //   ...this.state.accounts,
+    //   ...changedFields
+    // }
 
-    let newState = update(this.state,{
-      accounts: {$set: {...accounts}},
-      briefInfo: {$set: {...briefInfo}},
-      detailsInfo: {$set: {...detailsInfo}}
-    })
-    this.setState(newState);
+    // if(changedFields['row-0-accountNo']) {
+      let newState = update(this.state,{
+        // accounts: {$set: {...accounts}},
+        briefInfo: {$set: {...briefInfo}},
+        detailsInfo: {$set: {...detailsInfo}}
+      })
+      this.setState(newState);
+    // }
   }
 
   // change joiners
@@ -638,7 +637,8 @@ class BasicInfo extends Component {
     const {
       increaseBeEditArray,
       decreaseBeEditArray,
-      refreshCustomerLists
+      refreshCustomerLists,
+      uuid
     } = this.props;
     const { step, mode, beEditedArray } = this.props.currentCustomerInfo;
     const {
@@ -658,8 +658,8 @@ class BasicInfo extends Component {
       originAccountsArr,
       originAccounts
     } = this.state;
-    console.log(accounts['row-0-accountNo']);
-    console.log(originAccounts['row-0-accountNo']);
+    // console.log(accounts['row-0-accountNo']);
+    // console.log(originAccounts['row-0-accountNo']);
 
     const modal = {
       // modal
@@ -738,7 +738,7 @@ class BasicInfo extends Component {
             <div>
               <AddCrewModal key={id} {...modal}/>
               <EditBriefBasicInfo
-                key={this.state.eachCustomerInfo ? 'edit'+this.state.eachCustomerInfo.id.toString():'-1'}
+                key={this.state.eachCustomerInfo ? 'edit'+this.state.eachCustomerInfo.id+uuid.toString():'-1'}
                 {...basicInfoProps}
               />
               <EditDetailsBasicInfo

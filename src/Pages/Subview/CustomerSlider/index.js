@@ -202,6 +202,11 @@ class CustomerSlider extends Component {
           }
         }
       )
+
+      // newState = update(this.state,{
+      //   personalClient:{personalBasicInfo:{$set: PersonalBasicInfo}}
+      // })
+
       this.setState(newState)
     }, 'InfoTabs');
   };
@@ -231,7 +236,7 @@ class CustomerSlider extends Component {
   // 个人用户的 Tabs
   personalUserTabs = () => {
     const { mode, id } = this.props.currentCustomerInfo;
-    const { refreshCustomerLists } = this.props; // 实时刷新
+    const { refreshCustomerLists, uuid } = this.props; // 实时刷新
     const { personalClient } = this.state;
 
     const tabsProps = {
@@ -249,6 +254,7 @@ class CustomerSlider extends Component {
           {personalClient && personalClient.personalBasicInfo &&
             <personalClient.personalBasicInfo
               refreshCustomerLists={refreshCustomerLists}
+              uuid={uuid}
             />
           }
         </TabPane>
@@ -295,7 +301,7 @@ class CustomerSlider extends Component {
   // 企业用户的 tabs
   enterpriseUserTabs = () => {
     const { mode, id } = this.props.currentCustomerInfo;
-    const { refreshCustomerLists } = this.props; // 实时刷新
+    const { refreshCustomerLists, uuid } = this.props; // 实时刷新
     const { enterpriseClient } = this.state;
 
     // tabs props
@@ -311,6 +317,7 @@ class CustomerSlider extends Component {
           {enterpriseClient.enterpriseBasicInfo &&
             <enterpriseClient.enterpriseBasicInfo
               refreshCustomerLists={refreshCustomerLists}
+              uuid={uuid}
             />
           }
         </TabPane>
@@ -405,61 +412,64 @@ class CustomerSlider extends Component {
 
     return(
       <div>
-        <div className={styles.header}>
-          <div>
-            <div className={styles.img}>
-              <i className="iconfont icon-customer1"></i>
-            </div>
-
-            {mode === 'view' &&
-              <span className={styles.name}>{name}</span>
-            }
-
-            {step != 1 && mode !== 'view' &&
-              <Input
-                key={id}
-                onChange={this.nameChange}
-                className={styles.inputName}
-                value={name}
-              />
-            }
-
-            {name === '' && mode === 'edit' &&
-              <p style={{
-                textAlign: 'left',
-                paddingLeft: 50,
-                fontSize: 12,
-                color: 'red'
-              }}>姓名为必填项</p>
-            }
+    {
+      <div className={styles.header}>
+        <div>
+          <div className={styles.img}>
+            <i className="iconfont icon-customer1"></i>
           </div>
 
-          <div className={styles.options}>
-            { id !== -1 &&
-              <span>
-                <Icon type="star-o" />
-                <span>关注</span>
-              </span>
-            }
-            { id !== -1 &&
-              <span>
-                <Icon type="bell" />
-                <span>提醒</span>
-              </span>
-            }
-            { id !== -1 &&
-              <span>
-                <Icon type="ellipsis" />
-                <span>更多</span>
-              </span>
-            }
-            <Icon
-              className={styles.icon}
-              onClick={this.saveEditInfo}
-              type="close"
+          {mode === 'view' &&
+            <span className={styles.name}>{name}</span>
+          }
+
+          {step != 1 && mode !== 'view' &&
+            <Input
+              key={id}
+              onChange={this.nameChange}
+              className={styles.inputName}
+              value={name}
             />
-          </div>
+          }
+
+          {name === '' && mode === 'edit' &&
+            <p style={{
+              textAlign: 'left',
+              paddingLeft: 50,
+              fontSize: 12,
+              color: 'red'
+            }}>姓名为必填项</p>
+          }
         </div>
+
+        <div className={styles.options}>
+          { id !== -1 &&
+            <span>
+              <Icon type="star-o" />
+              <span>关注</span>
+            </span>
+          }
+          { id !== -1 &&
+            <span>
+              <Icon type="bell" />
+              <span>提醒</span>
+            </span>
+          }
+          { id !== -1 &&
+            <span>
+              <Icon type="ellipsis" />
+              <span>更多</span>
+            </span>
+          }
+          <Icon
+            className={styles.icon}
+            onClick={this.saveEditInfo}
+            type="close"
+          />
+        </div>
+      </div>
+    }
+
 
         {step === 1 && mode === 'create' &&
           <AddNewCustomer {...this.props}/>

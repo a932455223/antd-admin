@@ -33,13 +33,13 @@ class EditBriefBasicInfoForm extends Component{
   }
 
   componentWillMount(){
-    // console.log('EditBriefBasicInfoForm will mount');
+    console.log('EditBriefBasicInfoForm will mount');
     this.getDepartments(1, 1);
   }
 
 
   componentWillReceiveProps(next) {
-    // console.log('briefBasicInfo will recieve props');
+    console.log('briefBasicInfo will recieve props');
     const { getFieldValue } = next.form;
     // console.log(next);
     // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
@@ -66,16 +66,10 @@ class EditBriefBasicInfoForm extends Component{
       accountsArr: next.accountsArr
     })
 
-    // 三级联动，更新 manager和 grid
-    if((next && next.briefInfo && next.briefInfo.department && next.briefInfo.department.value)
-      !==
-      (this.props && this.props.briefInfo && this.props.briefInfo.department && this.props.briefInfo.department.value)) {
-      let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : '';
-      let managerId = getFieldValue('manager') ? getFieldValue('manager') - 0 : '';
-      if(departmentId > 0) {
-        this.getDepartments(departmentId, managerId);
-      }
-    }
+    // if((next && next.briefInfo && next.briefInfo.department && next.briefInfo.department.value)
+    //   !==
+    //   (this.props && this.props.briefInfo && this.props.briefInfo.department && this.props.briefInfo.department.value)) {
+    // }
   };
 
   // 获取 department，
@@ -91,6 +85,31 @@ class EditBriefBasicInfoForm extends Component{
         gridOptions:{$set:res[2].data.data}
       });
       this.setState(newState);
+    })
+  }
+
+  // department select change
+  departmentChange = () => {
+    if(!this.state.basicInfoBeEdit) {
+      this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
+      let newState = update(this.state, {
+        basicInfoBeEdit: {$set: true}
+      })
+      this.setState(newState)
+    }
+
+    const { getFieldValue, setFieldsValue } = this.props.form;
+    // 三级联动，更新 manager和 grid
+    let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : '';
+    let managerId = getFieldValue('manager') ? getFieldValue('manager') - 0 : '';
+
+    if(departmentId > 0) {
+      this.getDepartments(departmentId, managerId);
+    }
+
+    setFieldsValue({
+      manager: undefined,
+      grid: undefined
     })
   }
 
@@ -194,7 +213,18 @@ class EditBriefBasicInfoForm extends Component{
       accountsArr
     } = this.props;
     const { getFieldDecorator, getFieldValue, getFieldsValue, setFieldsValue, validateFields} = this.props.form;
-    const { department, manager, grid } = this.props.briefInfo;
+    const {
+      department,
+      manager,
+      grid,
+      phone,
+      wechat,
+      certificate,
+      birth,
+      origin,
+      age,
+      address
+    } = this.props.briefInfo;
     const { departmentOptions, managerOptions, gridOptions } = this.state;
 
     const formItemLayout = {
@@ -267,7 +297,7 @@ class EditBriefBasicInfoForm extends Component{
 
     return (
       <Form id="editMyBase" className="basicInfolist">
-    {/*
+    {
       <Row className={mode === 'create' ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
           <Col span={7}>
             <FormItem labelCol={{span: 11}}
@@ -278,8 +308,8 @@ class EditBriefBasicInfoForm extends Component{
                   required: true,
                   message: '选择所属机构!'
                 }],
-                // initialValue: eachCustomerInfo.department,
-                onChange: this.selectBasicInfoChange
+                initialValue: department && department.value,
+                onChange: this.departmentChange
               })(
                 <Select
                   showSearch
@@ -301,6 +331,7 @@ class EditBriefBasicInfoForm extends Component{
                       wrapperCol={{span: 13}}
                       label="客户经理">
               {getFieldDecorator('manager', {
+                initialValue: manager && manager.value,
                 onChange: this.selectBasicInfoChange
               })(
                 <Select
@@ -323,6 +354,7 @@ class EditBriefBasicInfoForm extends Component{
                       wrapperCol={{span: 13}}
                       label="所属网格">
               {getFieldDecorator('grid', {
+                initialValue: grid && grid.value,
                 onChange: this.selectBasicInfoChange
               })(
                 <Select
@@ -340,8 +372,9 @@ class EditBriefBasicInfoForm extends Component{
             </FormItem>
           </Col>
       </Row>
-    */}
+    }
 
+      {
         <div className="personInfo">
           <Row>
             <Col span={12}>
@@ -352,17 +385,14 @@ class EditBriefBasicInfoForm extends Component{
               {AccountsRemark}
             </Col>
           </Row>
-        </div>
 
-      {/*
-        <div className="personInfo">
           <Row>
             <Col span={12} className={mode === 'create' ? "phoneCreate" : "phoneEdit"}>
               <FormItem labelCol={{span: 8}}
                         wrapperCol={{span: 15}}
                         label="手机号：">
                 {getFieldDecorator('phone', {
-                  // initialValue: eachCustomerInfo.phone,
+                  initialValue: phone && phone.value,
                   onChange: this.inputBasicInfoChange,
                   rules: [{
                     required: true,
@@ -397,7 +427,7 @@ class EditBriefBasicInfoForm extends Component{
                 className="certificate"
               >
                 {getFieldDecorator('certificate', {
-                  // initialValue: eachCustomerInfo.certificate,
+                  initialValue: certificate && certificate.value,
                   onChange: this.inputBasicInfoChange
                 })(
                   <Input />
@@ -410,7 +440,7 @@ class EditBriefBasicInfoForm extends Component{
                         wrapperCol={{span: 15}}
                         label="生日：">
                 {getFieldDecorator('birth', {
-                  // initialValue: moment(eachCustomerInfo.birth, dateFormat),
+                  initialValue: birth && birth.value,
                   onChange: this.selectBasicInfoChange
                 })(
                   <DatePicker
@@ -431,7 +461,7 @@ class EditBriefBasicInfoForm extends Component{
                 className="origin"
               >
                 {getFieldDecorator('origin', {
-                  // initialValue: [eachCustomerInfo.origin],
+                  initialValue: origin && origin.value,
                   onChange: this.inputBasicInfoChange
                 })(
                   <Input placeholder="请选择籍贯"/>
@@ -447,7 +477,7 @@ class EditBriefBasicInfoForm extends Component{
                 className="age"
               >
                 {getFieldDecorator('age', {
-                  // initialValue: eachCustomerInfo.age,
+                  initialValue: age && age.value,
                   onChange: this.inputBasicInfoChange
                 })(
                   <InputNumber placeholder="客户年龄"/>
@@ -465,7 +495,7 @@ class EditBriefBasicInfoForm extends Component{
                 className="address"
               >
                 {getFieldDecorator('address', {
-                  // initialValue: eachCustomerInfo.address,
+                  initialValue: address && address.value,
                   onChange: this.inputBasicInfoChange
                 })(
                   <Input placeholder="请输入家庭住址"/>
@@ -489,7 +519,7 @@ class EditBriefBasicInfoForm extends Component{
             </Col>
           </Row>
         </div>
-      */}
+      }
 
 
         <Row className="buttonSave">
@@ -510,7 +540,7 @@ class EditBriefBasicInfoForm extends Component{
 
 function mapPropsToFields (props) {
   const { briefInfo, accounts } = props;
-  console.log(accounts['row-0-accountNo'])
+  // console.log(accounts['row-0-accountNo'])
   return {
     ...accounts,
     ...briefInfo
@@ -518,11 +548,14 @@ function mapPropsToFields (props) {
 }
 
 function onFieldsChange(props, changedFields) {
-  props.onChange(changedFields);
+  console.log(changedFields);
+  // if(!changedFields['row-0-accountNo']) {
+    props.onChange(changedFields);
+  // }
 };
 
 function onValuesChange(props, values) {
-  // console.log(props)
+  console.log(props)
   // console.log(values)
 }
 
@@ -532,4 +565,5 @@ const EditBriefBasicInfo = Form.create({
   // onValuesChange
 })(EditBriefBasicInfoForm)
 
+// export default EditBriefBasicInfo;
 export default EditBriefBasicInfo;

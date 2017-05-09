@@ -40,6 +40,8 @@ import EditBriefBasicInfo from './widget/Form/EditBriefBasicInfo'
 import BasicInfoEdit from './widget/BasicInfoEdit'
 import AddCrewModal from '../PersonalBasicInfo/widget/AddCrewModal'
 
+let uuid = 0;
+
 class EnterpriseBasicInfo extends Component {
   state = {
     id: '',

@@ -31,8 +31,8 @@ export default class MyCustomer extends Component {
       size: 10,
       searchContent: '',
       customerType: [],
-      customerLevel: [],
-      riskLevel: []
+      level: [],
+      risk: []
     }
   }
 
@@ -151,8 +151,8 @@ export default class MyCustomer extends Component {
       loading: {$set: true},
       reqJson: {
         customerType: {$set: filters.customerType},
-        customerLevel: {$set: filters.customerLevel},
-        riskLevel: {$set: filters.riskLevel},
+        level: {$set: filters.customerLevel},
+        risk: {$set: filters.riskLevel},
         searchContent: {$set: search}
       }
     })
