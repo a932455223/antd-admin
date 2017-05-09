@@ -434,11 +434,11 @@ class AreaForm extends Component{
                 </Col>
               </Row>
 
-              <Row gutter={8}>
-                <Col span={9}>
+              <Row gutter="8">
+                <Col span={8}>
                   <FormItem
                     label={<span>地址</span>}
-                    labelCol={{span:14}}
+                    labelCol={{span:12}}
                     wrapperCol={{span:12}}
                   >
                     {Province}
@@ -492,7 +492,7 @@ class AreaForm extends Component{
             <Col span={24} >
               <Col span={4}>
               </Col>
-              <Button type="primary" disabled={!this.props.gridBeEdited} onClick={this.handleSubmit}>保存</Button>
+              <Button type="primary" disabled={!this.props.gridBeEdited} onClick={this.handleSubmit} className={this.props.gridBeEdited ? "ablesavebtn" : "disablesavebtn"}>保存</Button>
             </Col>
           </Row>
         </div>

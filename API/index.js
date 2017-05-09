@@ -175,7 +175,7 @@ export default {
   GET_STAFF_LEADERS: '/api/staff/leaders',
 
   //新增员工角色下拉
-  GET_ROLES : '/api/roles',
+  GET_STAFF_ADD_ROLES : '/api/staff/add/roles',
 
   // 员工业务信息
   GET_STAFF_BUSSINESS_INFO: id => `/api/staff/${id}/businessInfo`,
