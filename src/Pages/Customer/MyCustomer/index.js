@@ -23,7 +23,17 @@ export default class MyCustomer extends Component {
     customers: [],
     pagination: {},
     type: 0,
-    privilege: []
+    privilege: [],
+
+    reqJson: {
+      router: 'myAllCustomer',
+      index: 1,
+      size: 10,
+      searchContent: '',
+      customerType: [],
+      customerLevel: [],
+      riskLevel: []
+    }
   }
 
   initTableScroll = () => {
@@ -69,7 +79,7 @@ export default class MyCustomer extends Component {
       }
     })
 
-    this.getCustomers();
+    this.getCustomers(this.state.reqJson);
   }
 
   componentWillReceiveProps() {
@@ -79,54 +89,27 @@ export default class MyCustomer extends Component {
   // get customer lists
   getCustomers = (params) => {
     // 请求数据
-    let reqJson = {
-      router: 'myAllCustomer',
-      index: 1,
-      size: 10,
-      ...params
-    };
-
-    let newReqJson = {};
-    if(params && params.customerType && params.customerType.length !== 0) {
-      newReqJson = {
-        ...reqJson,
-        customerType: params.customerType
-      }
+    if(params && params.customerType && params.customerType.length === 0) {
+      delete params.customerType
     }
 
-    if(params && params.customerLevel && params.customerLevel.length !== 0) {
-      newReqJson = {
-        ...reqJson,
-        customerLevel: params.customerLevel
-      }
+    if(params && params.customerLevel && params.customerLevel.length === 0) {
+      delete params.customerLevel
     }
 
-    if(params && params.riskLevel && params.riskLevel.length !== 0) {
-      newReqJson = {
-        ...reqJson,
-        riskLevel: params.riskLevel
-      }
+    if(params.riskLevel && params.riskLevel.length === 0) {
+      delete params.riskLevel
     }
 
-    console.log(reqJson);
+    if(params.searchContent == '' || params.searchContent == undefined) {
+      console.log('12');
+      delete params.searchContent
+    }
 
-    // if(params && params.page) {
-    //   reqJson = {
-    //     router: 'myAllCustomer',
-    //     index: params.page,
-    //     size: 10
-    //   }
-    // } else {
-    //   reqJson = {
-    //     router: 'myAllCustomer',
-    //     index: 1,
-    //     size: 10,
-    //     // customerType: params && params.customerType && params.customerType[0].id || [11, 12],
-    //   }
-    // }
+    console.log(params);
 
     // 请求客户列表数据
-    ajax.Get(API.GET_CUSTOMERS, reqJson)
+    ajax.Get(API.GET_CUSTOMERS, params)
         .then((json) => {
 
           // 将数据存入私有的 state中
@@ -155,9 +138,32 @@ export default class MyCustomer extends Component {
     })
   }
 
-  filterCustomers = (filters) => {
-    // console.log(filters);
-    this.getCustomers(filters)
+  // 分页功能
+  pageChange = (pageNumber) => {
+    let newState = update(this.state, {
+      loading: {$set: true},
+      reqJson: {
+        index: {$set: pageNumber}
+      }
+    })
+
+    this.setState(newState)
+    this.getCustomers(newState.reqJson);
+  }
+
+  // 高级筛选
+  filterCustomers = (filters, search) => {
+    let newState = update(this.state, {
+      reqJson: {
+        customerType: {$set: filters.customerType},
+        customerLevel: {$set: filters.customerLevel},
+        riskLevel: {$set: filters.riskLevel},
+        searchCustomer: {$set: search}
+      }
+    })
+
+    this.setState(newState);
+    this.getCustomers(newState.reqJson)
   }
 
   // 关注客户／取消关注
@@ -168,8 +174,8 @@ export default class MyCustomer extends Component {
 
 
   render() {
-    const { customers, pagination, loading, columnsLists, privilege } = this.state;
-    // console.log(pagination)
+    const { customers, pagination, loading, columnsLists, privilege, reqJson } = this.state;
+    // console.log(reqJson)
 
     // 渲染 Table表格的表头数据
     const columns = [
@@ -240,14 +246,7 @@ export default class MyCustomer extends Component {
       pagination: pagination,
       loading: loading,
       privilege: privilege,
-      pageChange:(pageNumber) => {
-          this.setState({
-              ...this.state,
-              loading:true
-          })
-
-          this.getCustomers({page: pageNumber});
-      }
+      pageChange: this.pageChange
     };
     return (
       <div className="customer" id="customer">

@@ -28,7 +28,8 @@ class CustomerFilter extends Component {
       customerType: [],
       customerLevel: [],
       riskLevel: []
-    }
+    },
+    searchContent: ''
   };
 
   componentWillMount() {
@@ -81,7 +82,7 @@ class CustomerFilter extends Component {
         let index = filters.findIndex(item => item.id === tag.id)
         newState = update(this.state,{
           selectedTags:{[filterName]:{$splice:[[index,1]]}},
-          params:{[filterName]:{$push:[tag.id]}}
+          params:{[filterName]:{$splice:[[index,1]]}}
         })
     }
 
@@ -91,16 +92,27 @@ class CustomerFilter extends Component {
 
   handleClose = (filterName,removedTag) => {
     let index = this.state.selectedTags[filterName].findIndex(item =>item.id===removedTag.id)
-    let newState = update(this.state,{selectedTags:{[filterName]:{$splice:[[index,1]]}}})
+    let newState = update(this.state,{
+      selectedTags:{[filterName]: {$splice:[[index,1]]}},
+      params:{[filterName]: {$splice:[[index,1]]}}
+    })
     this.setState(newState)
-    // this.props.onChange(newState.selectedTags)
+    this.props.onChange(newState.params, newState.searchContent)
+  }
+
+  searchCustomer = (value) => {
+    let newState = update(this.state,{
+      searchContent: {$set: value}
+    })
+    this.setState(newState)
+    this.props.onChange(newState.params, newState.searchContent)
   }
 
 	render() {
     const pathname = window.location.pathname; // 获取当前路由参数
     const path = pathname.split('/')[2];
 
-		const { selectedTags, filters } = this.state;
+		const { selectedTags, filters, params } = this.state;
 
 		return (
       <div className={style.droplist} id="customerFilter">
@@ -156,7 +168,7 @@ class CustomerFilter extends Component {
             className={style.search}
       	    placeholder="请输入客户名称，手机号"
       	    style={{ width: 200 }}
-      	    onSearch={value => console.log(value)}
+      	    onSearch={this.searchCustomer}
       		/>
       	</div>
 
