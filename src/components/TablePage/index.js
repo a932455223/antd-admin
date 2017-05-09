@@ -314,8 +314,8 @@ class TablePage extends Component {
           </div>
         }
 
-        <header id="customerTableHeader">
-          {this.state.addCustomerPrivilege &&
+        {this.state.addCustomerPrivilege &&
+          <header id="customerTableHeader">
             <Button
               className="addNewCustomer"
               type="primary"
@@ -324,12 +324,12 @@ class TablePage extends Component {
               <Icon type="plus" />
               <span>新建客户</span>
             </Button>
-          }
-          <Button>
-            <Icon type="download" />
-            <span>导入客户</span>
-          </Button>
-        </header>
+            <Button>
+              <Icon type="download" />
+              <span>导入客户</span>
+            </Button>
+          </header>
+        }
 
         <Table {...tableProps} />
 
