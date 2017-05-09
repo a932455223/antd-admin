@@ -224,7 +224,7 @@ class addFinanceCard extends Component{
         addArea=
             (<Card  className="my-card my-add-card">
                 <i className="iconfont icon-create"   onClick={()=>{this.props.toggleAdd()}}></i>
-                <p>新建金融业务信息</p>
+                <p>新建线下业务</p>
             </Card>)
         }
         // const { getFieldDecorator } = this.props.form;

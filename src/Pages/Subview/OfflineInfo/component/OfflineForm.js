@@ -6,80 +6,64 @@ import {
   Icon,
   Input,
   Form,
-  Modal,
   Button,
   Select,
   DatePicker,
-  message,
   InputNumber
 } from 'antd';
-// import styles from './../indexStyle.less';
 import { connect } from 'react-redux';
-import api from './../../../../../API';
-import ajax from '../../../../tools/POSTF.js';
 import Reg from "../../../../tools/Reg"
-import update from 'immutability-helper';
 import moment from 'moment';
 const FormItem = Form.Item;
 const Option = Select.Option;
-
-class addFinanceCard extends Component{
+class financeForm extends Component{
+    state={
+        btnLoading:false
+    }
     constructor(props) {
         super(props);
     };
-    clickSavaBtn=()=>{
-        // let newState=update(
-        //     this.state,{btnLoading:{$set:true}}
-        // )
-        // this.setState(newState);
-        
-        this.props.form.validateFields()
-        let formErrors = this.props.form.getFieldsError()
-        let noError=true;
-        Object.keys(formErrors).reduce((pre,ky)=>{
-            if(!(formErrors[ky]===undefined)){
-                Modal.error({
-                    title:'情仔细填写表单',
-                });
-                noError=false;
-            }
-        })
-        if(noError){
-            this.props.toggleAddFinanceCardLoading();
-            this.props.postCustomersFinances(this.props.form.getFieldsValue())
-        }
-    }
-    clickCancelBtn=()=>{
-        this.props.toggleAdd()
-        this.props.resetAddCard();
-        
-    }
-    componentWillMount(){
-            
-            // console.log(this.props.item.certificate)
-            // console.log(this.props.item.id)
-            // console.log(this.props.item.name)
-            // console.log(this.props.item.relation)
+    componentWillMount() {
+        // console.log(this.props.item.phone.value);
+        // console.log(this.props.item)
+        // console.log(this)
     }
     componentWillReceiveProps(newProps){
-        // let newState=update(
-        //     this.state,{btnLoading:{$set:false}}
-        // )
-        // this.setState(newState);
-        // this.setState({btnLoading:false})
+        // console.log(this.props)
+        this.setState({btnLoading:false})
+        // this.props.toggleEdit(this.props.index)
     }
+    clickSavaBtn=()=>{
+        this.setState({btnLoading:true})
+        this.props.putCustomersFinances(this.props.id.value,this.props.form.getFieldsValue(),this.props.index)
+    }
+    clickCancelBtn=()=>{
+        this.props.cancelChangeValue();
+        this.props.toggleEdit(this.props.index);
+    }
+    // findDropDownItem(value,dropDownType){
+    //     console.log(value);
+    //     let dropDown='';
+    //     this.props[dropDownType].map((item)=>{
+    //         for(let prop in item) {
+    //             // console.log('prop:',prop,",item[prop]:"+item[prop])
+    //             if(item[prop]==value){
+    //                 dropDown=item;
+    //             }
+    //         }
+    //     })[0];
+    //     return(dropDown);
+    // }
     render(){
-        let addArea;
         const { getFieldDecorator } = this.props.form;
-        if(this.props.isAdd){
-        addArea=
-            
-            (<Form  className="my-form-card">
+        
+        return (
+            <Form  className="my-form-card">
                 <Card
                     title={
                         <div className="my-card-title">
                             <FormItem>
-                                {getFieldDecorator('financeCategory', {
+                                {getFieldDecorator('financeCategory',{
                                     rules: [{ required: true, message: '业务项目不能为空' }],
                                 })(
                                     <Select 
@@ -103,14 +87,14 @@ class addFinanceCard extends Component{
                             <Button
                                 className="cancel-btn"
                                 onClick={this.clickCancelBtn}
-                                loading={this.props.addFinanceCardLoading}
+                                loading={this.state.btnLoading}
                             >
                                 取消
                             </Button>
                             <Button
                                 className="save-btn"
                                 onClick={this.clickSavaBtn}
-                                loading={this.props.addFinanceCardLoading}
+                                loading={this.state.btnLoading}
                             >
                             
                                 保存
@@ -120,13 +104,13 @@ class addFinanceCard extends Component{
                 >
                 <Row>
                     <Col span={8}>
-                     业务机构名称
+                        业务机构名称：
                     </Col>
                     <Col span={16}>
                         <FormItem>
-                            {getFieldDecorator('org', {
-                                    rules: [{ required: true, message: '业务机构不能为空' }],
-                                })(
+                            {getFieldDecorator('org',{
+                                    rules: [{ required: true, message: '业务机构名称不能为空' }],
+                            })(
                                 <Select 
                                 >
                                         <Option 
@@ -146,7 +130,7 @@ class addFinanceCard extends Component{
                         </FormItem>
                     </Col>
                 </Row>
-               <Row>
+                <Row>
                     <Col span={8}>
                         业务额：
                     </Col>
@@ -171,71 +155,56 @@ class addFinanceCard extends Component{
                                     parser={value => value.replace('%', '')}
                                 />
                             )}
+
                         </FormItem>
                     </Col>
                 </Row>
-               <Row>
-                    <Col span={8}>
-                        购买日：
-                    </Col>
-                    <Col span={16}>
-                        <FormItem>
-                            {
-                                   getFieldDecorator('buyDate',{
-                                         initialValue:undefined
-
+                    <Row>
+                        <Col span={8}>
+                            购买日：
+                        </Col>
+                        <Col span={16}>
+                            <FormItem>
+                                {
+                                    getFieldDecorator('buyDate',{
+                                         initialValue:this.props.buyDate.value==undefined?undefined:this.props.buyDate.value.format('YYYY/MM/DD')
                                     })(
                                         <DatePicker
                                             getCalendarContainer={ () => document.getElementsByClassName('my-cards-page')[0]}
                                         />
                                     )
-                               
-                                
-                            }
-                        </FormItem>
-                    </Col>
-                </Row>
-                  <Row>
-                    <Col span={8}>
-                        到期日／销毁日：
-                    </Col>
-                    <Col span={16}>
-                        <FormItem>
-                            {
-                            
-                                getFieldDecorator('expireDate',{
-                                        initialValue:undefined
+                                    
+                                }
+                            </FormItem>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={8}>
+                            到期日／销毁日：
+                        </Col>
+                        <Col span={16}>
+                            <FormItem>
+                                {
+                                    getFieldDecorator('expireDate',{
+                                        initialValue:this.props.expireDate.value==undefined?undefined:this.props.expireDate.value
                                     })(
                                         <DatePicker
                                             getCalendarContainer={ () => document.getElementsByClassName('my-cards-page')[0]}
                                         />
-                                    )  
-                            }
-                        </FormItem>
-                    </Col>
-                </Row>
+                                    ) 
+                                }
+                            </FormItem>
+                        </Col>
+                    </Row>
                 </Card>
-                {/*<pre className="language-bash" style={{textAlign:'left'}}>
-                    {JSON.stringify(this.props, null, 2)}
-                </pre>*/}
-            </Form>)
-        }else{
-        //添加按钮 
-        addArea=
-            (<Card  className="my-card my-add-card">
-                <i className="iconfont icon-create"   onClick={()=>{this.props.toggleAdd()}}></i>
-                <p>新建金融业务信息</p>
-            </Card>)
-        }
-        // const { getFieldDecorator } = this.props.form;
-        return (
-            addArea
+
+            </Form>
         )
     }
 }
-const AddFinanceCard =Form.create({
+const FinanceForm = Form.create({
     onFieldsChange(props, changedFields) {
-        props.onAddChange(changedFields);
+        props.onChange(changedFields);
     },
     mapPropsToFields(props) {
         // console.log('map triggered.',props)
@@ -265,5 +234,6 @@ const AddFinanceCard =Form.create({
         // console.log(financeForm)
         // financeForm.setState({values,values})
     },
-})(addFinanceCard);
-export default AddFinanceCard;
+})(financeForm);
+
+export default FinanceForm;

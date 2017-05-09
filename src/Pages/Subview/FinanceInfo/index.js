@@ -25,7 +25,7 @@ class FinanceInfo extends Component {
   state = {
     isLoading:false,//是否正在加载
     isModify: [],//编辑状态
-    financeList:[],//家庭信息数组
+    financeList:[],
     financeCategoryDropdown:[],//金融业务信息产品下拉菜单
     addFinanceCardLoading:false,
     isAdd:false,
