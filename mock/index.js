@@ -535,7 +535,7 @@ module.exports = {
         "id": 6,
         "childs": null,
         "isLeaf": 1,
-        "name": "客户信息查看",
+        "name": "客户信息编辑",
         "needLevel": 1,
         "options": [{
           "id": 1,
@@ -553,7 +553,7 @@ module.exports = {
         "id": 7,
         "childs": null,
         "isLeaf": 1,
-        "name": "客户信息查看",
+        "name": "客户信息删除",
         "needLevel": 1,
         "options": [{
           "id": 1,
@@ -572,7 +572,7 @@ module.exports = {
     }, {
       "id": 2,
       "isLeaf": 0,
-      "name": "客户管理",
+      "name": "网格管理",
       "needLevel": null,
       "options": null,
       "pid": 0,
@@ -581,7 +581,7 @@ module.exports = {
         "childs": null,
         "id": 5,
         "isLeaf": 1,
-        "name": "客户信息查看",
+        "name": "网格信息查看",
         "needLevel": 1,
         "options": [{
           "id": 1,
