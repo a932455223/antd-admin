@@ -409,10 +409,11 @@ class EnterpriseBasicInfo extends Component {
     // 如果 id不存在，则调用创建用户接口
     if(id === -1) {
       ajax.PostJson(API.POST_CUSTOMER_ENTERPRISE_BASE, json).then((res) => {
-        if(res.message === 'OK') {
+        if(res.code === 200) {
           message.success('创建用户成功');
           this.props.createCustomerSuccess(res.data);
           this.props.decreaseBeEditArray('enterpriseBasicInfo');
+          this.props.refreshCustomerLists(); // 实时刷新
         } else {
           message.error(res.message);
         }
@@ -422,6 +423,7 @@ class EnterpriseBasicInfo extends Component {
         if(res.code === 200) {
           message.success('编辑用户成功');
           this.props.decreaseBeEditArray('enterpriseBasicInfo');
+          this.props.refreshCustomerLists(); // 实时刷新
         } else {
           message.error(res.message);
         }
