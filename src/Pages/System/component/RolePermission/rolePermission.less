@@ -35,14 +35,29 @@
       display: flex;
       justify-content: space-between;
       p{
-       font-size: 16px;
+       font-size: 18px;
       }
       .btnbox{
+        overflow: hidden;
         i{
           font-size: 20px;
+          float: left;
+          margin-top: 17px;
         }
         button{
-          margin-right: 10px;
+          float: left;
+          margin-right: 15px;
+          margin-top: 12px;
+          &:nth-child(2){
+            &:hover{
+              background:#4b5bb8;
+             };
+            background: #5d6dbe;
+            border:1px solid #5d6dbe;
+            span{
+              color: #fff;
+            }
+          };
         }
       }
     }
@@ -63,12 +78,18 @@
       left: 50%;
       margin-left: -28px;
       &:nth-child(1){
-       top: 50%;
-       margin-top: -80px;
+       top: 160px;
+       background:#5d6dbe;
+       border:1px solid #5d6dbe;
+       &:hover{
+        background:#4b5bb8;
+       };
+       i{
+        color: #fff;
+       } 
       }
       &:nth-child(2){
-       top: 50%;
-       margin-top: -43px;
+        top: 200px;
       }
     } 
   }
