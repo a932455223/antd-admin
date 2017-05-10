@@ -29,6 +29,7 @@ class TablePage extends Component {
     dockContent: 'CustomerSlider',
     CustomerSlider: '', // 异步加载组件
     BatchParticipate: '',
+    ImportCustomers: '',
 
     currentCustomer: {},
     currentId: '', // 当前用户的 id
@@ -51,9 +52,11 @@ class TablePage extends Component {
     require.ensure([],() => {
       let CustomerSlider = require('../../Pages/Subview/CustomerSlider').default;
       let BatchParticipate = require('./widget/BatchParticipate').default;
+      let ImportCustomers = require('./widget/ImportCustomers').default;
       this.setState({
         CustomerSlider: CustomerSlider,
-        BatchParticipate: BatchParticipate
+        BatchParticipate: BatchParticipate,
+        ImportCustomers: ImportCustomers
       })
     }, 'CustomerSlider');
 
@@ -223,6 +226,19 @@ class TablePage extends Component {
     message.success('关注成功');
   }
 
+  // Import Customers
+  importCustomersLists = () => {
+    // 判断 dock是否显示，若未显示，则弹出 slider
+    let newState = {
+      dockContent: 'ImportCustomers',
+    }
+
+    if(!this.state.dockVisible ) {
+      newState.dockVisible = true;
+    }
+    this.setState(newState);
+  }
+
   render(){
     const { columns, dataSource, loading, pagination, refreshCustomerLists } = this.props;
 
@@ -290,6 +306,10 @@ class TablePage extends Component {
       closeDock: this.closeDock
     }
 
+    const importCustomersProps = {
+      closeDock: this.closeDock
+    }
+
     return (
       <div className="tablepage" id="tablePage">
         <Modal
@@ -324,7 +344,7 @@ class TablePage extends Component {
               <Icon type="plus" />
               <span>新建客户</span>
             </Button>
-            <Button>
+            <Button onClick={this.importCustomersLists}>
               <Icon type="download" />
               <span>导入客户</span>
             </Button>
@@ -342,6 +362,9 @@ class TablePage extends Component {
             }
             {this.state.dockContent === 'BatchParticipate' && this.state.BatchParticipate &&
               <this.state.BatchParticipate {...batchProps}/>
+            }
+            {this.state.dockContent === 'ImportCustomers' && this.state.ImportCustomers &&
+              <this.state.ImportCustomers {...importCustomersProps}/>
             }
           </Dock>
         </div>
