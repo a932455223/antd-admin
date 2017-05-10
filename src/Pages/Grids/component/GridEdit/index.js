@@ -80,7 +80,7 @@ class GridEdit extends Component {
     const {id } = this.props;
     const forms =  <div>
       <AreaForm getTableData={this.props.getTableData} area={this.state.area} onChange={this.handleFormChange} close={this.props.close} orgNameDropDown={this.state.orgNameDropDown} id={id}/>
-      <div>
+      <div className="recordhistory">
         <h1>操作记录</h1>
         <div className="recordbox">
           <div className="history">

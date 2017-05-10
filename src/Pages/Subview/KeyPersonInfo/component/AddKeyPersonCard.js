@@ -6,7 +6,8 @@ import {
   Icon,
   Input,
   Form,
-  Select
+  Select,
+  Button
 } from 'antd';
 import { connect } from 'react-redux';
 import api from './../../../../../API';
@@ -14,27 +15,21 @@ import ajax from '../../../../tools/POSTF.js';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-class addFamilyCard extends Component{
-    state = {
-        isAdd:false
-    }
+class addKeyPersonCard extends Component{
     
     constructor(props) {
         super(props);
     };
-    //添加状态切换
-    toggleAdd = () => {
-        this.setState({
-        isAdd:!this.state.isAdd
-        });
-    }
+    
     clickSavaBtn=()=>{
+        this.props.toggleIsAddCardLoading();
         this.props.addKeyPersonValue(this.props.form.getFieldsValue())
-        this.toggleAdd()
-        this.props.resetAddCard();
+        // this.toggleAdd()
+        // this.props.resetAddCard();
     }
     clickCancelBtn=()=>{
-        this.toggleAdd()
+        // this.toggleAdd()
+        this.props.toggleAdd();
         this.props.resetAddCard();
     }
     componentWillMount(){
@@ -47,9 +42,8 @@ class addFamilyCard extends Component{
     render(){
         let addArea;
         const { getFieldDecorator } = this.props.form;
-        if(this.state.isAdd){
+        if(this.props.isAdd){
         addArea=
-            
             (<Form  className="my-form-card">
                 <Card
                     title={
@@ -59,19 +53,21 @@ class addFamilyCard extends Component{
                                     rules: [{ required: true, message: '姓名不能为空' }],
                                 })(<Input />)}
                             </FormItem>
-                            <span
+                            <Button
                                 className="cancel-btn"
                                 onClick={this.clickCancelBtn}
+                                loading={this.props.isAddCardLoading}
                             >
                                 取消
-                            </span>
-                            <span
+                            </Button>
+                            <Button
                                 className="save-btn"
                                 onClick={this.clickSavaBtn}
+                                loading={this.props.isAddCardLoading}
                             >
                             
                                 保存
-                            </span>
+                            </Button>
                         </div>
                     }
                 >
@@ -107,7 +103,7 @@ class addFamilyCard extends Component{
         //添加按钮
         addArea=
             (<Card  className="my-card my-add-card">
-                <i className="iconfont icon-create"   onClick={()=>{this.toggleAdd()}}></i>
+                <i className="iconfont icon-create"   onClick={()=>{this.props.toggleAdd()}}></i>
                 <p>新建家庭关系</p>
             </Card>)
         }
@@ -117,7 +113,7 @@ class addFamilyCard extends Component{
         )
     }
 }
-const AddFamilyCard =Form.create({
+const AddKeyPersonCard  =Form.create({
     onFieldsChange(props, changedFields) {
         props.onAddChange(changedFields);
     },
@@ -140,5 +136,5 @@ const AddFamilyCard =Form.create({
         // console.log(familyForm)
         // familyForm.setState({values,values})
     },
-})(addFamilyCard);
-export default AddFamilyCard;
+})(addKeyPersonCard);
+export default AddKeyPersonCard ;

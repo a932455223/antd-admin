@@ -6,7 +6,8 @@ import {
   Icon,
   Input,
   Form,
-  Select
+  Select,
+  Popconfirm
 } from 'antd';
 import { connect } from 'react-redux';
 import api from './../../../../../API';
@@ -27,7 +28,7 @@ export default class familyCard extends Component{
     //    console.log(this.props.commonJobCategory);
     }
     findDropDownItem(value,dropDownType){
-        console.log(value);
+        // console.log(value);
         let dropDown='';
         this.props[dropDownType].map((item)=>{
             for(let prop in item) {
@@ -38,6 +39,9 @@ export default class familyCard extends Component{
             }
         })[0];
         return(dropDown);
+    }
+    confirm=()=>{
+        this.props.deleteFamilyValue(this.props.item.id.value);
     }
     render(){
         return (
@@ -53,11 +57,12 @@ export default class familyCard extends Component{
                             <i className="iconfont icon-edit"></i>编辑
                         </span>
 
-                        <span
-                            onClick={()=>{this.props.deleteFamilyValue(this.props.item.id.value)}}
-                        >
+                       
+                        <Popconfirm placement="bottomRight" title={'是否删除？'} onConfirm={this.confirm} okText="删除" cancelText="取消">
                             <i className="iconfont icon-delete"></i>删除
-                        </span>
+                        </Popconfirm>
+
+
                     </div>
                 }
                 >

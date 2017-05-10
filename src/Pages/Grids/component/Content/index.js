@@ -60,9 +60,11 @@ export default class Content extends Component{
             scroll={{y: 300}}
           />
         </Card>
-        <Dock {...dockConfig} {...this.props.dockConf}>
+        <Dock {...dockConfig} {...this.props.dockConf} className="dockboxcontainer">
+        <div className="dockboxcontainer">
           <div className="dock-container">
             {this.props.dockConf.children}
+          </div>
           </div>
         </Dock>
       </div>
