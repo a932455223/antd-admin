@@ -13,7 +13,7 @@
     justify-content: space-between;
     align-items: center;
 
-    padding: 5px 0;
+    padding: 13px 0;
 
     border-bottom: 1px solid #e1e2e4;
 
@@ -24,6 +24,30 @@
     i {
       font-size: 24px;
       cursor: pointer;
+    }
+  }
+
+  .importCustomersContent {
+    display: flex;
+    flex-flow: column;
+    min-height: calc(100vh-20px);
+
+    >p {
+      margin-top: 20px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .dragger {
+      // display: flex;
+      // flex-direction: column-reverse;
+      // flex: 1;
+      margin-top: 40px;
+      text-align: center;
+
+      .ant-upload-drag-container {
+        padding: 60px 0;
+      }
     }
   }
 }

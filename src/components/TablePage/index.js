@@ -269,6 +269,16 @@ class TablePage extends Component {
     message.success('关注成功');
   }
 
+  // 批量关注
+  batchUnfocus = () => {
+    message.success('取关成功');
+  }
+
+  // 批量关注
+  batchTrans = () => {
+    message.success('转移成功');
+  }
+
   // Import Customers
   importCustomersLists = () => {
     // 判断 dock是否显示，若未显示，则弹出 slider
@@ -367,15 +377,32 @@ class TablePage extends Component {
         </Modal>
 
         {this.state.batchProcessing &&
-          <div
+          <ul
             className={this.state.batchProcessing ? "batchProcessing batchProcessingActive" : "batchProcessing"}
           >
-            <Button onClick={this.batchFocus}>批量关注</Button>
-            <Button onClick={this.batchParticipate}>批量参与</Button>
-            <Button>批量提醒</Button>
-            <Button>取消关注</Button>
-            <Button>批量转移</Button>
-          </div>
+            <p>
+              <Icon type=""/>
+              <span>已选</span>
+              <span className="counter">13</span>
+              <span>位客户</span>
+            </p>
+            <li onClick={this.batchFocus}>
+              <Icon type=""/>
+              <span>批量关注</span>
+            </li>
+            <li onClick={this.batchParticipate}>
+              <Icon type=""/>
+              <span>批量参与</span>
+            </li>
+            <li onClick={this.batchUnfocus}>
+              <Icon type=""/>
+              <span>取消关注</span>
+            </li>
+            <li  onClick={this.batchTrans}>
+              <Icon type=""/>
+              <span>批量转移</span>
+            </li>
+          </ul>
         }
 
         {this.state.addCustomerPrivilege &&

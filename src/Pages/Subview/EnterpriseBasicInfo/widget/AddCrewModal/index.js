@@ -249,7 +249,7 @@ export default class AddCrewModal extends Component {
                       {tree}
                     </TabPane>
                     <TabPane tab={<span>群组</span>} key="2">
-                      Tab 2
+                      大同市分行
                     </TabPane>
                   </Tabs>
                 </div>
