@@ -209,9 +209,9 @@ class BasicInfo extends Component {
     const { id, beEditedArray } = this.props.currentCustomerInfo;
     if(id !== next.currentCustomerInfo.id ||
       (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) ) {
-      // console.log('get info');
-      this.getBaseInfo(next.currentCustomerInfo.id);
-      // this.resetAccounts();
+      console.log('get info');
+      let newState = this.getBaseInfo(next.currentCustomerInfo.id);
+      this.resetAccounts();
     }
 
     // 重置 joinersBeEdited
@@ -220,6 +220,24 @@ class BasicInfo extends Component {
         joinersBeEdited: false
       })
     }
+  }
+
+  // reset accounts
+  resetAccounts = (state) => {
+    let st = state || this.state;
+    const { originAccounts, originAccountsArr } = st;
+    let newAccounts = _.cloneDeep(originAccounts);
+    let newAccountsArr = _.cloneDeep(originAccountsArr);
+
+    console.log(originAccounts['row-0-accountNo']);
+
+    let newState = update(this.state, {
+      accounts: {$set: newAccounts},
+      accountsArr: {$set: newAccountsArr}
+    })
+
+    this.setState(newState);
+    return newState
   }
 
   // 获取客户基本信息
@@ -271,6 +289,8 @@ class BasicInfo extends Component {
         let accountsObj = _.cloneDeep(originAccountsObj);
         let accountsArr = _.cloneDeep(originAccountsArr);
 
+        console.log(originAccountsObj['row-0-accountNo']);
+
         // 更新 briefInfo, detailsInfo, eachCustomerInfo
         let newJoiners = _.cloneDeep(res.data.data.joiners);
 
@@ -278,7 +298,7 @@ class BasicInfo extends Component {
           id: {$set: res.data.data.id},
 
           accounts: {$set: accountsObj},
-          originAccounts: {$set: originAccounts},
+          originAccounts: {$set: originAccountsObj},
           originAccountsArr: {$set: originAccountsArr.length !== 0 ? originAccountsArr : ['row-0']},
           accountsArr: {$set: accountsArr.length !== 0 ? accountsArr : ['row-0']},
 
@@ -355,6 +375,7 @@ class BasicInfo extends Component {
           eachCustomerInfo: {$set: res.data.data}
         });
         this.setState(newState);
+        return newState;
       })
     }
   }
@@ -636,6 +657,8 @@ class BasicInfo extends Component {
       originAccountsArr,
       originAccounts
     } = this.state;
+    console.log(accounts['row-0-accountNo']);
+    console.log(originAccounts['row-0-accountNo']);
 
     const modal = {
       // modal
@@ -657,7 +680,6 @@ class BasicInfo extends Component {
       briefInfo: briefInfo,
       detailsInfo: detailsInfo,
 
-      id: id,
       beEditedArray: beEditedArray,
       increaseBeEditArray: increaseBeEditArray,
       decreaseBeEditArray: decreaseBeEditArray,
@@ -707,6 +729,7 @@ class BasicInfo extends Component {
             <div>
               <AddCrewModal key={id} {...modal}/>
               <EditBriefBasicInfo
+                key={this.state.eachCustomerInfo ? 'edit'+this.state.eachCustomerInfo.id.toString():'-1'}
                 {...basicInfoProps}
               />
               <EditDetailsBasicInfo
