@@ -5,13 +5,16 @@ import React,{Component} from 'react';
 import { Card ,Tree,Button,Icon,Select,message} from 'antd'
 import ajax from '../../../../tools/POSTF'
 import API from '../../../../../API/index'
-import cloneDeep from 'lodash/cloneDeep'
+import _ from 'lodash'
+
 const TreeNode = Tree.TreeNode;
 const Option = Select.Option
 import './rolePermission.less'
 // let Permission = <h1 onClick={this.props.mode === 'edit' ? this.props.backRoleEdit : this.props.close}>角色权限分配</h1>
 
-
+function info(msg,color='red'){
+  console.log('%c'+msg,'color:'+color)
+}
 const generateSelect = nodes => nodes.map((item)=>{
   return
   <Select defaultValue={item[0].id.toString()}>
@@ -31,20 +34,36 @@ const generateTree = (nodes,parentId,showOptions) => nodes.map((item) =>{
   return <TreeNode key={pid} title={<span>{item.name} &nbsp;{showOptions ? generateSelect(item.options):'['+item.options[0].name+']'}</span>} />
 })
 
-function deleteTreeNode(nodes,deleteIds){
-  console.dir(nodes)
+function deleteTreeNode(node,deleteIds){
+  console.dir(node)
   console.dir(deleteIds)
 
   deleteIds.forEach(function(deleteId){
     let pathIds = deleteId.split('-')
     let len = pathIds.length
-    let currentNodes = nodes
+    let currentNode = node
+    let parentNode = node
 
     for(let i=0;i<len;i++){
-      // currentNodes = currentNodes.find(item => item.id == pathIds[i])
+      console.dir(currentNode)
+      currentNode = currentNode.childs.find(item => item.id == pathIds[i])
+
+      if(currentNode === undefined){//最后
+        info('break:'+deleteId)
+        break;
+      }
+
+      if(i===len-1){
+        info('remove:'+deleteId)
+        console.dir(parentNode,currentNode)
+        _.remove(parentNode.childs,item => item.id === currentNode.id)
+      }
+      parentNode = currentNode
       // console.dir(currentNodes)
     }
   })
+
+  return node
 }
 
 
@@ -65,9 +84,7 @@ export default class  RolePermission extends Component{
 
   getAllPrivilige = () => {
     ajax.Get(API.GET_ALL_RPIVILIGE).then((res) => {
-      let index = res.data.data.childs[0].childs.findIndex(item => item.id===3)
-      res.data.data.childs[0].childs.splice(index,1)
-      this.setState({leftPrivilege:res.data.data.childs,leftOriginPrivilege:res.data.data.childs})
+      this.setState({leftPrivilege:res.data.data,leftOriginPrivilege:res.data.data})
     })
   }
 
@@ -75,8 +92,12 @@ export default class  RolePermission extends Component{
     if(this.state.leftCheckedKeys.length === 0){
       message.info("没有选中任何节点")
     }else{
-      let leftCheckedKeys = cloneDeep(this.state.leftCheckedKeys).sort((pre,next)=>pre.split('-').length - next.split('-').length)
-      deleteTreeNode(this.state.leftPrivilege,leftCheckedKeys);
+      let leftCheckedKeys = _.cloneDeep(this.state.leftCheckedKeys).sort((pre,next)=>pre.split('-').length - next.split('-').length)
+      let newLeftPrivilege = deleteTreeNode(_.cloneDeep(this.state.leftPrivilege),leftCheckedKeys);
+      this.setState({
+        leftPrivilege:newLeftPrivilege,
+        leftCheckedKeys:[]
+      })
     }
   }
 
@@ -96,7 +117,7 @@ export default class  RolePermission extends Component{
 
   render(){
 
-    const leftTree = this.state.leftPrivilege.length > 0 ? <Tree
+    const leftTree = this.state.leftPrivilege.id !==undefined ? <Tree
       checkable
       defaultExpandAll={true}
       onExpand={this.onExpand}
@@ -104,7 +125,7 @@ export default class  RolePermission extends Component{
       onCheck={this.onCheck} checkedKeys={this.state.leftCheckedKeys}
       onSelect={this.onSelect} selectedKeys={this.state.selectedKeys}
     >
-      {generateTree(this.state.leftPrivilege,'0',false)}
+      {generateTree(this.state.leftPrivilege.childs,'0',false)}
     </Tree>:null
 
     return (
