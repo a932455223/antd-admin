@@ -273,8 +273,10 @@ class CompanyBasicInfo extends Component{
         {getFieldDecorator(`${k}-accountNo`, {
           rules: [{
             required: true,
+            message: '请填写账户号码'
           },{
-            pattern: /^\d+$/
+            pattern: /^\d+$/,
+            message: '账户只能为数字'
           }],
           initialValue: accounts[`${k}-accountNo`] && accounts[`${k}-accountNo`].value,
           // validateTrigger: ['onChange', 'onBlur'],
@@ -304,7 +306,7 @@ class CompanyBasicInfo extends Component{
                       showSearch
                       placeholder="选择所属机构"
                       optionFilterProp="children"
-                      filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                      filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
                       getPopupContainer={() => document.getElementById('editMyBase')}
                     >
                       {departmentOptions && departmentOptions.map(departmentItem =>
@@ -327,7 +329,7 @@ class CompanyBasicInfo extends Component{
                     showSearch
                     placeholder="选择客户经理"
                     optionFilterProp="children"
-                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
                     getPopupContainer={() => document.getElementById('editMyBase')}
                   >
                     {managerOptions && managerOptions.map(managerItem =>
@@ -350,9 +352,8 @@ class CompanyBasicInfo extends Component{
                     showSearch
                     placeholder="选择所属网格"
                     optionFilterProp="children"
-                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
                     getPopupContainer={() => document.getElementById('editMyBase')}
-
                   >
                     {gridOptions && gridOptions.map(gridItem =>
                       <Option key={gridItem.id} value={gridItem.id + ''}>{gridItem.name}</Option>
@@ -438,9 +439,12 @@ class CompanyBasicInfo extends Component{
                     initialValue: eachCompanyInfo.yearIncome && eachCompanyInfo.yearIncome.value,
                     onChange: this.inputBasicInfoChange,
                     rules: [{
-                    required: true,
-                    message: '请填写年营业额'
-                  }]
+                      required: true,
+                      message: '请填写年营业额'
+                    },{
+                      pattern: /^\d+$/,
+                      message: '营业额只能为数字'
+                    }]
                   })(
                     <Input />
                   )}
@@ -456,9 +460,9 @@ class CompanyBasicInfo extends Component{
                     initialValue: eachCompanyInfo.legalPerson && eachCompanyInfo.legalPerson.value,
                     onChange: this.inputBasicInfoChange,
                     rules: [{
-                    required: true,
-                    message: '请填写法人法名'
-                  }]
+                      required: true,
+                      message: '请填写法人法名'
+                    }]
                   })(
                     <Input />
                   )}
@@ -473,9 +477,9 @@ class CompanyBasicInfo extends Component{
                     initialValue: eachCompanyInfo.telephone && eachCompanyInfo.telephone.value,
                     onChange: this.inputBasicInfoChange,
                     rules: [{
-                    required: true,
-                    message: '请填写企业电话'
-                  }]
+                      required: true,
+                      message: '请填写企业电话'
+                    }]
                   })(
                     <Input />
                   )}
@@ -491,9 +495,12 @@ class CompanyBasicInfo extends Component{
                     initialValue: eachCompanyInfo.staffCount && eachCompanyInfo.staffCount.value,
                     onChange: this.inputBasicInfoChange,
                     rules: [{
-                    required: true,
-                    message: '请填写员工人数'
-                  }]
+                      required: true,
+                      message: '请填写员工人数'
+                    },{
+                      pattern: /^\d+$/,
+                      message: '员工人数只能为数字'
+                    }]
                   })(
                     <Input />
                   )}
@@ -508,9 +515,12 @@ class CompanyBasicInfo extends Component{
                     initialValue: eachCompanyInfo.avgSalary && eachCompanyInfo.avgSalary.value,
                     onChange: this.inputBasicInfoChange,
                     rules: [{
-                    required: true,
-                    message: '请填写平均工资'
-                  }]
+                      required: true,
+                      message: '请填写平均工资'
+                    },{
+                      pattern: /^\d+$/,
+                      message: '平均工资只能为数字'
+                    }]
                   })(
                     <Input />
                   )}
@@ -527,9 +537,9 @@ class CompanyBasicInfo extends Component{
                     initialValue: eachCompanyInfo.addressCode && eachCompanyInfo.addressCode.value,
                     onChange: this.inputBasicInfoChange,
                     rules: [{
-                    required: true,
-                    message: '请填写企业住址'
-                  }]
+                      required: true,
+                      message: '请填写企业住址'
+                    }]
                   })(
                     <Input />
                   )}

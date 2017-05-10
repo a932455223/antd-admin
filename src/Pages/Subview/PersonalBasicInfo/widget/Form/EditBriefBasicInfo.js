@@ -17,6 +17,7 @@ import {
 import { connect } from 'react-redux';
 import API from '../../../../../../API';
 import ajax from '../../../../../tools/POSTF';
+import Reg from '../../../../../tools/Reg';
 const FormItem = Form.Item;
 const Option = Select.Option;
 let addkey = 100;
@@ -33,15 +34,15 @@ class EditBriefBasicInfoForm extends Component{
   }
 
   componentWillMount(){
-    console.log('EditBriefBasicInfoForm will mount');
+    // console.log('EditBriefBasicInfoForm will mount');
     this.getDepartments(1, 1);
   }
 
 
   componentWillReceiveProps(next) {
-    console.log('EditBriefBasicInfoForm will recieve props');
+    // console.log('EditBriefBasicInfoForm will recieve props');
     const { getFieldValue } = next.form;
-    
+
     // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
     if(next.joinersBeEdited && !next.beEditedArray.includes('basicInfo')) {
       this.props.increaseBeEditArray('basicInfo');
@@ -283,9 +284,13 @@ class EditBriefBasicInfoForm extends Component{
       >
         {getFieldDecorator(`${k}-accountNo`, {
           rules: [{
+            required: true,
+            message: '请填写账户号码'
+          },{
             pattern: /^\d+$/,
             message: '账户只能为数字'
           }],
+          // validateTrigger: 'onBlur',
           initialValue: accounts[`${k}-accountNo`] && accounts[`${k}-accountNo`].value,
           // validateTrigger: ['onChange', 'onBlur'],
           onChange: this.inputBasicInfoChange
@@ -315,7 +320,7 @@ class EditBriefBasicInfoForm extends Component{
                   showSearch
                   placeholder="选择所属机构"
                   optionFilterProp="children"
-                  filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
                   getPopupContainer={() => document.getElementById('editMyBase')}
                 >
                   {departmentOptions && departmentOptions.map(departmentItem =>
@@ -338,7 +343,7 @@ class EditBriefBasicInfoForm extends Component{
                   showSearch
                   placeholder="选择客户经理"
                   optionFilterProp="children"
-                  filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
                   getPopupContainer={() => document.getElementById('editMyBase')}
                 >
                   {managerOptions && managerOptions.map(managerItem =>
@@ -361,7 +366,7 @@ class EditBriefBasicInfoForm extends Component{
                   showSearch
                   placeholder="选择所属网格"
                   optionFilterProp="children"
-                  filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
                   getPopupContainer={() => document.getElementById('editMyBase')}
                 >
                   {gridOptions && gridOptions.map(gridItem =>
@@ -397,6 +402,9 @@ class EditBriefBasicInfoForm extends Component{
                   rules: [{
                     required: true,
                     message: '请填写手机号'
+                  },{
+                    pattern: Reg.mobile,
+                    message: '手机号格式有误'
                   }],
                 })(
                   <Input />
@@ -409,7 +417,7 @@ class EditBriefBasicInfoForm extends Component{
                         wrapperCol={{span: 15}}
                         label="微信号：">
                 {getFieldDecorator('wechat', {
-                  // initialValue: eachCustomerInfo.wechat,
+                  initialValue: wechat && wechat.value,
                   onChange: this.inputBasicInfoChange
                 })(
                   <Input />
@@ -427,6 +435,10 @@ class EditBriefBasicInfoForm extends Component{
                 className="certificate"
               >
                 {getFieldDecorator('certificate', {
+                  rules: [{
+                    pattern: Reg.certificate,
+                    message: '身份证格式有误'
+                  }],
                   initialValue: certificate && certificate.value,
                   onChange: this.inputBasicInfoChange
                 })(
@@ -477,10 +489,11 @@ class EditBriefBasicInfoForm extends Component{
                 className="age"
               >
                 {getFieldDecorator('age', {
-                  initialValue: age && age.value,
-                  onChange: this.inputBasicInfoChange
+                  // initialValue: age && age.value,
+                  // onChange: this.inputBasicInfoChange
                 })(
-                  <InputNumber placeholder="客户年龄"/>
+                  // <InputNumber placeholder="客户年龄"/>
+                  <span>{age && age.value}</span>
                 )}
               </FormItem>
             </Col>

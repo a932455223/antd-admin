@@ -11,7 +11,8 @@ import {
   Tag,
   Select,
   DatePicker,
-  Cascader
+  Cascader,
+  message
 } from 'antd';
 import moment from 'moment';
 const FormItem = Form.Item;
@@ -19,6 +20,7 @@ const Option = Select.Option;
 
 import API from '../../../../../../API';
 import ajax from '../../../../../tools/POSTF';
+import Reg from '../../../../../tools/Reg';
 
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -149,6 +151,10 @@ class EditDetailsBasicInfoForm extends Component{
                 className="yearIncome"
               >
                 {getFieldDecorator('yearIncome', {
+                  rules: [{
+                    pattern: /^\d+$/,
+                    message: '账户只能为数字'
+                  }],
                   // initialValue: eachCustomerInfo.yearIncome,
                   onChange: this.inputDetailsInfoChange
                 })(
@@ -165,6 +171,10 @@ class EditDetailsBasicInfoForm extends Component{
                 className="yearExpense"
               >
                 {getFieldDecorator('yearExpense', {
+                  rules: [{
+                    pattern: /^\d+$/,
+                    message: '账户只能为数字'
+                  }],
                   // initialValue: eachCustomerInfo.yearExpense,
                   onChange: this.inputDetailsInfoChange
                 })(

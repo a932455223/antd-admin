@@ -257,11 +257,9 @@ class TablePage extends Component {
   batchParticipate = () => {
     const { dispatch } = this.props;
     dispatch(resetCustomerInfo());
-    const batchProps = {
-      closeDock: this.closeDock
-    }
+
     this.setState({
-      dockContent: <this.state.BatchParticipate {...batchProps}/>,
+      dockContent: this.state.BatchParticipate,
       dockVisible: true
     })
   }
@@ -275,7 +273,7 @@ class TablePage extends Component {
   importCustomersLists = () => {
     // 判断 dock是否显示，若未显示，则弹出 slider
     let newState = {
-      dockContent: 'ImportCustomers',
+      dockContent: this.state.ImportCustomers,
     }
 
     if(!this.state.dockVisible ) {
@@ -404,7 +402,11 @@ class TablePage extends Component {
         <div className="slider">
           <Dock {...dockProps}>
             {this.state.dockContent !== '' &&
-              <this.state.dockContent {...sliderProps}/>
+              <this.state.dockContent
+                {...batchProps}
+                {...sliderProps}
+                {...importCustomersProps}
+              />
             }
           </Dock>
         </div>

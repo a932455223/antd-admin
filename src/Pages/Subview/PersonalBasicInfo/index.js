@@ -154,7 +154,7 @@ class BasicInfo extends Component {
   }
 
   componentWillMount(){
-    info('basicInfo will mount');
+    // info('basicInfo will mount');
     this.getBaseInfo(this.props.currentCustomerInfo.id);
 
     ajax.all([
@@ -204,7 +204,7 @@ class BasicInfo extends Component {
   }
 
   componentWillReceiveProps(next){
-    info('personalBasicInfo will receive props.');
+    // info('personalBasicInfo will receive props.');
     // 当前的客户 id发生变化时，或者当前用户的信息 beEditedNumber === true时，重置 state
     const { id, beEditedArray } = this.props.currentCustomerInfo;
     if(id !== next.currentCustomerInfo.id ||
@@ -483,94 +483,94 @@ class BasicInfo extends Component {
   }
 
   // 表单数据的双向绑定
-  // handleFormChange = (changedFields) => {
-  //   console.log(changedFields);
-  //   const { beEditedNumber } = this.props.currentCustomerInfo;
-  //   let oldDepartment = this.state.briefInfo.department.value;
-  //   let newDepartment = changedFields.department && changedFields.department.value;
-  //
-  //   // 所属机构，客户经理，所属网格三级联动
-  //   let briefInfo;
-  //   if(changedFields.department && oldDepartment !== newDepartment) {
-  //     briefInfo = {
-  //       ...this.state.briefInfo,
-  //       ...changedFields,
-  //       ...{manager: {
-  //         value: undefined
-  //       }},
-  //       ...{grid: {
-  //         value: undefined
-  //       }}
-  //     }
-  //
-  //     // console.dir(briefInfo.manager)
-  //   } else {
-  //     briefInfo = {
-  //       ...this.state.briefInfo,
-  //       ...changedFields
-  //     }
-  //   }
-  //
-  //   // console.dir(briefInfo.manager);
-  //   let oldWithCar = this.state.detailsInfo.withCar.value;
-  //   let newWithCar = changedFields.withCar && changedFields.withCar.value;
-  //   let oldNeedLoan = this.state.detailsInfo.needLoan.value;
-  //   let newNeedLoan = changedFields.needLoan && changedFields.needLoan.value;
-  //
-  //   let detailsInfo;
-  //   // 是否有车
-  //   if(changedFields.withCar && oldWithCar !== newWithCar) {
-  //     detailsInfo = {
-  //       ...this.state.detailsInfo,
-  //       ...changedFields,
-  //       ...{carPrice: {
-  //         value: undefined,
-  //         options: this.state.detailsInfo.carPrice.options
-  //       }}
-  //     }
-  //   } else if(changedFields.withDebt) { // 是否负债
-  //     detailsInfo = {
-  //       ...this.state.detailsInfo,
-  //       ...changedFields,
-  //       ...{debtAmount: {
-  //         value: undefined,
-  //         options: this.state.detailsInfo.debtAmount.options
-  //       }}
-  //     }
-  //   } else if(changedFields.needLoan && oldNeedLoan !== newNeedLoan) { // 是否有贷款需求
-  //     detailsInfo = {
-  //       ...this.state.detailsInfo,
-  //       ...changedFields,
-  //       ...{loanAmount: {
-  //         value: undefined,
-  //         options: this.state.detailsInfo.loanAmount.options
-  //       }},
-  //       ...{loanPurpose: {
-  //         value: undefined,
-  //         options: this.state.detailsInfo.loanPurpose.options
-  //       }}
-  //     }
-  //   } else {
-  //     detailsInfo = {
-  //       ...this.state.detailsInfo,
-  //       ...changedFields
-  //     }
-  //   }
-  //
-  //   // let accounts = {
-  //   //   ...this.state.accounts,
-  //   //   ...changedFields
-  //   // }
-  //
-  //   // if(changedFields['row-0-accountNo']) {
-  //     let newState = update(this.state,{
-  //       // accounts: {$set: {...accounts}},
-  //       briefInfo: {$set: {...briefInfo}},
-  //       detailsInfo: {$set: {...detailsInfo}}
-  //     })
-  //     this.setState(newState);
-  //   // }
-  // }
+  handleFormChange = (changedFields) => {
+    console.log(changedFields);
+    const { beEditedNumber } = this.props.currentCustomerInfo;
+    let oldDepartment = this.state.briefInfo.department.value;
+    let newDepartment = changedFields.department && changedFields.department.value;
+
+    // 所属机构，客户经理，所属网格三级联动
+    let briefInfo;
+    if(changedFields.department && oldDepartment !== newDepartment) {
+      briefInfo = {
+        ...this.state.briefInfo,
+        ...changedFields,
+        ...{manager: {
+          value: undefined
+        }},
+        ...{grid: {
+          value: undefined
+        }}
+      }
+
+      // console.dir(briefInfo.manager)
+    } else {
+      briefInfo = {
+        ...this.state.briefInfo,
+        ...changedFields
+      }
+    }
+
+    // console.dir(briefInfo.manager);
+    let oldWithCar = this.state.detailsInfo.withCar.value;
+    let newWithCar = changedFields.withCar && changedFields.withCar.value;
+    let oldNeedLoan = this.state.detailsInfo.needLoan.value;
+    let newNeedLoan = changedFields.needLoan && changedFields.needLoan.value;
+
+    let detailsInfo;
+    // 是否有车
+    if(changedFields.withCar && oldWithCar !== newWithCar) {
+      detailsInfo = {
+        ...this.state.detailsInfo,
+        ...changedFields,
+        ...{carPrice: {
+          value: undefined,
+          options: this.state.detailsInfo.carPrice.options
+        }}
+      }
+    } else if(changedFields.withDebt) { // 是否负债
+      detailsInfo = {
+        ...this.state.detailsInfo,
+        ...changedFields,
+        ...{debtAmount: {
+          value: undefined,
+          options: this.state.detailsInfo.debtAmount.options
+        }}
+      }
+    } else if(changedFields.needLoan && oldNeedLoan !== newNeedLoan) { // 是否有贷款需求
+      detailsInfo = {
+        ...this.state.detailsInfo,
+        ...changedFields,
+        ...{loanAmount: {
+          value: undefined,
+          options: this.state.detailsInfo.loanAmount.options
+        }},
+        ...{loanPurpose: {
+          value: undefined,
+          options: this.state.detailsInfo.loanPurpose.options
+        }}
+      }
+    } else {
+      detailsInfo = {
+        ...this.state.detailsInfo,
+        ...changedFields
+      }
+    }
+
+    // let accounts = {
+    //   ...this.state.accounts,
+    //   ...changedFields
+    // }
+
+    // if(changedFields['row-0-accountNo']) {
+      let newState = update(this.state,{
+        // accounts: {$set: {...accounts}},
+        briefInfo: {$set: {...briefInfo}},
+        detailsInfo: {$set: {...detailsInfo}}
+      })
+      this.setState(newState);
+    // }
+  }
 
   // change joiners
   changeJoiners = (joiner) => {

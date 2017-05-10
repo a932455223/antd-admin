@@ -120,12 +120,12 @@ class EnterpriseBasicInfo extends Component {
   }
 
   componentWillMount(){
-    info('basicInfo will mount');
+    // info('basicInfo will mount');
     this.getBaseInfo(this.props.currentCustomerInfo.id);
   }
 
   componentWillReceiveProps(next){
-    info(' will receive props.');
+    // info(' will receive props.');
     // 当前的客户 id发生变化时，或者当前用户的信息 beEditedNumber === true时，重置 state
     const { id, beEditedArray } = this.props.currentCustomerInfo;
     if(id !== next.currentCustomerInfo.id ||
