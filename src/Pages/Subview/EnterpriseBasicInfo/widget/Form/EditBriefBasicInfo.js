@@ -36,18 +36,15 @@ function hasErrors(fieldsError) {
 //个人信息表单................
 class CompanyBasicInfo extends Component{
   state = {
-    tags : [],
     basicInfoBeEdit: false,
 
     departmentOptions: [],
     managerOptions: [],
-    gridOptions: [],
-
-    accountsArr: ['row-0']
+    gridOptions: []
   }
 
   componentWillMount() {
-    console.log('CompanyBasicInfo will mount');
+    // console.log('CompanyBasicInfo will mount');
     this.getDepartments(1, 1);
   }
 
@@ -57,7 +54,7 @@ class CompanyBasicInfo extends Component{
 
     // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
     if(next.joinersBeEdited && !next.beEditedArray.includes('enterpriseBasicInfo')) {
-      this.props.increaseBeEditArray('basicInfo');
+      this.props.increaseBeEditArray('enterpriseBasicInfo');
     } else if(next.beEditedArray && !next.beEditedArray.includes('enterpriseBasicInfo')) {
       // 重置 InfoBeEdited
       let newState = update(this.state, {
@@ -147,7 +144,7 @@ class CompanyBasicInfo extends Component{
     this.props.modalShow()
   }
 
-  // 删除 tags
+  // 删除 staffs
   handleClose = (joiner) => {
     if(!this.state.basicInfoBeEdit) {
       this.props.increaseBeEditArray('enterpriseBasicInfo'); // 修改 store树上的 beEditedArray
@@ -214,7 +211,7 @@ class CompanyBasicInfo extends Component{
       eachCompanyInfo,
       id,
       createCustomerSuccess,
-      tags,
+      staffs,
       accountsArr,
       accounts
     } = this.props;
@@ -237,7 +234,7 @@ class CompanyBasicInfo extends Component{
     };
     const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
-    const tagsitems  = tags && tags.map((item,index) => {
+    const staffsItems  = staffs && staffs.map((item,index) => {
       return (
         <Tag key={`${item.id}${index}`} closable="true" afterClose={() => this.handleClose(item)}>
           {item.name}
@@ -559,7 +556,7 @@ class CompanyBasicInfo extends Component{
                   <span>参与者：</span>
                 </Col>
                 <Col span={20}>
-                  {tagsitems}
+                  {staffsItems}
                   <span className="addCrewButton"
                         onClick={this.selectStaff}>
                     <Icon type="plus-circle-o" />添加人员
