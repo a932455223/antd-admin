@@ -40,8 +40,6 @@ import EditBriefBasicInfo from './widget/Form/EditBriefBasicInfo'
 import BasicInfoEdit from './widget/BasicInfoEdit'
 import AddCrewModal from '../PersonalBasicInfo/widget/AddCrewModal'
 
-let uuid = 0;
-
 class EnterpriseBasicInfo extends Component {
   state = {
     id: '',
@@ -108,12 +106,15 @@ class EnterpriseBasicInfo extends Component {
   }
 
   componentWillReceiveProps(next){
-    // console.log('will recieve props');
+    console.log('EnterpriseBasicInfo will recieve props');
 
+    // 当前的客户 id发生变化时，或者当前用户的信息 beEditedNumber === true时，重置 state
     const { id, beEditedArray } = this.props.currentCustomerInfo;
     if(id !== next.currentCustomerInfo.id ||
       (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) ) {
-      this.getBaseInfo(next.currentCustomerInfo.id);
+      // console.log('get info');
+      let newState = this.getBaseInfo(next.currentCustomerInfo.id);
+      this.resetAccounts();
     }
 
     // 重置 joinersBeEdited
@@ -124,6 +125,22 @@ class EnterpriseBasicInfo extends Component {
     }
   }
 
+  // reset accounts
+  resetAccounts = (state) => {
+    let st = state || this.state;
+    const { originAccounts, originAccountsArr } = st;
+    let newAccounts = _.cloneDeep(originAccounts);
+    let newAccountsArr = _.cloneDeep(originAccountsArr);
+
+    let newState = update(this.state, {
+      accounts: {$set: newAccounts},
+      accountsArr: {$set: newAccountsArr}
+    })
+
+    this.setState(newState);
+    return newState
+  }
+
   // 获取客户基本信息
   getBaseInfo = (id) => {
     if(id !== -1) {
@@ -131,7 +148,7 @@ class EnterpriseBasicInfo extends Component {
       .then((res) => {
         if(res.data.data == null) {
         } else {
-          console.log(res.data.data);
+          // console.log(res.data.data);
           const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
           // 客户账户
@@ -161,6 +178,7 @@ class EnterpriseBasicInfo extends Component {
 
             joiners: {$set: res.data.data.joiners},
             tags: {$set: newJoiners},
+
             eachCompanyInfo: {
               department: {
                 $set: {
@@ -234,6 +252,7 @@ class EnterpriseBasicInfo extends Component {
           })
 
           this.setState(newState);
+          return newState;
         }
       })
     }
@@ -348,9 +367,9 @@ class EnterpriseBasicInfo extends Component {
     let st = state || this.state;
     let newJoiners = _.cloneDeep(st.joiners);
     let newState = update(st, {
-      tags: {$set: newJoiners}
+      staffs: {$set: newJoiners}
     })
-    this.setState(newState)
+    this.setState(newState);
     return newState
   }
 
@@ -387,7 +406,7 @@ class EnterpriseBasicInfo extends Component {
       yearIncome
     } = briefInfo
 
-    console.log(briefInfo);
+    // console.log(briefInfo);
     let json = {
       accounts: accountsInfo,
       address: address ? address : '',
@@ -434,7 +453,7 @@ class EnterpriseBasicInfo extends Component {
   }
 
   render() {
-    const { increaseBeEditArray, decreaseBeEditArray } = this.props;
+    const { increaseBeEditArray, decreaseBeEditArray, uuid } = this.props;
     const { step, mode, beEditedArray } = this.props.currentCustomerInfo;
     const {
       id,
@@ -449,6 +468,8 @@ class EnterpriseBasicInfo extends Component {
       originAccountsArr,
       originAccounts
     } = this.state;
+
+    console.log(uuid);
 
     const modal = {
       visible: modalVisible,
@@ -487,6 +508,7 @@ class EnterpriseBasicInfo extends Component {
             <div>
               <AddCrewModal key={id} {...modal}/>
               <EditBriefBasicInfo
+                key={this.state.eachCompanyInfo ? 'edit' + id + uuid.toString(): '-1'}
                 {...basicInfoProps}
                 onChange={this.handleFormChange}
               />
