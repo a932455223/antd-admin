@@ -207,16 +207,15 @@ class BasicInfo extends Component {
     info('personalBasicInfo will receive props.');
     // 当前的客户 id发生变化时，或者当前用户的信息 beEditedNumber === true时，重置 state
     const { id, beEditedArray } = this.props.currentCustomerInfo;
-    // if(id !== next.currentCustomerInfo.id ||
-    //   (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) ) {
-    //   console.log('get info');
-    //
-    // }
-    let newState = this.getBaseInfo(next.currentCustomerInfo.id);
-    this.resetAccounts();
+    if(id !== next.currentCustomerInfo.id ||
+      (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) ) {
+      // console.log('get info');
+      let newState = this.getBaseInfo(next.currentCustomerInfo.id);
+      this.resetAccounts();
+    }
 
     // 重置 joinersBeEdited
-    if(beEditedArray && beEditedArray.length !== 0) {
+    if(beEditedArray && beEditedArray.length === 0) {
       this.setState({
         joinersBeEdited: false
       })
@@ -642,6 +641,7 @@ class BasicInfo extends Component {
       uuid
     } = this.props;
     const { step, mode, beEditedArray } = this.props.currentCustomerInfo;
+
     const {
       id,
       modalVisible,

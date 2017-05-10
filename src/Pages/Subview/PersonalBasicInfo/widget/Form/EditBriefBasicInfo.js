@@ -41,7 +41,7 @@ class EditBriefBasicInfoForm extends Component{
   componentWillReceiveProps(next) {
     console.log('EditBriefBasicInfoForm will recieve props');
     const { getFieldValue } = next.form;
-    // console.log(next);
+    
     // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
     if(next.joinersBeEdited && !next.beEditedArray.includes('basicInfo')) {
       this.props.increaseBeEditArray('basicInfo');

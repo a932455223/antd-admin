@@ -123,6 +123,18 @@ class TablePage extends Component {
         dockVisible: {$set: true},
       })
       this.setState(nextStepState);
+    } else if(currentCustomer.id !== info.id) {
+      // 如果当前 id不一样，则 uuid不 +1
+      let newState = update(this.state, {
+        dockContent: {$set: this.state.CustomerSlider},
+        mode: {$set: mode},
+        onlyCloseModal: {$set: false},
+        dockVisible: {$set: true},
+        currentCustomer: {$set: info},
+      })
+
+      this.setState(newState);
+      dispatch(saveCurrentCustomerInfo(info, mode))
     } else {
       // 判断 dock是否显示，若未显示，则弹出 slider
       let newState = update(this.state, {
