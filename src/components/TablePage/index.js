@@ -105,12 +105,12 @@ class TablePage extends Component {
     }
 
     // 判断 dock是否显示，若未显示，则弹出 slider
-    let newState = {
-      dockContent: <this.state.CustomerSlider {...sliderProps}/>,
-      mode: mode,
-      currentCustomer: info,
-      onlyCloseModal: false
-    }
+    let newState = update(this.state, {
+      dockContent: {$set: <this.state.CustomerSlider {...sliderProps}/>},
+      mode: {$set: mode},
+      currentCustomer: {$set: info},
+      onlyCloseModal: {$set: false}
+    })
 
     if(!this.state.dockVisible ) {
       newState.dockVisible = true;
@@ -119,16 +119,19 @@ class TablePage extends Component {
 
     // 如果前一个客户的信息被编辑之后，未被保存，切换客户，则显示弹窗
     if(beEditedArray && beEditedArray.length !== 0 ) {
-      let newState = update(this.state, {
+      let nextStepState = update(newState, {
         modalVisible: {$set: true}
       })
-      this.setState(newState);
+      this.setState(nextStepState);
+      console.log(nextStepState);
       // dispatch(saveCurrentCustomerInfo(info, mode))
+    } else if(currentCustomer.id === info.id){
+      let nextStepState = update(newState, {
+        uuid: {$set: this.state.uuid + 1}
+      })
+      this.setState(nextStepState);
     } else {
       dispatch(saveCurrentCustomerInfo(info, mode))
-      this.setState({
-        uuid: this.state.uuid + 1
-      });
     }
   }
 
@@ -144,17 +147,16 @@ class TablePage extends Component {
 
     let newState;
     if(onlyCloseModal) { // 关闭 modal和 dock
-      dispatch(resetBeEditArray());
-
       newState = update(this.state, {
         modalVisible: {$set: false},
-        dockVisible: {$set: false}
+        dockVisible: {$set: false},
+        uuid: {$set: this.state.uuid + 1}
       })
 
     } else if(beEditedArray && beEditedArray.length !== 0) { // 仅关闭 modal,
       newState = update(this.state, {
         modalVisible: {$set: false},
-        uuid: {$set: this.state.uuid + 1}
+        // uuid: {$set: this.state.uuid + 1}
       })
 
       dispatch(saveCurrentCustomerInfo(currentCustomer, mode))
@@ -199,8 +201,18 @@ class TablePage extends Component {
   // add new customer
   addNewCustomer = () => {
     const { dispatch } = this.props;
+    // slider visible and row click crrentId
+    const sliderProps = {
+      showModal: this.showModal,
+      closeDock: this.closeDock,
+      onlyModalClose: this.onlyModalClose,
+      visible: this.state.dockVisible,
+      refreshCustomerLists: this.props.refreshCustomerLists,
+      uuid: this.state.uuid
+    }
+
     let newState = update(this.state, {
-      dockContent: {$set: 'CustomerSlider'},
+      dockContent: {$set: <this.state.CustomerSlider {...sliderProps}/>},
       dockVisible: {$set: true}
     })
     this.setState(newState);
@@ -260,7 +272,7 @@ class TablePage extends Component {
   }
 
   render(){
-    console.log(this.state.uuid);
+    console.log(this.state.currentCustomer);
     const { columns, dataSource, loading, pagination, refreshCustomerLists } = this.props;
 
     // table props lists

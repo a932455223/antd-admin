@@ -738,7 +738,7 @@ class BasicInfo extends Component {
             <div>
               <AddCrewModal key={id} {...modal}/>
               <EditBriefBasicInfo
-                key={this.state.eachCustomerInfo ? 'edit'+this.state.eachCustomerInfo.id+uuid.toString():'-1'}
+                key={this.state.eachCustomerInfo ? 'edit'+this.props.currentCustomerInfo.id+uuid.toString():'-1'}
                 {...basicInfoProps}
               />
               <EditDetailsBasicInfo

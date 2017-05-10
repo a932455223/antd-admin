@@ -412,64 +412,61 @@ class CustomerSlider extends Component {
 
     return(
       <div>
-    {
-      <div className={styles.header}>
-        <div>
-          <div className={styles.img}>
-            <i className="iconfont icon-customer1"></i>
+        <div className={styles.header}>
+          <div>
+            <div className={styles.img}>
+              <i className="iconfont icon-customer1"></i>
+            </div>
+
+            {mode === 'view' &&
+              <span className={styles.name}>{name}</span>
+            }
+
+            {step != 1 && mode !== 'view' &&
+              <Input
+                key={id}
+                onChange={this.nameChange}
+                className={styles.inputName}
+                value={name}
+              />
+            }
+
+            {name === '' && mode === 'edit' &&
+              <p style={{
+                textAlign: 'left',
+                paddingLeft: 50,
+                fontSize: 12,
+                color: 'red'
+              }}>姓名为必填项</p>
+            }
           </div>
 
-          {mode === 'view' &&
-            <span className={styles.name}>{name}</span>
-          }
-
-          {step != 1 && mode !== 'view' &&
-            <Input
-              key={id}
-              onChange={this.nameChange}
-              className={styles.inputName}
-              value={name}
+          <div className={styles.options}>
+            { id !== -1 &&
+              <span>
+                <Icon type="star-o" />
+                <span>关注</span>
+              </span>
+            }
+            { id !== -1 &&
+              <span>
+                <Icon type="bell" />
+                <span>提醒</span>
+              </span>
+            }
+            { id !== -1 &&
+              <span>
+                <Icon type="ellipsis" />
+                <span>更多</span>
+              </span>
+            }
+            <Icon
+              className={styles.icon}
+              onClick={this.saveEditInfo}
+              type="close"
             />
-          }
-
-          {name === '' && mode === 'edit' &&
-            <p style={{
-              textAlign: 'left',
-              paddingLeft: 50,
-              fontSize: 12,
-              color: 'red'
-            }}>姓名为必填项</p>
-          }
+          </div>
         </div>
-
-        <div className={styles.options}>
-          { id !== -1 &&
-            <span>
-              <Icon type="star-o" />
-              <span>关注</span>
-            </span>
-          }
-          { id !== -1 &&
-            <span>
-              <Icon type="bell" />
-              <span>提醒</span>
-            </span>
-          }
-          { id !== -1 &&
-            <span>
-              <Icon type="ellipsis" />
-              <span>更多</span>
-            </span>
-          }
-          <Icon
-            className={styles.icon}
-            onClick={this.saveEditInfo}
-            type="close"
-          />
-        </div>
-      </div>
-    }
-
 
         {step === 1 && mode === 'create' &&
           <AddNewCustomer {...this.props}/>
