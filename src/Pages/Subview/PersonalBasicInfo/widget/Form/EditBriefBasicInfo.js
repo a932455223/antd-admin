@@ -33,7 +33,7 @@ class EditBriefBasicInfoForm extends Component{
   }
 
   componentWillMount(){
-    // console.log('key will mount');
+    console.log('EditBriefBasicInfoForm will mount');
     this.getDepartments(1, 1);
   }
 
@@ -185,7 +185,7 @@ class EditBriefBasicInfoForm extends Component{
       eachCustomerInfo,
 
       mode,
-      id,
+      // id,
       beEditedArray,
 
       joinersBeEdited,
@@ -265,7 +265,7 @@ class EditBriefBasicInfoForm extends Component{
 
     return (
       <Form id="editMyBase" className="basicInfolist">
-        <Row className={id === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
+        <Row className={mode === 'create' ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
             <Col span={7}>
               <FormItem labelCol={{span: 11}}
                         wrapperCol={{span: 13}}
@@ -350,7 +350,7 @@ class EditBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={12} className={id === -1 ? "phoneCreate" : "phoneEdit"}>
+            <Col span={12} className={mode === 'create' ? "phoneCreate" : "phoneEdit"}>
               <FormItem labelCol={{span: 8}}
                         wrapperCol={{span: 15}}
                         label="手机号：">
@@ -367,7 +367,7 @@ class EditBriefBasicInfoForm extends Component{
               </FormItem>
             </Col>
 
-            <Col span={12} className={id === -1 ? "wechatCreate" : "wechatEdit"}>
+            <Col span={12} className={mode === 'create' ? "wechatCreate" : "wechatEdit"}>
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="微信号：">
@@ -382,7 +382,7 @@ class EditBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={12} className={id === -1 ? "idCreate" : "idEdit"}>
+            <Col span={12} className={mode === 'create' ? "idCreate" : "idEdit"}>
               <FormItem
                 labelCol={{span: 8}}
                 wrapperCol={{span: 15}}
@@ -398,7 +398,7 @@ class EditBriefBasicInfoForm extends Component{
               </FormItem>
             </Col>
 
-            <Col span={12} className={id === -1 ? "birthCreate" : "birthEdit"}>
+            <Col span={12} className={mode === 'create' ? "birthCreate" : "birthEdit"}>
               <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="生日：">
@@ -416,7 +416,7 @@ class EditBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={12} className={id === -1 ? "originCreate" : "originEdit"}>
+            <Col span={12} className={mode === 'create' ? "originCreate" : "originEdit"}>
               <FormItem
                 labelCol={{span: 8}}
                 wrapperCol={{span: 15}}
@@ -432,7 +432,7 @@ class EditBriefBasicInfoForm extends Component{
               </FormItem>
             </Col>
 
-            <Col span={12} className={id === -1 ? "ageCreate" : "ageEdit"}>
+            <Col span={12} className={mode === 'create' ? "ageCreate" : "ageEdit"}>
               <FormItem
                 labelCol={{span: 8, offset: 1}}
                 wrapperCol={{span: 15}}
@@ -450,7 +450,7 @@ class EditBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-            <Col span={24} className={id === -1 ? "addressCreate" : "addressEdit"}>
+            <Col span={24} className={mode === 'create' ? "addressCreate" : "addressEdit"}>
               <FormItem
                 labelCol={{span: 4}}
                 wrapperCol={{span: 19}}
@@ -501,7 +501,7 @@ class EditBriefBasicInfoForm extends Component{
 
 function mapPropsToFields (props) {
   const { briefInfo, accounts } = props;
-  // console.log(briefInfo);
+  console.dir(accounts)
   return {
     ...accounts,
     ...briefInfo
