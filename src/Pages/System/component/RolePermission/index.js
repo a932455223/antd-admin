@@ -128,9 +128,22 @@ export default class  RolePermission extends Component{
       {generateTree(this.state.leftPrivilege.childs,'0',false)}
     </Tree>:null
 
+    const title = 
+                <div className="titlerow">
+                  <p>分配权限</p>
+                  <div className="btnbox">
+                    <Button>重置</Button>
+                    <Button>保存</Button>
+                    <Icon
+                        className="close"
+                        type="close"
+                        style={{cursor:"pointer"}}
+                    />
+                  </div>
+                </div>
     return (
       <div>
-        <Card title="分配权限">
+        <Card title={title}>
           <div className="my-transfer">
             <div className="transfer-left">
               {leftTree}

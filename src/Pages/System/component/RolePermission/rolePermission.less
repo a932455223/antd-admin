@@ -16,21 +16,64 @@
 }
 
 .system-content .dock-container{
+  height: 100%;
   .ant-card-bordered{
     border:none;
     background: #f4f4f6;
-   /* &:hover{
-      box-shaow
-    };*/
+    &:hover{
+      box-shadow:0 0 0 #f4f4f6;
+    };
+  }
+  .ant-card-body{
+    padding-top: 10px;
   }
   .ant-card-head{
+    border:none;
     background: #f4f4f6;
+    
+    .titlerow{
+      display: flex;
+      justify-content: space-between;
+      p{
+       font-size: 16px;
+      }
+      .btnbox{
+        i{
+          font-size: 20px;
+        }
+        button{
+          margin-right: 10px;
+        }
+      }
+    }
   }
   .my-transfer{
     .transfer-left{
-      height: 450px;
+      min-height: 500px;
+      overflow: hidden;
       background: #fff;
       border-radius: 4px;
     }
+  }
+  .transfer-center{
+    position: relative;
+    border: none;
+    button{
+      position: absolute;
+      left: 50%;
+      margin-left: -28px;
+      &:nth-child(1){
+       top: 50%;
+       margin-top: -80px;
+      }
+      &:nth-child(2){
+       top: 50%;
+       margin-top: -43px;
+      }
+    } 
+  }
+  .transfer-right{
+    background: #fff;
+    border-radius: 4px;
   }
 }
