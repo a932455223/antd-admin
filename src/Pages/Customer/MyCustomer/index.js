@@ -92,11 +92,11 @@ export default class MyCustomer extends Component {
     if(params.customerType && params.customerType.length === 0) {
       delete params.customerType
     }
-    if(params.customerLevel && params.customerLevel.length === 0) {
-      delete params.customerLevel
+    if(params.level && params.level.length === 0) {
+      delete params.level
     }
-    if(params.riskLevel && params.riskLevel.length === 0) {
-      delete params.riskLevel
+    if(params.risk && params.risk.length === 0) {
+      delete params.risk
     }
     if(params.searchContent == '' || params.searchContent == undefined) {
       delete params.searchContent

@@ -321,7 +321,6 @@ class EnterpriseBasicInfo extends Component {
       staffs: {$set: newJoiners}
     })
     this.setState(newState);
-    console.log(newState);
   };
 
   // 重置参与人员
