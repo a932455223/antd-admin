@@ -192,7 +192,6 @@ export default class  RolePermission extends Component{
   }
 
   onRightCheck = (checkedKeys,e) => {
-    console.dir(checkedKeys)
     this.setState({
       rightCheckedKeys:checkedKeys
     })

@@ -5,15 +5,19 @@
 .batchParticipate {
   display: flex;
   flex-direction: column;
+  min-height: calc(100vh - 40px);
   height: 100%;
   margin: 0 auto;
 
   .title {
+    // height: 100px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    padding: 5px 0;
+    padding: 10px 0 16px 0;
+    max-height: 64px;
+    // min-height: 64px;
 
     border-bottom: 1px solid #e1e2e4;
 
@@ -27,39 +31,61 @@
     }
   }
 
-  .hadParticipated {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    margin: 10px 0;
-    padding: 8px;
-    background-color: #fff;
-    box-shadow: 0 1px 3px 0 #dfdfe1;
-	  border: solid 1px #d4d4d5;
-  }
-
   .select-staff-body {
-    display: flex;
+    // display: flex;
     flex: 1;
-    // min-height: 90vh;
+    // min-height: 85vh;
+    text-align: left;
 
-    background-color: #fff;
-    box-shadow: 0 1px 3px 0 #dfdfe1;
-	  border: solid 1px #d4d4d5;
-
-    > div {
-      flex: 1;
+    .hadParticipated {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin: 15px 0;
+      padding: 8px;
+      background-color: #fff;
+      box-shadow: 0 1px 3px 0 #dfdfe1;
+  	  border: solid 1px #d4d4d5;
     }
 
-    > div:first-child {
-      flex: 2.5;
-      border-right: 1px solid #ccc;
+    // background-color: #fff;
 
-      + div {
-        flex: 3.5;
+    .tagsWrapper {
+      padding: 20px 10px;
+
+      background-color: #fff;
+      box-shadow: 0 1px 3px 0 #dfdfe1;
+  	  border: solid 1px #d4d4d5;
+
+      .tags-title {
+        display: flex;
+        justify-content: space-between;
       }
     }
 
+    .selectStaffs {
+      display: flex;
+
+
+      background-color: #fff;
+      box-shadow: 0 1px 3px 0 #dfdfe1;
+  	  border: solid 1px #d4d4d5;
+
+      border-top: none;
+
+      > div {
+        flex: 1;
+      }
+
+      > div:first-child {
+        flex: 2.5;
+        border-right: 1px solid #ccc;
+
+        + div {
+          flex: 3.5;
+        }
+      }
+    }
   }
 
   .btn-group {

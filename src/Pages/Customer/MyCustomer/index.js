@@ -31,8 +31,8 @@ export default class MyCustomer extends Component {
       size: 10,
       searchContent: '',
       customerType: [],
-      customerLevel: [],
-      riskLevel: []
+      level: [],
+      risk: []
     }
   }
 
@@ -92,11 +92,11 @@ export default class MyCustomer extends Component {
     if(params.customerType && params.customerType.length === 0) {
       delete params.customerType
     }
-    if(params.customerLevel && params.customerLevel.length === 0) {
-      delete params.customerLevel
+    if(params.level && params.level.length === 0) {
+      delete params.level
     }
-    if(params.riskLevel && params.riskLevel.length === 0) {
-      delete params.riskLevel
+    if(params.risk && params.risk.length === 0) {
+      delete params.risk
     }
     if(params.searchContent == '' || params.searchContent == undefined) {
       delete params.searchContent
@@ -151,8 +151,8 @@ export default class MyCustomer extends Component {
       loading: {$set: true},
       reqJson: {
         customerType: {$set: filters.customerType},
-        customerLevel: {$set: filters.customerLevel},
-        riskLevel: {$set: filters.riskLevel},
+        level: {$set: filters.customerLevel},
+        risk: {$set: filters.riskLevel},
         searchContent: {$set: search}
       }
     })
