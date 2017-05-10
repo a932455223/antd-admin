@@ -138,6 +138,7 @@ export default class  RolePermission extends Component{
                         className="close"
                         type="close"
                         style={{cursor:"pointer"}}
+                        onClick={this.props.close}
                     />
                   </div>
                 </div>
