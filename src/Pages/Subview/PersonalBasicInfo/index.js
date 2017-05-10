@@ -204,15 +204,16 @@ class BasicInfo extends Component {
   }
 
   componentWillReceiveProps(next){
-    info('basicInfo will receive props.');
+    info('personalBasicInfo will receive props.');
     // 当前的客户 id发生变化时，或者当前用户的信息 beEditedNumber === true时，重置 state
     const { id, beEditedArray } = this.props.currentCustomerInfo;
-    if(id !== next.currentCustomerInfo.id ||
-      (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) ) {
-      console.log('get info');
-      let newState = this.getBaseInfo(next.currentCustomerInfo.id);
-      this.resetAccounts();
-    }
+    // if(id !== next.currentCustomerInfo.id ||
+    //   (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) ) {
+    //   console.log('get info');
+    //
+    // }
+    let newState = this.getBaseInfo(next.currentCustomerInfo.id);
+    this.resetAccounts();
 
     // 重置 joinersBeEdited
     if(beEditedArray && beEditedArray.length !== 0) {
@@ -738,7 +739,7 @@ class BasicInfo extends Component {
             <div>
               <AddCrewModal key={id} {...modal}/>
               <EditBriefBasicInfo
-                key={this.state.eachCustomerInfo ? 'edit'+this.props.currentCustomerInfo.id+uuid.toString():'-1'}
+                key={this.state.eachCustomerInfo ? 'edit' + id + uuid.toString():'-1'}
                 {...basicInfoProps}
               />
               <EditDetailsBasicInfo

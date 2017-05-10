@@ -409,6 +409,7 @@ class CustomerSlider extends Component {
 
   render() {
     const { step, mode, id, name, beEdited } = this.props.currentCustomerInfo;
+    const { uuid } = this.props;
 
     return(
       <div>
@@ -424,7 +425,7 @@ class CustomerSlider extends Component {
 
             {step != 1 && mode !== 'view' &&
               <Input
-                key={id}
+                key={id + uuid + ''}
                 onChange={this.nameChange}
                 className={styles.inputName}
                 value={name}
