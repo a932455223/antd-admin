@@ -95,7 +95,8 @@ export default class familyCard extends Component{
                         工作属性：
                     </Col>
                     <Col span={16}>
-                        {this.props.item.jobCategory.value===""?"":this.findDropDownItem(this.props.item.jobCategory.value,'commonJobCategory').name}
+                        {this.props.item.jobCategory==undefined||this.props.item.jobCategory.value===""?"":this.findDropDownItem(this.props.item.jobCategory.value,'commonJobCategory').name}
+                        {/*{this.props.item.jobCategory}*/}
                     </Col>
                 </Row>
             </Card>

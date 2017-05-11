@@ -23,7 +23,7 @@ export default class AddCrewModal extends Component {
   };
 
   componentWillMount() {
-    console.log('add crew modal')
+    // console.log('add crew modal')
     // 获取 treeNode department
     ajax.Get(API.GET_DEPARTMENT_HIERARCHY)
     .then(res => {
@@ -36,7 +36,7 @@ export default class AddCrewModal extends Component {
   }
 
   componentWillReceiveProps(next){
-    console.log('next');
+    // console.log('next');
     const { staffs } = next;
     let a = [];
     staffs.map((item) => {
@@ -249,7 +249,7 @@ export default class AddCrewModal extends Component {
                       {tree}
                     </TabPane>
                     <TabPane tab={<span>群组</span>} key="2">
-                      Tab 2
+                      大同市分行
                     </TabPane>
                   </Tabs>
                 </div>

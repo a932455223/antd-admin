@@ -154,7 +154,7 @@ class BasicInfo extends Component {
   }
 
   componentWillMount(){
-    info('basicInfo will mount');
+    // info('basicInfo will mount');
     this.getBaseInfo(this.props.currentCustomerInfo.id);
 
     ajax.all([
@@ -204,18 +204,18 @@ class BasicInfo extends Component {
   }
 
   componentWillReceiveProps(next){
-    info('basicInfo will receive props.');
+    // info('personalBasicInfo will receive props.');
     // 当前的客户 id发生变化时，或者当前用户的信息 beEditedNumber === true时，重置 state
     const { id, beEditedArray } = this.props.currentCustomerInfo;
     if(id !== next.currentCustomerInfo.id ||
       (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) ) {
-      console.log('get info');
-      let newState = this.getBaseInfo(next.currentCustomerInfo.id);
-      this.resetAccounts();
+      // console.log('get info');
+      this.getBaseInfo(next.currentCustomerInfo.id);
+      // this.resetAccounts();
     }
 
     // 重置 joinersBeEdited
-    if(beEditedArray && beEditedArray.length !== 0) {
+    if(beEditedArray && beEditedArray.length === 0) {
       this.setState({
         joinersBeEdited: false
       })
@@ -228,8 +228,6 @@ class BasicInfo extends Component {
     const { originAccounts, originAccountsArr } = st;
     let newAccounts = _.cloneDeep(originAccounts);
     let newAccountsArr = _.cloneDeep(originAccountsArr);
-
-    console.log(originAccounts['row-0-accountNo']);
 
     let newState = update(this.state, {
       accounts: {$set: newAccounts},
@@ -288,8 +286,6 @@ class BasicInfo extends Component {
         },{});
         let accountsObj = _.cloneDeep(originAccountsObj);
         let accountsArr = _.cloneDeep(originAccountsArr);
-
-        console.log(originAccountsObj['row-0-accountNo']);
 
         // 更新 briefInfo, detailsInfo, eachCustomerInfo
         let newJoiners = _.cloneDeep(res.data.data.joiners);
@@ -387,7 +383,8 @@ class BasicInfo extends Component {
     const dateFormat = 'YYYY-MM-DD'; // 日期格式
     // 参与人数信息
     let joiners = this.state.staffs.map(item => item.id);
-    console.log(briefInfo['row-0-accountNo'] == undefined);
+    console.log(briefInfo['row-0-accountNo']);
+
     // 账户信息
     let accountsInfo = accountsArr.map((item, index) => {
       return {
@@ -487,6 +484,7 @@ class BasicInfo extends Component {
 
   // 表单数据的双向绑定
   handleFormChange = (changedFields) => {
+    console.log(changedFields);
     const { beEditedNumber } = this.props.currentCustomerInfo;
     let oldDepartment = this.state.briefInfo.department.value;
     let newDepartment = changedFields.department && changedFields.department.value;
@@ -559,17 +557,19 @@ class BasicInfo extends Component {
       }
     }
 
-    let accounts = {
-      ...this.state.accounts,
-      ...changedFields
-    }
+    // let accounts = {
+    //   ...this.state.accounts,
+    //   ...changedFields
+    // }
 
-    let newState = update(this.state,{
-      accounts: {$set: {...accounts}},
-      briefInfo: {$set: {...briefInfo}},
-      detailsInfo: {$set: {...detailsInfo}}
-    })
-    this.setState(newState);
+    // if(changedFields['row-0-accountNo']) {
+      let newState = update(this.state,{
+        // accounts: {$set: {...accounts}},
+        briefInfo: {$set: {...briefInfo}},
+        detailsInfo: {$set: {...detailsInfo}}
+      })
+      this.setState(newState);
+    // }
   }
 
   // change joiners
@@ -580,6 +580,7 @@ class BasicInfo extends Component {
       staffs: {$set: newJoiners}
     })
     this.setState(newState);
+    console.log(newState);
   };
 
   // 重置参与人员
@@ -637,9 +638,11 @@ class BasicInfo extends Component {
     const {
       increaseBeEditArray,
       decreaseBeEditArray,
-      refreshCustomerLists
+      refreshCustomerLists,
+      uuid
     } = this.props;
     const { step, mode, beEditedArray } = this.props.currentCustomerInfo;
+
     const {
       id,
       modalVisible,
@@ -657,8 +660,8 @@ class BasicInfo extends Component {
       originAccountsArr,
       originAccounts
     } = this.state;
-    console.log(accounts['row-0-accountNo']);
-    console.log(originAccounts['row-0-accountNo']);
+    // console.log(accounts['row-0-accountNo']);
+    // console.log(originAccounts['row-0-accountNo']);
 
     const modal = {
       // modal
@@ -698,6 +701,14 @@ class BasicInfo extends Component {
 
       // accounts
       accounts: accounts,
+      // {
+      //   ['row-0-accountNo']: {
+      //     value: 222222
+      //   },
+      //   ['row-0-remark']: {
+      //     value: 333333
+      //   },
+      // },
       accountsArr: accountsArr,
       deleteAccountsInfo: this.deleteAccountsInfo,
       addAccountsInfo: this.addAccountsInfo,
@@ -706,6 +717,7 @@ class BasicInfo extends Component {
     }
 
     const maintainRecordProps = {
+      eachCustomerInfo: eachCustomerInfo,
       mode: mode
     }
 
@@ -729,7 +741,7 @@ class BasicInfo extends Component {
             <div>
               <AddCrewModal key={id} {...modal}/>
               <EditBriefBasicInfo
-                key={this.state.eachCustomerInfo ? 'edit'+this.state.eachCustomerInfo.id.toString():'-1'}
+                key={this.state.eachCustomerInfo ? 'edit' + id + uuid.toString():'-1'}
                 {...basicInfoProps}
               />
               <EditDetailsBasicInfo
@@ -741,15 +753,18 @@ class BasicInfo extends Component {
 
         <div className="maintain">
           <Tabs>
-            <TabPane tab="维护记录" key="basicInfo" className="tab01">
+            <TabPane tab="维护记录" key="basicInfo" className="addMaintainRecord">
               {mode && mode !== 'view' &&
-                <AddMaintainRecord />
+                <AddMaintainRecord {...maintainRecordProps}/>
               }
               <MaintainRecord {...maintainRecordProps}/>
             </TabPane>
             <TabPane tab="操作记录" key="familyInfo" className="tab02">
               <div className="history">
-                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <div>
+                  <span>王祎</span>
+                  <span> 编辑了客户手机号 </span>
+                </div>
                 <p>2017/03/10 13:40:23</p>
               </div>
               <div className="history">

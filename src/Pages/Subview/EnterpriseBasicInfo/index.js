@@ -40,15 +40,18 @@ import EditBriefBasicInfo from './widget/Form/EditBriefBasicInfo'
 import BasicInfoEdit from './widget/BasicInfoEdit'
 import AddCrewModal from '../PersonalBasicInfo/widget/AddCrewModal'
 
+function info(msg,color){
+  console.log('%c'+msg,'color:'+color);
+}
+
 class EnterpriseBasicInfo extends Component {
   state = {
     id: '',
     modalVisible: false,
-    // edited: false,
 
     joinersBeEdited: false,
     joiners: [],
-    tags: [],
+    staffs: [],
 
     accountsArr: ['row-0'],
     accounts: {},
@@ -99,19 +102,37 @@ class EnterpriseBasicInfo extends Component {
     }
   }
 
-  componentWillMount(){
-    // console.log('will mount');
+  // modal Show
+  modalShow = () => {
+    this.setState({
+      modalVisible: true
+    })
+  }
 
+  // modal hide
+  modalHide = () => {
+    let newState = update(this.state, {
+      modalVisible: {$set: false}
+    })
+
+    this.setState(newState);
+    return newState;
+  }
+
+  componentWillMount(){
+    // info('basicInfo will mount');
     this.getBaseInfo(this.props.currentCustomerInfo.id);
   }
 
   componentWillReceiveProps(next){
-    // console.log('will recieve props');
-
+    // info(' will receive props.');
+    // 当前的客户 id发生变化时，或者当前用户的信息 beEditedNumber === true时，重置 state
     const { id, beEditedArray } = this.props.currentCustomerInfo;
     if(id !== next.currentCustomerInfo.id ||
       (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) ) {
+      // console.log('get info');
       this.getBaseInfo(next.currentCustomerInfo.id);
+      // this.resetAccounts();
     }
 
     // 重置 joinersBeEdited
@@ -122,6 +143,22 @@ class EnterpriseBasicInfo extends Component {
     }
   }
 
+  // reset accounts
+  resetAccounts = (state) => {
+    let st = state || this.state;
+    const { originAccounts, originAccountsArr } = st;
+    let newAccounts = _.cloneDeep(originAccounts);
+    let newAccountsArr = _.cloneDeep(originAccountsArr);
+
+    let newState = update(this.state, {
+      accounts: {$set: newAccounts},
+      accountsArr: {$set: newAccountsArr}
+    })
+
+    this.setState(newState);
+    return newState
+  }
+
   // 获取客户基本信息
   getBaseInfo = (id) => {
     if(id !== -1) {
@@ -129,7 +166,7 @@ class EnterpriseBasicInfo extends Component {
       .then((res) => {
         if(res.data.data == null) {
         } else {
-          console.log(res.data.data);
+          // console.log(res.data.data);
           const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
           // 客户账户
@@ -158,7 +195,8 @@ class EnterpriseBasicInfo extends Component {
             accountsArr: {$set: accountsArr.length !== 0 ? accountsArr : ['row-0']},
 
             joiners: {$set: res.data.data.joiners},
-            tags: {$set: newJoiners},
+            staffs: {$set: newJoiners},
+
             eachCompanyInfo: {
               department: {
                 $set: {
@@ -232,62 +270,80 @@ class EnterpriseBasicInfo extends Component {
           })
 
           this.setState(newState);
+          return newState;
         }
       })
     }
   }
 
   // 表单数据的双向绑定
-  handleFormChange = (changedFields) => {
-    let oldDepartment = this.state.eachCompanyInfo.department.value;
-    let newDepartment = changedFields.department && changedFields.department.value;
+  // handleFormChange = (changedFields) => {
+  //   let oldDepartment = this.state.eachCompanyInfo.department.value;
+  //   let newDepartment = changedFields.department && changedFields.department.value;
+  //
+  //   // 所属机构，客户经理，所属网格三级联动
+  //   let eachCompanyInfo;
+  //   if(changedFields.department && oldDepartment !== newDepartment) {
+  //     eachCompanyInfo = {
+  //       ...this.state.eachCompanyInfo,
+  //       ...changedFields,
+  //       ...{manager: {
+  //         value: undefined
+  //       }},
+  //       ...{grid: {
+  //         value: undefined
+  //       }}
+  //     }
+  //   } else {
+  //     eachCompanyInfo = {
+  //       ...this.state.eachCompanyInfo,
+  //       ...changedFields
+  //     }
+  //   }
+  //
+  //   let accounts = {
+  //     ...this.state.accounts,
+  //     ...changedFields
+  //   }
+  //
+  //   let newState = update(this.state, {
+  //     accounts: {$set: {...accounts}},
+  //     eachCompanyInfo: {$set: {...eachCompanyInfo}}
+  //   })
+  //   this.setState(newState);
+  // }
 
-    // 所属机构，客户经理，所属网格三级联动
-    let eachCompanyInfo;
-    if(changedFields.department && oldDepartment !== newDepartment) {
-      eachCompanyInfo = {
-        ...this.state.eachCompanyInfo,
-        ...changedFields,
-        ...{manager: {
-          value: undefined
-        }},
-        ...{grid: {
-          value: undefined
-        }}
-      }
-    } else {
-      eachCompanyInfo = {
-        ...this.state.eachCompanyInfo,
-        ...changedFields
-      }
-    }
-
-    let accounts = {
-      ...this.state.accounts,
-      ...changedFields
-    }
-
+  // change joiners
+  changeJoiners = (joiner) => {
+    const { staffs } = this.state;
+    const newJoiners = staffs.filter(item => item.id !== joiner.id);
     let newState = update(this.state, {
-      accounts: {$set: {...accounts}},
-      eachCompanyInfo: {$set: {...eachCompanyInfo}}
+      staffs: {$set: newJoiners}
     })
     this.setState(newState);
-  }
+  };
 
-  // modal Show
-  modalShow = () => {
-    this.setState({
-      modalVisible: true
-    })
-  }
-
-  // modal hide
-  modalHide = () => {
-    let newState = update(this.state, {
-      modalVisible: {$set: false}
+  // 重置参与人员
+  resetJoiners = (state) => {
+    let st = state || this.state;
+    let newJoiners = _.cloneDeep(st.joiners);
+    let newState = update(st, {
+      staffs: {$set: newJoiners}
     })
     this.setState(newState);
-    return newState;
+    return newState
+  }
+
+  // 参与人员被修改了
+  joinersBeModified = (state) => {
+    let st = state || this.state;
+
+    if(!st.joinersBeEdited) {
+      let newState = update(st, {
+        joinersBeEdited: {$set: true}
+      })
+      this.setState(newState);
+    }
   }
 
   // 删除对应的 accounts字段
@@ -318,40 +374,6 @@ class EnterpriseBasicInfo extends Component {
     })
   }
 
-  // 参与人员被修改了
-  joinersBeModified = (state) => {
-    let st = state || this.state;
-
-    if(!st.joinersBeEdited) {
-      let newState = update(st, {
-        joinersBeEdited: {$set: true}
-      })
-      this.setState(newState);
-    }
-  }
-
-  // change joiners
-  changeJoiners = (joiner) => {
-    // console.log(joiner);
-    const { tags } = this.state;
-    const newJoiners = tags.filter(item => item.id !== joiner.id);
-    let newState = update(this.state, {
-      tags: {$set: newJoiners}
-    })
-    this.setState(newState);
-  };
-
-  // 重置参与人员
-  resetJoiners = (state) => {
-    let st = state || this.state;
-    let newJoiners = _.cloneDeep(st.joiners);
-    let newState = update(st, {
-      tags: {$set: newJoiners}
-    })
-    this.setState(newState)
-    return newState
-  }
-
   // 新建/编辑客户
   addNewCustomer = (briefInfo) => {
     const { id, name } = this.props.currentCustomerInfo;
@@ -359,7 +381,7 @@ class EnterpriseBasicInfo extends Component {
     const dateFormat = 'YYYY-MM-DD'; // 日期格式
 
     // 参与人数信息
-    let joiners = this.state.tags.map(item => item.id);
+    let joiners = this.state.staffs.map(item => item.id);
     // 账户信息
     let accountsInfo = accountsArr.map((item, index) => {
       return {
@@ -385,7 +407,7 @@ class EnterpriseBasicInfo extends Component {
       yearIncome
     } = briefInfo
 
-    console.log(briefInfo);
+    // console.log(briefInfo);
     let json = {
       accounts: accountsInfo,
       address: address ? address : '',
@@ -419,7 +441,7 @@ class EnterpriseBasicInfo extends Component {
         }
       });
     } else {
-      ajax.PutJson(API.PUT_CUSTOMER_ENTERPRISE_BASE(5), json).then((res)=>{
+      ajax.PutJson(API.PUT_CUSTOMER_ENTERPRISE_BASE(id), json).then((res)=>{
         if(res.code === 200) {
           message.success('编辑用户成功');
           this.props.decreaseBeEditArray('enterpriseBasicInfo');
@@ -432,14 +454,14 @@ class EnterpriseBasicInfo extends Component {
   }
 
   render() {
-    const { increaseBeEditArray, decreaseBeEditArray } = this.props;
+    const { increaseBeEditArray, decreaseBeEditArray, uuid } = this.props;
     const { step, mode, beEditedArray } = this.props.currentCustomerInfo;
     const {
       id,
       modalVisible,
       eachCompanyInfo,
 
-      tags,
+      staffs,
       joinersBeEdited,
 
       accountsArr,
@@ -452,7 +474,10 @@ class EnterpriseBasicInfo extends Component {
       visible: modalVisible,
       hide: this.modalHide,
 
-      staffs: tags,
+      id: id,
+
+      staffs: staffs,
+      changeJoiners: this.changeJoiners,
       joinersBeModified: this.joinersBeModified,
       resetJoiners: this.resetJoiners,
     };
@@ -471,11 +496,16 @@ class EnterpriseBasicInfo extends Component {
       deleteAccountsInfo: this.deleteAccountsInfo,
       addAccountsInfo: this.addAccountsInfo,
 
-      tags: tags,
+      staffs: staffs,
       changeJoiners: this.changeJoiners,
       joinersBeEdited: joinersBeEdited,
 
       modalShow: this.modalShow,
+    }
+
+    const maintainRecordProps = {
+      id: id,
+      mode: mode
     }
 
     return(
@@ -485,6 +515,7 @@ class EnterpriseBasicInfo extends Component {
             <div>
               <AddCrewModal key={id} {...modal}/>
               <EditBriefBasicInfo
+                key={this.state.eachCompanyInfo ? 'edit' + id + uuid.toString(): '-1'}
                 {...basicInfoProps}
                 onChange={this.handleFormChange}
               />
@@ -497,9 +528,11 @@ class EnterpriseBasicInfo extends Component {
 
         <div className="maintain">
           <Tabs type='card'>
-            <TabPane tab="维护记录" key="basicInfo" className="tab01">
-              <AddMaintainRecord />
-              <MaintainRecord />
+            <TabPane tab="维护记录" key="basicInfo" className="addMaintainRecord">
+              {mode && mode !== 'view' &&
+                <AddMaintainRecord {...maintainRecordProps}/>
+              }
+              <MaintainRecord {...maintainRecordProps}/>
             </TabPane>
             <TabPane tab="操作记录" key="familyInfo" className="tab02">
               <div className="history">

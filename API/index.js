@@ -2,8 +2,17 @@ export default {
   // 获取权限
   POST_PRIVILEGE_COMMON: '/api/privilege/common',
 
-  //个人客户：
-  //户家庭信息：查看、增加、删除、修改
+  // 新增客户
+  POST_CUSTOMER_INDIVIDUAL_BASE: '/api/customer/individual/base',
+
+  // 基本信息
+  PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1: id => `/api/customer/individual/${id}/base/tab1`,
+  PUT_CUSTOMER_INDIVIDUAL_BASE_TAB2: id => `/api/customer/individual/${id}/base/tab2`,
+
+  // 维护记录
+  POST_CUSTOMER_MAINTENANCE_COUNT: id => `/api/customer/${id}/maintenance`,
+
+  //家庭信息：查看、增加、删除、修改
   GET_CUSTOMERS_FAMILY:customerId =>`/api/customer/individual/${customerId}/families`,
   POST_CUSTOMERS_FAMILY:customerId => `/api/customer/individual/${customerId}/family`,
   DELETE_CUSTOMERS_FAMILY:familyId=>`/api/customer/individual/family/${familyId}`,
@@ -12,8 +21,9 @@ export default {
   GET_JOBINFO_BASE:customerId=>`/api/customer/individual/${customerId}/job`,
   PUT_JOBINFO_BASE:customerId=>`/api/customer/individual/${customerId}/job`,
   //风险测试：
-  GET_RISKQUESTIONS:`/api/riskQuestions`,//请求问卷
-  GET_CALCULATESCORE:`/api/calculateScore`,//计算分数
+  GET_CUSTOMER_PRE_RISKQUESTIONS:customerId=>`/api/customer/individual/${customerId}/riskQuestions`,//获取之前做过的题目
+  GET_CUSTOMER_RISKQUESTIONS:customerId=>`/api/customer/individual/riskQuestions`,//获取题目
+  PUT_CUSTOMER_RISKQUESTION:customerId=>`/api/customer/individual/${customerId}/riskQuestion`,//提交测试
   //企业客户：
   //关键人信息查看、增加、删除、修改
   GET_CUSTOMETS_KEYPERSONS:customerId=>`/api/customer/enterprise/${customerId}/keyPersons`,
@@ -28,7 +38,7 @@ export default {
   PUT_CUSTOMERS_FINANCES:financesId=>`/api/customer/finance/${financesId}`,
   //获取金融业务信息产品下拉：
   GET_CUSTOMER_FINANCE_CATEGORY:'/api/customer/finance/category',
-  
+
   //enterprise:
   GET_CUSTOMER_ENTERPRISE_BASE: customerId => `/api/customer/enterprise/${customerId}/base`,
   PUT_CUSTOMER_ENTERPRISE_BASE: id =>  `/api/customer/enterprise/${id}/base`,
@@ -54,11 +64,6 @@ export default {
   GET_RELATION_SLIDER_BAR: '/asd/common/dropdown/list/relation',
   GET_JOBCATEGORY_SLIDER_BAR: '/asd/common/dropdown/list/jobCategory',
   //==================================================================
-
-  // 新增客户
-  POST_CUSTOMER_INDIVIDUAL_BASE: '/api/customer/individual/base',
-  PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1: id => `/api/customer/individual/${id}/base/tab1`,
-  PUT_CUSTOMER_INDIVIDUAL_BASE_TAB2: id => `/api/customer/individual/${id}/base/tab2`,
 
   GET_DEPARTMENT_AREAS: id => `/api/department/${id}/areas`,
   GET_CUSTOMER_DEPARTMENT: '/api/customer/add/departments/noHierarchy',
@@ -147,6 +152,8 @@ export default {
     GET_CAPTCHA:'/api/captcha',
     //登陆
     POST_LOGIN:'/api/login',
+    //注销登陆
+    GET_LOGOUT:'/api/logout',
   // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory',
 
   // 添加组织机构

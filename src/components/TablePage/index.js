@@ -16,22 +16,28 @@ import {
   resetBeEditArray
 } from '../../redux/actions/customerAction';
 
+// let uuid = 1000;
+
 class TablePage extends Component {
   // static propTypes = {
   //   editDock: PropTypes.object
   // };
 
   state = {
+    uuid: 1000,
+
     selectedRowKeys: [], // 被选中的 row
+    selectedCustomers: [],
+
     dockVisible: false, // slide visible
     modalVisible: false,
-
-    dockContent: 'CustomerSlider',
+    dockContent: '',
     CustomerSlider: '', // 异步加载组件
     BatchParticipate: '',
     ImportCustomers: '',
 
     currentCustomer: {},
+    temporary: {},
     currentId: '', // 当前用户的 id
     clientType: '个人客户', // 客户类型
     mode: 'create', // 模式
@@ -69,54 +75,70 @@ class TablePage extends Component {
         })
   }
 
-  // 获取被选中的 row的 Id，打印当前的 Id
-  onSelectChange = (selectedRowKeys) => {
-    let newState = {
-      selectedRowKeys: selectedRowKeys
-    }
-
-    if(selectedRowKeys.length === 0) {
-      newState.batchProcessing = false
-    } else {
-      newState.batchProcessing = true
-    }
-
-    this.setState(newState)
+  componentWillReceiveProps(next) {
+    // console.log(this.state.uuid)
   }
-
-  // componentWillReceiveProps(next) {
-  //   console.log(this.state.changeId)
-  // }
 
   // 点击某一栏，编辑客户信息
   rowClick = (info) => {
-    const { dockVisible } = this.state;
+    const { dockVisible, uuid } = this.state;
     const { dispatch, privilege, currentCustomer } = this.props;
     const mode = privilege[info.id]['system:update'] ? 'edit' : 'view';
     const beEditedArray = currentCustomer.beEditedArray;
 
     // 如果前一个客户的信息被编辑之后，未被保存，切换客户，则显示弹窗
-    if(beEditedArray && beEditedArray.length !== 0 && dockVisible) {
+    if(beEditedArray && beEditedArray.length !== 0 && currentCustomer.id !== info.id) {
+      // 当数组被编辑并且当前的 id不同于被点击的 id，重新渲染页面
       let newState = update(this.state, {
+        dockContent: {$set: this.state.CustomerSlider},
+        onlyCloseModal: {$set: false},
+        temporary: {$set: info},
         modalVisible: {$set: true}
       })
       this.setState(newState);
-    } else if(info.id !== currentCustomer.id || !dockVisible){
+    } else if(currentCustomer.id === info.id && beEditedArray && beEditedArray.length === 0 && !dockVisible) {
+      // 当点击同一行并且当前的 dock处于被关闭状态，
+      // 则 uuid+1，并且重新发一个 action改回原来的姓名
+      let newState = update(this.state, {
+        dockContent: {$set: this.state.CustomerSlider},
+        temporary: {$set: info},
+        dockVisible: {$set: true},
+        uuid: {$set: this.state.uuid + 1}
+      })
+      this.setState(newState);
+      dispatch(saveCurrentCustomerInfo(info, mode))
+    } else if(currentCustomer.id === info.id && beEditedArray && beEditedArray.length !== 0){
+      // 当前的 id被编辑之后，点击相同的一行，不触发重新渲染
+      let nextStepState = update(this.state, {
+        dockVisible: {$set: true},
+      })
+      this.setState(nextStepState);
+    } else if(currentCustomer.id !== info.id) {
+      // 如果当前 id不一样，则 uuid不 +1
+      let newState = update(this.state, {
+        dockContent: {$set: this.state.CustomerSlider},
+        mode: {$set: mode},
+        onlyCloseModal: {$set: false},
+        dockVisible: {$set: true},
+        currentCustomer: {$set: info},
+      })
+
+      this.setState(newState);
+      dispatch(saveCurrentCustomerInfo(info, mode))
+    } else {
+      // 判断 dock是否显示，若未显示，则弹出 slider
+      let newState = update(this.state, {
+        dockContent: {$set: this.state.CustomerSlider},
+        mode: {$set: mode},
+        onlyCloseModal: {$set: false},
+        dockVisible: {$set: true},
+        currentCustomer: {$set: info},
+        uuid: {$set: this.state.uuid + 1}
+      })
+
+      this.setState(newState);
       dispatch(saveCurrentCustomerInfo(info, mode))
     }
-
-    // 判断 dock是否显示，若未显示，则弹出 slider
-    let newState = {
-      dockContent: 'CustomerSlider',
-      mode: mode,
-      currentCustomer: info,
-      onlyCloseModal: false
-    }
-
-    if(!this.state.dockVisible ) {
-      newState.dockVisible = true;
-    }
-    this.setState(newState);
   }
 
   // not save the be edited info
@@ -133,13 +155,19 @@ class TablePage extends Component {
     if(onlyCloseModal) { // 关闭 modal和 dock
       newState = update(this.state, {
         modalVisible: {$set: false},
-        dockVisible: {$set: false}
+        dockVisible: {$set: false},
+        uuid: {$set: this.state.uuid + 1}
       })
+      dispatch(resetBeEditArray());
+
     } else if(beEditedArray && beEditedArray.length !== 0) { // 仅关闭 modal,
       newState = update(this.state, {
-        modalVisible: {$set: false}
+        currentCustomer: {$set: this.state.temporary},
+        modalVisible: {$set: false},
+        uuid: {$set: this.state.uuid + 1}
       })
-      dispatch(saveCurrentCustomerInfo(currentCustomer, mode))
+
+      dispatch(saveCurrentCustomerInfo(this.state.temporary, mode))
     }
 
     this.setState(newState);
@@ -181,8 +209,10 @@ class TablePage extends Component {
   // add new customer
   addNewCustomer = () => {
     const { dispatch } = this.props;
+    // slider visible and row click crrentId
+
     let newState = update(this.state, {
-      dockContent: {$set: 'CustomerSlider'},
+      dockContent: {$set: this.state.CustomerSlider},
       dockVisible: {$set: true}
     })
     this.setState(newState);
@@ -210,13 +240,55 @@ class TablePage extends Component {
     this.setState(newState);
   }
 
+  // // 获取被选中的 row的 Id，打印当前的 Id
+  customerChange = (selectedRowKeys) => {
+    let newState = {
+      selectedRowKeys: selectedRowKeys
+    }
+
+    // if(selectedRowKeys.length === 0) {
+    //   newState.batchProcessing = false
+    // } else {
+    //   newState.batchProcessing = true
+    // }
+
+    this.setState(newState)
+  }
+
+  // 选择客户
+  selectCustomers = (record, selected, selectedRows) => {
+    let newState = update(this.state, {
+      selectedCustomers: {$set: selectedRows}
+    })
+
+    this.setState(newState);
+  }
+
+  // 选择所有客户
+  selectAllCustomers = (selected, selectedRows, changeRows) => {
+    let newState = update(this.state, {
+      selectedCustomers: {$set: selectedRows}
+    })
+
+    this.setState(newState);
+  }
+
+  // 更新 customers lists的数据
+  changeCustomersLists = (customer) => {
+    let newState = update(this.state, {
+      selectedCustomers: {$set: this.state.selectedCustomers.filter(item => item.id !== customer.id)}
+    })
+
+    this.setState(newState);
+  }
+
   // 批量参加
   batchParticipate = () => {
     const { dispatch } = this.props;
     dispatch(resetCustomerInfo());
 
     this.setState({
-      dockContent: 'BatchParticipate',
+      dockContent: this.state.BatchParticipate,
       dockVisible: true
     })
   }
@@ -226,11 +298,21 @@ class TablePage extends Component {
     message.success('关注成功');
   }
 
+  // 批量关注
+  batchUnfocus = () => {
+    message.success('取关成功');
+  }
+
+  // 批量关注
+  batchTrans = () => {
+    message.success('转移成功');
+  }
+
   // Import Customers
   importCustomersLists = () => {
     // 判断 dock是否显示，若未显示，则弹出 slider
     let newState = {
-      dockContent: 'ImportCustomers',
+      dockContent: this.state.ImportCustomers,
     }
 
     if(!this.state.dockVisible ) {
@@ -241,6 +323,8 @@ class TablePage extends Component {
 
   render(){
     const { columns, dataSource, loading, pagination, refreshCustomerLists } = this.props;
+    const { selectedCustomers } = this.state;
+    const selectedRowKeys = selectedCustomers.map(item => item.id);
 
     // table props lists
     const tableProps = {
@@ -258,8 +342,11 @@ class TablePage extends Component {
       rowKey: record => record.id,
       scroll: { y: 1 }, // 固定表头
       rowSelection: {
-        onChange: this.onSelectChange
-      } // 打开选择框
+        selectedRowKeys,
+        onChange: this.customerChange,
+        onSelect: this.selectCustomers,
+        onSelectAll: this.selectAllCustomers
+      }, // 打开选择框
     }
 
     // page props lists
@@ -273,6 +360,16 @@ class TablePage extends Component {
       onChange: this.props.pageChange,
       // simple: true,
       showTotal: (total, range) => `共${total}条`
+    }
+
+    // sliderProps
+    const sliderProps = {
+      showModal: this.showModal,
+      closeDock: this.closeDock,
+      onlyModalClose: this.onlyModalClose,
+      visible: this.state.dockVisible,
+      refreshCustomerLists: this.props.refreshCustomerLists,
+      uuid: this.state.uuid
     }
 
     // dock props lists
@@ -289,20 +386,13 @@ class TablePage extends Component {
       }, // 背景
       fluid: true,
       defaultSize: .48, // 初始 width/height
-      duration: 350, // 动画时间
+      duration: 500, // 动画时间
       zIndex: 100,
     }
 
-    // slider visible and row click crrentId
-    const sliderProps = {
-      showModal: this.showModal,
-      closeDock: this.closeDock,
-      onlyModalClose: this.onlyModalClose,
-      visible: this.state.dockVisible,
-      refreshCustomerLists: refreshCustomerLists
-    }
-
     const batchProps = {
+      changeCustomersLists: this.changeCustomersLists,
+      selectedCustomers: this.state.selectedCustomers,
       closeDock: this.closeDock
     }
 
@@ -322,16 +412,33 @@ class TablePage extends Component {
           <p>您已更新了该客户的信息，是否需要保存？</p>
         </Modal>
 
-        {this.state.batchProcessing &&
-          <div
-            className={this.state.batchProcessing ? "batchProcessing batchProcessingActive" : "batchProcessing"}
+        {this.state.selectedCustomers.length !== 0 &&
+          <ul
+            className={this.state.selectedCustomers.length !== 0 ? "batchProcessing batchProcessingActive" : "batchProcessing"}
           >
-            <Button onClick={this.batchFocus}>批量关注</Button>
-            <Button onClick={this.batchParticipate}>批量参与</Button>
-            <Button>批量提醒</Button>
-            <Button>取消关注</Button>
-            <Button>批量转移</Button>
-          </div>
+            <p>
+              <Icon type=""/>
+              <span>已选</span>
+              <span className="counter">13</span>
+              <span>位客户</span>
+            </p>
+            <li onClick={this.batchFocus}>
+              <Icon type=""/>
+              <span>批量关注</span>
+            </li>
+            <li onClick={this.batchParticipate}>
+              <Icon type=""/>
+              <span>批量参与</span>
+            </li>
+            <li onClick={this.batchUnfocus}>
+              <Icon type=""/>
+              <span>取消关注</span>
+            </li>
+            <li  onClick={this.batchTrans}>
+              <Icon type=""/>
+              <span>批量转移</span>
+            </li>
+          </ul>
         }
 
         {this.state.addCustomerPrivilege &&
@@ -357,14 +464,12 @@ class TablePage extends Component {
 
         <div className="slider">
           <Dock {...dockProps}>
-            {this.state.dockContent === 'CustomerSlider' && this.state.CustomerSlider &&
-              <this.state.CustomerSlider {...sliderProps}/>
-            }
-            {this.state.dockContent === 'BatchParticipate' && this.state.BatchParticipate &&
-              <this.state.BatchParticipate {...batchProps}/>
-            }
-            {this.state.dockContent === 'ImportCustomers' && this.state.ImportCustomers &&
-              <this.state.ImportCustomers {...importCustomersProps}/>
+            {this.state.dockContent !== '' &&
+              <this.state.dockContent
+                {...batchProps}
+                {...sliderProps}
+                {...importCustomersProps}
+              />
             }
           </Dock>
         </div>

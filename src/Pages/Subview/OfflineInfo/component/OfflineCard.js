@@ -74,7 +74,7 @@ export default class FinanceCard extends Component{
                         业务额：
                     </Col>
                     <Col span={16}>
-                        {this.props.item.money.value}
+                        {this.props.item.money.value===""?"":this.props.item.money.value}
                     </Col>
                 </Row>
                 <Row>
@@ -83,7 +83,7 @@ export default class FinanceCard extends Component{
                     </Col>
                     <Col span={16}>
                         {
-                            this.props.item.profit.value===""?"":this.props.item.profit.value+"%"
+                            this.props.item.profit.value===""?"":this.props.item.profit.value===""?"":this.props.item.profit.value+"%"
                         }
                     </Col>
                 </Row>
@@ -94,7 +94,7 @@ export default class FinanceCard extends Component{
                     <Col span={16}>
                         
                         {
-                            this.props.item.buyDate.value===undefined?'':this.props.item.buyDate.value.format('YYYY/MM/DD')
+                            this.props.item.buyDate.value===undefined||this.props.item.buyDate.value===""?'':this.props.item.buyDate.value.format('YYYY/MM/DD')
                         }
                     </Col>
                 </Row>
@@ -104,7 +104,7 @@ export default class FinanceCard extends Component{
                     </Col>
                     <Col span={16}>
                         {
-                             this.props.item.expireDate.value===undefined?'':this.props.item.buyDate.value.format('YYYY/MM/DD')
+                             this.props.item.expireDate.value===undefined||this.props.item.expireDate.value===""?'':this.props.item.buyDate.value.format('YYYY/MM/DD')
                         }
                     </Col>
                 </Row>

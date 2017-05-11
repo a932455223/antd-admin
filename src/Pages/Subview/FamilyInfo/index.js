@@ -225,15 +225,10 @@ class FamilyInfo extends Component {
     })
   }
   handleFormChange = (index,changedFields) => {
-    // console.log(index)
-    // this.setState({
-    //   fields: { ...this.state.fields, ...changedFicelds },
-    // });
     let fields={ ...this.state.familyList[index], ...changedFields };
     let newState=update(
       this.state,{familyList:{[index]:{$set:fields}}}
     )
-    // console.log("0000000000000",newState);
     this.setState(newState)
   }
   onAddChange=(changedFields)=>{
@@ -271,6 +266,9 @@ class FamilyInfo extends Component {
     return(
       <div className="my-cards-page">
         {loading}
+        {/*<pre className="language-bash" style={{textAlign:'left'}}>
+              {JSON.stringify(this.state, null, 2)}
+            </pre>*/}
         {
           this.state.familyList.length?
           <div className="my-cards-area">
@@ -318,10 +316,8 @@ class FamilyInfo extends Component {
               isAdd={this.state.isAdd}
               toggleAdd={this.toggleAdd}
             />
-            {/*<pre className="language-bash" style={{textAlign:'left'}}>
-              {JSON.stringify(this.state.addFamilyCardLoading, null, 2)}
-            </pre>*/}
           </div>:
+            
           <AddFamilyCard
             commonJobCategory={this.state.commonJobCategory}
             addNewFamilyValue={this.addNewFamilyValue}

@@ -43,16 +43,44 @@
   // position: relative;
   .batchProcessing {
     position: absolute;
+    display: inline-flex;
     margin-left: 18px;
-    margin-top: -91px;
-    padding-bottom: 20px;
+    margin-top: -94px;
+    padding-top: 10px;
+    padding-bottom: 21px;
     // background-color: #fff;
     transition: all 1s ease;
     z-index: 10;
     transform: translateX(-100%);
 
-    button {
-      margin-right: 16px;
+    >p {
+      height: 20px;
+    	font-family: PingFangSC;
+    	font-size: 14px;
+    	font-weight: 500;
+    	color: #6a819a;
+      padding-right: 15px;
+    }
+
+    li {
+      // width: 56px;
+    	height: 20px;
+    	font-family: PingFangSC;
+    	font-size: 14px;
+    	font-weight: 500;
+    	color: #6a819a;
+      padding: 0 15px;
+
+      +li {
+        // width: 3px;
+      	// height: 17px;
+      	border-left: solid 1px #d4d4d5;
+      }
+
+      >span {
+        // font-size: 16px;
+        cursor: pointer;
+      }
     }
   }
 
