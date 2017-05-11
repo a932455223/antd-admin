@@ -761,7 +761,10 @@ class BasicInfo extends Component {
             </TabPane>
             <TabPane tab="操作记录" key="familyInfo" className="tab02">
               <div className="history">
-                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <div>
+                  <span>王祎</span>
+                  <span> 编辑了客户手机号 </span>
+                </div>
                 <p>2017/03/10 13:40:23</p>
               </div>
               <div className="history">
