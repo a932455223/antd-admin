@@ -129,7 +129,7 @@ class Login extends React.Component {
       // </Row>
       
       <div className="loginpagebc">
-        <span>{JSON.stringify(this.props.user)}</span>
+        <span>{/*JSON.stringify(this.props.user)*/}</span>
         
         
         <div className="loginpage">
