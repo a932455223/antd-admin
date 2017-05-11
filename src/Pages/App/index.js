@@ -1,33 +1,40 @@
-import React,{Component} from 'react';
-import {connect} from 'react-redux';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
-const { SubMenu } = Menu;
-const {Content, Footer, Sider } = Layout;
-import Header from '../../components/Header/Header';
+import React, {Component} from "react";
+import {connect} from "react-redux";
+import {Layout, Menu} from "antd";
+//=======================================================
+import Header from "../../components/Header/Header";
 // import MenuList from '../MenuList/MenuList';
-import styles from'./index.scss'
-import SiderBar from '../../components/SliderBar'
-import NavPath from '../../components/NavPath/NavPath'
-import './App.less'
-import '../../style/base.less'
-import '../../style/iconfont.less'
- class App extends Component{
-    render(){
-        return (
-            <Layout >
-              <Header />
-              <Layout>
-                <SiderBar/>
-                <Layout>
-                    <Content style={{display: 'flex'}}>
-                        {this.props.children}
-                    </Content>
+import SiderBar from "../../components/SliderBar";
+//===========================================================
+import "./App.less";
+import "../../style/base.less";
+import "../../style/iconfont.less";
 
-                </Layout>
-             </Layout>
+const {SubMenu} = Menu;
+const {Content, Footer, Sider} = Layout;
+
+
+
+class App extends Component {
+  state = {
+
+  };
+
+  render() {
+    return (
+      <Layout >
+        <Header />
+        <Layout>
+          <SiderBar/>
+          <Layout>
+            <Content style={{display: 'flex'}}>
+              {this.props.children}
+            </Content>
+          </Layout>
         </Layout>
-        )
-    }
+      </Layout>
+    )
+  }
 }
 
 function mapStateToProp(store) {

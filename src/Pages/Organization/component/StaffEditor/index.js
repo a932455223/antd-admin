@@ -223,12 +223,13 @@ class BranchesEditor extends Component {
       if (!err) {
         const data = ((values) => {
           for (let key in values) {
-            // if (typeof values[key] === 'object' && Object.keys(values[key]).includes('_d')) {
-            //   values[key] = values[key].format('YYYY-MM-DD');
-            // }
             if (values[key] === undefined || values[key] === null) {
               delete values[key]
             }
+            if (typeof values[key] === 'object' && Object.keys(values[key]).includes('_d')) {
+              values[key] = values[key].format('YYYY-MM-DD');
+            }
+
           }
 
           return values;

@@ -21,25 +21,31 @@ import $ from 'jquery'
 };
 
 
+// const PostJson = (url,data) => {
+//   return   $.ajax({
+//     url: url,
+//     type: 'POST',
+//     data: JSON.stringify(data),
+//     dataType: "json",
+//     contentType: "application/json"
+//   })
+// };
 const PostJson = (url,data) => {
-  return   $.ajax({
-    url: url,
-    type: 'POST',
-    data: JSON.stringify(data),
-    dataType: "json",
-    contentType: "application/json"
-  })
+  return axios.post(url,data)
 };
 
+// const PutJson = (url,data) => {
+//   return   $.ajax({
+//     url: url,
+//     type: 'PUT',
+//     data: JSON.stringify(data),
+//     dataType: "json",
+//     contentType: "application/json"
+//   })
+// }
 const PutJson = (url,data) => {
-  return   $.ajax({
-    url: url,
-    type: 'PUT',
-    data: JSON.stringify(data),
-    dataType: "json",
-    contentType: "application/json"
-  })
-}
+  return axios.put(url,data)
+};
 
 const Get = (url,data) => {
   return  axios.get(url,{
