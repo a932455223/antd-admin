@@ -3,8 +3,7 @@
  */
 import React, {Component} from "react";
 import {Button, Card, Icon, Table, Tabs, Tag, Tree} from "antd";
-import axios from "axios";
-import ajax from '../../tools/POSTF';
+import ajax from "../../tools/POSTF";
 //=============================================+
 import "./less/selectStaff.less";
 import API from "../../../API";
@@ -19,64 +18,79 @@ export default class SelectStaff extends Component {
     department: {},
     table: {
       dataSource: []
-    }
+    },
+    loading: true,
+    selectedStaff: [],
+    selectedRowKeys: [19]
   };
 
   componentWillMount() {
     ajax.Get(API.GET_DEPARTMENT_HIERARCHY)
       .then(res => {
         this.setState({
-          department: res.data.data
+          department: res.data.data[0]
         })
       });
+    this.getStaff();
 
-    ajax.Get(API.GET_STAFFS, {departmentId: 1})
-      .then(res => {
-        console.log(res.data.data);
-        this.setState({
-          table: {
-            dataSource: res.data.data.staffs
-          }
-        })
-      })
   }
 
   componentDidMount() {
     this.initTableScroll();
-    addEventListener('resize',this.initTableScroll)
+    addEventListener('resize', this.initTableScroll)
   }
 
   componentDidUpdate() {
     this.initTableScroll();
   }
 
-  componentWillUnmout(){
-    removeEventListener('resize',this.initTableScroll)
+  componentWillUnmout() {
+    removeEventListener('resize', this.initTableScroll)
+  }
+
+  getStaff(departmentId = 1) {
+    this.setState({
+      loading: true
+    })
+    ajax.Get(API.GET_STAFFS, {departmentId: departmentId})
+      .then(res => {
+        console.log(res.data.data);
+        this.setState({
+          table: {
+            dataSource: res.data.data.staffs
+          },
+          loading: false
+        })
+      })
   }
 
   createTree(data) {
-    if (data.childDepartment) {
+    if (data.childDepartments && data.childDepartments.length !== 0) {
       return (
-        <TreeNode title={<span>{data.name}</span>} id={data.id} key={data.id}>
+        <TreeNode title={<span><Icon type="folder-open"/>{data.name}</span>} id={data.id} key={data.id}>
           {
-            data.childDepartment.map(childrenDepartment => {
-              return (
-                this.createTree(childrenDepartment)
-              )
+            data.childDepartments.map(childrenDepartment => {
+              return this.createTree(childrenDepartment)
             })
           }
-        </TreeNode>  )
+        </TreeNode>)
     } else {
-      return <TreeNode title={<span>{data.name}</span>} id={data.id} key={data.id}/>
+      return <TreeNode title={<span><Icon type="folder-open"/>{data.name}</span>} id={data.id} key={data.id}/>
     }
   }
 
   rowSelection = {
+    // selectedRowKeys: this.state.selectedRowKeys,
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      console.log('state',this.state.selectedRowKeys)
+      console.log(`selectedRowKeys:`,selectedRowKeys, 'selectedRows: ', selectedRows);
+      this.setState({
+        selectedRowKeys: selectedRowKeys,
+        selectedStaff: selectedRows
+      })
     },
     onSelect: (record, selected, selectedRows) => {
-      console.log(record, selected, selectedRows);
+      console.log('onSelect',record, selected, selectedRows);
     },
     onSelectAll: (selected, selectedRows, changeRows) => {
       console.log(selected, selectedRows, changeRows);
@@ -86,6 +100,11 @@ export default class SelectStaff extends Component {
     }),
   };
 
+  treeSelect(selectKey) {
+    console.log(selectKey)
+    this.getStaff(selectKey[0])
+  }
+
   initTableScroll() {
     let selectStaff = document.getElementById('selectStaff');
     let container = selectStaff.getElementsByClassName('ant-card-body')[0];
@@ -93,7 +112,6 @@ export default class SelectStaff extends Component {
     tableScroll.style['max-height'] = container.offsetHeight - 83 - 130 + 'px';
     tableScroll.style['height'] = container.offsetHeight - 83 - 130 + 'px';
     tableScroll.style['overflow-y'] = 'auto';
-    console.log(tableScroll)
   }
 
 
@@ -116,6 +134,14 @@ export default class SelectStaff extends Component {
       dataSource: this.state.table.dataSource
     };
 
+    let tree = Object.keys(this.state.department).length > 0 ? (<Tree
+      defaultExpandedKeys={[this.state.department.id.toString()]}
+      onSelect={this.treeSelect.bind(this)}
+    >
+      {this.createTree(this.state.department)}
+    </Tree>)
+      : null
+
     return (
       <div className="select-staff" id="selectStaff">
         <Card
@@ -125,7 +151,7 @@ export default class SelectStaff extends Component {
               <h3>选择人员</h3>
               <Icon
                 type="close"
-                onClick={this.props.back.bind(this,this.props.id)}
+                onClick={this.props.back.bind(this, this.props.id)}
                 className="back"
               />
             </div>
@@ -137,11 +163,7 @@ export default class SelectStaff extends Component {
               <div>
                 <Tabs defaultActiveKey="1">
                   <TabPane tab={<span>职位</span>} key="1">
-                    <Tree
-                      checkable
-                    >
-                      {this.createTree(this.state.department)}
-                    </Tree>
+                    {tree}
                   </TabPane>
                   <TabPane tab={<span>群组</span>} key="2">
                     Tab 2
@@ -155,6 +177,7 @@ export default class SelectStaff extends Component {
                   rowKey={record => record.id}
                   rowSelection={this.rowSelection}
                   scroll={{y: 300}}
+                  loading={this.state.loading}
                   pagination={{
                     pageSize: 20
                   }}
@@ -169,13 +192,14 @@ export default class SelectStaff extends Component {
               <span>6ren</span>
             </div>
             <div>
-              <Tag>Tag 1</Tag>
-              <Tag><a href="https://github.com/ant-design/ant-design/issues/1862">Link</a></Tag>
-              <Tag closable>Tag 2</Tag>
-              <Tag closable>Prevent Default</Tag>
+              {
+                this.state.selectedStaff.map( item => {
+                  return <Tag closable={false}>{item.name}</Tag>
+                })
+              }
             </div>
             <div className="btn-group">
-              <Button onClick={this.props.back.bind(this,this.props.id)}>取消</Button>
+              <Button onClick={this.props.back.bind(this, this.props.id)}>取消</Button>
               <Button>确认</Button>
             </div>
           </div>

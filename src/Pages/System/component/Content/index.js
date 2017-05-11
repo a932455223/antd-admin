@@ -60,6 +60,8 @@ export default class Content extends Component{
             {...this.props.tableConf}
             rowKey={record => record.id}
             scroll={{y: 300}}
+            pagination={this.props.tableConf.pagination}
+            onChange={this.props.tableConf.onChange}
           />
         </Card>
         <Dock {...dockConfig} {...this.props.dockConf}>

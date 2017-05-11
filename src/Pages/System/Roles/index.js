@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {Button} from "antd";
-import axios from "axios";
 //=============================================================
 import RoleEdit from "../component/RoleEdit";
 import Content from "../component/Content";
@@ -10,32 +9,57 @@ import NewRole from '../component/NewRole';
 //===============================================================
 import "./less/rolesStyle.less";
 import API from "../../../../API";
+import ajax from '../../../tools/POSTF.js';
 
 export default class SystemRoles extends Component {
 
   state = {
     table: {
       loading: true,
-      dataSource: []
+      dataSource: [],
+      count: 100,
+      size: 15,
+      index: 1
     },
     dock: {
       visible: false,
       children: null
-    }
+    },
+    searchContent: ''
   };
 
   componentWillMount() {
-    axios.get(API.GET_SYSTEM_ROLES_LIST)
+    // ajax.Get(API.GET_SYSTEM_ROLES_LIST)
+    //   .then(res => {
+    //     this.setState({
+    //       table: {
+    //         dataSource: res.data.list,
+    //         loading: false
+    //       }
+    //     })
+    //   })
+
+    this.getRoles();
+
+    this.rolePermission(-1,'create')
+  }
+
+  getRoles(index = this.state.table.index){
+    ajax.Get(API.GET_SYSTEM_ROLES_LIST,{
+      index: index,
+      searchContent: this.state.searchContent,
+      size: this.state.table.size
+    })
       .then(res => {
         this.setState({
           table: {
-            dataSource: res.data.list,
+            ...this.state.table,
+            count: res.data.data.pagination.count,
+            dataSource: res.data.data.roles,
             loading: false
           }
         })
       })
-
-    this.rolePermission(-1,'create')
   }
 
 
@@ -54,6 +78,17 @@ export default class SystemRoles extends Component {
         addUser={this.addUser.bind(this)}
       />
     )
+  };
+
+  // 表格分页点击
+  tableChange(pagination) {
+    this.setState({
+      table: {
+        ...this.state.table,
+        index: pagination.current
+      }
+    },this.getUsers)
+
   }
 
   // 新增角色
@@ -109,6 +144,12 @@ export default class SystemRoles extends Component {
     });
   }
 
+  search(value){
+    this.setState({
+      searchContent: value
+    },this.getUsers.bind(this,1))
+  }
+
   // 权限分配
   rolePermission(id,mode) {
     this.setState({
@@ -131,14 +172,14 @@ export default class SystemRoles extends Component {
     const columns = [
       {
         title: '角色名称',
-        dataIndex: 'clientName',
-        key: 'clientName',
+        dataIndex: 'name',
+        key: 'name',
         width: '27%'
       },
       {
         title: '用户数',
-        dataIndex: 'customCount',
-        key: 'customCount',
+        dataIndex: 'roleCount',
+        key: 'roleCount',
         width: '27%'
       },
       {
@@ -179,12 +220,19 @@ export default class SystemRoles extends Component {
       columns: columns,
       dataSource: this.state.table.dataSource,
       loading: this.state.table.loading,
-      onRowClick: this.rowClick.bind(this)
+      onRowClick: this.rowClick.bind(this),
+      onChange: this.tableChange.bind(this),
+      pagination: {
+        total: this.state.table.count,
+        pageSize: this.state.table.size,
+        current: this.state.table.index
+      }
     };
 
     const dockConf = {
       visible: this.state.dock.visible,
       children: this.state.dock.children,
+      onChange: this.search.bind(this)
     };
 
     return (

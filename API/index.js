@@ -2,6 +2,12 @@ export default {
   // 获取权限
   POST_PRIVILEGE_COMMON: '/api/privilege/common',
 
+  //个人客户：
+  //户家庭信息：查看、增加、删除、修改
+  GET_CUSTOMERS_FAMILY: customerId => `/api/customer/individual/${customerId}/families`,
+  POST_CUSTOMERS_FAMILY: customerId => `/api/customer/individual/${customerId}/family`,
+  DELETE_CUSTOMERS_FAMILY: familyId => `/api/customer/individual/family/${familyId}`,
+  PUT_CUSTOMERS_FAMILY: familyId => `/api/customer/individual/family/${familyId}`,
   // 新增客户
   POST_CUSTOMER_INDIVIDUAL_BASE: '/api/customer/individual/base',
 
@@ -18,37 +24,41 @@ export default {
   DELETE_CUSTOMERS_FAMILY:familyId=>`/api/customer/individual/family/${familyId}`,
   PUT_CUSTOMERS_FAMILY:familyId => `/api/customer/individual/family/${familyId}`,
   //工作信息：查看、修改
-  GET_JOBINFO_BASE:customerId=>`/api/customer/individual/${customerId}/job`,
-  PUT_JOBINFO_BASE:customerId=>`/api/customer/individual/${customerId}/job`,
+  GET_JOBINFO_BASE: customerId => `/api/customer/individual/${customerId}/job`,
+  PUT_JOBINFO_BASE: customerId => `/api/customer/individual/${customerId}/job`,
   //风险测试：
   GET_CUSTOMER_PRE_RISKQUESTIONS:customerId=>`/api/customer/individual/${customerId}/riskQuestions`,//获取之前做过的题目
   GET_CUSTOMER_RISKQUESTIONS:customerId=>`/api/customer/individual/riskQuestions`,//获取题目
   PUT_CUSTOMER_RISKQUESTION:customerId=>`/api/customer/individual/${customerId}/riskQuestion`,//提交测试
+  GET_CUSTOMER_RISKQUESTIONS: customerId => `/api/customer/individual/${customerId}/riskQuestions`,//获取题目
+  PUT_CUSTOMER_RISKQUESTION: customerId => `/api/customer/individual/${customerId}/riskQuestion`,//提交测试
   //企业客户：
   //关键人信息查看、增加、删除、修改
-  GET_CUSTOMETS_KEYPERSONS:customerId=>`/api/customer/enterprise/${customerId}/keyPersons`,
-  POST_CUSTOMERS_KEYPERSONS:customerId=>`/api/customer/enterprise/${customerId}/keyPerson`,
-  DELETE_CUSTOMERS_KEYPERSONS:keypersonId=>`/api/customer/enterprise/keyPerson/${keypersonId}`,
-  PUT_CUSTOMERS_KEYPERSONS:keypersonId=>`/api/customer/enterprise/keyPerson/${keypersonId}`,
+  GET_CUSTOMETS_KEYPERSONS: customerId => `/api/customer/enterprise/${customerId}/keyPersons`,
+  POST_CUSTOMERS_KEYPERSONS: customerId => `/api/customer/enterprise/${customerId}/keyPerson`,
+  DELETE_CUSTOMERS_KEYPERSONS: keypersonId => `/api/customer/enterprise/keyPerson/${keypersonId}`,
+  PUT_CUSTOMERS_KEYPERSONS: keypersonId => `/api/customer/enterprise/keyPerson/${keypersonId}`,
   //个人客户金融业务信息、企业用户线下业务：
   // 查看、增加、删除、修改
-  GET_CUSTOMER_FINANCES:customerId=>`/api/customer/${customerId}/finances`,
-  POST_CUSTOMER_FINANCES:customerId=>`/api/customer/${customerId}/finance`,
-  DELETE_CUSTOMERS_FINANCES:financesId=>`/api/customer/finance/${financesId}`,
-  PUT_CUSTOMERS_FINANCES:financesId=>`/api/customer/finance/${financesId}`,
+  GET_CUSTOMER_FINANCES: customerId => `/api/customer/${customerId}/finances`,
+  POST_CUSTOMER_FINANCES: customerId => `/api/customer/${customerId}/finance`,
+  DELETE_CUSTOMERS_FINANCES: financesId => `/api/customer/finance/${financesId}`,
+  PUT_CUSTOMERS_FINANCES: financesId => `/api/customer/finance/${financesId}`,
   //获取金融业务信息产品下拉：
   GET_CUSTOMER_FINANCE_CATEGORY:'/api/customer/finance/category',
 
+  GET_CUSTOMER_FINANCE_CATEGORY: '/api/customer/finance/category',
+
   //enterprise:
   GET_CUSTOMER_ENTERPRISE_BASE: customerId => `/api/customer/enterprise/${customerId}/base`,
-  PUT_CUSTOMER_ENTERPRISE_BASE: id =>  `/api/customer/enterprise/${id}/base`,
+  PUT_CUSTOMER_ENTERPRISE_BASE: id => `/api/customer/enterprise/${id}/base`,
   POST_CUSTOMER_ENTERPRISE_BASE: '/api/customer/enterprise/base',
   //*===============================GET=======================================*
   // 客户列表
   GET_CUSTOMERS: '/api/customers',
   // customer/individual/:customerId/families
   // 用户与权限 角色 列表
-  GET_SYSTEM_ROLES_LIST: '/asd/system/roles/list',
+  GET_SYSTEM_ROLES_LIST: '/api/roles',
 
   GET_DEPARTMENT_HIERARCHY: '/api/department/hierarchy',
 
@@ -69,7 +79,7 @@ export default {
   GET_CUSTOMER_DEPARTMENT: '/api/customer/add/departments/noHierarchy',
   GET_DEPARTMENT_STAFFS: id => `/api/department/${id}/staffs`,
 
-  GET_CUSTOMER_BASE: id =>  `/api/customer/individual/${id}/base`, // 客户基本信息
+  GET_CUSTOMER_BASE: id => `/api/customer/individual/${id}/base`, // 客户基本信息
   // GET_JOBINFO_BASE: id =>  `/asd/jobinfo/${id}/base`, // 客户工作信息
   // GET_CUSTOMER_BASE: id => `/asd/customer/${id}/base`,
   // GET_JOBINFO_BASE: id => `/asd/jobinfo/${id}/base`,
@@ -97,6 +107,10 @@ export default {
   GET_STAFFS: '/api/staffs',
 
   // 用户权限管理 用户列表
+  GET_USERS: '/api/users',
+
+  // 用户详情
+  GET_USER_BASE: id => `/api/user/${id}`,
   // GET_USERS: '/asd/system/users',
 
   // 产品类别 层级
@@ -120,23 +134,26 @@ export default {
   //修改员工教育信息
   PUT_STAFF_EDUCATION: id => `/api/staff/${id}/education`,
 
+  // 用户修改
+  PUT_USER: id => `/api/user/${id}`,
+
   //获取多个组织机构的直属员工
-  GET_DEPARTMENTS_STAFFS:'/api/department/staffs',
+  GET_DEPARTMENTS_STAFFS: '/api/department/staffs',
 
   //网格列表
   POST_GRIDS_AREAS: '/api/areas',
 
   //网格列表id
-  GET_GRIDS_ID : id => `/api/area/${id}`,
+  GET_GRIDS_ID: id => `/api/area/${id}`,
 
   //新增网格
- POST_API_AREA : "/api/area",
+  POST_API_AREA: "/api/area",
 
- //编辑网格
- PUT_API_AREA : id => `/api/area/${id}`,
+  //编辑网格
+  PUT_API_AREA: id => `/api/area/${id}`,
 
- //获取网格所属机构dropdown
- GET_AREAS_ADD_DEPARTMENTS : '/api/areas/add/departments',
+  //获取网格所属机构dropdown
+  GET_AREAS_ADD_DEPARTMENTS: '/api/areas/add/departments',
 
 
   // 下拉菜单信息
@@ -148,6 +165,10 @@ export default {
   // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory'
 
   //======================================登录相关==================================
+  //获取验证码图片
+  GET_CAPTCHA: '/api/captcha',
+  //登陆
+  POST_LOGIN: '/api/login',
     //获取验证码图片
     GET_CAPTCHA:'/api/captcha',
     //登陆
@@ -182,7 +203,7 @@ export default {
   GET_STAFF_LEADERS: '/api/staff/leaders',
 
   //新增员工角色下拉
-  GET_STAFF_ADD_ROLES : '/api/staff/add/roles',
+  GET_STAFF_ADD_ROLES: '/api/staff/add/roles',
 
   // 员工业务信息
   GET_STAFF_BUSSINESS_INFO: id => `/api/staff/${id}/businessInfo`,
