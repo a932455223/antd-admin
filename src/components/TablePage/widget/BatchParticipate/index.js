@@ -23,35 +23,40 @@ export default class BatchParticipate extends Component {
   };
 
   componentWillMount() {
-    ajax.Get(API.GET_CUSTOMER_ADD_DEPARTMENT_HIERARCHY)
-      .then(res => {
-        this.setState({
-          department: res.data.data[0]
-        })
-      });
-
-    let json = {
-      departmentId: 1
-    }
-    //
-    ajax.Get(API.GET_STAFFS, json)
-      .then(res => {
-        this.setState({
-          table: {
-            dataSource: res.data.data.staffs
-          }
-        })
+    // console.log('add crew modal')
+    // 获取 treeNode department
+    ajax.Get(API.GET_DEPARTMENT_HIERARCHY)
+    .then(res => {
+      this.setState({
+        department: res.data.data[0]
       })
+    });
+
+    this.getStaffs(1);
+  }
+
+  getStaffs = (departmentId) => {
+    ajax.Get(API.GET_STAFFS, {departmentId: departmentId})
+    .then(res => {
+      this.setState({
+        table: {
+          dataSource: res.data.data.staffs
+        }
+      })
+    })
   }
 
   createTree(data) {
-    if (data && data.childDepartments) {
+    if (data.childDepartments && data.childDepartments.length > 0) {
       return (
-        <TreeNode title={<span>{data.name}</span>} id={data.id} key={data.id}>
-          {
-            data.childDepartments.map(childDepartments => {
+        <TreeNode
+          title={<span>{data.name}</span>}
+          id={data.id}
+          key={data.id}
+        >
+          {data.childDepartments.map(childrenDepartment => {
               return (
-                this.createTree(childDepartments)
+                this.createTree(childrenDepartment)
               )
             })
           }
@@ -81,10 +86,15 @@ export default class BatchParticipate extends Component {
     let thead = document.getElementsByClassName('ant-table-thead')[0];
     let table = document.getElementsByClassName('participateTable')[0];
     let tableScroll = table.getElementsByClassName('ant-table-body')[0];
-    let pagenationHeight = 32;
+    let tabsScroll = table.getElementsByClassName('ant-tabs-content')[0];
+    let pagenationHeight = 52;
 
     tableScroll.style['max-height'] = container.offsetHeight - thead.offsetHeight - pagenationHeight + 'px';
-    // tableScroll.style['overflow-y'] = 'auto';
+    if(tabsScroll && tabsScroll.style) {
+      tabsScroll.style['max-height'] = container.offsetHeight - thead.offsetHeight - pagenationHeight + 'px';
+      tabsScroll.style['overflow-y'] = 'auto';
+    }
+    tableScroll.style['overflow-y'] = 'auto';
     // console.log(tableScroll.style['max-height'])
   }
 
@@ -137,6 +147,18 @@ export default class BatchParticipate extends Component {
       dataSource: this.state.table.dataSource
     };
 
+    console.log(this.state.department && this.state.department.id)
+
+    const tree = this.state.department && this.state.department !== {} ?
+      <Tree
+        defaultExpandedKeys={['1']}
+        checkable
+        onSelect={this.onSelect}>
+        {this.createTree(this.state.department)}
+      </Tree>
+      :
+      null
+
     return (
       <div className="batchParticipate" id="batchParticipate">
         <header className="title">
@@ -148,43 +170,54 @@ export default class BatchParticipate extends Component {
           />
         </header>
 
-        <div className="hadParticipated">
-          <span>参与的客户：</span>
-          <Tag closable onClose={this.log}>Mary Davis</Tag>
-          <Tag closable onClose={this.log}>Nancy Hall</Tag>
-          <Tag closable onClose={this.log}>Joseph Robinson</Tag>
-        </div>
-
         <div className="select-staff-body" id="selectStaffBody">
-          <div>
-            <Tabs defaultActiveKey="1">
-              <TabPane tab={<span>职位</span>} key="1">
-                <Tree
-                  checkable
-                >
-                  {this.createTree(this.state.department)}
-                </Tree>
-              </TabPane>
-              <TabPane tab={<span>群组</span>} key="2">
-                大同市分行
-              </TabPane>
-            </Tabs>
+          <div className="hadParticipated">
+            <span>参与的客户：</span>
+            <Tag closable onClose={this.log}>Mary Davis</Tag>
+            <Tag closable onClose={this.log}>Nancy Hall</Tag>
+            <Tag closable onClose={this.log}>Joseph Robinson</Tag>
           </div>
 
-          <div>
-            <Table
-              className="participateTable"
-              {...tableConf}
-              rowClassName={(record, index) => {return 'participate'}}
-              checkable
-              rowKey={record => record.id}
-              rowSelection={this.rowSelection}
-              scroll={{y: 1 }} // 固定表头
-              pagination={{
-                pageSize:20
-              }}
-            />
+
+          <div className="tagsWrapper">
+            <div className="tags-title">
+              <h3>已选成员</h3>
+              <span> 人</span>
+            </div>
+            <div>
+
+            </div>
           </div>
+
+            <div className="selectStaffs">
+              <div className="departmentTrees">
+                <Tabs defaultActiveKey="1">
+                  <TabPane tab={<span>职位</span>} key="1">
+                    <Tree checkable>
+                      {tree}
+                    </Tree>
+                  </TabPane>
+                  <TabPane tab={<span>群组</span>} key="2">
+                    大同市分行
+                  </TabPane>
+                </Tabs>
+              </div>
+
+              <div>
+                <Table
+                  className="participateTable"
+                  {...tableConf}
+                  // rowClassName={(record, index) => {return 'participate'}}
+                  // checkable
+                  rowKey={record => record.id}
+                  // rowSelection={this.rowSelection}
+                  // scroll={{y: 1 }} // 固定表头
+                  // pagination={{
+                  //   pageSize:20
+                  // }}
+                />
+              </div>
+            </div>
         </div>
 
         <div className="btn-group">

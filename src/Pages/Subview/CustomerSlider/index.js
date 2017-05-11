@@ -202,6 +202,11 @@ class CustomerSlider extends Component {
           }
         }
       )
+
+      // newState = update(this.state,{
+      //   personalClient:{personalBasicInfo:{$set: PersonalBasicInfo}}
+      // })
+
       this.setState(newState)
     }, 'InfoTabs');
   };
@@ -231,7 +236,7 @@ class CustomerSlider extends Component {
   // 个人用户的 Tabs
   personalUserTabs = () => {
     const { mode, id } = this.props.currentCustomerInfo;
-    const { refreshCustomerLists } = this.props; // 实时刷新
+    const { refreshCustomerLists, uuid } = this.props; // 实时刷新
     const { personalClient } = this.state;
 
     const tabsProps = {
@@ -249,6 +254,7 @@ class CustomerSlider extends Component {
           {personalClient && personalClient.personalBasicInfo &&
             <personalClient.personalBasicInfo
               refreshCustomerLists={refreshCustomerLists}
+              uuid={uuid}
             />
           }
         </TabPane>
@@ -295,7 +301,7 @@ class CustomerSlider extends Component {
   // 企业用户的 tabs
   enterpriseUserTabs = () => {
     const { mode, id } = this.props.currentCustomerInfo;
-    const { refreshCustomerLists } = this.props; // 实时刷新
+    const { refreshCustomerLists, uuid } = this.props; // 实时刷新
     const { enterpriseClient } = this.state;
 
     // tabs props
@@ -311,6 +317,7 @@ class CustomerSlider extends Component {
           {enterpriseClient.enterpriseBasicInfo &&
             <enterpriseClient.enterpriseBasicInfo
               refreshCustomerLists={refreshCustomerLists}
+              uuid={uuid}
             />
           }
         </TabPane>
@@ -402,6 +409,7 @@ class CustomerSlider extends Component {
 
   render() {
     const { step, mode, id, name, beEdited } = this.props.currentCustomerInfo;
+    const { uuid } = this.props;
 
     return(
       <div>
@@ -417,7 +425,7 @@ class CustomerSlider extends Component {
 
             {step != 1 && mode !== 'view' &&
               <Input
-                key={id}
+                key={id + uuid + ''}
                 onChange={this.nameChange}
                 className={styles.inputName}
                 value={name}
