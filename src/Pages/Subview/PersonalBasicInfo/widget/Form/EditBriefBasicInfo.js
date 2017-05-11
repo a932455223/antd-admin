@@ -31,12 +31,18 @@ class EditBriefBasicInfoForm extends Component{
     basicInfoBeEdit: false,
     departmentOptions: [],
     managerOptions: [],
-    gridOptions: []
+    gridOptions: [],
+
+    provinceOptions: [],
+    cityOptions: [],
+    areaOptions: []
   }
 
   componentWillMount(){
     // console.log('EditBriefBasicInfoForm will mount');
     this.getDepartments(1, 1);
+
+    this.provinceSelect(1);
   }
 
 
@@ -62,18 +68,25 @@ class EditBriefBasicInfoForm extends Component{
       this.setState(newState)
     }
 
-    // console.log(this.props.accountsArr);
-    // console.log(next.accountsArr);
     // 更新 accountsArr
     this.setState({
       accountsArr: next.accountsArr
     })
-
-    // if((next && next.briefInfo && next.briefInfo.department && next.briefInfo.department.value)
-    //   !==
-    //   (this.props && this.props.briefInfo && this.props.briefInfo.department && this.props.briefInfo.department.value)) {
-    // }
   };
+
+  // 省份下拉选择
+  provinceSelect = (province, city, area) => {
+    ajax.all([
+      ajax.Get(API.GET_AREA_SELECT(province)),
+    ]).then((res)=>{
+      let newState = update(this.state, {
+        provinceOptions: {$set: res[0].data.data}
+      });
+      this.setState(newState);
+
+      return newState;
+    })
+  }
 
   // 获取 department，
   getDepartments = (departmentId, managerId) => {
@@ -228,7 +241,9 @@ class EditBriefBasicInfoForm extends Component{
       age,
       address
     } = this.props.briefInfo;
-    const { departmentOptions, managerOptions, gridOptions } = this.state;
+    const { departmentOptions, managerOptions, gridOptions, provinceOptions, cityOptions, areaOptions } = this.state;
+
+    // console.log(provinceOptions);
 
     const formItemLayout = {
       labelCol: {
@@ -502,11 +517,80 @@ class EditBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
+              <Col span={12} className={mode === 'create' ? "addressCreate" : "addressEdit"}>
+                <FormItem labelCol={{span: 11}}
+                          wrapperCol={{span: 13}}
+                          label="家庭住址">
+                  {getFieldDecorator('province', {
+                    // initialValue: department && department.value,
+                    onChange: this.provinceSelect
+                  })(
+                    <Select
+                      showSearch
+                      placeholder="选择省份"
+                      optionFilterProp="children"
+                      filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
+                      getPopupContainer={() => document.getElementById('editMyBase')}
+                    >
+                      {provinceOptions && provinceOptions.map(provinceItem =>
+                        <Option key={provinceItem.id} value={provinceItem.id + ''}>{provinceItem.name}</Option>
+                      )}
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+
+              <Col span={6}>
+                <FormItem labelCol={{span: 11}}
+                          wrapperCol={{span: 13}}>
+                  {getFieldDecorator('city', {
+                    // initialValue: manager && manager.value,
+                    onChange: this.citySelect
+                  })(
+                    <Select
+                      showSearch
+                      placeholder="选择城市"
+                      optionFilterProp="children"
+                      filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
+                      getPopupContainer={() => document.getElementById('editMyBase')}
+                    >
+                      {cityOptions && cityOptions.map(cityItem =>
+                        <Option key={cityItem.id} value={cityItem.id + ''}>{cityItem.name}</Option>
+                      )}
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+
+              <Col span={6}>
+                <FormItem labelCol={{span: 11}}
+                          wrapperCol={{span: 13}}>
+                  {getFieldDecorator('area', {
+                    initialValue: grid && grid.value,
+                    onChange: this.selectBasicInfoChange
+                  })(
+                    <Select
+                      showSearch
+                      placeholder="选择区域"
+                      optionFilterProp="children"
+                      filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
+                      getPopupContainer={() => document.getElementById('editMyBase')}
+                    >
+                      {areaOptions && areaOptions.map(areaItem =>
+                        <Option key={areaItem.id} value={areaItem.id + ''}>{areaItem.name}</Option>
+                      )}
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+          </Row>
+
+          <Row>
             <Col span={24} className={mode === 'create' ? "addressCreate" : "addressEdit"}>
               <FormItem
                 labelCol={{span: 4}}
                 wrapperCol={{span: 19}}
-                label="家庭住址："
+                label="详细住址："
                 className="address"
               >
                 {getFieldDecorator('address', {
