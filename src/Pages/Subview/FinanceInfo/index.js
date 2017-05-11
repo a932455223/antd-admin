@@ -278,9 +278,11 @@ class FinanceInfo extends Component {
     return (
       <div className="my-cards-page">
         {loading}
-        
+        {/*<pre className="language-bash" style={{textAlign:'left'}}>
+          {JSON.stringify(this.state, null, 2)}
+        </pre>*/}
         {
-          this.state.financeList.length?
+          this.state.financeList.length>0?
           <div className="my-cards-area">
               {
                 this.state.financeList.map((item,index)=>{
@@ -343,10 +345,8 @@ class FinanceInfo extends Component {
           />
 
         }
-        {/*<pre className="language-bash" style={{textAlign:'left'}}>
-          {JSON.stringify(this.state.addFinanceCardLoading, null, 2)}
-        </pre>
-        */}
+        
+        
 
       </div>
     )
