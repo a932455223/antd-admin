@@ -105,7 +105,7 @@ class BranchesDetail extends Component {
     //   this.props.closeDock()
     // }
     this.props.closeDock()
-    
+
   }
   onHandleChange = () => {
     this.setState({
@@ -129,15 +129,21 @@ class BranchesDetail extends Component {
           return values;
         })(values);
         const {getFieldsValue,getFieldValue} = this.props.form;
-        let provinceName = this.state.province.find(item => item.id == getFieldValue('province')).name;
-        let cityName = this.state.city.find(item => item.id == getFieldValue('city')).name;
-        let regionName = this.state.region.find(item => item.id == getFieldValue('region')).name;
+        let provinceName = this.state.province.find(item => item.id == getFieldValue('province')) && this.state.province.find(item => item.id == getFieldValue('province')).name;
+        let cityName = this.state.city.find(item => item.id == getFieldValue('city')) && this.state.city.find(item => item.id == getFieldValue('city')).name;
+        let regionName = this.state.region.find(item => item.id == getFieldValue('region')) && this.state.region.find(item => item.id == getFieldValue('region')).name;
         let address = provinceName + ' ' + cityName + ' ' + regionName + ' ' + getFieldValue('addressDtail');
         data.address = address;
         delete data.province;
         delete data.city;
         delete data.region;
         delete data.addressDtail
+
+
+        if(data.address.indexOf('undefined') >= 0){
+          delete data.address
+        }
+        console.log('data',data)
 
         ajax.Post(API.POST_ADD_STAFF,data)
           .then( res => {
@@ -473,7 +479,7 @@ class BranchesDetail extends Component {
           <div className="dock-title">
             <Row>
               <Col span={22}>
-               
+
                 <strong style={{marginLeft:"10px"}}>新增员工</strong>
               </Col>
               <Col span={2}>
