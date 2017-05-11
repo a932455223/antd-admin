@@ -151,12 +151,6 @@ export default class BatchParticipate extends Component {
     this.setState(newState);
   }
 
-  // 确认参与人员的信息
-  confirmParticipant = () => {
-    message.success('参与者修改成功');
-    this.props.closeDock();
-  }
-
   // 删除已选择的客户
   customersHandleClose = (customer) => {
     this.props.changeCustomersLists(customer);
@@ -170,6 +164,21 @@ export default class BatchParticipate extends Component {
 
     this.setState(newState);
   }
+
+  // 确认参与人员的信息
+  confirmParticipant = () => {
+    const { selectedCustomers } = this.props;
+    const { staffs } = this.state;
+    const customersArray = selectedCustomers.map(item => item.id);
+    const staffsArray = staffs.map(item => item.id);
+
+    // console.log(customersArray);
+    // console.log(staffsArray);
+    message.success('参与者修改成功');
+    this.props.closeDock();
+  }
+
+  cancleParticipant = () => {}
 
   render() {
     const { selectedCustomers } = this.props;
@@ -192,7 +201,7 @@ export default class BatchParticipate extends Component {
       dataSource: this.state.table.dataSource
     };
     const selectedRowKeys = staffs.map(item => item.id);
-    
+
     const rowSelection = {
       selectedRowKeys,
       onChange: this.staffsChange,
@@ -286,7 +295,7 @@ export default class BatchParticipate extends Component {
         </div>
 
         <div className="btn-group">
-          <Button>取消</Button>
+          <Button onClick={this.cancleParticipant}>取消</Button>
           <Button onClick={this.confirmParticipant}>确认</Button>
         </div>
       </div>

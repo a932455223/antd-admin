@@ -419,7 +419,7 @@ class TablePage extends Component {
             <p>
               <Icon type=""/>
               <span>已选</span>
-              <span className="counter">13</span>
+              <span className="counter">{selectedCustomers.length}</span>
               <span>位客户</span>
             </p>
             <li onClick={this.batchFocus}>
