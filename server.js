@@ -49,7 +49,7 @@ if (isDeveloping) {
   var config = require('./webpack.config/webpack.config.dev');
   var compiler = webpack(config);
   devMiddleWare = require('webpack-dev-middleware')(compiler, {
-    publicPath: '/dist',
+    publicPath: config.output.publicPath,
     stats: {
       colors: true,
       modules: false,

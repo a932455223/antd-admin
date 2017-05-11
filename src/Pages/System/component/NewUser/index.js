@@ -24,7 +24,7 @@ class NewUser extends Component {
   saveUsername = (e) => {
     e.preventDefault();
     let username = this.props.form.getFieldValue('username');
-    if (username) {
+    if (username.trim()) {
       this.setState({
         username: username,
         formGroupVisible: true

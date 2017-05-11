@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Button, Table} from "antd";
 import Dock from "react-dock";
-import axios from "axios";
+import ajax from "../../../tools/POSTF.js";
 //=============================================================
 import Content from '../component/Content';
 import UserEdit from '../component/UserEdit';
@@ -15,21 +15,44 @@ export default class SystemUsers extends Component {
   state = {
     table: {
       loading: true,
-      dataSource: []
+      dataSource: [],
+      count: 100,
+      size: 15,
+      index: 1
     },
     dock: {
       visible: false,
       children: null
     },
-    UserEditKey:'UserEditKey'
+    searchContent: ''
   };
 
   componentWillMount() {
-    axios.get(API.GET_USERS)
+    // ajax.Get(API.GET_USERS)
+    //   .then(res => {
+    //     this.setState({
+    //       table: {
+    //         dataSource: res.data.data.users,
+    //         loading: false
+    //       }
+    //     })
+    //   })
+    this.getUsers()
+  }
+
+  // 获取表格数据
+  getUsers(index = this.state.table.index){
+    ajax.Get(API.GET_USERS,{
+      index: index,
+      searchContent: this.state.searchContent,
+      size: this.state.table.size
+    })
       .then(res => {
         this.setState({
           table: {
-            dataSource: res.data.data,
+            ...this.state.table,
+            count: res.data.data.pagination.count,
+            dataSource: res.data.data.users,
             loading: false
           }
         })
@@ -39,18 +62,17 @@ export default class SystemUsers extends Component {
   // 表格点击事件
   rowClick(rowData) {
     this.setState({
-      UserEditKey: `rowData.id-${rowData}` ,
       dock: {
         visible: true,
         children: (
           <UserEdit
             id={rowData.id}
+            key={rowData.id}
             close={this.close.bind(this)}
-            key={this.state.UserEditKey}
+            refresh={this.refresh.bind(this)}
           />
         )
       }
-      
     });
   }
 
@@ -59,11 +81,31 @@ export default class SystemUsers extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: <NewUser close={this.close.bind(this)}/>
-
+        children: <NewUser
+          close={this.close.bind(this)}
+          refresh={this.refresh.bind(this)}
+        />
       }
     })
   }
+
+  // 表格分页点击
+  tableChange(pagination) {
+    this.setState({
+      table: {
+        ...this.state.table,
+        index: pagination.current
+      }
+    },this.getUsers)
+
+  }
+
+  search(value){
+    this.setState({
+      searchContent: value
+    },this.getUsers.bind(this,1))
+  }
+
 
   // 关闭dock
   close(){
@@ -72,6 +114,11 @@ export default class SystemUsers extends Component {
         visible: false,
       }
     });
+  }
+
+  // 刷新数据
+  refresh(){
+    this.getUsers()
   }
 
   render() {
@@ -90,20 +137,20 @@ export default class SystemUsers extends Component {
       },
       {
         title: '所属角色',
-        dataIndex: 'post',
-        key: 'post',
+        dataIndex: 'role',
+        key: 'role',
         width: '16%'
       },
       {
         title: '所属机构',
-        dataIndex: 'department',
-        key: 'department',
+        dataIndex: 'org',
+        key: 'org',
         width: '16%'
       },
       {
         title: '最近登录时间',
-        dataIndex: 'lastTime',
-        key: 'lastTime',
+        dataIndex: 'latestLogin',
+        key: 'latestLogin',
         width: '16%'
       },
       {
@@ -124,7 +171,13 @@ export default class SystemUsers extends Component {
       columns: columns,
       dataSource: this.state.table.dataSource,
       loading: this.state.table.loading,
-      onRowClick: this.rowClick.bind(this)
+      onRowClick: this.rowClick.bind(this),
+      onChange: this.tableChange.bind(this),
+      pagination: {
+        total: this.state.table.count,
+        pageSize: this.state.table.size,
+        current: this.state.table.index
+      }
     };
 
     const dockConf = {
@@ -134,7 +187,8 @@ export default class SystemUsers extends Component {
 
     const actionBarConf = {
       mode: 'user',
-      newClick: this.newClick.bind(this)
+      newClick: this.newClick.bind(this),
+      onChange: this.search.bind(this)
     };
 
     return (

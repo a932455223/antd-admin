@@ -5,9 +5,14 @@ import React, {Component} from "react";
 import {Button, Card, Input, Table} from "antd";
 //=====================================================================
 import './less/roleEdit.less';
+import ajax from '../../../../tools/POSTF.js';
+import API from '../../../../../API';
 
 export default class RoleEdit extends Component {
-  state = {};
+  state = {
+    departments: []
+  };
+
 
 
   render() {
