@@ -103,7 +103,7 @@ class TablePage extends Component {
         dockContent: {$set: this.state.CustomerSlider},
         temporary: {$set: info},
         dockVisible: {$set: true},
-        uuid: {$set: this.state.uuid + 1}
+        // uuid: {$set: this.state.uuid + 1}
       })
       this.setState(newState);
       dispatch(saveCurrentCustomerInfo(info, mode))
@@ -121,6 +121,7 @@ class TablePage extends Component {
         onlyCloseModal: {$set: false},
         dockVisible: {$set: true},
         currentCustomer: {$set: info},
+        // uuid: {$set: this.state.uuid + 1}
       })
 
       this.setState(newState);
@@ -133,7 +134,7 @@ class TablePage extends Component {
         onlyCloseModal: {$set: false},
         dockVisible: {$set: true},
         currentCustomer: {$set: info},
-        uuid: {$set: this.state.uuid + 1}
+        // uuid: {$set: this.state.uuid + 1}
       })
 
       this.setState(newState);
@@ -156,7 +157,7 @@ class TablePage extends Component {
       newState = update(this.state, {
         modalVisible: {$set: false},
         dockVisible: {$set: false},
-        uuid: {$set: this.state.uuid + 1}
+        // uuid: {$set: this.state.uuid + 1}
       })
       dispatch(resetBeEditArray());
 
@@ -164,7 +165,7 @@ class TablePage extends Component {
       newState = update(this.state, {
         currentCustomer: {$set: this.state.temporary},
         modalVisible: {$set: false},
-        uuid: {$set: this.state.uuid + 1}
+        // uuid: {$set: this.state.uuid + 1}
       })
 
       dispatch(saveCurrentCustomerInfo(this.state.temporary, mode))

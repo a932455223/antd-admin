@@ -40,11 +40,16 @@ class EditBriefBasicInfoForm extends Component{
 
   componentWillMount(){
     // console.log('EditBriefBasicInfoForm will mount');
-    this.getDepartments(1, 1);
+    const { eachCustomerInfo } = this.props;
 
-    this.provinceSelect(1);
+    let originProvince = eachCustomerInfo && eachCustomerInfo.addressCode && eachCustomerInfo.addressCode.split(' ')[0];
+    let originCity = eachCustomerInfo && eachCustomerInfo.addressCode && eachCustomerInfo.addressCode.split(' ')[1];
+
+    let province = originProvince != null || originProvince != '' ? originProvince : undefined;
+    let city = originCity != null || originCity != '' ? originCity : undefined;
+
+    this.getAlloptions(1, 1, province, city);
   }
-
 
   componentWillReceiveProps(next) {
     // console.log('EditBriefBasicInfoForm will recieve props');
@@ -52,7 +57,6 @@ class EditBriefBasicInfoForm extends Component{
 
     // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
     if(next.joinersBeEdited && !next.beEditedArray.includes('basicInfo')) {
-      // console.log('joinersBeEdited')
       this.props.increaseBeEditArray('basicInfo');
     } else if(next.beEditedArray && !next.beEditedArray.includes('basicInfo')) {
       // 重置 InfoBeEdited
@@ -68,23 +72,120 @@ class EditBriefBasicInfoForm extends Component{
       this.setState(newState)
     }
 
-    // 更新 accountsArr
-    this.setState({
-      accountsArr: next.accountsArr
-    })
+    let province = getFieldValue('province');
+    let city = getFieldValue('city');
+
+    this.getProvinceOptions(1, province, city);
   };
 
-  // 省份下拉选择
-  provinceSelect = (province, city, area) => {
-    ajax.all([
-      ajax.Get(API.GET_AREA_SELECT(province)),
-    ]).then((res)=>{
-      let newState = update(this.state, {
-        provinceOptions: {$set: res[0].data.data}
-      });
-      this.setState(newState);
+  // 一次性获取所有下拉列表
+  getAlloptions = (departmentId, managerId, province, city) => {
+    if(province == undefined || province == '') {
+      ajax.all([
+        ajax.Get(API.GET_CUSTOMER_DEPARTMENT), // 所属机构下拉菜单
+        ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)), // 所属客户经理下拉菜单
+        ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId)), // 重置网格
+        ajax.Get(API.GET_AREA_SELECT(1))
+      ]).then((res) => {
+        let newState = update(this.state, {
+          departmentOptions: {$set: res[0].data.data},
+          managerOptions:{$set:res[1].data.data},
+          gridOptions:{$set:res[2].data.data},
+          provinceOptions: {$set: res[3].data.data}
+        });
+        this.setState(newState);
+      })
+    } else {
+      ajax.all([
+        ajax.Get(API.GET_CUSTOMER_DEPARTMENT), // 所属机构下拉菜单
+        ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)), // 所属客户经理下拉菜单
+        ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId)), // 重置网格
+        ajax.Get(API.GET_AREA_SELECT(1)),
+        ajax.Get(API.GET_AREA_SELECT(province)),
+        ajax.Get(API.GET_AREA_SELECT(city))
+      ]).then((res) => {
+        let newState = update(this.state, {
+          departmentOptions: {$set: res[0].data.data},
+          managerOptions:{$set:res[1].data.data},
+          gridOptions:{$set:res[2].data.data},
+          provinceOptions: {$set: res[3].data.data},
+          cityOptions: {$set: res[4].data.data},
+          areaOptions: {$set: res[5].data.data},
+        });
+        this.setState(newState);
+      })
+    }
+  }
 
-      return newState;
+  // 省份下拉选择
+  getProvinceOptions = (country, province, city) => {
+    ajax.Get(API.GET_AREA_SELECT(1))
+        .then(res => {
+          let provinceState = update(this.state, {
+            provinceOptions: {$set: res.data.data},
+            cityOptions: {$set: []}
+          });
+
+          if(province == undefined) {
+            this.setState(provinceState);
+          } else {
+            ajax.Get(API.GET_AREA_SELECT(province))
+                .then(res => {
+                  let cityState = update(provinceState, {
+                    cityOptions: {$set: res.data.data},
+                    areaOptions: {$set: []}
+                  });
+
+                  if(city == undefined) {
+                    this.setState(cityState);
+                  } else {
+                    ajax.Get(API.GET_AREA_SELECT(city))
+                        .then(res => {
+                          let areaState = update(cityState, {
+                            areaOptions: {$set: res.data.data},
+                          });
+
+                          this.setState(areaState);
+                        })
+                  }
+                })
+          }
+        })
+  }
+
+  // 选择省份，获取城市选项, 清空city 和area的值
+  provinceSelect = () => {
+    if(!this.state.basicInfoBeEdit) {
+      this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
+      let newState = update(this.state, {
+        basicInfoBeEdit: {$set: true}
+      })
+      this.setState(newState)
+    }
+
+    // console.log(province);
+    // this.getProvinceOptions(1, province)
+
+    const { setFieldsValue } = this.props.form;
+    setFieldsValue({
+      'city': undefined,
+      'area': undefined
+    })
+  }
+
+  // 选择城市，获取区域选项，清空区域选项
+  citySelect = (city) => {
+    if(!this.state.basicInfoBeEdit) {
+      this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
+      let newState = update(this.state, {
+        basicInfoBeEdit: {$set: true}
+      })
+      this.setState(newState)
+    }
+
+    const { setFieldsValue } = this.props.form;
+    setFieldsValue({
+      'area': undefined
     })
   }
 
@@ -93,8 +194,8 @@ class EditBriefBasicInfoForm extends Component{
     ajax.all([
       ajax.Get(API.GET_CUSTOMER_DEPARTMENT), // 所属机构下拉菜单
       ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)), // 所属客户经理下拉菜单
-      ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId)) // 重置网格
-    ]).then((res)=>{
+      ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId)), // 重置网格
+    ]).then((res) => {
       let newState = update(this.state, {
         departmentOptions: {$set: res[0].data.data},
         managerOptions:{$set:res[1].data.data},
@@ -205,13 +306,32 @@ class EditBriefBasicInfoForm extends Component{
 
   // 更新信息
   updateInfo = (briefInfo) => {
-    const { validateFields,getFieldsError } = this.props.form;
+    const { validateFields, getFieldValue, getFieldsError } = this.props.form;
     const { addNewCustomer } = this.props;
+    const { provinceOptions, cityOptions, areaOptions } = this.state;
+
+    let province = provinceOptions.filter(item => item.id == getFieldValue('province'));
+    let city = cityOptions.filter(item => item.id == getFieldValue('city'));
+    let area = areaOptions.filter(item => item.id == getFieldValue('area'));
+    let detailStreet = getFieldValue('address');
+
     validateFields();
+
     if(hasErrors(getFieldsError())) {
       message.error('表单填写有误，请仔细检查表单');
     } else {
-      addNewCustomer(briefInfo);
+      let address;
+      if(province.length !== 0 && city.length !== 0 && area.length !== 0 && detailStreet !== '') {
+        address = `${province[0].name} ${city[0].name} ${area[0].name} ${detailStreet}`;
+        addNewCustomer(briefInfo, address);
+      } else if(province.length !== 0 && (city.length === 0 || area.length !== 0 || detailStreet !== '')) {
+        message.error('表单填写有误，请仔细检查表单');
+      } else if(detailStreet !== '' && (province.length === 0 || city.length === 0 || area.length === 0)){
+        message.error('表单填写有误，请仔细检查表单');
+      } else {
+        address = '';
+        addNewCustomer(briefInfo, address);
+      }
     }
   }
 
@@ -242,8 +362,6 @@ class EditBriefBasicInfoForm extends Component{
       address
     } = this.props.briefInfo;
     const { departmentOptions, managerOptions, gridOptions, provinceOptions, cityOptions, areaOptions } = this.state;
-
-    // console.log(provinceOptions);
 
     const formItemLayout = {
       labelCol: {
@@ -517,19 +635,24 @@ class EditBriefBasicInfoForm extends Component{
           </Row>
 
           <Row>
-              <Col span={12} className={mode === 'create' ? "addressCreate" : "addressEdit"}>
-                <FormItem labelCol={{span: 11}}
-                          wrapperCol={{span: 13}}
-                          label="家庭住址">
+              <Col span={8} className={mode === 'create' ? "addressCreate" : "addressEdit"}>
+                <FormItem labelCol={{span: 12}}
+                          wrapperCol={{span: 12}}
+                          label="家庭住址"
+                          className="province">
                   {getFieldDecorator('province', {
-                    // initialValue: department && department.value,
+                    initialValue: eachCustomerInfo && eachCustomerInfo.addressCode && eachCustomerInfo.addressCode.split(' ')[0] != null
+                                  ?
+                                  eachCustomerInfo.addressCode.split(' ')[0]
+                                  :
+                                  undefined,
                     onChange: this.provinceSelect
                   })(
                     <Select
                       showSearch
                       placeholder="选择省份"
                       optionFilterProp="children"
-                      filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
+                      filterOption={(input, option) => option.props.value.toLowerCase().includes(input.toLowerCase())}
                       getPopupContainer={() => document.getElementById('editMyBase')}
                     >
                       {provinceOptions && provinceOptions.map(provinceItem =>
@@ -541,17 +664,20 @@ class EditBriefBasicInfoForm extends Component{
               </Col>
 
               <Col span={6}>
-                <FormItem labelCol={{span: 11}}
-                          wrapperCol={{span: 13}}>
+                <FormItem wrapperCol={{span: 16, offset: 4}}>
                   {getFieldDecorator('city', {
-                    // initialValue: manager && manager.value,
+                    initialValue: eachCustomerInfo && eachCustomerInfo.addressCode && eachCustomerInfo.addressCode.split(' ')[1] != null
+                                  ?
+                                  eachCustomerInfo.addressCode.split(' ')[1]
+                                  :
+                                  undefined,
                     onChange: this.citySelect
                   })(
                     <Select
                       showSearch
                       placeholder="选择城市"
                       optionFilterProp="children"
-                      filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
+                      filterOption={(input, option) => option.props.value.toLowerCase().includes(input.toLowerCase())}
                       getPopupContainer={() => document.getElementById('editMyBase')}
                     >
                       {cityOptions && cityOptions.map(cityItem =>
@@ -562,18 +688,21 @@ class EditBriefBasicInfoForm extends Component{
                 </FormItem>
               </Col>
 
-              <Col span={6}>
-                <FormItem labelCol={{span: 11}}
-                          wrapperCol={{span: 13}}>
+              <Col span={4}>
+                <FormItem wrapperCol={{span: 24}}>
                   {getFieldDecorator('area', {
-                    initialValue: grid && grid.value,
+                    initialValue: eachCustomerInfo && eachCustomerInfo.addressCode && eachCustomerInfo.addressCode.split(' ')[2] != null
+                                  ?
+                                  eachCustomerInfo.addressCode.split(' ')[2]
+                                  :
+                                  undefined,
                     onChange: this.selectBasicInfoChange
                   })(
                     <Select
                       showSearch
                       placeholder="选择区域"
                       optionFilterProp="children"
-                      filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
+                      filterOption={(input, option) => option.props.value.toLowerCase().includes(input.toLowerCase())}
                       getPopupContainer={() => document.getElementById('editMyBase')}
                     >
                       {areaOptions && areaOptions.map(areaItem =>
@@ -594,7 +723,7 @@ class EditBriefBasicInfoForm extends Component{
                 className="address"
               >
                 {getFieldDecorator('address', {
-                  initialValue: address && address.value,
+                  initialValue: address && address.value.split(' ')[3],
                   onChange: this.inputBasicInfoChange
                 })(
                   <Input placeholder="请输入家庭住址"/>
