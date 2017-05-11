@@ -191,5 +191,11 @@ export default {
   GET_ALL_RPIVILIGE:'/api/role/tree',
 
   //新增角色
-  POST_ROLE: '/api/role'
+  POST_ROLE: '/api/role',
+
+  //根据id获取获取role
+  GET_ROLE_TREE: roleId => `/api/role/${roleId}/tree`,
+
+  //编辑角色
+  PUT_ROLE_TREE:roleId => ` /api/role/${roleId}`
 }

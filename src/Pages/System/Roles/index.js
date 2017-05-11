@@ -34,8 +34,6 @@ export default class SystemRoles extends Component {
           }
         })
       })
-
-    this.rolePermission(-1,'create')
   }
 
 
@@ -61,7 +59,10 @@ export default class SystemRoles extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: <NewRole close={this.close.bind(this)}/>
+        children: <NewRole
+          rolePermission={this.rolePermission.bind(this,-1,'create')}
+          close={this.close.bind(this)}
+        />
       }
     });
   }
@@ -110,7 +111,7 @@ export default class SystemRoles extends Component {
   }
 
   // 权限分配
-  rolePermission(id,mode) {
+  rolePermission(id,mode,roleName) {
     this.setState({
       dock: {
         visible: true,
@@ -120,6 +121,7 @@ export default class SystemRoles extends Component {
             close={this.close.bind(this)}
             backRoleEdit={this.addUserBack.bind(this,id)}
             mode={mode}
+            roleName={roleName}
           />
         )
       }

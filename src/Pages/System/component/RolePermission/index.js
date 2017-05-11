@@ -6,21 +6,36 @@ import { Card ,Tree,Button,Icon,Select,message} from 'antd'
 import ajax from '../../../../tools/POSTF'
 import API from '../../../../../API/index'
 import _ from 'lodash'
-
+import $ from 'jquery'
 const TreeNode = Tree.TreeNode;
 const Option = Select.Option
 import './rolePermission.less'
 // let Permission = <h1 onClick={this.props.mode === 'edit' ? this.props.backRoleEdit : this.props.close}>角色权限分配</h1>
 
+
+
 function info(msg,color='red'){
   console.log('%c'+msg,'color:'+color)
 }
-const generateSelect = (options) => {
-  return <Select defaultValue={options[0].level.toString()}>
-          {options.map((item,index) => <Option key={item.level.toString()}>{item.name}</Option>)}
-         </Select>
 
+
+// const generateSelect = (options,pid) => {
+//   return <Select  value={options[0].level.toString()} onChange={(e)=>{info(e)}}>
+//           {options.map((item,index) => <Option key={item.level.toString()}>{item.name}</Option>)}
+//          </Select>
+// }
+
+const generateSelect = (options,pid) => {
+  let selectValue;
+  if(options) {
+    selectValue = options.find(item => item.checked)
+  }
+  console.log(selectValue)
+  return <select defaultValue={selectValue} name={pid}>
+    {options.map((item,index) => <option key={item.level.toString()} value={item.level.toString()}>{item.name}</option>)}
+  </select>
 }
+
 const generateTree = (nodes,parentId,showOptions) => nodes.map((item) =>{
   let pid = parentId==='0' ? item.id.toString() : parentId.toString()+'-'+item.id.toString()
 
@@ -31,7 +46,7 @@ const generateTree = (nodes,parentId,showOptions) => nodes.map((item) =>{
       </TreeNode>
     )
   }
-  return <TreeNode key={pid} title={<span>{item.name} &nbsp;{showOptions ? generateSelect(item.options):'['+item.options[0].name+']'}</span>} />
+  return <TreeNode key={pid} title={<span>{item.name} &nbsp;{showOptions ? generateSelect(item.options,pid):'['+item.options[0].name+']'}</span>} />
   // console.log(item)
   // return <TreeNode key={pid} title={<span>{<Select><Option key="1">111</Option></Select>}</span>} />
 
@@ -156,7 +171,12 @@ export default class  RolePermission extends Component{
 
   componentWillMount(){
     info('will mount.')
-    this.getAllPrivilige()
+    console.log(this.props.id)
+    if(this.props.mode === 'edit'){
+      this.getRoleTrees(18)
+    }else if(this.props.mode === 'create'){
+      this.getAllPrivilige()
+    }
   }
 
   getAllPrivilige = () => {
@@ -169,7 +189,17 @@ export default class  RolePermission extends Component{
     })
   }
 
-
+  getRoleTrees = (id) =>{
+    ajax.Get(API.GET_ROLE_TREE(id)).then((res)=>{
+      console.dir(res)
+      this.setState({
+        leftPrivilege:res.data.data.leftTree,
+        rightPrivilege:res.data.data.rightTree,
+        leftOriginPrivilege:_.cloneDeep(res.data.data.leftTree),
+        rightOriginPrivilege:_.cloneDeep(res.data.data.rightTree)
+      })
+    })
+  }
   toRight = () =>{
     if(this.state.leftCheckedKeys.length === 0){
       message.info("没有选中任何节点")
@@ -231,6 +261,28 @@ export default class  RolePermission extends Component{
   }
 
   handleSubmit = (e) =>{
+    let data = {}
+    let permissions = []
+
+    $('.transfer-right').find('select').each(function(){
+      let name = $(this).attr('name')
+      let value = $(this).val()
+      let ids = name.split('-')
+      let id = ids[ids.length - 1]
+      permissions.push({id:id,level:parseInt(value)})
+    })
+
+    data.permissions = permissions;
+    data.roleName = this.props.roleName
+    if(this.props.mode === 'edit'){
+      ajax.PutJson(API.PUT_ROLE_TREE(18),data).then(function(res){
+        console.log(res)
+      })
+    }else if(this.props.mode === 'create'){
+      // ajax.PostJson(API.POST_ROLE,data).then(function(res){
+      //   console.log(res)
+      // })
+    }
 
   }
   render(){
@@ -284,7 +336,6 @@ export default class  RolePermission extends Component{
               <Button onClick={this.toLeft}> <Icon type="double-left" /> </Button>
             </div>
             <div className="transfer-right">
-
               {rightTree}
             </div>
           </div>
