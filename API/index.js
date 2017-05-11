@@ -18,20 +18,14 @@ export default {
   // 维护记录
   POST_CUSTOMER_MAINTENANCE_COUNT: id => `/api/customer/${id}/maintenance`,
 
-  //家庭信息：查看、增加、删除、修改
-  GET_CUSTOMERS_FAMILY:customerId =>`/api/customer/individual/${customerId}/families`,
-  POST_CUSTOMERS_FAMILY:customerId => `/api/customer/individual/${customerId}/family`,
-  DELETE_CUSTOMERS_FAMILY:familyId=>`/api/customer/individual/family/${familyId}`,
-  PUT_CUSTOMERS_FAMILY:familyId => `/api/customer/individual/family/${familyId}`,
+
   //工作信息：查看、修改
   GET_JOBINFO_BASE: customerId => `/api/customer/individual/${customerId}/job`,
   PUT_JOBINFO_BASE: customerId => `/api/customer/individual/${customerId}/job`,
   //风险测试：
-  GET_CUSTOMER_PRE_RISKQUESTIONS:customerId=>`/api/customer/individual/${customerId}/riskQuestions`,//获取之前做过的题目
-  GET_CUSTOMER_RISKQUESTIONS:customerId=>`/api/customer/individual/riskQuestions`,//获取题目
-  PUT_CUSTOMER_RISKQUESTION:customerId=>`/api/customer/individual/${customerId}/riskQuestion`,//提交测试
-  GET_CUSTOMER_RISKQUESTIONS: customerId => `/api/customer/individual/${customerId}/riskQuestions`,//获取题目
+  GET_CUSTOMER_PRE_RISKQUESTIONS: customerId => `/api/customer/individual/${customerId}/riskQuestions`,//获取之前做过的题目
   PUT_CUSTOMER_RISKQUESTION: customerId => `/api/customer/individual/${customerId}/riskQuestion`,//提交测试
+  GET_CUSTOMER_RISKQUESTIONS: customerId => `/api/customer/individual/${customerId}/riskQuestions`,//获取题目
   //企业客户：
   //关键人信息查看、增加、删除、修改
   GET_CUSTOMETS_KEYPERSONS: customerId => `/api/customer/enterprise/${customerId}/keyPersons`,
@@ -45,8 +39,6 @@ export default {
   DELETE_CUSTOMERS_FINANCES: financesId => `/api/customer/finance/${financesId}`,
   PUT_CUSTOMERS_FINANCES: financesId => `/api/customer/finance/${financesId}`,
   //获取金融业务信息产品下拉：
-  GET_CUSTOMER_FINANCE_CATEGORY:'/api/customer/finance/category',
-
   GET_CUSTOMER_FINANCE_CATEGORY: '/api/customer/finance/category',
 
   //enterprise:
@@ -169,12 +161,8 @@ export default {
   GET_CAPTCHA: '/api/captcha',
   //登陆
   POST_LOGIN: '/api/login',
-    //获取验证码图片
-    GET_CAPTCHA:'/api/captcha',
-    //登陆
-    POST_LOGIN:'/api/login',
-    //注销登陆
-    GET_LOGOUT:'/api/logout',
+  //注销登陆
+  GET_LOGOUT: '/api/logout',
   // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory',
 
   // 添加组织机构
@@ -209,8 +197,11 @@ export default {
   GET_STAFF_BUSSINESS_INFO: id => `/api/staff/${id}/businessInfo`,
 
   //分配时全部的权限数据
-  GET_ALL_RPIVILIGE:'/api/role/tree',
+  GET_ALL_RPIVILIGE: '/api/role/tree',
 
   //新增角色
-  POST_ROLE: '/api/role'
+  POST_ROLE: '/api/role',
+
+  // 添加用户
+  POST_USER: '/api/user'
 }
