@@ -86,15 +86,15 @@ export default class BatchParticipate extends Component {
     let thead = document.getElementsByClassName('ant-table-thead')[0];
     let table = document.getElementsByClassName('participateTable')[0];
     let tableScroll = table.getElementsByClassName('ant-table-body')[0];
-    let tabsScroll = table.getElementsByClassName('ant-tabs-content')[0];
+    let tabsScroll = table.getElementsByClassName('ant-tree')[0];
     let pagenationHeight = 52;
 
     tableScroll.style['max-height'] = container.offsetHeight - thead.offsetHeight - pagenationHeight + 'px';
-    if(tabsScroll && tabsScroll.style) {
-      tabsScroll.style['max-height'] = container.offsetHeight - thead.offsetHeight - pagenationHeight + 'px';
-      tabsScroll.style['overflow-y'] = 'auto';
-    }
-    tableScroll.style['overflow-y'] = 'auto';
+    // if(tabsScroll && tabsScroll.style) {
+    //   tabsScroll.style['max-height'] = container.offsetHeight - thead.offsetHeight - pagenationHeight + 'px';
+    //   tabsScroll.style['overflow-y'] = 'auto';
+    // }
+    // tableScroll.style['overflow-y'] = 'auto';
     // console.log(tableScroll.style['max-height'])
   }
 
@@ -146,8 +146,6 @@ export default class BatchParticipate extends Component {
       ],
       dataSource: this.state.table.dataSource
     };
-
-    console.log(this.state.department && this.state.department.id)
 
     const tree = this.state.department && this.state.department !== {} ?
       <Tree

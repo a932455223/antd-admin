@@ -2,8 +2,17 @@ export default {
   // 获取权限
   POST_PRIVILEGE_COMMON: '/api/privilege/common',
 
-  //个人客户：
-  //户家庭信息：查看、增加、删除、修改
+  // 新增客户
+  POST_CUSTOMER_INDIVIDUAL_BASE: '/api/customer/individual/base',
+
+  // 基本信息
+  PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1: id => `/api/customer/individual/${id}/base/tab1`,
+  PUT_CUSTOMER_INDIVIDUAL_BASE_TAB2: id => `/api/customer/individual/${id}/base/tab2`,
+
+  // 维护记录
+  POST_CUSTOMER_MAINTENANCE_COUNT: id => `/api/customer/${id}/maintenance`,
+
+  //家庭信息：查看、增加、删除、修改
   GET_CUSTOMERS_FAMILY:customerId =>`/api/customer/individual/${customerId}/families`,
   POST_CUSTOMERS_FAMILY:customerId => `/api/customer/individual/${customerId}/family`,
   DELETE_CUSTOMERS_FAMILY:familyId=>`/api/customer/individual/family/${familyId}`,
@@ -28,7 +37,7 @@ export default {
   PUT_CUSTOMERS_FINANCES:financesId=>`/api/customer/finance/${financesId}`,
   //获取金融业务信息产品下拉：
   GET_CUSTOMER_FINANCE_CATEGORY:'/api/customer/finance/category',
-  
+
   //enterprise:
   GET_CUSTOMER_ENTERPRISE_BASE: customerId => `/api/customer/enterprise/${customerId}/base`,
   PUT_CUSTOMER_ENTERPRISE_BASE: id =>  `/api/customer/enterprise/${id}/base`,
@@ -54,11 +63,6 @@ export default {
   GET_RELATION_SLIDER_BAR: '/asd/common/dropdown/list/relation',
   GET_JOBCATEGORY_SLIDER_BAR: '/asd/common/dropdown/list/jobCategory',
   //==================================================================
-
-  // 新增客户
-  POST_CUSTOMER_INDIVIDUAL_BASE: '/api/customer/individual/base',
-  PUT_CUSTOMER_INDIVIDUAL_BASE_TAB1: id => `/api/customer/individual/${id}/base/tab1`,
-  PUT_CUSTOMER_INDIVIDUAL_BASE_TAB2: id => `/api/customer/individual/${id}/base/tab2`,
 
   GET_DEPARTMENT_AREAS: id => `/api/department/${id}/areas`,
   GET_CUSTOMER_DEPARTMENT: '/api/customer/add/departments/noHierarchy',

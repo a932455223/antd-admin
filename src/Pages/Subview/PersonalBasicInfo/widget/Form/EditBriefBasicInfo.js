@@ -21,6 +21,7 @@ import Reg from '../../../../../tools/Reg';
 const FormItem = Form.Item;
 const Option = Select.Option;
 let addkey = 100;
+
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
