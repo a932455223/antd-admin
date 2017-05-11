@@ -54,12 +54,25 @@
     transform: translateX(-100%);
 
     >p {
+      display: inline-flex;
+      justify-content: center;
+
+      padding-right: 15px;
       height: 20px;
+
     	font-family: PingFangSC;
     	font-size: 14px;
     	font-weight: 500;
     	color: #6a819a;
-      padding-right: 15px;
+
+      .counter {
+        margin-top: -5px;
+        width: 24px;
+        text-align: center;
+        // padding: 0 8px;
+        font-size: 18px;
+	      color: #41bf89;
+      }
     }
 
     li {

@@ -23,7 +23,7 @@ export default class AddCrewModal extends Component {
   };
 
   componentWillMount() {
-    // console.log('add crew modal')
+    console.log('add crew modal')
     // 获取 treeNode department
     ajax.Get(API.GET_DEPARTMENT_HIERARCHY)
     .then(res => {
@@ -238,6 +238,7 @@ export default class AddCrewModal extends Component {
         onOk={this.handleOk}
         confirmLoading={this.state.confirmLoading}
         onCancel={this.handleCancel}
+        // key={id}
       >
         <div className="select-staff" id="addCrew">
           <Card className="card-body">
