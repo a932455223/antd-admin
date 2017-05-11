@@ -286,6 +286,13 @@ class BranchesEditor extends Component {
           </Row>
           {/*组织信息*/}
           {Object.keys(baseInfo).length > 0 ? <BaseInoForm onChange={this.baseInfoChange} baseInfo={baseInfo} id={this.props.id} getStaffs={this.props.getStaffs} hasChangeBase={this.props.hasChangeBase} hasNoChangeBase={this.props.hasNoChangeBase}/> : null}
+
+            {/*工作信息*/}
+          <JobInfoForm onChange={this.jobInfoChange} jobInfo={jobInfo} id={this.props.id} getStaffs={this.props.getStaffs} parentDepartmentDropDown={this.state.parentDepartmentDropDown} hasChangeJob={this.props.hasChangeJob} hasNoChangeJob={this.props.hasNoChangeJob} />
+
+            {/*教育经历*/}
+          <EducationInfoForm onChange={this.educationInfoChange} educationInfo={educationInfo} id={this.props.id} getStaffs={this.props.getStaffs} hasChangeEdu={this.props.hasChangeEdu} hasNoChangeEdu={this.props.hasNoChangeEdu} />
+          
           {/*业务信息*/}
           <Card className="business" title={<h3>业务信息</h3>}>
             <Row>
@@ -322,11 +329,7 @@ class BranchesEditor extends Component {
             </Row>
           </Card>
 
-          {/*工作信息*/}
-        <JobInfoForm onChange={this.jobInfoChange} jobInfo={jobInfo} id={this.props.id} getStaffs={this.props.getStaffs} parentDepartmentDropDown={this.state.parentDepartmentDropDown} hasChangeJob={this.props.hasChangeJob} hasNoChangeJob={this.props.hasNoChangeJob} />
-
-          {/*教育经历*/}
-        <EducationInfoForm onChange={this.educationInfoChange} educationInfo={educationInfo} id={this.props.id} getStaffs={this.props.getStaffs} hasChangeEdu={this.props.hasChangeEdu} hasNoChangeEdu={this.props.hasNoChangeEdu} />
+        
 
 
           {/*操作日志*/}

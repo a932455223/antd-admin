@@ -97,7 +97,7 @@ export default {
   GET_STAFFS: '/api/staffs',
 
   // 用户权限管理 用户列表
-  GET_USERS: '/asd/system/users',
+  // GET_USERS: '/asd/system/users',
 
   // 产品类别 层级
   GET_PRODUCT_HIERARCHY: '/asd/product/hierarchy',
@@ -189,7 +189,6 @@ export default {
 
   //分配时全部的权限数据
   GET_ALL_RPIVILIGE:'/api/role/tree',
-
 
   //新增角色
   POST_ROLE: '/api/role'
