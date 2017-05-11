@@ -181,5 +181,9 @@ export default {
   GET_STAFF_BUSSINESS_INFO: id => `/api/staff/${id}/businessInfo`,
 
   //分配时全部的权限数据
-  GET_ALL_RPIVILIGE:'/api/role/tree'
+  GET_ALL_RPIVILIGE:'/api/role/tree',
+
+
+  //新增角色
+  POST_ROLE: '/api/role'
 }

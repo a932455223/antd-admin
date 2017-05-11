@@ -30,26 +30,29 @@ class BranchBaseInfoForm extends Component{
 
   	ajax.Get(API.GET_AREA_SELECT(1))
       .then((res) => {
-      	console.log(res)
         this.setState({
           province:res.data.data
         })
   	})
+   
   }
 
   componentWillReceiveProps(nextProps) {
-  	if(nextProps.branchInfo){
-  		if(!this.props.branchInfo || this.props.branchInfo.category.value !== nextProps.branchInfo.category.value){
-  			let value = nextProps.branchInfo.category.value;
-		  	ajax.Get(API.GET_ADD_DEPARTMENT_PARENT, {
-			      level: value
-			    }).then(res => {
-			      this.setState({
-			        parentDepartmentDropDown: res.data.data
-			      })
-			    })
-  		}
-
+    console.log(nextProps, 121212, this.props,  898989)
+    //nextProps已经接收到，但是
+    	if(nextProps.branchInfo){
+    		if(!this.props.branchInfo || this.props.branchInfo.category.value !== nextProps.branchInfo.category.value){
+    			let value = nextProps.branchInfo.category.value;
+  		  	ajax.Get(API.GET_ADD_DEPARTMENT_PARENT, {
+  			      level: value
+  			    }).then(res => {
+  			      this.setState({
+  			        parentDepartmentDropDown: res.data.data,
+                changed:false
+  			      })
+  			    })
+    		  }
+        }
   		if(!this.props.branchInfo || this.props.branchInfo.province.value !== nextProps.branchInfo.province.value && nextProps.branchInfo.province.value){
 	    		this.getCity(nextProps.branchInfo.province.value)
   		}
@@ -57,8 +60,7 @@ class BranchBaseInfoForm extends Component{
   		if(!this.props.branchInfo || this.props.branchInfo.city.value !== nextProps.branchInfo.city.value && nextProps.branchInfo.city.value){
 	    		this.getArea(nextProps.branchInfo.city.value)
   		}
-  	}
-  
+      
   }
   onhandleClick = () => {
   	this.setState({
@@ -97,6 +99,7 @@ class BranchBaseInfoForm extends Component{
 		    if(hasError){
 			      Modal.error({content: '信息填写有误',})
 			    }else{
+            console.log(7777777)
 			      ajax.Put(API.PUT_DEPARTMENT(id),FieldsValue)
 			      .then(() => {
 			      this.props.getDepartments()
@@ -107,6 +110,7 @@ class BranchBaseInfoForm extends Component{
 			      message.success('您已经修改成功！');
 			    })
 		    }
+        this.props.hasNobranchInFoChange();
 		  }
   }
   onHandleSelect = (value) => {
@@ -129,6 +133,7 @@ class BranchBaseInfoForm extends Component{
       changed:true,
       loading : false
     })
+    this.props.hasInfoChange()
   }
 
   getCity = (value) => {
@@ -242,7 +247,7 @@ class BranchBaseInfoForm extends Component{
 
                 >
                   {getFieldDecorator('name', {
-                    rules: [{required: true, message: '组织名称!',min:4,max:100}],
+                    rules: [{required: true, message: '组织名称!',max:100}],
                     onChange:this.inputChange,
                   })(
                     <Input />	
@@ -324,23 +329,23 @@ class BranchBaseInfoForm extends Component{
             </Row>
             <Row gutter={8}>
 
-              <Col span={6}>
+              <Col span={9}>
                 <FormItem
                   label={<span>地址</span>}
-                  labelCol={{span:12}}
-                  wrapperCol={{span:12}}
+                  labelCol={{span:8}}
+                  wrapperCol={{span:16}}
                 >
                 {Province}
                 </FormItem>
               </Col>
-              <Col span={3}>
+              <Col span={6}>
                 <FormItem
                   wrapperCol={{span:24}}
                 >
                  {City}
                 </FormItem>
               </Col>
-              <Col span={3}>
+              <Col span={6}>
                 <FormItem
                   wrapperCol={{span:24}}
                 >
@@ -364,13 +369,13 @@ class BranchBaseInfoForm extends Component{
                 </FormItem>
               </Col>
             </Row>
-            <Row>
+        <Row className="buttonrow">
           <Col span="3">
           
           </Col>
           <Col span="3">
             <Button
-              className="save"
+              className={this.state.changed ? "ablesavebtn" : "disablesavebtn"}
               disabled={this.state.changed  ? false : true}
               htmlType="submit"
               onClick = {this.onhandleClick}

@@ -57,7 +57,6 @@ class BranchesEditor extends Component {
   getDepartmnent = (id) => {
     axios.get(API.GET_DEPARTMENT_DETAIL(id))
       .then( res => {
-        console.log(res);
         let branchBase = res.data.data;
         let arry = branchBase.regionCode ? branchBase.regionCode.split(' '):[]
         let addressDetail = branchBase.adress ? branchBase.adress.split(' ')[3]:''
@@ -143,7 +142,7 @@ class BranchesEditor extends Component {
           ref={ departmentEditor => this.departmentEditor = departmentEditor}
         >
    
-          <BranchBaseInfo branchInfo= {branchInfo} id={this.props.id} getDepartments={this.props.getDepartments} closeDock={this.props.closeDock}/>
+          <BranchBaseInfo branchInfo= {branchInfo} id={this.props.id} getDepartments={this.props.getDepartments} closeDock={this.props.closeDock} hasInfoChange={this.props.hasInfoChange} hasNobranchInFoChange={this.props.hasNobranchInFoChange}/>
           {/*业务信息*/}
           <Card className="business" title={<h3>业务信息</h3>}>
             <Row>

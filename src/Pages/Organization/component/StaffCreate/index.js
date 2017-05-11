@@ -25,6 +25,9 @@ class BranchesDetail extends Component {
   state = {
     bankJobCategory: [],
     jobStatus: [],
+    province:[],
+    city:[],
+    region:[],
     educationLevel: [],
     parentDepartmentDropDown: [],
     rolesDropDown:[],
@@ -34,6 +37,14 @@ class BranchesDetail extends Component {
   };
 
   componentWillMount(){
+    //省
+    ajax.Get(API.GET_AREA_SELECT(1))
+      .then(res => {
+        this.setState({
+          province:res.data.data
+        })
+      })
+
     axios.get(API.GET_COMMON_DROPDOWN('bankJobCategory'))
       .then(res => {
         this.setState({
@@ -55,7 +66,6 @@ class BranchesDetail extends Component {
         this.setState({
           parentDepartmentDropDown: res.data.data
         })
-        console.log(res.data.data,12121212)
       });
 
     axios.get(API.GET_COMMON_DROPDOWN('educationLevel'))
@@ -99,14 +109,14 @@ class BranchesDetail extends Component {
   }
   onHandleChange = () => {
     this.setState({
-       rolesHide:  !this.state.rolesHide,
+       rolesHide: !this.state.rolesHide,
        coloseIcon:true
     })
   }
   handleSubmit = (e) => {
-    console.log(123)
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
+      console.log(values)
       if (!err) {
         const data = ((values) => {
           for(let key in values){
@@ -116,9 +126,19 @@ class BranchesDetail extends Component {
               delete values[key]
             }
           }
-          console.log(values);
           return values;
         })(values);
+        const {getFieldsValue,getFieldValue} = this.props.form;
+        let provinceName = this.state.province.find(item => item.id == getFieldValue('province')).name;
+        let cityName = this.state.city.find(item => item.id == getFieldValue('city')).name;
+        let regionName = this.state.region.find(item => item.id == getFieldValue('region')).name;
+        let address = provinceName + ' ' + cityName + ' ' + regionName + ' ' + getFieldValue('addressDtail');
+        data.address = address;
+        delete data.province;
+        delete data.city;
+        delete data.region;
+        delete data.addressDtail
+
         ajax.Post(API.POST_ADD_STAFF,data)
           .then( res => {
             console.log(res)
@@ -137,11 +157,46 @@ class BranchesDetail extends Component {
       }
     });
   };
+
+  getCity = (value) => {
+    ajax.Get(API.GET_AREA_SELECT(value))
+      .then(res => {
+        this.setState({
+          city:res.data.data
+        })
+      })
+  }
+
+  getRegion = (value) => {
+    ajax.Get(API.GET_AREA_SELECT(value))
+      .then(res => {
+        this.setState({
+          region:res.data.data
+        })
+      })
+  }
+
   inputChange = () => {
     this.setState({
       coloseIcon:true
     })
   }
+
+  inputProvinceChange = (e) => {
+    this.getCity(e)
+    this.props.form.setFieldsValue({
+      city:undefined,
+      region:undefined
+    })
+  }
+
+  inputCityChange = (e) => {
+       this.getRegion(e)
+       this.props.form.setFieldsValue({
+          region:undefined
+        })
+  }
+
   render() {
     console.log()
     const {getFieldDecorator} = this.props.form;
@@ -556,13 +611,89 @@ class BranchesDetail extends Component {
                       <Input/>
                     )}
                   </FormItem>
+                <Row>
+                  <Col span={10}>
+                    <FormItem
+                      label={<span>家庭住址</span>}
+                      labelCol={{span:10}}
+                      wrapperCol={{span:14}}
+                      key='province'
+                    >
+                      {getFieldDecorator('province', {
+                        rules: [{ message: '省份'}],
+                        onChange:this.inputProvinceChange
+                        // initialValue: ''
+                      })(
+                        <Select
+                          placeholder="省份"
+                          getPopupContainer={
+                            () => document.getElementById('staffDetail')
+                          }
+                        >
+                          {this.state.province && this.state.province.map((option, index) => {
+                            return <Option value={option.id.toString()} key={'position' + index}>{option.name}</Option>
+                          })}
+                        </Select>
+                      )}
+                    </FormItem>
+                  </Col>
+
+                  <Col span={6}>
+                    <FormItem
+                      wrapperCol={{span:24}}
+                      key='city'
+                    >
+                      {getFieldDecorator('city', {
+                        rules: [{ message: '城市'}],
+                        onChange:this.inputCityChange
+                        // initialValue: ''
+                      })(
+                        <Select
+                          placeholder="城市"
+                          getPopupContainer={
+                            () => document.getElementById('staffDetail')
+                          }
+                        >
+                          {this.state.city && this.state.city.map((option, index) => {
+                            return <Option value={option.id.toString()} key={'position' + index}>{option.name}</Option>
+                          })}
+                        </Select>
+                      )}
+                    </FormItem>
+                  </Col>
+
+                  <Col span={6}>
+                    <FormItem
+                      wrapperCol={{span:24}}
+                      key='region'
+                    >
+                      {getFieldDecorator('region', {
+                        rules: [{ message: '地区'}],
+                        onChange:this.inputChange
+                        // initialValue: ''
+                      })(
+                        <Select
+                          placeholder="地区"
+                          getPopupContainer={
+                            () => document.getElementById('staffDetail')
+                          }
+                        >
+                          {this.state.region && this.state.region.map((option, index) => {
+                            return <Option value={option.id.toString()} key={'position' + index}>{option.name}</Option>
+                          })}
+                        </Select>
+                      )}
+                    </FormItem>
+                  </Col>
+                </Row>
+
                   <FormItem
-                    label={<span>家庭住址</span>}
+                    label={<span>详细地址</span>}
                     {...formItemLayoutS}
-                    key='address'
+                    key='addressDtail'
                   >
-                    {getFieldDecorator('address', {
-                      rules: [{required: false, message: '请填写住址!'}],
+                    {getFieldDecorator('addressDtail', {
+                      rules: [{required: false, message: '请填写详细住址!'}],
                       onChange:this.inputChange
                       // initialValue: '请填写住址'
                     })(
@@ -576,19 +707,22 @@ class BranchesDetail extends Component {
                   >
                     {getFieldDecorator('isUser', {
                       rules: [{required: true, message: '请选择是否添加用户!'}],
+                      initialValue:"false",
                       onChange:this.onHandleChange
                     })(
-                      <RadioGroup >
+                      <RadioGroup>
                         <Radio value="true">是</Radio>
                         <Radio value="false">否</Radio>
                       </RadioGroup>
                     )}
                   </FormItem>
+
+                  {
+                    this.state.rolesHide ?
                    <FormItem
                     label={<span>所属角色</span>}
                     {...formItemLayoutS}
                     key='roles'
-                    style={{display : this.state.rolesHide ? "block" : "none" }}
                   >
                     {getFieldDecorator('roles', {
                       rules: [{required: true, message: '请选择所属角色'}],
@@ -596,7 +730,7 @@ class BranchesDetail extends Component {
                     })(
                        <Select
                           mode="multiple"
-                          getPopupContainer={ () => document.getElementById('newstaffroles')}
+                          getPopupContainer={ () => document.getElementById('staffDetail')}
                         >
                           {
                             this.state.rolesDropDown && this.state.rolesDropDown.map(item => {
@@ -606,10 +740,10 @@ class BranchesDetail extends Component {
                         </Select>
                     )}
                   </FormItem>
+                  : null
+                  }
                </Col>
               </Row>
-
-
 
               <Row className="form-group">
                 <div>
@@ -641,7 +775,7 @@ class BranchesDetail extends Component {
                     })(
                       <Select
                         getPopupContainer={
-                          () => document.getElementById('newstaffroles')
+                          () => document.getElementById('staffDetail')
                         }
                       >
                         {this.state.bankJobCategory && this.state.bankJobCategory.map((option, index) => {
@@ -662,7 +796,7 @@ class BranchesDetail extends Component {
                     })(
                       <Select
                         getPopupContainer={
-                          () => document.getElementById('newstaffroles')
+                          () => document.getElementById('staffDetail')
                         }
                       >
                         {this.state.jobStatus && this.state.jobStatus.map((option, index) => {
@@ -683,7 +817,7 @@ class BranchesDetail extends Component {
                     })(
                        <Select
                           mode="multiple"
-                          getPopupContainer={ () => document.getElementById('newstaffroles')}
+                          getPopupContainer={ () => document.getElementById('staffDetail')}
                         >
                           {
                             this.state.parentDepartmentDropDown && this.state.parentDepartmentDropDown.map(item => {
