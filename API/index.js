@@ -18,11 +18,6 @@ export default {
   // 维护记录
   POST_CUSTOMER_MAINTENANCE_COUNT: id => `/api/customer/${id}/maintenance`,
 
-  //家庭信息：查看、增加、删除、修改
-  GET_CUSTOMERS_FAMILY:customerId =>`/api/customer/individual/${customerId}/families`,
-  POST_CUSTOMERS_FAMILY:customerId => `/api/customer/individual/${customerId}/family`,
-  DELETE_CUSTOMERS_FAMILY:familyId=>`/api/customer/individual/family/${familyId}`,
-  PUT_CUSTOMERS_FAMILY:familyId => `/api/customer/individual/family/${familyId}`,
   //工作信息：查看、修改
   GET_JOBINFO_BASE: customerId => `/api/customer/individual/${customerId}/job`,
   PUT_JOBINFO_BASE: customerId => `/api/customer/individual/${customerId}/job`,
@@ -30,8 +25,6 @@ export default {
   GET_CUSTOMER_PRE_RISKQUESTIONS:customerId=>`/api/customer/individual/${customerId}/riskQuestions`,//获取之前做过的题目
   GET_CUSTOMER_RISKQUESTIONS:customerId=>`/api/customer/individual/riskQuestions`,//获取题目
   PUT_CUSTOMER_RISKQUESTION:customerId=>`/api/customer/individual/${customerId}/riskQuestion`,//提交测试
-  GET_CUSTOMER_RISKQUESTIONS: customerId => `/api/customer/individual/${customerId}/riskQuestions`,//获取题目
-  PUT_CUSTOMER_RISKQUESTION: customerId => `/api/customer/individual/${customerId}/riskQuestion`,//提交测试
   //企业客户：
   //关键人信息查看、增加、删除、修改
   GET_CUSTOMETS_KEYPERSONS: customerId => `/api/customer/enterprise/${customerId}/keyPersons`,
@@ -46,9 +39,6 @@ export default {
   PUT_CUSTOMERS_FINANCES: financesId => `/api/customer/finance/${financesId}`,
   //获取金融业务信息产品下拉：
   GET_CUSTOMER_FINANCE_CATEGORY:'/api/customer/finance/category',
-
-  GET_CUSTOMER_FINANCE_CATEGORY: '/api/customer/finance/category',
-
   //enterprise:
   GET_CUSTOMER_ENTERPRISE_BASE: customerId => `/api/customer/enterprise/${customerId}/base`,
   PUT_CUSTOMER_ENTERPRISE_BASE: id => `/api/customer/enterprise/${id}/base`,
@@ -169,12 +159,8 @@ export default {
   GET_CAPTCHA: '/api/captcha',
   //登陆
   POST_LOGIN: '/api/login',
-    //获取验证码图片
-    GET_CAPTCHA:'/api/captcha',
-    //登陆
-    POST_LOGIN:'/api/login',
-    //注销登陆
-    GET_LOGOUT:'/api/logout',
+  //注销登陆
+  GET_LOGOUT:'/api/logout',
   // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory',
 
   // 添加组织机构
