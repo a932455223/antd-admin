@@ -15,23 +15,26 @@ import './rolePermission.less'
 function info(msg,color='red'){
   console.log('%c'+msg,'color:'+color)
 }
-const generateSelect = nodes => nodes.map((item)=>{
-  return
-  <Select defaultValue={item[0].id.toString()}>
-    <Option key={item.id.toString()}>{item.name}</Option>
-  </Select>
-})
+const generateSelect = (options) => {
+  return <Select defaultValue={options[0].level.toString()}>
+          {options.map((item,index) => <Option key={item.level.toString()}>{item.name}</Option>)}
+         </Select>
+
+}
 const generateTree = (nodes,parentId,showOptions) => nodes.map((item) =>{
   let pid = parentId==='0' ? item.id.toString() : parentId.toString()+'-'+item.id.toString()
-  if(item.childs){
+
+  if(item.childs.length > 0){
     return (
       <TreeNode key={pid} title={item.name}>
         {generateTree(item.childs,pid,showOptions)}
       </TreeNode>
     )
   }
-
   return <TreeNode key={pid} title={<span>{item.name} &nbsp;{showOptions ? generateSelect(item.options):'['+item.options[0].name+']'}</span>} />
+  // console.log(item)
+  // return <TreeNode key={pid} title={<span>{<Select><Option key="1">111</Option></Select>}</span>} />
+
 })
 
 function copySigleTreeNode(treeNode){
@@ -51,8 +54,6 @@ function copySigleTreeNode(treeNode){
 }
 
 function copyTreeNode(leftTree, rightTree, ids) {
-  console.log(ids)
-  console.dir(leftTree)
   if (rightTree.childs === undefined) {
     rightTree = {
       id: 0,
@@ -136,7 +137,6 @@ function deleteTreeNode(node,deleteIds){
       parentNode = currentNode
     }
   })
-
   return node
 }
 
@@ -149,16 +149,23 @@ export default class  RolePermission extends Component{
     leftPrivilege:[],
     rightPrivilege:{},
     leftOriginPrivilege:[],
-    rightOriginPrivilege:[]
+    rightOriginPrivilege:[],
+    leftKey:0,
+    rightKey:0
   }
 
   componentWillMount(){
+    info('will mount.')
     this.getAllPrivilige()
   }
 
   getAllPrivilige = () => {
     ajax.Get(API.GET_ALL_RPIVILIGE).then((res) => {
-      this.setState({leftPrivilege:res.data.data,leftOriginPrivilege:res.data.data})
+      this.setState({
+        leftPrivilege:res.data.data,
+        leftOriginPrivilege:_.cloneDeep(res.data.data),
+        rightOriginPrivilege:_.cloneDeep(res.data.data)
+      })
     })
   }
 
@@ -177,20 +184,38 @@ export default class  RolePermission extends Component{
       this.setState({
         leftPrivilege:newLeftPrivilege,
         rightPrivilege:newRightPrivilege,
-        leftCheckedKeys:[]
+        leftCheckedKeys:[],
+        leftKey:(this.state.leftKey + 1),
+        rightKey:(this.state.rightKey + 1)
       })
     }
   }
 
   toLeft = () => {
+      if(this.state.rightCheckedKeys.length === 0){
+        message.info("没有选中任何节点")
+      }else{
+        let rightCheckedKeys = _.cloneDeep(this.state.rightCheckedKeys).sort((pre,next)=>pre.split('-').length - next.split('-').length)
+        rightCheckedKeys = removeChildrenKeys(rightCheckedKeys)
+        console.dir(rightCheckedKeys)
+        let newRightPrivilege = deleteTreeNode(_.cloneDeep(this.state.rightPrivilege),rightCheckedKeys)
 
+        let newLeftPrivilege = copyTreeNode(_.cloneDeep(this.state.rightOriginPrivilege),_.cloneDeep(this.state.leftPrivilege),rightCheckedKeys)
+
+        this.setState({
+          leftPrivilege:newLeftPrivilege,
+          rightPrivilege:newRightPrivilege,
+          rightCheckedKeys:[],
+          leftKey:(this.state.leftKey + 1),
+          rightKey:(this.state.rightKey + 1)
+        })
+      }
   }
   onLeftCheck = (checkedKeys,e) => {
     this.setState({
       leftCheckedKeys:checkedKeys
     })
   }
-
   onRightCheck = (checkedKeys,e) => {
     this.setState({
       rightCheckedKeys:checkedKeys
@@ -201,10 +226,16 @@ export default class  RolePermission extends Component{
     this.setState({ selectedKeys });
   }
 
+  resetForm = (e) =>{
 
+  }
+
+  handleSubmit = (e) =>{
+
+  }
   render(){
-
     const leftTree = this.state.leftPrivilege.id !==undefined ? <Tree
+      key={this.state.leftKey.toString()}
       checkable
       defaultExpandAll={true}
       onExpand={this.onExpand}
@@ -216,23 +247,22 @@ export default class  RolePermission extends Component{
     </Tree>:null
 
     const rightTree = this.state.rightPrivilege.id !== undefined ? <Tree
-      key={Math.random().toString()}
+      key={this.state.rightKey.toString()}
       checkable
       defaultExpandAll={true}
       onExpand={this.onExpand}
       autoExpandParent={true}
       onCheck={this.onRightCheck} checkedKeys={this.state.rightCheckedKeys}
-      onSelect={this.onSelect} selectedKeys={this.state.selectedKeys}
     >
-      {generateTree(this.state.rightPrivilege.childs,'0',false)}
+      {generateTree(this.state.rightPrivilege.childs,'0',true)}
     </Tree>:null
 
     const title =
                 <div className="titlerow">
                   <p>分配权限</p>
                   <div className="btnbox">
-                    <Button>重置</Button>
-                    <Button>保存</Button>
+                    <Button onClick={this.resetForm}>重置</Button>
+                    <Button onClick={this.handleSubmit}>保存</Button>
                     <Icon
                         className="close"
                         type="close"
@@ -254,6 +284,7 @@ export default class  RolePermission extends Component{
               <Button onClick={this.toLeft}> <Icon type="double-left" /> </Button>
             </div>
             <div className="transfer-right">
+
               {rightTree}
             </div>
           </div>
