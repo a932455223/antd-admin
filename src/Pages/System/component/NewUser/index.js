@@ -3,9 +3,11 @@
  */
 
 import React, {Component} from "react";
-import {Button, Card, Form, Input, Select, Tabs} from "antd";
+import {Button, Card, Form, Input, Select, Tabs,Row,Col,Icon} from "antd";
 //================================================
 import "./less/newUser.less";
+import API from "../../../../../API";
+import ajax from "../../../../tools/POSTF.js";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -32,11 +34,14 @@ class NewUser extends Component {
 
   save() {
     this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        alert('保存成功');
-        console.log(values);
+      console.log(values);
+      if (err) {
+        Modal.error({content: '信息填写有误',});
         this.props.close();
       }
+      // else{
+      //   ajax.Post()
+      // }
     });
 
   }
@@ -54,17 +59,16 @@ class NewUser extends Component {
 
 
     return (
-      <Form onSubmit={this.save.bind(this)}>
+      <Form>
         <div className="new-user">
           <div className="new-user-title">
             <h3>{this.state.username}</h3>
-            <span>
-            {this.state.formGroupVisible && <Button onClick={this.save.bind(this)} >保存</Button>}
-              <Button
-                className="close"
-                onClick={this.props.close}
-              >&times;</Button>
-          </span>
+            <Icon
+              className="close"
+              onClick={this.props.close}
+              type="close"
+              style={{cursor:"pointer"}}
+            />
           </div>
 
           {
@@ -148,10 +152,20 @@ class NewUser extends Component {
                     <Input type="textarea"/>
                   )}
                 </FormItem>
+                <Row>
+                  <Col span={6}>
+                    
+                  </Col>
+                  <Col>
+                    {this.state.formGroupVisible && <Button onClick={this.save.bind(this)} >保存</Button>}
+                  </Col>
+                </Row>
               </Card>
+
             )
           }
         </div>
+        
       </Form>
 
     )

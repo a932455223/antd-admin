@@ -61,7 +61,7 @@ export default class ImportCustomers extends Component {
               <Icon type="inbox" />
             </p>
             <p className="ant-upload-text">请将文件拖拽到此区域</p>
-            <p className="ant-upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
+          {/*<p className="ant-upload-hint"></p>*/}
           </Dragger>
         </div>
       </div>

@@ -10,9 +10,9 @@ import React, {Component} from "react";
 import axios from "axios";
 import {Button, Icon,Modal} from "antd";
 //========================================
-import StaffDetail from "../component/StaffDetail";
+import StaffCreate from "../component/StaffCreate";
 import StaffEditor from "../component/StaffEditor";
-import BranchesDetail from "../component/BranchesDetail";
+import BranchesCreate from "../component/BranchesCreate";
 //==================================================
 import Content from "../component/Content";
 import API from "../../../../API";
@@ -150,7 +150,7 @@ export default class Branches extends Component {
       dock: {
         visible: true,
         children:(
-          <StaffDetail
+          <StaffCreate
             closeDock={this.closeDock.bind(this)}
             refresh={this.refresh.bind(this)}
             id={id}
@@ -166,7 +166,7 @@ export default class Branches extends Component {
         dock: {
           visible: true,
           children: (
-            <BranchesDetail
+            <BranchesCreate
               id="-1"
               closeDock={this.closeDock.bind(this)}
               refresh={this.refresh.bind(this)}
@@ -179,7 +179,7 @@ export default class Branches extends Component {
         dock: {
           visible: true,
           children: (
-            <StaffDetail
+            <StaffCreate
               id="-1"
               closeDock={this.closeDock.bind(this)}
               refresh={this.refresh.bind(this)}

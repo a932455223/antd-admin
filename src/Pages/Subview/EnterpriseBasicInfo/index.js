@@ -53,6 +53,9 @@ class EnterpriseBasicInfo extends Component {
     joiners: [],
     staffs: [],
 
+    AddCrewModal: '',
+    AddMaintainRecord: '',
+
     accountsArr: ['row-0'],
     accounts: {},
     originAccountsArr: ['row-0'],
@@ -122,6 +125,18 @@ class EnterpriseBasicInfo extends Component {
   componentWillMount(){
     // info('basicInfo will mount');
     this.getBaseInfo(this.props.currentCustomerInfo.id);
+
+    // 异步加载 edit component
+    setTimeout(() => {
+      require.ensure([],() => {
+        let AddCrewModal = require('./widget/AddCrewModal').default;
+        let AddMaintainRecord = require('./widget/AddMaintainRecordForm').default;
+        this.setState({
+          AddCrewModal: AddCrewModal,
+          AddMaintainRecord: AddMaintainRecord
+        })
+      }, 'AddCrewModal')
+    }, 500)
   }
 
   componentWillReceiveProps(next){
@@ -136,7 +151,7 @@ class EnterpriseBasicInfo extends Component {
     }
 
     // 重置 joinersBeEdited
-    if(beEditedArray && beEditedArray.length === 0) {
+    if(next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) {
       this.setState({
         joinersBeEdited: false
       })
@@ -503,12 +518,19 @@ class EnterpriseBasicInfo extends Component {
       modalShow: this.modalShow,
     }
 
+    const maintainRecordProps = {
+      id: id,
+      mode: mode
+    }
+
     return(
       <div style={{textAlign: 'left'}}>
         <div>
           {mode && mode !== 'view' &&
             <div>
-              <AddCrewModal key={id} {...modal}/>
+              {this.state.AddCrewModal !== '' &&
+                <this.state.AddCrewModal key={id} {...modal}/>
+              }
               <EditBriefBasicInfo
                 key={this.state.eachCompanyInfo ? 'edit' + id + uuid.toString(): '-1'}
                 {...basicInfoProps}
@@ -523,9 +545,11 @@ class EnterpriseBasicInfo extends Component {
 
         <div className="maintain">
           <Tabs type='card'>
-            <TabPane tab="维护记录" key="basicInfo" className="tab01">
-              <AddMaintainRecord />
-              <MaintainRecord />
+            <TabPane tab="维护记录" key="basicInfo" className="addMaintainRecord">
+              {mode && mode !== 'view' && this.state.AddMaintainRecord !== '' &&
+                <this.state.AddMaintainRecord {...maintainRecordProps}/>
+              }
+              <MaintainRecord {...maintainRecordProps}/>
             </TabPane>
             <TabPane tab="操作记录" key="familyInfo" className="tab02">
               <div className="history">

@@ -23,7 +23,7 @@ const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const Option = Select.Option;
 import './indexStyle.less';
-import AddMaintainRecord from './widget/AddMaintainRecordForm'
+// import AddMaintainRecord from './widget/AddMaintainRecordForm'
 import MaintainRecord from './widget/MaintainRecord'
 
 import ViewBriefBasicInfo from './widget/Form/ViewBriefBasicInfo'
@@ -32,7 +32,7 @@ import EditBriefBasicInfo from './widget/Form/EditBriefBasicInfo'
 import EditDetailsBasicInfo from './widget/Form/EditDetailsBasicInfo'
 
 import BasicInfoEdit from './widget/BasicInfoEdit'
-import AddCrewModal from './widget/AddCrewModal'
+// import AddCrewModal from './widget/AddCrewModal'
 
 function info(msg,color){
   console.log('%c'+msg,'color:'+color);
@@ -49,6 +49,9 @@ class BasicInfo extends Component {
     joinersBeEdited: false,
     joiners: [],
     staffs: [],
+
+    AddCrewModal: '',
+    AddMaintainRecord: '',
 
     accountsArr: ['row-0'],
     accounts: {},
@@ -157,6 +160,18 @@ class BasicInfo extends Component {
     // info('basicInfo will mount');
     this.getBaseInfo(this.props.currentCustomerInfo.id);
 
+    // 异步加载 edit component
+    setTimeout(() => {
+      require.ensure([],() => {
+        let AddCrewModal = require('./widget/AddCrewModal').default;
+        let AddMaintainRecord = require('./widget/AddMaintainRecordForm').default;
+        this.setState({
+          AddCrewModal: AddCrewModal,
+          AddMaintainRecord: AddMaintainRecord
+        })
+      }, 'AddCrewModal')
+    }, 500)
+
     ajax.all([
       ajax.Get(API.GET_COMMON_DROPDOWN('marryStatus')),
       ajax.Get(API.GET_COMMON_DROPDOWN('houseType')),
@@ -215,7 +230,7 @@ class BasicInfo extends Component {
     }
 
     // 重置 joinersBeEdited
-    if(beEditedArray && beEditedArray.length === 0) {
+    if(next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) {
       this.setState({
         joinersBeEdited: false
       })
@@ -580,7 +595,6 @@ class BasicInfo extends Component {
       staffs: {$set: newJoiners}
     })
     this.setState(newState);
-    console.log(newState);
   };
 
   // 重置参与人员
@@ -660,7 +674,7 @@ class BasicInfo extends Component {
       originAccountsArr,
       originAccounts
     } = this.state;
-    // console.log(accounts['row-0-accountNo']);
+    // console.log(<this.state.AddCrewModal />);
     // console.log(originAccounts['row-0-accountNo']);
 
     const modal = {
@@ -717,6 +731,7 @@ class BasicInfo extends Component {
     }
 
     const maintainRecordProps = {
+      eachCustomerInfo: eachCustomerInfo,
       mode: mode
     }
 
@@ -738,7 +753,9 @@ class BasicInfo extends Component {
 
           {mode && mode !== 'view' &&
             <div>
-              <AddCrewModal key={id} {...modal}/>
+              {this.state.AddCrewModal !== '' &&
+                <this.state.AddCrewModal key={id} {...modal}/>
+              }
               <EditBriefBasicInfo
                 key={this.state.eachCustomerInfo ? 'edit' + id + uuid.toString():'-1'}
                 {...basicInfoProps}
@@ -752,15 +769,18 @@ class BasicInfo extends Component {
 
         <div className="maintain">
           <Tabs>
-            <TabPane tab="维护记录" key="basicInfo" className="tab01">
-              {mode && mode !== 'view' &&
-                <AddMaintainRecord />
+            <TabPane tab="维护记录" key="basicInfo" className="addMaintainRecord">
+              {mode && mode !== 'view' && this.state.AddMaintainRecord !== '' &&
+                <this.state.AddMaintainRecord {...maintainRecordProps}/>
               }
               <MaintainRecord {...maintainRecordProps}/>
             </TabPane>
             <TabPane tab="操作记录" key="familyInfo" className="tab02">
               <div className="history">
-                <div><span>王祎</span><span> 编辑了客户手机号 </span></div>
+                <div>
+                  <span>王祎</span>
+                  <span> 编辑了客户手机号 </span>
+                </div>
                 <p>2017/03/10 13:40:23</p>
               </div>
               <div className="history">

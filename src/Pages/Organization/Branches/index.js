@@ -10,7 +10,7 @@ import React, {Component} from "react";
 import {Button, Icon,Modal,message} from "antd";
 //=========================================================
 import Content from "../component/Content";
-import BranchesDetail from "../component/BranchesDetail";
+import BranchesCreate from "../component/BranchesCreate";
 import ajax from "../../../tools/POSTF.js";
 //=========================================================
 import API from "../../../../API";
@@ -18,6 +18,7 @@ import BrabchesEditor from "../component/BranchesEditor/index";
 
 export default class Branches extends Component {
   state = {
+    branchinfoChange:false,
     haschange:false,
     parentId: 1,
     dock: {
@@ -73,6 +74,33 @@ export default class Branches extends Component {
       }
     })
   }
+
+  closeDockHasChangeBase = () => {
+    if (this.state.branchinfoChange){
+      let that = this;
+      Modal.confirm({
+        title: '您确定要离开吗?',
+        content: '您的修改还没有保存',
+        onOk() {
+          that.setState({
+            branchinfoChange:false,
+            dock: {
+              visible: false,
+            }
+          })
+        },
+        onCancel() {
+          console.log('Cancel');
+        },
+      });
+    }else{
+      this.setState({
+        dock: {
+          visible: false,
+        }
+      })
+    }
+  }
   closeDockHasChange = () => {
     if (this.state.haschange){
       Modal.error({content: '您要离开此页面吗？',})
@@ -85,13 +113,25 @@ export default class Branches extends Component {
     })
   }
 
+  hasInfoChange = () => {
+    this.setState({
+      branchinfoChange:true
+    })
+  }
+
+  hasNobranchInFoChange = () => {
+    this.setState({
+      branchinfoChange:false
+    })
+  }
+
   // 展示dock
   showDock(id) {
     this.setState({
       dock: {
         visible: true,
         children: (
-          <BranchesDetail
+          <BranchesCreate
             closeDock={this.closeDock.bind(this)}
             id={id}
             refresh={this.refresh.bind(this)}
@@ -103,20 +143,52 @@ export default class Branches extends Component {
 
   // 表格 行 点击事件
   tableClick(id) {
-    this.setState({
-      dock: {
-        visible: true,
-        children: (
-          <BrabchesEditor
-            closeDock={this.closeDock.bind(this)}
-            refresh={this.refresh.bind(this)}
-            id={id}
-            getDepartments={this.getDepartments}
-            
-          />
-        )
-      }
-    })
+    if (this.state.branchinfoChange){
+      let that = this;
+      Modal.confirm({
+        title: '警告',
+        content: '您确定不保存编辑的数据?',
+        onOk(){
+          console.log(id)
+          that.setState({
+            branchinfoChange:false,
+            dock:{
+               visible: true,
+              children:(
+                <BrabchesEditor
+                  closeDock={that.closeDockHasChangeBase}
+                  refresh={that.refresh.bind(this)}
+                  id={id}
+                  getDepartments={that.getDepartments}
+                  hasInfoChange= {that.hasInfoChange}
+                  hasNobranchInFoChange = {that.hasNobranchInFoChange}
+                />
+              )
+            }
+          })
+        },
+        onCancel() {
+          console.log('Cancel');
+        },
+      });
+    }else{
+      this.setState({
+        dock: {
+          visible: true,
+          children: (
+            <BrabchesEditor
+              closeDock={this.closeDockHasChangeBase}
+              refresh={this.refresh.bind(this)}
+              id={id}
+              getDepartments={this.getDepartments}
+              hasInfoChange= {this.hasInfoChange}
+              hasNobranchInFoChange = {this.hasNobranchInFoChange}
+            />
+          )
+        }
+      })
+    }
+    
   }
 
   // 表格分页点击事件

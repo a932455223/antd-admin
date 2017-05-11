@@ -21,6 +21,7 @@ import Reg from '../../../../../tools/Reg';
 const FormItem = Form.Item;
 const Option = Select.Option;
 let addkey = 100;
+
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
@@ -45,6 +46,7 @@ class EditBriefBasicInfoForm extends Component{
 
     // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
     if(next.joinersBeEdited && !next.beEditedArray.includes('basicInfo')) {
+      // console.log('joinersBeEdited')
       this.props.increaseBeEditArray('basicInfo');
     } else if(next.beEditedArray && !next.beEditedArray.includes('basicInfo')) {
       // 重置 InfoBeEdited

@@ -27,6 +27,8 @@ class TablePage extends Component {
     uuid: 1000,
 
     selectedRowKeys: [], // 被选中的 row
+    selectedCustomers: [],
+
     dockVisible: false, // slide visible
     modalVisible: false,
     dockContent: '',
@@ -71,21 +73,6 @@ class TablePage extends Component {
             addCustomerPrivilege: res.data.data['system:user:add']
           })
         })
-  }
-
-  // 获取被选中的 row的 Id，打印当前的 Id
-  onSelectChange = (selectedRowKeys) => {
-    let newState = {
-      selectedRowKeys: selectedRowKeys
-    }
-
-    if(selectedRowKeys.length === 0) {
-      newState.batchProcessing = false
-    } else {
-      newState.batchProcessing = true
-    }
-
-    this.setState(newState)
   }
 
   componentWillReceiveProps(next) {
@@ -253,6 +240,48 @@ class TablePage extends Component {
     this.setState(newState);
   }
 
+  // // 获取被选中的 row的 Id，打印当前的 Id
+  customerChange = (selectedRowKeys) => {
+    let newState = {
+      selectedRowKeys: selectedRowKeys
+    }
+
+    // if(selectedRowKeys.length === 0) {
+    //   newState.batchProcessing = false
+    // } else {
+    //   newState.batchProcessing = true
+    // }
+
+    this.setState(newState)
+  }
+
+  // 选择客户
+  selectCustomers = (record, selected, selectedRows) => {
+    let newState = update(this.state, {
+      selectedCustomers: {$set: selectedRows}
+    })
+
+    this.setState(newState);
+  }
+
+  // 选择所有客户
+  selectAllCustomers = (selected, selectedRows, changeRows) => {
+    let newState = update(this.state, {
+      selectedCustomers: {$set: selectedRows}
+    })
+
+    this.setState(newState);
+  }
+
+  // 更新 customers lists的数据
+  changeCustomersLists = (customer) => {
+    let newState = update(this.state, {
+      selectedCustomers: {$set: this.state.selectedCustomers.filter(item => item.id !== customer.id)}
+    })
+
+    this.setState(newState);
+  }
+
   // 批量参加
   batchParticipate = () => {
     const { dispatch } = this.props;
@@ -294,6 +323,8 @@ class TablePage extends Component {
 
   render(){
     const { columns, dataSource, loading, pagination, refreshCustomerLists } = this.props;
+    const { selectedCustomers } = this.state;
+    const selectedRowKeys = selectedCustomers.map(item => item.id);
 
     // table props lists
     const tableProps = {
@@ -311,7 +342,10 @@ class TablePage extends Component {
       rowKey: record => record.id,
       scroll: { y: 1 }, // 固定表头
       rowSelection: {
-        onChange: this.onSelectChange
+        selectedRowKeys,
+        onChange: this.customerChange,
+        onSelect: this.selectCustomers,
+        onSelectAll: this.selectAllCustomers
       }, // 打开选择框
     }
 
@@ -357,6 +391,8 @@ class TablePage extends Component {
     }
 
     const batchProps = {
+      changeCustomersLists: this.changeCustomersLists,
+      selectedCustomers: this.state.selectedCustomers,
       closeDock: this.closeDock
     }
 
@@ -376,14 +412,14 @@ class TablePage extends Component {
           <p>您已更新了该客户的信息，是否需要保存？</p>
         </Modal>
 
-        {this.state.batchProcessing &&
+        {this.state.selectedCustomers.length !== 0 &&
           <ul
-            className={this.state.batchProcessing ? "batchProcessing batchProcessingActive" : "batchProcessing"}
+            className={this.state.selectedCustomers.length !== 0 ? "batchProcessing batchProcessingActive" : "batchProcessing"}
           >
             <p>
               <Icon type=""/>
               <span>已选</span>
-              <span className="counter">13</span>
+              <span className="counter">{selectedCustomers.length}</span>
               <span>位客户</span>
             </p>
             <li onClick={this.batchFocus}>

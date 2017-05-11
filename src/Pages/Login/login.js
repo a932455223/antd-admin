@@ -55,7 +55,7 @@ class Login extends React.Component {
     }
 
     if (user) {
-      this.context.router.replace('/home');
+      this.context.router.replace('/customer/my');
     }
   }
   getCaptcha=()=>{
@@ -68,11 +68,11 @@ class Login extends React.Component {
     //   }
     // })
     this.setState({
-      captchaImg:<img src={[api.GET_CAPTCHA]} />
+      captchaImg:<img  onClick={this.getCaptcha} src={[api.GET_CAPTCHA]} />
     })
 
   }
-  handleSubmit (e) {
+  handleSubmit =(e) =>{
     e.preventDefault();
     // this.setState({
     //   loading: true
@@ -82,18 +82,30 @@ class Login extends React.Component {
     // this.props.login(data.user, data.password)
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
-        ajax.Post(api.POST_LOGIN,values)
-        .then((data)=>{
-            console.log(data)
-        })
+        // console.log('Received values of form: ', values);
+        this.props.login(values)
       }
     });
 
   }
 
   render () {
-    const { getFieldDecorator } = this.props.form
+    const { getFieldDecorator } = this.props.form;
+    console.log(this.props.isLoggingIn,'=====')
+    if(this.props.loggingIn){
+      return (
+        <div>
+          loading...
+        </div>
+      )
+    }
+    if(this.props.loginErrors){
+      return (
+        <div>
+          {this.props.loginErrors}
+        </div>
+      )
+    }
     return (
       // <Row className="login-row" type="flex" jeustify="space-around" align="middle">
       //   <Col span="8">
@@ -115,15 +127,16 @@ class Login extends React.Component {
       //     </Form>
       //   </Col>
       // </Row>
-
+      
       <div className="loginpagebc">
-        {this.state.captchaImg}
-        <div onClick={this.getCaptcha}>点击更换</div>
+        <span>{/*JSON.stringify(this.props.user)*/}</span>
+        
+        
         <div className="loginpage">
         <div className="img"></div>
         <div className="loginbox">
           <h1>登陆精准营销系统</h1>
-          <Form onSubmit={(e)=>{this.handleSubmit(e)}}>
+          <Form onSubmit={this.handleSubmit}>
               <FormItem labelCol={{span: 24}}
                         wrapperCol={{span: 24}}
                         label="用户名"
@@ -157,7 +170,7 @@ class Login extends React.Component {
                     )}
                   </Col>
                   <Col span={10}>
-                    <div></div>
+                    {this.state.captchaImg}
                   </Col>
                 </Row>
               </FormItem>
