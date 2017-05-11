@@ -503,6 +503,11 @@ class EnterpriseBasicInfo extends Component {
       modalShow: this.modalShow,
     }
 
+    const maintainRecordProps = {
+      id: id,
+      mode: mode
+    }
+
     return(
       <div style={{textAlign: 'left'}}>
         <div>
@@ -523,9 +528,11 @@ class EnterpriseBasicInfo extends Component {
 
         <div className="maintain">
           <Tabs type='card'>
-            <TabPane tab="维护记录" key="basicInfo" className="tab01">
-              <AddMaintainRecord />
-              <MaintainRecord />
+            <TabPane tab="维护记录" key="basicInfo" className="addMaintainRecord">
+              {mode && mode !== 'view' &&
+                <AddMaintainRecord {...maintainRecordProps}/>
+              }
+              <MaintainRecord {...maintainRecordProps}/>
             </TabPane>
             <TabPane tab="操作记录" key="familyInfo" className="tab02">
               <div className="history">

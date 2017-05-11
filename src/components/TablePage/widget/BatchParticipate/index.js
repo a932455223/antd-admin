@@ -3,6 +3,7 @@
  */
 import React, {Component} from "react";
 import {Card, Col, Icon, Row, Table, Tabs, Tree,Tag, Button, message} from "antd";
+import update from 'immutability-helper';
 import axios from "axios";
 import ajax from '../../../../tools/POSTF';
 //=============================================+
@@ -19,7 +20,8 @@ export default class BatchParticipate extends Component {
     department: {},
     table: {
       dataSource: []
-    }
+    },
+    staffs: []
   };
 
   componentWillMount() {
@@ -66,20 +68,20 @@ export default class BatchParticipate extends Component {
     }
   }
 
-  rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-    },
-    onSelect: (record, selected, selectedRows) => {
-      console.log(record, selected, selectedRows);
-    },
-    onSelectAll: (selected, selectedRows, changeRows) => {
-      console.log(selected, selectedRows, changeRows);
-    },
-    getCheckboxProps: record => ({
-      disabled: record.name === 'Disabled User',    // Column configuration not to be checked
-    }),
-  };
+  // rowSelection = {
+  //   selectedRowKeys,
+  //   onChange: (selectedRowKeys, selectedRows) => {},
+  //   onSelect: (record, selected, selectedRows) => {
+  //     this.setState({
+  //       staffs: selectedRows
+  //     })
+  //   },
+  //   onSelectAll: (selected, selectedRows, changeRows) => {
+  //     this.setState({
+  //       staffs: selectedRows
+  //     })
+  //   }
+  // };
 
   initTableScroll(){
     let container = document.getElementById('selectStaffBody');
@@ -117,9 +119,36 @@ export default class BatchParticipate extends Component {
     this.props.closeDock();
   }
 
-  // log
-  log = (e) => {
-    // console.log(e)
+  // treenode select
+  onSelect = (selectedKeys, info) => {
+    this.getStaffs(selectedKeys[0]);
+  }
+
+  // 选择客户
+  selectStaffs = (record, selected, selectedRows) => {
+    let newState = update(this.state, {
+      staffs: {$set: selectedRows}
+    })
+
+    this.setState(newState);
+  }
+
+  // 选择所有客户
+  selectAllStaffs = (selected, selectedRows, changeRows) => {
+    let newState = update(this.state, {
+      staffs: {$set: selectedRows}
+    })
+
+    this.setState(newState);
+  }
+
+  // 更新 customers lists的数据
+  changeStaffsLists = (customer) => {
+    let newState = update(this.state, {
+      staffs: {$set: this.state.selectedCustomers.filter(item => item.id !== customer.id)}
+    })
+
+    this.setState(newState);
   }
 
   // 确认参与人员的信息
@@ -128,7 +157,23 @@ export default class BatchParticipate extends Component {
     this.props.closeDock();
   }
 
+  // 删除已选择的客户
+  customersHandleClose = (customer) => {
+    this.props.changeCustomersLists(customer);
+  }
+
+  // 删除已选择的员工
+  staffHandleClose = (staff) => {
+    let newState = update(this.state, {
+      staffs: {$set: this.state.staffs.filter(item => item.id !== staff.id)}
+    })
+
+    this.setState(newState);
+  }
+
   render() {
+    const { selectedCustomers } = this.props;
+    const { staffs } = this.state;
     const tableConf = {
       columns: [
         {
@@ -146,6 +191,14 @@ export default class BatchParticipate extends Component {
       ],
       dataSource: this.state.table.dataSource
     };
+    const selectedRowKeys = staffs.map(item => item.id);
+    
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.staffsChange,
+      onSelect: this.selectStaffs,
+      onSelectAll: this.selectAllStaffs
+    }
 
     const tree = this.state.department && this.state.department !== {} ?
       <Tree
@@ -156,6 +209,22 @@ export default class BatchParticipate extends Component {
       </Tree>
       :
       null
+
+    const ParticipateCustomers = selectedCustomers && selectedCustomers.map((item,index) => {
+      return (
+        <Tag key={`${item.id}${index}`} closable="true" afterClose={() => this.customersHandleClose(item)}>
+          {item.name}
+        </Tag>
+      )
+    })
+
+    const ParticipateStaffs = staffs && staffs.map((item,index) => {
+      return (
+        <Tag key={`${item.id}${index}`} closable="true" afterClose={() => this.staffHandleClose(item)}>
+          {item.name}
+        </Tag>
+      )
+    })
 
     return (
       <div className="batchParticipate" id="batchParticipate">
@@ -171,19 +240,17 @@ export default class BatchParticipate extends Component {
         <div className="select-staff-body" id="selectStaffBody">
           <div className="hadParticipated">
             <span>参与的客户：</span>
-            <Tag closable onClose={this.log}>Mary Davis</Tag>
-            <Tag closable onClose={this.log}>Nancy Hall</Tag>
-            <Tag closable onClose={this.log}>Joseph Robinson</Tag>
+            {ParticipateCustomers}
           </div>
 
 
           <div className="tagsWrapper">
             <div className="tags-title">
-              <h3>已选成员</h3>
-              <span> 人</span>
+              <span>已选成员:</span>
+              <span>{staffs.length} 人</span>
             </div>
             <div>
-
+              {ParticipateStaffs}
             </div>
           </div>
 
@@ -205,14 +272,14 @@ export default class BatchParticipate extends Component {
                 <Table
                   className="participateTable"
                   {...tableConf}
-                  // rowClassName={(record, index) => {return 'participate'}}
-                  // checkable
+                  rowClassName={(record, index) => {return 'participate'}}
+                  checkable
                   rowKey={record => record.id}
-                  // rowSelection={this.rowSelection}
-                  // scroll={{y: 1 }} // 固定表头
-                  // pagination={{
-                  //   pageSize:20
-                  // }}
+                  rowSelection={rowSelection}
+                  scroll={{y: 1 }} // 固定表头
+                  pagination={{
+                    pageSize: 10
+                  }}
                 />
               </div>
             </div>
