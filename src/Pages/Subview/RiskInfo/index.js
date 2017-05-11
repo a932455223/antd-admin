@@ -45,18 +45,35 @@ const dataSource = [
 ]
 class RiskInfo extends Component {
   state = {
-    riskQuestions: [],
-    riskCode: '',
-    answers:[]
+    questions: [],
+    answers:[],
+    type:'',
+  }
+  getCustomerType(code){
+    var type=''
+    if(code<51){
+      type="安全型"
+    }else if(code<66){
+      type="保守型"
+
+    }else if(code<81){
+      type="稳健型"
+
+    }
+    return type;
   }
   //----------APIS-----------
   // 获取题目
-  getCustomerRiskQuestions = () => {
-    ajax.Get(api.GET_CUSTOMER_RISKQUESTIONS(this.props.currentId))
+  getCustomerRiskQuestions = (id) => {
+    ajax.Get(api.GET_CUSTOMER_RISKQUESTIONS(id))
       .then(res => {
         if (res.data.code === 200) {
           if (res.data.message === 'OK') {
-            this.setState({riskQuestions: res.data.data})
+            this.setState({
+              questions: res.data.data.questions,
+              scores:res.data.data.scores,
+              type:this.getCustomerType(res.data.data.scores)
+            })
           }
           console.log(res)
         } else {
@@ -80,12 +97,16 @@ class RiskInfo extends Component {
   }
 
   componentWillMount() {
-    this.getCustomerRiskQuestions();
+    this.getCustomerRiskQuestions(this.props.currentId);
     // this.putCustomerRiskQuestion();
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(newProps) {
     // this.getCustomerRiskQuestions();
+    if(newProps.currentId!==this.props.currentId){
+      this.getCustomerRiskQuestions(newProps.currentId);
+      // console.log('重置数据')
+    }
   }
 
   handleSubmit(e) {
@@ -98,7 +119,7 @@ class RiskInfo extends Component {
         //   answers:Object.values(values).filter(Boolean)
         // })
         this.putCustomerRiskQuestion(Object.values(values).filter(Boolean));
-        this.getCustomerRiskQuestions();
+        this.getCustomerRiskQuestions(this.props.currentId);
       }
 
     });
@@ -111,7 +132,7 @@ class RiskInfo extends Component {
         <div className="my-test">
           <Form onSubmit={this.handleSubmit.bind(this)}>
             {
-              this.state.riskQuestions.map((item, index) => {
+              this.state.questions.map((item, index) => {
                 let selectedId=null;
                 let selectedValue;
                 item.options.forEach(option =>{
@@ -150,15 +171,15 @@ class RiskInfo extends Component {
           <div className="my-row">
             <div className="test-score">
               <span>
-                <i>{this.state.riskCode}</i>分
+                <i>{this.state.scores}</i>分
               </span>
               <span>
-                保守型
+                {this.state.type}
               </span>
             </div>
             <div className="test-type">
               <h2>
-                保守型客户
+                {this.state.type}客户
                 <Button onClick={()=>{this.resetTest();this.changeTest();}} >重新测试</Button>
               </h2>
               <p>
