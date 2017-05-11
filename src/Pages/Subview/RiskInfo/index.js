@@ -13,20 +13,67 @@ import ajax from '../../../tools/POSTF.js';
 import styles from './indexStyle.less';
 import {connect} from 'react-redux';
 import api from './../../../../API';
+const columns = [{
+  title: '分数',
+  dataIndex: 'code',
+  key: 'code'
+}, {
+  title: '风险承受能力分类',
+  dataIndex: 'ability',
+  key: 'ability',
+}, {
+  title: '定义及建议',
+  dataIndex: 'advice',
+  key: 'advice'
+}]
+const dataSource = [
+  {
+    'code': '50 分以内（含 50 分）',
+    'ability': '安全型',
+    'advice': '代表您投资谨慎，保护本金不受损失和保证资产流动性是投资的首要目标。'
+  },
+  {
+    'code': '50 分-65 分（含 65 分）',
+    'ability': '保守型',
+    'advice': '代表您投资谨慎，保护本金不受损失和保证资产流动性是投资的首要目标。'
+  },
+  {
+    'code': '65 分-80 分（含 80 分）',
+    'ability': '稳健型',
+    'advice': '代表您对投资有一定的了解，能够根据跟人的投资需求，将资产在高风险和低风险资产之间分配，愿意将一部分资产投资于高风险高...'
+  },
+]
 class RiskInfo extends Component {
   state = {
-    riskQuestions: [],
-    code: '',
-    answers:[]
+    questions: [],
+    answers:[],
+    type:'',
+  }
+  getCustomerType(code){
+    var type=''
+    if(code<51){
+      type="安全型"
+    }else if(code<66){
+      type="保守型"
+
+    }else if(code<81){
+      type="稳健型"
+
+    }
+    return type;
   }
   //----------APIS-----------
   // 获取题目
-  getCustomerRiskQuestions = () => {
-    ajax.Get(api.GET_CUSTOMER_RISKQUESTIONS(this.props.currentId))
+  getCustomerRiskQuestions = (id) => {
+    ajax.Get(api.GET_CUSTOMER_RISKQUESTIONS(id))
       .then(res => {
         if (res.data.code === 200) {
           if (res.data.message === 'OK') {
-            this.setState({riskQuestions: res.data.data})
+            this.setState({
+              questions: res.data.data.questions,
+              scores:res.data.data.scores,
+              type:this.getCustomerType(res.data.data.scores)
+            })
           }
           console.log(res)
         } else {
@@ -35,22 +82,31 @@ class RiskInfo extends Component {
       })
   }
   // 提交测试
-  putCustomerRiskQuestion = () => {
+  putCustomerRiskQuestion = (answers) => {
     ajax.Put(api.PUT_CUSTOMER_RISKQUESTION(this.props.currentId), {
-      answers: [2, 8, 14]
+      answers:answers
     })
       .then(res => {
-        console.log(res)
+        // console.log(res)
+        if(res.data.code===200){
+          if(res.data.message==='OK'){
+            this.setState({riskCode:res.data.data});
+          }
+        }
       })
   }
 
   componentWillMount() {
-    this.getCustomerRiskQuestions();
-    this.putCustomerRiskQuestion();
+    this.getCustomerRiskQuestions(this.props.currentId);
+    // this.putCustomerRiskQuestion();
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(newProps) {
     // this.getCustomerRiskQuestions();
+    if(newProps.currentId!==this.props.currentId){
+      this.getCustomerRiskQuestions(newProps.currentId);
+      // console.log('重置数据')
+    }
   }
 
   handleSubmit(e) {
@@ -59,9 +115,11 @@ class RiskInfo extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        _this.setState({
-          answers:Object.values(values).filter(Boolean)
-        })
+        // _this.setState({
+        //   answers:Object.values(values).filter(Boolean)
+        // })
+        this.putCustomerRiskQuestion(Object.values(values).filter(Boolean));
+        this.getCustomerRiskQuestions(this.props.currentId);
       }
 
     });
@@ -70,42 +128,74 @@ class RiskInfo extends Component {
   render() {
     let {getFieldDecorator, getFieldsError, getFieldError, isFieldTouched} = this.props.form;
     return (
-      <Form onSubmit={this.handleSubmit.bind(this)}>
-        {
-          this.state.riskQuestions.map((item, index) => {
-            let selectedId=null;
-            let selectedValue;
-            item.options.forEach(option =>{
-              if(option.checked) selectedValue=option.id;
-            })
-            return (
-              <div key={item.id}>
-                <p>{index+1}&nbsp;、&nbsp;{item.title}</p>
-                {getFieldDecorator('a'+item.id, {
-                  rules: [],
-                  valuePropName:'value',
-                  initialValue:selectedValue
-                })(
-                  <RadioGroup key={item.id}>
-                    {
-                      item.options.map((option, i) => {
-                        return (
-                          <Radio key={option.id} value={option.id} defaultChecked={option.checked}>
-                            {option.option}
-                          </Radio>
-                        )
-                      })
+      <div className='risk'>
+        <div className="my-test">
+          <Form onSubmit={this.handleSubmit.bind(this)}>
+            {
+              this.state.questions.map((item, index) => {
+                let selectedId=null;
+                let selectedValue;
+                item.options.forEach(option =>{
+                  if(option.checked) selectedValue=option.id;
+                })
+                return (
+                  <div key={item.id}>
+                    <p>{index+1}&nbsp;、&nbsp;{item.title}</p>
+                    {getFieldDecorator('a'+item.id, {
+                      rules: [],
+                      valuePropName:'value',
+                      initialValue:selectedValue
+                    })(
+                      <RadioGroup key={item.id}>
+                        {
+                          item.options.map((option, i) => {
+                            return (
+                              <Radio key={option.id} value={option.id} defaultChecked={option.checked}>
+                                {option.option}
+                              </Radio>
+                            )
+                          })
 
-                    }
-                  </RadioGroup>
-                )}
-                <br/><br/>
-              </div>
-            )
-          })
-        }
-        <Button type="submit" htmlType="submit">提交</Button>
-      </Form>
+                        }
+                      </RadioGroup>
+                    )}
+                  </div>
+                )
+              })
+            }
+            <Button type="submit" htmlType="submit">提交</Button>
+          </Form>
+        </div>
+
+        <div className="test-result">
+          <div className="my-row">
+            <div className="test-score">
+              <span>
+                <i>{this.state.scores}</i>分
+              </span>
+              <span>
+                {this.state.type}
+              </span>
+            </div>
+            <div className="test-type">
+              <h2>
+                {this.state.type}客户
+                <Button onClick={()=>{this.resetTest();this.changeTest();}} >重新测试</Button>
+              </h2>
+              <p>
+                从总体投资来看，在风险较小的情况下获得一定的收益是您主要的投资目的。您通常愿意使本金面临一定的风险，但在做投资决定时，对风险总是客观存在的道理有清楚的认识，会仔细地对将要面临的风险进行认真的分析。总体来看，愿意承受市场的平均风险。
+              </p>
+            </div>
+          </div>
+          <Row>
+            <Table
+            dataSource={dataSource}
+            columns={columns}
+            pagination={false}
+            />
+          </Row>
+        </div>
+      </div>
 
 
     )
@@ -134,36 +224,7 @@ export default connect(mapStateToProps)(Form.create()(RiskInfo));
 //   { label: '单薪有子女', value: '4' },
 //   { label: '赡/抚养第三代', value: '5' }
 // ];
-// const columns = [{
-//   title: '分数',
-//   dataIndex: 'code',
-//   key: 'code'
-// }, {
-//   title: '风险承受能力分类',
-//   dataIndex: 'ability',
-//   key: 'ability',
-// }, {
-//   title: '定义及建议',
-//   dataIndex: 'advice',
-//   key: 'advice'
-// }]
-// const dataSource = [
-//   {
-//     'code': '50 分以内（含 50 分）',
-//     'ability': '安全型',
-//     'advice': '代表您投资谨慎，保护本金不受损失和保证资产流动性是投资的首要目标。'
-//   },
-//   {
-//     'code': '50 分-65 分（含 65 分）',
-//     'ability': '保守型',
-//     'advice': '代表您投资谨慎，保护本金不受损失和保证资产流动性是投资的首要目标。'
-//   },
-//   {
-//     'code': '65 分-80 分（含 80 分）',
-//     'ability': '稳健型',
-//     'advice': '代表您对投资有一定的了解，能够根据跟人的投资需求，将资产在高风险和低风险资产之间分配，愿意将一部分资产投资于高风险高...'
-//   },
-// ]
+
 // changeTest=()=>{
 //   this.setState({'onTest':!this.state.onTest})
 // }
