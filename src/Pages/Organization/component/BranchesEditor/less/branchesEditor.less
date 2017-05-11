@@ -1,4 +1,18 @@
 .departmentEditor {
+  label{
+    font-size: 14px;
+    color: #999;
+  }
+  input{
+    font-size: 14px;
+    color: #000;
+  }
+  .ant-select-selection__placeholder{
+    font-size: 14px;
+  }
+  .ant-select-selection-selected-value{
+    font-size: 14px;
+  }
   position: absolute;
   top: 0;
   left: 0;
@@ -53,5 +67,29 @@
   h3 {
     font-size: 14px;
   }
+  .buttonrow{
+    .disablesavebtn[disabled]{
+      background: #fff;
+      &:hover{
+        background-color:#fff;
+        color: #999;
+      };
+    }
+    .ablesavebtn{
+      background: #5c6bc0;
+      color: #fff;
+      transition: all 0.3s;
+      border:1px solid #5c6bc0;
+      &:hover{
+        background-color:#4b5bb8;
+        transition: all 0.3s;
+      };
+    }
+  }
 
+
+}
+
+.organization .dock-title{
+  margin:12px 0 ;
 }

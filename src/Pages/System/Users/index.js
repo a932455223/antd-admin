@@ -20,7 +20,8 @@ export default class SystemUsers extends Component {
     dock: {
       visible: false,
       children: null
-    }
+    },
+    UserEditKey:'UserEditKey'
   };
 
   componentWillMount() {
@@ -38,15 +39,18 @@ export default class SystemUsers extends Component {
   // 表格点击事件
   rowClick(rowData) {
     this.setState({
+      UserEditKey: `rowData.id-${rowData}` ,
       dock: {
         visible: true,
         children: (
           <UserEdit
             id={rowData.id}
             close={this.close.bind(this)}
+            key={this.state.UserEditKey}
           />
         )
       }
+      
     });
   }
 
@@ -56,6 +60,7 @@ export default class SystemUsers extends Component {
       dock: {
         visible: true,
         children: <NewUser close={this.close.bind(this)}/>
+
       }
     })
   }

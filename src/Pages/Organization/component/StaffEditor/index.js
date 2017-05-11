@@ -96,6 +96,8 @@ class BranchesEditor extends Component {
         console.log(staffBase);
         let getDepartmentsId = staffBase.departments && staffBase.departments.map( item => item.id.toString());
         let rolesId = staffBase.roles && staffBase.roles.map (item => item.roleId.toString());
+        let regionCodeArray = staffBase.regionCode && staffBase.regionCode.split(' ');
+        let addressDetial = staffBase.address && staffBase.address.split(' ')
         this.setState({
           staff: {
             base: {
@@ -128,6 +130,30 @@ class BranchesEditor extends Component {
               },
               roles:{
                 value:rolesId
+              },
+              province:{
+                value:staffBase.province || ''
+              },
+              city:{
+                value:staffBase.city || ''
+              },
+              region:{
+                value:staffBase.region || ''
+              },
+              regionCode:{
+                value:staffBase.regionCode || ''
+              },
+              provinceCode:{
+                value:regionCodeArray ? regionCodeArray[0] : undefined
+              },
+              cityCode:{
+                value:regionCodeArray ? regionCodeArray[1] : undefined
+              },
+              regionNum:{
+                value:regionCodeArray ? regionCodeArray[2] : undefined
+              },
+              addressDetial:{
+                value:addressDetial ? addressDetial[2] : undefined
               }
             },
             job:{
@@ -233,6 +259,7 @@ class BranchesEditor extends Component {
     };
 
     const baseInfo = this.state.staff.base;
+    console.log(baseInfo);
     const jobInfo = this.state.staff.job;
     const educationInfo = this.state.staff.educationInfo;
     const {business} = this.state;
@@ -258,7 +285,7 @@ class BranchesEditor extends Component {
             </Col>
           </Row>
           {/*组织信息*/}
-          <BaseInoForm onChange={this.baseInfoChange} baseInfo={baseInfo} id={this.props.id} getStaffs={this.props.getStaffs} hasChangeBase={this.props.hasChangeBase} hasNoChangeBase={this.props.hasNoChangeBase}/>
+          {Object.keys(baseInfo).length > 0 ? <BaseInoForm onChange={this.baseInfoChange} baseInfo={baseInfo} id={this.props.id} getStaffs={this.props.getStaffs} hasChangeBase={this.props.hasChangeBase} hasNoChangeBase={this.props.hasNoChangeBase}/> : null}
           {/*业务信息*/}
           <Card className="business" title={<h3>业务信息</h3>}>
             <Row>

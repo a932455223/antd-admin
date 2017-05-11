@@ -20,7 +20,7 @@ export default function auth(state = initialState, action = {}) {
       return Object.assign({}, initialState, {loggingIn: true});
     case LOGIN_SUCCESS:
       let user = action.payload.data;
-      window.localStorage.setItem('uid', user.uid);
+      // window.localStorage.setItem('uid', user.uid);
       return Object.assign({}, state, {user: user, loggingIn: false, loginErrors: null});
     case LOGIN_ERROR:
       return {
@@ -30,7 +30,7 @@ export default function auth(state = initialState, action = {}) {
         loginErrors: action.payload.message
       };
     case LOGOUT_SUCCESS:
-      window.localStorage.removeItem('uid');
+      // window.localStorage.removeItem('uid');
       return {
         ...state,
         loggingOut: false,
