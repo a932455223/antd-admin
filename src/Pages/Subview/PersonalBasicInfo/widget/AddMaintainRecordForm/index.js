@@ -1,10 +1,48 @@
-import React,{Component} from 'react'
-import {Card,Button,Form,Select,Icon,Row,Col,DatePicker,InputNumber,Input} from 'antd'
+import React,{Component} from 'react';
+import update from "immutability-helper";
+import {
+  Card,
+  Button,
+  Form,
+  Select,
+  Icon,
+  Row,
+  Col,
+  DatePicker,
+  InputNumber,
+  Input,
+  message
+} from 'antd';
+import moment from 'moment';
+import ajax from '../../../../../tools/POSTF';
+import API from "../../../../../../API";
+
+const dateFormat = 'YYYY-MM-DD HH:mm:ss'; // 日期格式
+
+function hasErrors(fieldsError) {
+  return Object.keys(fieldsError).some(field => fieldsError[field]);
+}
+
 const FormItem = Form.Item;
 const Option = Select.Option;
 class AddMaintainRecordForm extends Component {
   state = {
-    formVisible: false
+    formVisible: false,
+    maintenanceAspectOptions: [],
+    maintenanceMethodOptions: []
+  }
+
+  componentWillMount() {
+    ajax.all([
+      ajax.Get(API.GET_COMMON_DROPDOWN('maintenanceAspect')),
+      ajax.Get(API.GET_COMMON_DROPDOWN('maintenanceMethod'))
+    ]).then((res)=>{
+      let newState = update(this.state, {
+        maintenanceAspectOptions: {$set: res[0].data.data},
+        maintenanceMethodOptions: {$set: res[1].data.data},
+      });
+      this.setState(newState);
+    })
   }
 
   // 下拉框选择发生变化时
@@ -25,20 +63,71 @@ class AddMaintainRecordForm extends Component {
 
   // add new maintain record
   addNewMaintainRecord = () => {
-    this.setState({
-      formVisible: true
-    })
+    if(this.state.formVisible) {
+      this.setState({
+        formVisible: false
+      })
+    } else {
+      this.setState({
+        formVisible: true
+      })
+    }
   }
 
   // publish maintain record
-  publishMaintainRecord = () => {
-    this.setState({
-      formVisible: false
+  publishMaintainRecord = (record) => {
+    const { id } = this.props.eachCustomerInfo;
+    const { validateFields, getFieldsError, setFieldsValue } = this.props.form;
+    validateFields();
+    if(hasErrors(getFieldsError())) {
+      message.error('表单填写有误，请仔细检查表单');
+    } else {
+      let recordData = {
+        aspect: record.maintainAspect - 0,
+        method: record.maintainMethod - 0,
+        maintenanceTime: record.maintainTime != null ? moment(record.maintainTime).format(dateFormat) : '',
+        maintenanceCount: record.maintainCount - 0,
+        content: record.maintainContent != undefined ? record.maintainContent : ''
+      }
+
+      ajax.Post(API.POST_CUSTOMER_MAINTENANCE_COUNT(id), recordData)
+          .then(res => {
+            if(res.data.code === 200) {
+              message.success('维护记录添加成功');
+              
+              setFieldsValue({
+                maintainAspect: undefined,
+                maintainMethod: undefined,
+                maintainTime: undefined,
+                maintainCount: undefined,
+                maintainContent: undefined
+              })
+            } else {
+              message.error(res.data.message)
+            }
+          })
+    }
+  }
+
+  // 取消所填的维护记录
+  resetMaintainRecord = () => {
+    const { setFieldsValue } = this.props.form;
+
+    setFieldsValue({
+      maintainAspect: undefined,
+      maintainMethod: undefined,
+      maintainTime: undefined,
+      maintainCount: undefined,
+      maintainContent: undefined
     })
   }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, getFieldsValue } = this.props.form;
+    const {
+      maintenanceAspectOptions,
+      maintenanceMethodOptions
+    } = this.state;
 
     return (
       <Card id="maintainRecord"  title={<span onClick={this.addNewMaintainRecord}>
@@ -53,20 +142,23 @@ class AddMaintainRecordForm extends Component {
                 <FormItem labelCol={{span: 8}}
                           wrapperCol={{span: 13}}
                           label="维护切入点">
-                  {getFieldDecorator('maintainPointCut', {
+                  {getFieldDecorator('maintainAspect', {
                     rules: [{
                       required: true,
-                      // message: 'Please select the movie type!'
+                      message: '请选择维护切入点!'
                     }],
                     onChange: this.selectChange
                   })(
                     <Select
+                      // showSearch
+                      // optionFilterProp="children"
                       placeholder="请选择切入类型"
+                      // filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
                       getPopupContainer={() => document.getElementById('maintainRecord')}
                     >
-                      <Option value="deadline">产品到期提醒</Option>
-                      <Option value="upgrade">产品升级</Option>
-                      <Option value="activate">产品激活</Option>
+                      {maintenanceAspectOptions && maintenanceAspectOptions.map(maintenanceAspectItem =>
+                        <Option key={maintenanceAspectItem.id} value={maintenanceAspectItem.id + ''}>{maintenanceAspectItem.name}</Option>
+                      )}
                     </Select>
                   )}
                 </FormItem>
@@ -84,12 +176,15 @@ class AddMaintainRecordForm extends Component {
                     onChange: this.selectChange
                   })(
                     <Select
+                      // showSearch
+                      optionFilterProp="children"
                       placeholder="请选择维护方式"
+                      // filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
                       getPopupContainer={() => document.getElementById('maintainRecord')}
                     >
-                      <Option value="mobile">手机</Option>
-                      <Option value="wechat">微信</Option>
-                      <Option value="message">短信</Option>
+                      {maintenanceMethodOptions && maintenanceMethodOptions.map(maintenanceMethodItem =>
+                        <Option key={maintenanceMethodItem.id} value={maintenanceMethodItem.id + ''}>{maintenanceMethodItem.name}</Option>
+                      )}
                     </Select>
                   )}
                 </FormItem>
@@ -99,12 +194,16 @@ class AddMaintainRecordForm extends Component {
                 <FormItem labelCol={{span: 8}}
                           wrapperCol={{span: 16}}
                           label="维护日期">
-                  {getFieldDecorator('maintainDate', {
+                  {getFieldDecorator('maintainTime', {
+                    rules: [{
+                      required: true,
+                      message: '请选择维护时间!'
+                    }],
                     onChange: this.dateChange
                   })(
                     <DatePicker
                       onChange={this.onChange}
-                      getCalendarContainer={() => document.getElementById('editMyBase')}
+                      getCalendarContainer={() => document.getElementById('maintainRecord')}
                     />
                   )}
                 </FormItem>
@@ -114,11 +213,22 @@ class AddMaintainRecordForm extends Component {
                 <FormItem labelCol={{span: 8}}
                           wrapperCol={{span: 16}}
                           label="维护次数">
-                  {getFieldDecorator('maintainTimes', {
-                    initialValue: 1,
+                  {getFieldDecorator('maintainCount', {
+                    rules: [{
+                      required: true,
+                      message: '请输入维护次数!'
+                    },{
+                      pattern: /^\d+$/,
+                      message: '请输入数字'
+                    }],
+                    // initialValue: 1,
                     onChange: this.inputChange
                   })(
-                    <InputNumber min={1} max={10} />
+                    <InputNumber
+                      placeholder="维护次数"
+                      min={1}
+                      max={100}
+                    />
                   )}
                 </FormItem>
               </Col>
@@ -127,7 +237,7 @@ class AddMaintainRecordForm extends Component {
                 <FormItem labelCol={{span: 4}}
                           wrapperCol={{span: 20}}
                           label="维护成效">
-                  {getFieldDecorator('maintainEffect', {
+                  {getFieldDecorator('maintainContent', {
                     onChange: this.inputChange
                   })(
                     <Input  type="textarea"
@@ -143,9 +253,12 @@ class AddMaintainRecordForm extends Component {
                 <Button
                   type="primary"
                   className="submit"
-                  onClick={this.publishMaintainRecord}
+                  onClick={this.publishMaintainRecord.bind(this, getFieldsValue())}
                 >发布</Button>
-                <Button className="cancle">取消</Button>
+                <Button
+                  className="cancle"
+                  onClick={this.resetMaintainRecord}
+                >取消</Button>
               </Col>
             </Row>
           </Form>

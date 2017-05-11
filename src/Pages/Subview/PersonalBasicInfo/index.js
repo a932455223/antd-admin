@@ -717,6 +717,7 @@ class BasicInfo extends Component {
     }
 
     const maintainRecordProps = {
+      eachCustomerInfo: eachCustomerInfo,
       mode: mode
     }
 
@@ -752,9 +753,9 @@ class BasicInfo extends Component {
 
         <div className="maintain">
           <Tabs>
-            <TabPane tab="维护记录" key="basicInfo" className="tab01">
+            <TabPane tab="维护记录" key="basicInfo" className="addMaintainRecord">
               {mode && mode !== 'view' &&
-                <AddMaintainRecord />
+                <AddMaintainRecord {...maintainRecordProps}/>
               }
               <MaintainRecord {...maintainRecordProps}/>
             </TabPane>
