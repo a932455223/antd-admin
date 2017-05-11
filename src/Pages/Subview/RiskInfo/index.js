@@ -48,6 +48,7 @@ class RiskInfo extends Component {
     questions: [],
     answers:[],
     type:'',
+    isTest:true,
   }
   getCustomerType(code){
     var type=''
@@ -64,8 +65,8 @@ class RiskInfo extends Component {
   }
   //----------APIS-----------
   // 获取题目
-  getCustomerRiskQuestions = (id) => {
-    ajax.Get(api.GET_CUSTOMER_RISKQUESTIONS(id))
+  getCustomerPreRiskQuestions = (id) => {
+    ajax.Get(api.GET_CUSTOMER_PRE_RISKQUESTIONS(id))
       .then(res => {
         if (res.data.code === 200) {
           if (res.data.message === 'OK') {
@@ -81,6 +82,10 @@ class RiskInfo extends Component {
         }
       })
   }
+  //
+  toggleTest=()=>{
+    this.setState({isTest:!this.state.isTest})
+  }
   // 提交测试
   putCustomerRiskQuestion = (answers) => {
     ajax.Put(api.PUT_CUSTOMER_RISKQUESTION(this.props.currentId), {
@@ -91,20 +96,21 @@ class RiskInfo extends Component {
         if(res.data.code===200){
           if(res.data.message==='OK'){
             this.setState({riskCode:res.data.data});
+            this.toggleTest();
           }
         }
       })
   }
 
   componentWillMount() {
-    this.getCustomerRiskQuestions(this.props.currentId);
+    this.getCustomerPreRiskQuestions(this.props.currentId);
     // this.putCustomerRiskQuestion();
   }
 
   componentWillReceiveProps(newProps) {
-    // this.getCustomerRiskQuestions();
+    // this.getCustomerPreRiskQuestions();
     if(newProps.currentId!==this.props.currentId){
-      this.getCustomerRiskQuestions(newProps.currentId);
+      this.getCustomerPreRiskQuestions(newProps.currentId);
       // console.log('重置数据')
     }
   }
@@ -119,7 +125,7 @@ class RiskInfo extends Component {
         //   answers:Object.values(values).filter(Boolean)
         // })
         this.putCustomerRiskQuestion(Object.values(values).filter(Boolean));
-        this.getCustomerRiskQuestions(this.props.currentId);
+        this.getCustomerPreRiskQuestions(this.props.currentId);
       }
 
     });
@@ -129,78 +135,78 @@ class RiskInfo extends Component {
     let {getFieldDecorator, getFieldsError, getFieldError, isFieldTouched} = this.props.form;
     return (
       <div className='risk'>
-        <div className="my-test">
-          <Form onSubmit={this.handleSubmit.bind(this)}>
-            {
-              this.state.questions.map((item, index) => {
-                let selectedId=null;
-                let selectedValue;
-                item.options.forEach(option =>{
-                  if(option.checked) selectedValue=option.id;
-                })
-                return (
-                  <div key={item.id}>
-                    <p>{index+1}&nbsp;、&nbsp;{item.title}</p>
-                    {getFieldDecorator('a'+item.id, {
-                      rules: [],
-                      valuePropName:'value',
-                      initialValue:selectedValue
-                    })(
-                      <RadioGroup key={item.id}>
-                        {
-                          item.options.map((option, i) => {
-                            return (
-                              <Radio key={option.id} value={option.id} defaultChecked={option.checked}>
-                                {option.option}
-                              </Radio>
-                            )
-                          })
-
-                        }
-                      </RadioGroup>
-                    )}
+        {
+          (this.state.isTest)?
+              
+              <div className="test-result">
+                <div className="my-row">
+                  <div className="test-score">
+                    <span>
+                      <i>{this.state.scores}</i>分
+                    </span>
+                    <span>
+                      {this.state.type}
+                    </span>
                   </div>
-                )
-              })
-            }
-            <Button type="submit" htmlType="submit">提交</Button>
-          </Form>
-        </div>
+                  <div className="test-type">
+                    <h2>
+                      {this.state.type}客户
+                      <Button onClick={()=>{this.toggleTest()}} >重新测试</Button>
+                    </h2>
+                    <p>
+                      从总体投资来看，在风险较小的情况下获得一定的收益是您主要的投资目的。您通常愿意使本金面临一定的风险，但在做投资决定时，对风险总是客观存在的道理有清楚的认识，会仔细地对将要面临的风险进行认真的分析。总体来看，愿意承受市场的平均风险。
+                    </p>
+                  </div>
+                </div>
+                <Row>
+                  <Table
+                  dataSource={dataSource}
+                  columns={columns}
+                  pagination={false}
+                  />
+                </Row>
+              </div>
+              :
+              <div className="my-test">
+                <Form onSubmit={this.handleSubmit.bind(this)}>
+                  {
+                    this.state.questions.map((item, index) => {
+                      let selectedId=null;
+                      let selectedValue;
+                      item.options.forEach(option =>{
+                        if(option.checked) selectedValue=option.id;
+                      })
+                      return (
+                        <div key={item.id}>
+                          <p>{index+1}&nbsp;、&nbsp;{item.title}</p>
+                          {getFieldDecorator('a'+item.id, {
+                            rules: [],
+                            valuePropName:'value',
+                            initialValue:selectedValue
+                          })(
+                            <RadioGroup key={item.id}>
+                              {
+                                item.options.map((option, i) => {
+                                  return (
+                                    <Radio key={option.id} value={option.id} defaultChecked={option.checked}>
+                                      {option.option}
+                                    </Radio>
+                                  )
+                                })
 
-        <div className="test-result">
-          <div className="my-row">
-            <div className="test-score">
-              <span>
-                <i>{this.state.scores}</i>分
-              </span>
-              <span>
-                {this.state.type}
-              </span>
-            </div>
-            <div className="test-type">
-              <h2>
-                {this.state.type}客户
-                <Button onClick={()=>{this.resetTest();this.changeTest();}} >重新测试</Button>
-              </h2>
-              <p>
-                从总体投资来看，在风险较小的情况下获得一定的收益是您主要的投资目的。您通常愿意使本金面临一定的风险，但在做投资决定时，对风险总是客观存在的道理有清楚的认识，会仔细地对将要面临的风险进行认真的分析。总体来看，愿意承受市场的平均风险。
-              </p>
-            </div>
-          </div>
-          <Row>
-            <Table
-            dataSource={dataSource}
-            columns={columns}
-            pagination={false}
-            />
-          </Row>
-        </div>
+                              }
+                            </RadioGroup>
+                          )}
+                        </div>
+                      )
+                    })
+                  }
+                  <Button type="submit" htmlType="submit">提交</Button>
+                </Form>
+              </div>
+        }
       </div>
-
-
     )
-
-
   }
 }
 const mapStateToProps = (store) => {

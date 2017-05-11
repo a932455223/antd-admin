@@ -21,7 +21,8 @@ export default {
   GET_JOBINFO_BASE:customerId=>`/api/customer/individual/${customerId}/job`,
   PUT_JOBINFO_BASE:customerId=>`/api/customer/individual/${customerId}/job`,
   //风险测试：
-  GET_CUSTOMER_RISKQUESTIONS:customerId=>`/api/customer/individual/${customerId}/riskQuestions`,//获取题目
+  GET_CUSTOMER_PRE_RISKQUESTIONS:customerId=>`/api/customer/individual/${customerId}/riskQuestions`,//获取之前做过的题目
+  GET_CUSTOMER_RISKQUESTIONS:customerId=>`/api/customer/individual/riskQuestions`,//获取题目
   PUT_CUSTOMER_RISKQUESTION:customerId=>`/api/customer/individual/${customerId}/riskQuestion`,//提交测试
   //企业客户：
   //关键人信息查看、增加、删除、修改
