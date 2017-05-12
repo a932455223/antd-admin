@@ -2,7 +2,7 @@
  * Created by jufei on 2017/4/25.
  */
 import React, {Component} from "react";
-import {Button, Card, Input, Table} from "antd";
+import {Button, Card, Input, Table,Icon} from "antd";
 //=====================================================================
 import './less/roleEdit.less';
 import ajax from '../../../../tools/POSTF.js';
@@ -64,14 +64,13 @@ export default class RoleEdit extends Component {
           <h3>角色</h3>
           <span>
           <Button onClick={this.props.rolePermission.bind(this,this.props.id)}>分配权限</Button>
-          <Button
-            className="save"
-            onClick={() => {
-              alert('保存成功');
-              this.props.close()
-            }}
-          >保存</Button>
-          <Button className="close" onClick={this.props.close}>&times;</Button>
+          
+          <Icon
+              className="close"
+              onClick={this.props.close}
+              type="close"
+              style={{cursor:"pointer"}}
+            />
         </span>
         </div>
 
@@ -88,6 +87,13 @@ export default class RoleEdit extends Component {
             <span>备注</span>
             <Input type="textarea"/>
           </p>
+          <Button
+            className="save"
+            onClick={() => {
+              alert('保存成功');
+              this.props.close()
+            }}
+          >保存</Button>
         </Card>
 
         <Card
