@@ -93,3 +93,13 @@ render(<Root store={store}/>, document.getElementById('root'));
 //     console.log(err)
 //   })
 //
+
+//
+// import ajax from './tools/POSTF.js';
+// import API from '../API';
+//
+// ajax.all([ajax.Get(API.GET_CUSTOMER_DEPARTMENT),
+//   ajax.Get('/api/users')
+// ]).then( res => {
+//   console.log(res)
+// })

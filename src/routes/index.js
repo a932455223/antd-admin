@@ -16,7 +16,7 @@ const validate = function (next, replace, callback) {
 }
 const route = (
   <Route path='/'>
-    <IndexRedirect to='customer/my'/>
+    <IndexRedirect to='welcome'/>
     <Route path='customer' onEnter={validate} component={App}>
       <Route path='my' getComponent={(location, cb) => {
         require.ensure([], () => {
