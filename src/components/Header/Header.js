@@ -230,6 +230,7 @@ class TopHeader extends React.Component {
                 </a>
               </Dropdown>
             </Menu.Item>
+            {/*permissions['system:user:view']*/}
             {
               1 && (
                 <Menu.Item key="roles">

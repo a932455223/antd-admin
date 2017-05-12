@@ -414,7 +414,7 @@ class BasicInfo extends Component {
 
     let json = {
       accounts: accountsInfo,
-      address: address,
+      address: address ? address : '',
       birth: briefInfo.birth != null ? moment(briefInfo.birth).format(dateFormat) : '',
       certificate: briefInfo.certificate ? briefInfo.certificate : '',
       department: briefInfo.department ? briefInfo.department - 0 : '',

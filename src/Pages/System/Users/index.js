@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Button, Table} from "antd";
+import {Button, Table,Modal} from "antd";
 import Dock from "react-dock";
 import ajax from "../../../tools/POSTF.js";
 //=============================================================
@@ -24,7 +24,8 @@ export default class SystemUsers extends Component {
       visible: false,
       children: null
     },
-    searchContent: ''
+    searchContent: '',
+    hasChange: false
   };
 
   componentWillMount() {
@@ -59,21 +60,55 @@ export default class SystemUsers extends Component {
       })
   }
 
+
+  // 修改数据
+  changeHasChange(boolean){
+    this.setState({
+      hasChange: boolean
+    })
+  }
+
   // 表格点击事件
   rowClick(rowData) {
-    this.setState({
-      dock: {
-        visible: true,
-        children: (
-          <UserEdit
-            id={rowData.id}
-            key={rowData.id}
-            close={this.close.bind(this)}
-            refresh={this.refresh.bind(this)}
-          />
-        )
-      }
-    });
+    if(this.state.hasChange){
+      Modal.confirm({
+        // title: '',
+        content: '页面存在未保存修改，是否离开',
+        onOk: () => {
+          this.setState({
+            dock: {
+              visible: true,
+              children: (
+                <UserEdit
+                  id={rowData.id}
+                  key={rowData.id}
+                  close={this.close.bind(this)}
+                  refresh={this.refresh.bind(this)}
+                  onChange={this.changeHasChange.bind(this)}
+                />
+              )
+            },
+            hasChange: false
+          });
+        }
+      })
+    }else {
+      this.setState({
+        dock: {
+          visible: true,
+          children: (
+            <UserEdit
+              id={rowData.id}
+              key={rowData.id}
+              close={this.close.bind(this)}
+              refresh={this.refresh.bind(this)}
+              onChange={this.changeHasChange.bind(this)}
+            />
+          )
+        },
+        hasChange: false
+      });
+    }
   }
 
   // 新增用户
@@ -84,6 +119,7 @@ export default class SystemUsers extends Component {
         children: <NewUser
           close={this.close.bind(this)}
           refresh={this.refresh.bind(this)}
+          onChange={this.changeHasChange.bind(this)}
         />
       }
     })
@@ -112,7 +148,8 @@ export default class SystemUsers extends Component {
     this.setState({
       dock: {
         visible: false,
-      }
+      },
+      hasChange: false
     });
   }
 

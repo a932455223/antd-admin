@@ -115,6 +115,7 @@ class UserEdit extends Component {
   }
 
   hasChange() {
+    this.props.onChange(true);
     this.setState({
       hasChange: true
     })
@@ -197,7 +198,18 @@ class UserEdit extends Component {
             <Button onClick={this.resetpsd}>重置密码</Button>
             <Button
               className="close"
-              onClick={this.props.close}
+              onClick={() => {
+                if(this.state.hasChange){
+                  Modal.confirm({
+                    // title: '',
+                    content: '页面存在未保存修改，是否离开',
+                    onOk: this.props.close,
+                    onCancel() {
+                      // console.log('Cancel');
+                    },
+                  })
+                }
+              }}
             >&times;</Button>
           </span>
         </div>
