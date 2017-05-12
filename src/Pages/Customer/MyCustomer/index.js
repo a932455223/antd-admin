@@ -3,7 +3,8 @@ import update from 'immutability-helper';
 import {
   Button,
   Icon,
-  Input
+  Input,
+  message
 } from 'antd';
 import axios from 'axios';
 import API from '../../../../API';
@@ -165,6 +166,17 @@ export default class MyCustomer extends Component {
   customerFocus = (id, e) => {
     e.stopPropagation(); // 阻止事件冒泡
     // 拿到用户的 id，发送请求，取消关注／关注
+    let customerIds = [id];
+
+    ajax.Put(API.PUT_CUSTOMERS_ATTENTION, {customerIds: customerIds})
+        .then(res => {
+          if(res.data.code === 200) {
+            message.success('用户关注成功');
+            this.getCustomers(this.state.reqJson);
+          } else {
+            message.error(res.data.message);
+          }
+        })
   }
 
   refreshCustomerLists = () => {
@@ -174,7 +186,7 @@ export default class MyCustomer extends Component {
 
   render() {
     const { customers, pagination, loading, columnsLists, privilege, reqJson } = this.state;
-    // console.log(reqJson)
+    console.log(customers)
 
     // 渲染 Table表格的表头数据
     const columns = [
@@ -221,7 +233,7 @@ export default class MyCustomer extends Component {
         render: customer => (
           <div className='attention'>
             <p>{customer.department}</p>
-            {customer.attention
+            {customer.attention !== 0
               ?
               <a className="cancel" href="#" onClick={this.customerFocus.bind(this, customer.id)}>
                   <Icon style={{color: '#a66800'}} type="star" />
