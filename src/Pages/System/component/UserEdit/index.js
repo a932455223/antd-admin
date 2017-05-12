@@ -136,7 +136,10 @@ class UserEdit extends Component {
           .then(res => {
             if (res.data.message === 'OK') {
               this.props.refresh();
-              this.saveSuccess(this.props.close.bind(this))
+              this.setState({
+                hasChange: false
+              })
+              // this.saveSuccess(this.props.close.bind(this))
             }
           })
       }
