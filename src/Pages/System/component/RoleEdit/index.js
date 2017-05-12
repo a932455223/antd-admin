@@ -2,7 +2,7 @@
  * Created by jufei on 2017/4/25.
  */
 import React, {Component} from "react";
-import {Button, Card, Input, Table} from "antd";
+import {Button, Card, Input, Table,Icon,Row,Col} from "antd";
 //=====================================================================
 import './less/roleEdit.less';
 import ajax from '../../../../tools/POSTF.js';
@@ -64,14 +64,13 @@ export default class RoleEdit extends Component {
           <h3>角色</h3>
           <span>
           <Button onClick={this.props.rolePermission.bind(this,this.props.id)}>分配权限</Button>
-          <Button
-            className="save"
-            onClick={() => {
-              alert('保存成功');
-              this.props.close()
-            }}
-          >保存</Button>
-          <Button className="close" onClick={this.props.close}>&times;</Button>
+          
+          <Icon
+              className="close"
+              onClick={this.props.close}
+              type="close"
+              style={{cursor:"pointer"}}
+            />
         </span>
         </div>
 
@@ -88,13 +87,33 @@ export default class RoleEdit extends Component {
             <span>备注</span>
             <Input type="textarea"/>
           </p>
+          <Row className="buttonrow">
+          {/*<Col span="3">
+              <Button
+                className="cancel"
+                // disabled={this.state.changed ? true : false}
+              >取消</Button>
+            </Col>  */}
+            <Col span="3"></Col>
+            <Col span="20">
+              <Button
+                className={this.state.changed ? "ablesavebtn" : "disablesavebtn"}
+                disabled={this.state.changed ? false : true}
+                htmlType="submit"
+                onClick={this.onHandleSubmit}
+                loading={this.state.loading}
+
+              >保存</Button>
+            </Col>
+        </Row>
         </Card>
 
         <Card
+          className="users"
           title={(
             <p>
               <h3>包含用户</h3>
-              <Button onClick={this.props.addUser.bind(this,this.props.id)}>添加</Button>
+              <Button onClick={this.props.addUser.bind(this,this.props.id)} className="addusers">添加</Button>
             </p>
           )}
         >

@@ -13,6 +13,7 @@ class BranchBaseInfoForm extends Component{
 	state = {
     changed : false,
     loading:false,
+    reauiredOrg:false,
     categoryDropdown: [],
     parentDepartmentDropDown:[],
     province:[],
@@ -34,11 +35,12 @@ class BranchBaseInfoForm extends Component{
           province:res.data.data
         })
   	})
+     
+    
    
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps, 121212, this.props,  898989)
     //nextProps已经接收到，但是
     	if(nextProps.branchInfo){
     		if(!this.props.branchInfo || this.props.branchInfo.category.value !== nextProps.branchInfo.category.value){
@@ -51,8 +53,18 @@ class BranchBaseInfoForm extends Component{
                 changed:false
   			      })
   			    })
-    		  }
-        }
+          const levelOrg = this.props.form.getFieldValue('category');
+          if (levelOrg == 1) {
+            this.setState({
+              reauiredOrg:false
+            })
+          }else{
+            this.setState({
+              reauiredOrg:true
+            })
+          }
+    		}
+      }
   		if(!this.props.branchInfo || this.props.branchInfo.province.value !== nextProps.branchInfo.province.value && nextProps.branchInfo.province.value){
 	    		this.getCity(nextProps.branchInfo.province.value)
   		}
@@ -99,7 +111,6 @@ class BranchBaseInfoForm extends Component{
 		    if(hasError){
 			      Modal.error({content: '信息填写有误',})
 			    }else{
-            console.log(7777777)
 			      ajax.Put(API.PUT_DEPARTMENT(id),FieldsValue)
 			      .then(() => {
 			      this.props.getDepartments()
@@ -126,6 +137,15 @@ class BranchBaseInfoForm extends Component{
 	  this.props.form.setFieldsValue({
       parentOrg:undefined
     })
+    if (value == 1) {
+      this.setState({
+        reauiredOrg:false
+      })
+    }else{
+      this.setState({
+        reauiredOrg:true
+      })
+    }
   }
 
   inputChange=()=>{
@@ -297,7 +317,7 @@ class BranchBaseInfoForm extends Component{
                   {...formItemLayout}
                 >
                   {getFieldDecorator('parentOrg', {
-                    rules: [{required: true, message: '所属组织!'}],
+                    rules: [{required: this.state.reauiredOrg, message: '所属组织!'}],
                     onChange:this.inputChange,
                   })(
                     <Select
@@ -334,6 +354,7 @@ class BranchBaseInfoForm extends Component{
                   label={<span>地址</span>}
                   labelCol={{span:8}}
                   wrapperCol={{span:16}}
+                  className="required"
                 >
                 {Province}
                 </FormItem>

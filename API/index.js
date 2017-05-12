@@ -214,5 +214,8 @@ export default {
   //编辑角色
   PUT_ROLE_TREE:roleId => ` /api/role/${roleId}`,
   // 添加用户
-  POST_USER: '/api/user'
+  POST_USER: '/api/user',
+
+  // 获取用户权限
+  GET_PERMISSION: '/api/privilege/myPermissions'
 }

@@ -91,13 +91,12 @@ let log = (req,res,next) => {
 // app.use(log);
 
 // const proxyHost = '115.159.58.21:8099';
-
 // const proxyHost = '106.14.69.82:8099'
-// const proxyHost = '192.168.1.105:8080';
-// const proxyHost = '192.168.1.39:8080';
+// const proxyHost = '192.168.1.105:8080'; // 本地
+const proxyHost = '192.168.1.39:8099'; //服务器
 // const proxyHost = 'yanfei.tunnel.qydev.com';
-const proxyHost = '192.168.1.39:8099';
-// const proxyHost = 'http://localhost:9999';
+
+
 
 app.use('/', proxy(proxyHost, {
   filter: (req, res) => {

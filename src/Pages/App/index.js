@@ -9,6 +9,8 @@ import SiderBar from "../../components/SliderBar";
 import "./App.less";
 import "../../style/base.less";
 import "../../style/iconfont.less";
+import API from '../../../API';
+import ajax from '../../tools/POSTF.js';
 
 const {SubMenu} = Menu;
 const {Content, Footer, Sider} = Layout;
@@ -17,15 +19,22 @@ const {Content, Footer, Sider} = Layout;
 
 class App extends Component {
   state = {
-
+    // permissions: {
+    //   'customerManage:base:view': true
+    // }
   };
 
+  componentWillMount(){
+
+  }
+
   render() {
+    const permissions = this.state.permissions;
     return (
       <Layout >
-        <Header />
+        <Header permissions={permissions}/>
         <Layout>
-          <SiderBar/>
+          <SiderBar permissions={permissions} />
           <Layout>
             <Content style={{display: 'flex'}}>
               {this.props.children}
