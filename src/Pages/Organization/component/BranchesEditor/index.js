@@ -134,15 +134,7 @@ class BranchesEditor extends Component {
   render() {
     const branchInfo = this.state.branchInfo;
     // const departmentInfo = this.state.department;
-    const formItemLayout = {
-      labelCol: {
-        span: 6
-      },
-      wrapperCol: {
-        span: 14
-      }
-    };
-    const {getFieldDecorator} = this.props.form;
+
     return (
         <div
           className={classNames('dock-container','departmentEditor')}
@@ -150,9 +142,17 @@ class BranchesEditor extends Component {
           onKeyDown={this.hasChange.bind(this)}
           ref={ departmentEditor => this.departmentEditor = departmentEditor}
         >
+          
 
 
-          <BranchBaseInfo branchInfo= {branchInfo} id={this.props.id} getDepartments={this.props.getDepartments} closeDock={this.props.closeDock}/>
+          <BranchBaseInfo 
+            branchInfo= {branchInfo} 
+            id={this.props.id} 
+            getDepartments={this.props.getDepartments} 
+            closeDock={this.props.closeDock} 
+            hasInfoChange={this.props.hasInfoChange} 
+            hasNobranchInFoChange={this.props.hasNobranchInFoChange}
+          />
           {/*业务信息*/}
           <Card className="business" title={<h3>业务信息</h3>}>
             <Row>

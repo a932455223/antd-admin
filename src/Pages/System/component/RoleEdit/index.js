@@ -91,10 +91,11 @@ export default class RoleEdit extends Component {
         </Card>
 
         <Card
+          className="users"
           title={(
             <p>
               <h3>包含用户</h3>
-              <Button onClick={this.props.addUser.bind(this,this.props.id)}>添加</Button>
+              <Button onClick={this.props.addUser.bind(this,this.props.id)} className="addusers">添加</Button>
             </p>
           )}
         >
