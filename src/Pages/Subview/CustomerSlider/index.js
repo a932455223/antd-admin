@@ -467,7 +467,7 @@ class CustomerSlider extends Component {
     const { uuid, dataSource } = this.props;
 
     const currentInfo = dataSource.filter(item => item.id === id);
-    const attention = currentInfo[0].attention;
+    const attention = currentInfo[0] && currentInfo[0].attention;
 
     return(
       <div>
