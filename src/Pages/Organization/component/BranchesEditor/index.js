@@ -134,7 +134,15 @@ class BranchesEditor extends Component {
   render() {
     const branchInfo = this.state.branchInfo;
     // const departmentInfo = this.state.department;
-
+    const formItemLayout = {
+      labelCol: {
+        span: 6
+      },
+      wrapperCol: {
+        span: 14
+      }
+    };
+    const {getFieldDecorator} = this.props.form;
     return (
         <div
           className={classNames('dock-container','departmentEditor')}
