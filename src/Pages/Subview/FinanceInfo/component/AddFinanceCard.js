@@ -152,7 +152,10 @@ class addFinanceCard extends Component{
                     </Col>
                     <Col span={16}>
                         <FormItem>
-                            {getFieldDecorator('money')(<Input />)}
+                            {getFieldDecorator('money',{
+                                    rules:[{pattern:Reg.Integer,message:'请输入数字'}]
+                                }
+                            )(<Input />)}
                         </FormItem>
                     </Col>
                     
