@@ -26,7 +26,6 @@ export default class SelectStaff extends Component {
   };
 
   componentWillMount() {
-
     ajax.Get(API.GET_DEPARTMENT_HIERARCHY)
       .then(res => {
         this.setState({
@@ -70,6 +69,15 @@ export default class SelectStaff extends Component {
       })
   }
 
+  initTableScroll() {
+    let selectStaff = document.getElementById('selectStaff');
+    let container = selectStaff.getElementsByClassName('ant-card-body')[0];
+    let tableScroll = selectStaff.getElementsByClassName('ant-table-body')[0];
+    tableScroll.style['max-height'] = container.offsetHeight - 83 - 130 + 'px';
+    tableScroll.style['height'] = container.offsetHeight - 83 - 130 + 'px';
+    tableScroll.style['overflow-y'] = 'auto';
+  }
+
   createTree(data) {
     if (data.childDepartments && data.childDepartments.length !== 0) {
       return (
@@ -110,14 +118,6 @@ export default class SelectStaff extends Component {
     this.getStaff(selectKey[0])
   }
 
-  initTableScroll() {
-    let selectStaff = document.getElementById('selectStaff');
-    let container = selectStaff.getElementsByClassName('ant-card-body')[0];
-    let tableScroll = selectStaff.getElementsByClassName('ant-table-body')[0];
-    tableScroll.style['max-height'] = container.offsetHeight - 83 - 130 + 'px';
-    tableScroll.style['height'] = container.offsetHeight - 83 - 130 + 'px';
-    tableScroll.style['overflow-y'] = 'auto';
-  }
 
   backConfirm(ok){
     Modal.confirm({

@@ -52,7 +52,6 @@ class UserEdit extends Component {
           cantDeleteRoles += `<li class="ant-select-selection__choice" title=${item.name} style="user-select: none;"><div class="ant-select-selection__choice__content">${item.name}</div></li>`
         });
         $("#roleIds ul").append(cantDeleteRoles);
-        console.log('==============================================',cantDeleteRoles);
         if (info.departments) {
           info.departments.map(item => {
             if(item.canDelete){
@@ -65,7 +64,7 @@ class UserEdit extends Component {
         let cantDeleteDepartments = '';
         initDepartmentCantDelete.map( item => {
           cantDeleteDepartments += `<li class="ant-select-selection__choice" title=${item.name} style="user-select: none;"><div class="ant-select-selection__choice__content">${item.name}</div></li>`
-        })
+        });
 
         $("#departmentIds ul").append(cantDeleteDepartments);
 
@@ -79,7 +78,6 @@ class UserEdit extends Component {
 
     ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
       .then(res => {
-        console.log(res)
         this.setState({
           departmentDropdown: res.data.data
         })
@@ -170,6 +168,18 @@ class UserEdit extends Component {
     })
   }
 
+  close(){
+    if(this.state.hasChange){
+      Modal.confirm({
+        // title: '',
+        content: '页面存在未保存修改，是否离开',
+        onOk: this.props.close,
+      })
+    }else {
+      this.props.close()
+    }
+  }
+
   render() {
     const info = this.state.userInfo;
 
@@ -198,18 +208,7 @@ class UserEdit extends Component {
             <Button onClick={this.resetpsd}>重置密码</Button>
             <Button
               className="close"
-              onClick={() => {
-                if(this.state.hasChange){
-                  Modal.confirm({
-                    // title: '',
-                    content: '页面存在未保存修改，是否离开',
-                    onOk: this.props.close,
-                    onCancel() {
-                      // console.log('Cancel');
-                    },
-                  })
-                }
-              }}
+              onClick={this.close.bind(this)}
             >&times;</Button>
           </span>
         </div>
