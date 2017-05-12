@@ -12,6 +12,7 @@ const Option = Select.Option;
  class  GridPermission extends Component{
 
   state={
+    changed:false,
     GridTypes:[],
     orgNameDropDown:'',
     staffs:[],
@@ -90,10 +91,15 @@ const Option = Select.Option;
     })
    }
 
+   inputChange = () => {
+    this.setState({
+      changed:true
+    })
+   }
    onSubmit = () => {
  		const { getFieldsValue} = this.props.form;
  		const FieldsValue = getFieldsValue();
- 		if(!(FieldsValue.province && FieldsValue.city && FieldsValue.region)){
+ 		if(!(FieldsValue.province && FieldsValue.city && FieldsValue.region && FieldsValue.addressDetail)){
 
  		  Modal.error({
         content:'请重新填写地址信息'
@@ -111,6 +117,7 @@ const Option = Select.Option;
           if(res.data.code === 200){
             this.props.getTableData()
             message.success("网格创建成功")
+            this.props.close()
           }else{
             Modal.error({content:res.data.message})
           }
@@ -124,7 +131,9 @@ const Option = Select.Option;
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
     const {orgNameDropDown} = this.state;
 
-    const Province = getFieldDecorator('province')(
+    const Province = getFieldDecorator('province',{
+      rules:[{required:true,message:"填写省份"}]
+    })(
       <Select
         placeholder="选择省份"
         notFoundContent="没有省份"
@@ -134,7 +143,9 @@ const Option = Select.Option;
       </Select>)
 
 
-    const City = getFieldDecorator('city')(
+    const City = getFieldDecorator('city',{
+      rules:[{required:true,message:"填写城市"}],
+    })(
       <Select
         placeholder="选择城市"
         notFoundContent="没有城市"
@@ -143,7 +154,9 @@ const Option = Select.Option;
         {this.state.city.map((item,index)=>(<Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>))}
       </Select>)
 
-    const Region = getFieldDecorator('region')(
+    const Region = getFieldDecorator('region',{
+      rules:[{required:true,message:"填写地区"}],
+    })(
       <Select
         placeholder="选择地区"
         notFoundContent="没有地区"
@@ -179,12 +192,12 @@ const Option = Select.Option;
         <div className="bgrow">
           <Row>
             <Col span={12}>
-              <FormItem labelCol={{span: 8,offset:1}}
+              <FormItem labelCol={{span: 8}}
                         wrapperCol={{span: 15}}
                         label="所属机构">
                 {
                   orgNameDropDown.length > 0 ? getFieldDecorator('orgId',{
-                    rules: [{ message: '请选择所属机构' , whitespace:"ture"}],
+                    rules: [{required:true, message: '请选择所属机构' , whitespace:"ture"}],
                     onChange:this.orgIdChange
                   })(
                   <Select
@@ -201,7 +214,7 @@ const Option = Select.Option;
               </FormItem>
             </Col>
             <Col span={12}>
-              <FormItem labelCol={{span: 8}}
+              <FormItem labelCol={{span: 8,offset:1}}
                         wrapperCol={{span: 15}}
                         label="网格负责人"
                         className="idnumber"
@@ -227,6 +240,7 @@ const Option = Select.Option;
               >
 
                 {getFieldDecorator('areaType', {
+                  rules:[{required:true,message:"填写网格类型"}],
                   onChange: this.inputChange
                 })(
                   <Select
@@ -279,11 +293,12 @@ const Option = Select.Option;
             </Col>
           </Row>
           <Row gutter={8}>
-            <Col span={9}>
+            <Col span={8}>
               <FormItem
                 label={<span>地址</span>}
                 labelCol={{span:12}}
                 wrapperCol={{span:12}}
+                className="required"
               >
                 {Province}
               </FormItem>
@@ -311,6 +326,7 @@ const Option = Select.Option;
                         className="idnumber"
               >
                 {getFieldDecorator('addressDetail', {
+                  rules:[{required:true,message:"详细地址"}],
                   onChange: this.inputChange
                 })(
                   <Input placeholder="详细地址信息"/>
@@ -340,7 +356,7 @@ const Option = Select.Option;
             <Col span={24} >
               <Col span={4}>
               </Col>
-              <Button htmlType="button" onClick={this.onSubmit}>保存</Button>
+              <Button htmlType="button" onClick={this.onSubmit} className={this.state.changed ? "ablesavebtn" : "disablesavebtn"}>保存</Button>
             </Col>
           </Row>
       </div>

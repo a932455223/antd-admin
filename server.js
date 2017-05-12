@@ -94,7 +94,7 @@ let log = (req,res,next) => {
 
 // const proxyHost = '106.14.69.82:8099'
 // const proxyHost = '192.168.1.105:8080';
-// const proxyHost = '192.168.1.39:8080';
+const proxyHost = '192.168.1.39:8080';
 // const proxyHost = 'yanfei.tunnel.qydev.com';
 const proxyHost = '192.168.1.39:8099'
 // const proxyHost = 'http://192.168.1.39:8080';
@@ -102,7 +102,7 @@ const proxyHost = '192.168.1.39:8099'
 
 app.use('/', proxy(proxyHost, {
   filter: (req, res) => {
-    console.log(req.headers.cookie)
+    // console.log(req.headers.cookie)
     return req.url.indexOf('/api/') === 0;
   },
   proxyReqPathResolver: (req, res) => {

@@ -57,5 +57,32 @@
       margin-left: 7px;
     }
   }
+  .buttonsave{
+    .disablesavebtn[disabled]{
+      background: #fff;
+      &:hover{
+        background-color:#fff;
+        color: #999;
+      };
+    }
+    .ablesavebtn{
+      background: #5c6bc0;
+      color: #fff;
+      transition: all 0.3s;
+      border:1px solid #5c6bc0;
+      &:hover{
+        background-color:#4b5bb8;
+        transition: all 0.3s;
+      };
+    }
+  }
 
+}
+
+.system-content .dock-container .ant-card-bordered{
+  background: #fff;
+  border:1px solid #eaeaea;
+}
+.dockboxcontainer{
+  height: 100%;
 }
