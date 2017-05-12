@@ -223,9 +223,10 @@ class BasicInfo extends Component {
     // info('personalBasicInfo will receive props.');
     // 当前的客户 id发生变化时，或者当前用户的信息 beEditedNumber === true时，重置 state
     const { id, beEditedArray } = this.props.currentCustomerInfo;
-    if(id !== next.currentCustomerInfo.id ||
-      (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0) ) {
-      // console.log('get info');
+    if(id !== next.currentCustomerInfo.id
+      //  || (next.currentCustomerInfo.beEditedArray && next.currentCustomerInfo.beEditedArray.length === 0)
+    ) {
+      console.log('get info');
       this.getBaseInfo(next.currentCustomerInfo.id);
       // this.resetAccounts();
     }
@@ -307,7 +308,7 @@ class BasicInfo extends Component {
         let newJoiners = _.cloneDeep(res.data.data.joiners);
 
         let newState = update(this.state, {
-          uuid: {$set: this.state.uuid + 1},
+          // uuid: {$set: this.state.uuid + 1},
           id: {$set: res.data.data.id},
 
           accounts: {$set: accountsObj},
