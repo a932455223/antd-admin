@@ -170,10 +170,9 @@ class addFinanceCard extends Component{
                                  rules: [{pattern:Reg.percentage,message:'小数点后精确到两位'}]
                             })(
                                 <InputNumber min={0.01} max={99.99} step={0.01} 
-                                    formatter={value => `${value}%`}
-                                    parser={value => value.replace('%', '')}
                                 />
                             )}
+                            %
                         </FormItem>
                     </Col>
                 </Row>

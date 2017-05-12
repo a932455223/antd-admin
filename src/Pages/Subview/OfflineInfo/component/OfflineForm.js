@@ -30,12 +30,29 @@ class financeForm extends Component{
     }
     componentWillReceiveProps(newProps){
         // console.log(this.props)
-        this.setState({btnLoading:false})
+        // this.setState({btnLoading:false})
         // this.props.toggleEdit(this.props.index)
     }
     clickSavaBtn=()=>{
-        this.setState({btnLoading:true})
-        this.props.putCustomersFinances(this.props.id.value,this.props.form.getFieldsValue(),this.props.index)
+        this.props.form.validateFields()
+        let formErrors = this.props.form.getFieldsError()
+        let noError=true;
+        let values=this.props.form.getFieldsValue();
+        // console.log('=====',values)
+        // console.log(formErrors)
+        Object.keys(formErrors).map((item,index)=>{
+            
+            if(!(formErrors[item]===undefined)){
+                Modal.error({
+                    title:'情仔细填写表单',
+                });
+                noError=false;
+            }
+        })
+        if(noError){
+            this.setState({btnLoading:true});
+            this.props.putCustomersFinances(this.props.id.value,this.props.form.getFieldsValue(),this.props.index)
+        }
     }
     clickCancelBtn=()=>{
         this.props.cancelChangeValue();
@@ -59,6 +76,9 @@ class financeForm extends Component{
         
         return (
             <Form  className="my-form-card">
+                <pre className="language-bash" style={{textAlign:'left'}}>
+          {JSON.stringify(this.state, null, 2)}
+          </pre>
                 <Card
                     title={
                         <div className="my-card-title">
@@ -136,7 +156,9 @@ class financeForm extends Component{
                     </Col>
                     <Col span={16}>
                         <FormItem>
-                            {getFieldDecorator('money')(<Input />)}
+                            {getFieldDecorator('money',{
+                                rules:[{pattern:Reg.Integer,message:'请输入数字'}]
+                            })(<Input />)}
                         </FormItem>
                     </Col>
                     
@@ -151,11 +173,9 @@ class financeForm extends Component{
                                  rules: [{pattern:Reg.percentage,message:'小数点后精确到两位'}]
                             })(
                                 <InputNumber min={0.01} max={99.99} step={0.01} 
-                                    formatter={value => `${value}%`}
-                                    parser={value => value.replace('%', '')}
                                 />
                             )}
-
+                            %
                         </FormItem>
                     </Col>
                 </Row>

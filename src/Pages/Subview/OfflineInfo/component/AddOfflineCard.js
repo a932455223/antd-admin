@@ -152,7 +152,9 @@ class addFinanceCard extends Component{
                     </Col>
                     <Col span={16}>
                         <FormItem>
-                            {getFieldDecorator('money')(<Input />)}
+                            {getFieldDecorator('money',{
+                                rules:[{pattern:Reg.Integer,message:'请输入数字'}]
+                            })(<Input />)}
                         </FormItem>
                     </Col>
                     
@@ -167,10 +169,9 @@ class addFinanceCard extends Component{
                                  rules: [{pattern:Reg.percentage,message:'小数点后精确到两位'}]
                             })(
                                 <InputNumber min={0.01} max={99.99} step={0.01} 
-                                    formatter={value => `${value}%`}
-                                    parser={value => value.replace('%', '')}
                                 />
                             )}
+                            %
                         </FormItem>
                     </Col>
                 </Row>

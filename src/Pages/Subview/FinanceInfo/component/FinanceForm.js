@@ -31,7 +31,7 @@ class financeForm extends Component{
     }
     componentWillReceiveProps(newProps){
         // console.log(this.props)
-        this.setState({btnLoading:false})
+        // this.setState({btnLoading:false})
         // this.props.toggleEdit(this.props.index)
     }
     clickSavaBtn=()=>{
@@ -171,11 +171,9 @@ class financeForm extends Component{
                                  rules: [{pattern:Reg.percentage,message:'小数点后精确到两位'}]
                             })(
                                 <InputNumber min={0.01} max={99.99} step={0.01} 
-                                    formatter={value => `${value}%`}
-                                    parser={value => value.replace('%', '')}
                                 />
                             )}
-
+                            %
                         </FormItem>
                     </Col>
                 </Row>
