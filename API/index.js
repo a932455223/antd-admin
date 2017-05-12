@@ -207,6 +207,11 @@ export default {
   //新增角色
   POST_ROLE: '/api/role',
 
+  //根据id获取获取role
+  GET_ROLE_TREE: roleId => `/api/role/${roleId}/tree`,
+
+  //编辑角色
+  PUT_ROLE_TREE:roleId => ` /api/role/${roleId}`,
   // 添加用户
   POST_USER: '/api/user'
 }
