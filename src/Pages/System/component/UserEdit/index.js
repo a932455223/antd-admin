@@ -89,9 +89,8 @@ class UserEdit extends Component {
   };
 
   render() {
-    console.log(this.props.id)
     const info = this.state.userInfo;
-
+    console.log(info);
     let initRoles = [];
     let initDepartment = [];
     if (info.roles) {
@@ -177,7 +176,7 @@ class UserEdit extends Component {
                 >
                   {
                     this.state.rolesDropDown.map((item) => {
-                      return <Option value={item.id} key={item.id}>{item.roleName}</Option>
+                      return <Option value={item.id.toString()} key={item.id.toString()}>{item.roleName}</Option>
                     })
                   }
                 </Select>
@@ -199,7 +198,7 @@ class UserEdit extends Component {
                 >
                   {
                     this.state.departmentDropdown.map((item) => {
-                      return <Option value={item.id} key={item.id.toString()}>{item.name}</Option>
+                      return <Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>
                     })
                   }
                 </Select>
