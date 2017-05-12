@@ -235,7 +235,7 @@ export default class SystemRoles extends Component {
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
-                  this.rolePermission(rowData.id)
+                  this.rolePermission(rowData.id,'edit')
                 }}
               >
                 分配权限
