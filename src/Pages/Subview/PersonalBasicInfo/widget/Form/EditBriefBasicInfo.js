@@ -38,46 +38,6 @@ class EditBriefBasicInfoForm extends Component{
     areaOptions: []
   }
 
-  componentWillMount(){
-    // console.log('EditBriefBasicInfoForm will mount');
-    const { eachCustomerInfo } = this.props;
-
-    let originProvince = eachCustomerInfo && eachCustomerInfo.addressCode && eachCustomerInfo.addressCode.split(' ')[0];
-    let originCity = eachCustomerInfo && eachCustomerInfo.addressCode && eachCustomerInfo.addressCode.split(' ')[1];
-
-    let province = originProvince != null || originProvince != '' ? originProvince : undefined;
-    let city = originCity != null || originCity != '' ? originCity : undefined;
-
-    this.getAlloptions(1, 1, province, city);
-  }
-
-  componentWillReceiveProps(next) {
-    // console.log('EditBriefBasicInfoForm will recieve props');
-    const { getFieldValue } = next.form;
-
-    // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
-    if(next.joinersBeEdited && !next.beEditedArray.includes('basicInfo')) {
-      this.props.increaseBeEditArray('basicInfo');
-    } else if(next.beEditedArray && !next.beEditedArray.includes('basicInfo')) {
-      // 重置 InfoBeEdited
-      let newState = update(this.state, {
-        basicInfoBeEdit: {$set: false}
-      })
-      this.setState(newState)
-    } else {
-      // 重置 InfoBeEdited
-      let newState = update(this.state, {
-        basicInfoBeEdit: {$set: true}
-      })
-      this.setState(newState)
-    }
-
-    let province = getFieldValue('province');
-    let city = getFieldValue('city');
-
-    this.getProvinceOptions(1, province, city);
-  };
-
   // 一次性获取所有下拉列表
   getAlloptions = (departmentId, managerId, province, city) => {
     if(province == undefined || province == '') {
@@ -117,44 +77,79 @@ class EditBriefBasicInfoForm extends Component{
     }
   }
 
-  // 省份下拉选择
-  getProvinceOptions = (country, province, city) => {
-    ajax.Get(API.GET_AREA_SELECT(1))
-        .then(res => {
-          let provinceState = update(this.state, {
-            provinceOptions: {$set: res.data.data},
-            cityOptions: {$set: []}
-          });
+  componentWillMount(){
+    // console.log('EditBriefBasicInfoForm will mount');
+    const { eachCustomerInfo } = this.props;
 
-          if(province == undefined) {
-            this.setState(provinceState);
-          } else {
-            ajax.Get(API.GET_AREA_SELECT(province))
-                .then(res => {
-                  let cityState = update(provinceState, {
-                    cityOptions: {$set: res.data.data},
-                    areaOptions: {$set: []}
-                  });
+    let originProvince = eachCustomerInfo && eachCustomerInfo.addressCode && eachCustomerInfo.addressCode.split(' ')[0];
+    let originCity = eachCustomerInfo && eachCustomerInfo.addressCode && eachCustomerInfo.addressCode.split(' ')[1];
 
-                  if(city == undefined) {
-                    this.setState(cityState);
-                  } else {
-                    ajax.Get(API.GET_AREA_SELECT(city))
-                        .then(res => {
-                          let areaState = update(cityState, {
-                            areaOptions: {$set: res.data.data},
-                          });
+    let province = originProvince != null || originProvince != '' ? originProvince : undefined;
+    let city = originCity != null || originCity != '' ? originCity : undefined;
 
-                          this.setState(areaState);
-                        })
-                  }
-                })
-          }
-        })
+    this.getAlloptions(1, 1, province, city);
   }
 
+  componentWillReceiveProps(next) {
+    // console.log('EditBriefBasicInfoForm will recieve props');
+    const { getFieldValue } = next.form;
+
+    // 当 joinersBeEdited不为 true并且 beEditedArray不包含 ‘basicInfo’，发送 action
+    if(next.joinersBeEdited && !next.beEditedArray.includes('basicInfo')) {
+      this.props.increaseBeEditArray('basicInfo');
+    } else if(next.beEditedArray && !next.beEditedArray.includes('basicInfo')) {
+      // 重置 InfoBeEdited
+      let newState = update(this.state, {
+        basicInfoBeEdit: {$set: false}
+      })
+      this.setState(newState)
+    } else {
+      // 重置 InfoBeEdited
+      let newState = update(this.state, {
+        basicInfoBeEdit: {$set: true}
+      })
+      this.setState(newState)
+    }
+  };
+
+  // 省份下拉选择
+  // getProvinceOptions = (country, province, city) => {
+  //   ajax.Get(API.GET_AREA_SELECT(1))
+  //       .then(res => {
+  //         let provinceState = update(this.state, {
+  //           provinceOptions: {$set: res.data.data},
+  //           cityOptions: {$set: []}
+  //         });
+  //
+  //         if(province == undefined) {
+  //           this.setState(provinceState);
+  //         } else {
+  //           ajax.Get(API.GET_AREA_SELECT(province))
+  //               .then(res => {
+  //                 let cityState = update(provinceState, {
+  //                   cityOptions: {$set: res.data.data},
+  //                   areaOptions: {$set: []}
+  //                 });
+  //
+  //                 if(city == undefined) {
+  //                   this.setState(cityState);
+  //                 } else {
+  //                   ajax.Get(API.GET_AREA_SELECT(city))
+  //                       .then(res => {
+  //                         let areaState = update(cityState, {
+  //                           areaOptions: {$set: res.data.data},
+  //                         });
+  //
+  //                         this.setState(areaState);
+  //                       })
+  //                 }
+  //               })
+  //         }
+  //       })
+  // }
+
   // 选择省份，获取城市选项, 清空city 和area的值
-  provinceSelect = () => {
+  provinceSelect = (province) => {
     if(!this.state.basicInfoBeEdit) {
       this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
       let newState = update(this.state, {
@@ -163,10 +158,19 @@ class EditBriefBasicInfoForm extends Component{
       this.setState(newState)
     }
 
-    // console.log(province);
-    // this.getProvinceOptions(1, province)
-
     const { setFieldsValue } = this.props.form;
+
+    ajax.Get(API.GET_AREA_SELECT(province))
+        .then(res => {
+          let provinceState = update(this.state, {
+            cityOptions: {$set: res.data.data},
+            areaOptions: {$set: []}
+          });
+
+          this.setState(provinceState);
+        });
+
+
     setFieldsValue({
       'city': undefined,
       'area': undefined
@@ -174,7 +178,7 @@ class EditBriefBasicInfoForm extends Component{
   }
 
   // 选择城市，获取区域选项，清空区域选项
-  citySelect = (city) => {
+  citySelect = (cityId) => {
     if(!this.state.basicInfoBeEdit) {
       this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
       let newState = update(this.state, {
@@ -184,13 +188,21 @@ class EditBriefBasicInfoForm extends Component{
     }
 
     const { setFieldsValue } = this.props.form;
+    ajax.Get(API.GET_AREA_SELECT(cityId))
+        .then(res => {
+          let newState = update(this.state, {
+            areaOptions: {$set: res.data.data}
+          });
+
+          this.setState(newState);
+        });
     setFieldsValue({
       'area': undefined
     })
   }
 
   // 获取 department，
-  getDepartments = (departmentId, managerId) => {
+  getDepartments = (departmentId) => {
     ajax.all([
       ajax.Get(API.GET_CUSTOMER_DEPARTMENT), // 所属机构下拉菜单
       ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)), // 所属客户经理下拉菜单
@@ -198,15 +210,15 @@ class EditBriefBasicInfoForm extends Component{
     ]).then((res) => {
       let newState = update(this.state, {
         departmentOptions: {$set: res[0].data.data},
-        managerOptions:{$set:res[1].data.data},
-        gridOptions:{$set:res[2].data.data}
+        managerOptions:{$set: res[1].data.data},
+        gridOptions:{$set: res[2].data.data}
       });
       this.setState(newState);
     })
   }
 
   // department select change
-  departmentChange = () => {
+  departmentChange = (departmentId) => {
     if(!this.state.basicInfoBeEdit) {
       this.props.increaseBeEditArray('basicInfo'); // 修改 store树上的 beEditedArray
       let newState = update(this.state, {
@@ -216,12 +228,10 @@ class EditBriefBasicInfoForm extends Component{
     }
 
     const { getFieldValue, setFieldsValue } = this.props.form;
-    // 三级联动，更新 manager和 grid
-    let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : '';
-    let managerId = getFieldValue('manager') ? getFieldValue('manager') - 0 : '';
 
+    // 三级联动，更新 manager和 grid
     if(departmentId > 0) {
-      this.getDepartments(departmentId, managerId);
+      this.getDepartments(departmentId);
     }
 
     setFieldsValue({

@@ -18,10 +18,16 @@ export default class BatchParticipate extends Component {
 
   state = {
     department: {},
+    departmentId: 1,
     table: {
       dataSource: []
     },
-    staffs: []
+    staffs: [],
+
+    tableContent: '',
+    Paticipate: '',
+    Trans: '',
+    Distribute: ''
   };
 
   componentWillMount() {
@@ -35,6 +41,18 @@ export default class BatchParticipate extends Component {
     });
 
     this.getStaffs(1);
+
+    // 异步加载 edit component
+    require.ensure([],() => {
+      let Paticipate = require('./Table/PaticipateTable').default;
+      let Trans = require('./Table/TransTable').default;
+      let Distribute = require('./Table/DistributeTable').default;
+      this.setState({
+        Paticipate: Paticipate,
+        Trans: Trans,
+        Distribute: Distribute
+      })
+    }, 'TableContent');
   }
 
   getStaffs = (departmentId) => {
@@ -48,80 +66,13 @@ export default class BatchParticipate extends Component {
     })
   }
 
-  createTree(data) {
-    if (data.childDepartments && data.childDepartments.length > 0) {
-      return (
-        <TreeNode
-          title={<span>{data.name}</span>}
-          id={data.id}
-          key={data.id}
-        >
-          {data.childDepartments.map(childrenDepartment => {
-              return (
-                this.createTree(childrenDepartment)
-              )
-            })
-          }
-        </TreeNode>  )
-    } else {
-      return <TreeNode title={<span>{data.name}</span>} id={data.id} key={data.id}/>
-    }
-  }
-
-  // rowSelection = {
-  //   selectedRowKeys,
-  //   onChange: (selectedRowKeys, selectedRows) => {},
-  //   onSelect: (record, selected, selectedRows) => {
-  //     this.setState({
-  //       staffs: selectedRows
-  //     })
-  //   },
-  //   onSelectAll: (selected, selectedRows, changeRows) => {
-  //     this.setState({
-  //       staffs: selectedRows
-  //     })
-  //   }
-  // };
-
-  initTableScroll(){
-    let container = document.getElementById('selectStaffBody');
-    let thead = document.getElementsByClassName('ant-table-thead')[0];
-    let table = document.getElementsByClassName('participateTable')[0];
-    let tableScroll = table.getElementsByClassName('ant-table-body')[0];
-    let tabsScroll = table.getElementsByClassName('ant-tree')[0];
-    let pagenationHeight = 52;
-
-    tableScroll.style['max-height'] = container.offsetHeight - thead.offsetHeight - pagenationHeight + 'px';
-    // if(tabsScroll && tabsScroll.style) {
-    //   tabsScroll.style['max-height'] = container.offsetHeight - thead.offsetHeight - pagenationHeight + 'px';
-    //   tabsScroll.style['overflow-y'] = 'auto';
-    // }
-    // tableScroll.style['overflow-y'] = 'auto';
-    // console.log(tableScroll.style['max-height'])
-  }
-
-  componentDidMount(){
-    this.initTableScroll();
-    addEventListener('resize', this.initTableScroll)
-  }
-
-  // 更新页面高度
-  componentDidUpdate(){
-    // this.initTableScroll();
-  }
-
-  // 卸载方法
-  // componentWillUnmount(){
-  //   removeEventListener('resize', this.initTableScroll)
-  // }
-
   saveEditInfo = () => {
     this.props.closeDock();
   }
 
-  // treenode select
-  onSelect = (selectedKeys, info) => {
-    this.getStaffs(selectedKeys[0]);
+  // 删除已选择的客户
+  customersHandleClose = (customer) => {
+    this.props.changeCustomersLists(customer);
   }
 
   // 选择客户
@@ -142,24 +93,17 @@ export default class BatchParticipate extends Component {
     this.setState(newState);
   }
 
-  // 更新 customers lists的数据
-  changeStaffsLists = (customer) => {
+  participantStaffs = (staffs) => {
     let newState = update(this.state, {
-      staffs: {$set: this.state.selectedCustomers.filter(item => item.id !== customer.id)}
+      staffs: {$set: staffs}
     })
 
     this.setState(newState);
   }
 
-  // 删除已选择的客户
-  customersHandleClose = (customer) => {
-    this.props.changeCustomersLists(customer);
-  }
-
-  // 删除已选择的员工
-  staffHandleClose = (staff) => {
+  updateDepartmentId = (departmentId) => {
     let newState = update(this.state, {
-      staffs: {$set: this.state.staffs.filter(item => item.id !== staff.id)}
+      departmentId: {$set: departmentId}
     })
 
     this.setState(newState);
@@ -174,7 +118,7 @@ export default class BatchParticipate extends Component {
 
     if(customersArray.length === 0 ) {
       message.error('参与客户不能为空');
-    } else if(staffsArray === 0) {
+    } else if(staffsArray.length === 0) {
       message.error('参与员工不能为空');
     } else {
       ajax.Put(API.PUT_CUSTOMER_JOIN, {customerIds: customersArray, joinerIds: staffsArray})
@@ -182,51 +126,77 @@ export default class BatchParticipate extends Component {
             if(res.data.code === 200) {
               message.success('参与者修改成功');
               this.props.closeDock();
+            } else {
+              message.error(res.data.message)
             }
           })
     }
   }
 
-  cancleParticipant = () => {}
-
-  render() {
+  // 确认批量转移
+  confirmTrans = () => {
     const { selectedCustomers } = this.props;
     const { staffs } = this.state;
-    const tableConf = {
-      columns: [
-        {
-          title: '姓名',
-          dataIndex: 'name',
-          key: 'name',
-          width: '40%'
-        },
-        {
-          title: '手机号',
-          dataIndex: 'phone',
-          key: 'phone',
-          width: '60%'
-        }
-      ],
-      dataSource: this.state.table.dataSource
-    };
-    const selectedRowKeys = staffs.map(item => item.id);
+    const customersArray = selectedCustomers.map(item => item.id);
+    const staffsArray = staffs.map(item => item.id);
 
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: this.staffsChange,
-      onSelect: this.selectStaffs,
-      onSelectAll: this.selectAllStaffs
+    if(customersArray.length === 0 ) {
+      message.error('参与客户不能为空');
+    } else if(staffsArray.length === 0) {
+      message.error('参与员工不能为空');
+    } else {
+      ajax.Put(API.PUT_CUSTOMER_TRANSFER, {customerIds: customersArray, staffId: staffsArray[0] - 0, orgId: this.state.departmentId})
+          .then(res => {
+            console.log(res);
+            if(res.data.code === 200) {
+              message.success('批量转移成功');
+              this.props.closeDock();
+            } else {
+              message.error(res.data.message);
+            }
+          })
     }
+  }
 
-    const tree = this.state.department && this.state.department !== {} ?
-      <Tree
-        defaultExpandedKeys={['1']}
-        checkable
-        onSelect={this.onSelect}>
-        {this.createTree(this.state.department)}
-      </Tree>
-      :
-      null
+  // 确认批量分配
+  confirmDistribute = () => {
+    const { selectedCustomers } = this.props;
+    const { staffs } = this.state;
+    const customersArray = selectedCustomers.map(item => item.id);
+    const staffsArray = staffs.map(item => item.id);
+
+    if(customersArray.length === 0 ) {
+      message.error('参与客户不能为空');
+    } else if(staffsArray.length === 0) {
+      message.error('参与员工不能为空');
+    } else {
+      ajax.Put(API.PUT_CUSTOMER_TRANSFER, {customerIds: customersArray, staffId: staffsArray[0] - 0, orgId: this.state.departmentId})
+          .then(res => {
+            console.log(res);
+            if(res.data.code === 200) {
+              message.success('批量转移成功');
+              this.props.closeDock();
+            } else {
+              message.error(res.data.message);
+            }
+          })
+    }
+  }
+
+  cancleParticipant = () => {
+    this.props.closeDock();
+  }
+
+  render() {
+    const { selectedCustomers, batchComfirmButton } = this.props;
+    const { staffs } = this.state;
+
+    let newStaffs;
+    if(batchComfirmButton === 'participate') {
+      newStaffs = staffs;
+    } else {
+      newStaffs = staffs.length !== 0 ? [staffs[0]] : [];
+    }
 
     const ParticipateCustomers = selectedCustomers && selectedCustomers.map((item,index) => {
       return (
@@ -236,18 +206,18 @@ export default class BatchParticipate extends Component {
       )
     })
 
-    const ParticipateStaffs = staffs && staffs.map((item,index) => {
-      return (
-        <Tag key={`${item.id}${index}`} closable="true" afterClose={() => this.staffHandleClose(item)}>
-          {item.name}
-        </Tag>
-      )
-    })
-
     return (
       <div className="batchParticipate" id="batchParticipate">
         <header className="title">
-          <p>批量参与</p>
+          {batchComfirmButton && batchComfirmButton === 'participate' &&
+            <p>批量参与</p>
+          }
+          {batchComfirmButton && batchComfirmButton === 'trans' &&
+            <p>批量转移</p>
+          }
+          {batchComfirmButton && batchComfirmButton === 'distribute' &&
+            <p>批量分配</p>
+          }
           <Icon
             className="close"
             onClick={this.saveEditInfo}
@@ -261,51 +231,37 @@ export default class BatchParticipate extends Component {
             {ParticipateCustomers}
           </div>
 
-
-          <div className="tagsWrapper">
-            <div className="tags-title">
-              <span>已选成员:</span>
-              <span>{staffs.length} 人</span>
-            </div>
-            <div>
-              {ParticipateStaffs}
-            </div>
-          </div>
-
-            <div className="selectStaffs">
-              <div className="departmentTrees">
-                <Tabs defaultActiveKey="1">
-                  <TabPane tab={<span>职位</span>} key="1">
-                    <Tree checkable>
-                      {tree}
-                    </Tree>
-                  </TabPane>
-                  <TabPane tab={<span>群组</span>} key="2">
-                    大同市分行
-                  </TabPane>
-                </Tabs>
-              </div>
-
-              <div>
-                <Table
-                  className="participateTable"
-                  {...tableConf}
-                  rowClassName={(record, index) => {return 'participate'}}
-                  checkable
-                  rowKey={record => record.id}
-                  rowSelection={rowSelection}
-                  scroll={{y: 1 }} // 固定表头
-                  pagination={{
-                    pageSize: 10
-                  }}
-                />
-              </div>
-            </div>
+          {batchComfirmButton && batchComfirmButton === 'participate' && this.state.Paticipate !== '' &&
+            <this.state.Paticipate
+              participantStaffs={this.participantStaffs}
+              updateDepartmentId={this.updateDepartmentId}
+            />
+          }
+          {batchComfirmButton && batchComfirmButton === 'trans' && this.state.Trans !== '' &&
+            <this.state.Trans
+              participantStaffs={this.participantStaffs}
+              updateDepartmentId={this.updateDepartmentId}
+            />
+          }
+          {batchComfirmButton && batchComfirmButton === 'distribute' && this.state.Distribute !== '' &&
+            <this.state.Distribute
+              participantStaffs={this.participantStaffs}
+              updateDepartmentId={this.updateDepartmentId}
+            />
+          }
         </div>
 
         <div className="btn-group">
           <Button onClick={this.cancleParticipant}>取消</Button>
-          <Button onClick={this.confirmParticipant}>确认</Button>
+          {batchComfirmButton && batchComfirmButton === 'participate' &&
+            <Button onClick={this.confirmParticipant}>确认</Button>
+          }
+          {batchComfirmButton && batchComfirmButton === 'trans' &&
+            <Button onClick={this.confirmTrans}>确认</Button>
+          }
+          {batchComfirmButton && batchComfirmButton === 'distribute' &&
+            <Button onClick={this.confirmDistribute}>确认</Button>
+          }
         </div>
       </div>
     )

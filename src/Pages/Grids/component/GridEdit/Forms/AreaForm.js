@@ -341,6 +341,7 @@ class AreaForm extends Component{
                   <FormItem labelCol={{span: 8}}
                             wrapperCol={{span: 15}}
                             label="所属机构"
+                            className="required"
 
                   >
                     <Select
@@ -384,7 +385,7 @@ class AreaForm extends Component{
                   <FormItem labelCol={{span: 8}}
                             wrapperCol={{span: 15}}
                             label="网格类型"
-                            className="idnumber"
+                            className="required"
                             validateStatus={this.state.validate.areaType.validateStatus}
                             help={this.state.validate.areaType.message}
                   >
@@ -434,7 +435,7 @@ class AreaForm extends Component{
                 </Col>
               </Row>
 
-              <Row gutter="8">
+              <Row gutter={8} className="required">
                 <Col span={8}>
                   <FormItem
                     label={<span>地址</span>}
@@ -465,7 +466,7 @@ class AreaForm extends Component{
                     labelCol={{span: 4}}
                     wrapperCol={{span: 20}}
                     label="详细地址"
-                    className="idnumber"
+                    className="required"
                     validateStatus={this.state.validate.addressDetail.validateStatus}
                     help={this.state.validate.addressDetail.message}
                   >
@@ -488,7 +489,7 @@ class AreaForm extends Component{
               </Row>
             </div>
           </Form>
-          <Row className="buttonsave">
+          <Row className="buttonsave buttonrow">
             <Col span={24} >
               <Col span={4}>
               </Col>

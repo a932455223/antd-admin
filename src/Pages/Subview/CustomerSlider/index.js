@@ -12,7 +12,8 @@ import {
   Form,
   Select,
   Input,
-  Modal
+  Modal,
+  message
 } from 'antd';
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
@@ -20,6 +21,9 @@ const Option = Select.Option;
 
 import styles from './indexStyle.scss';
 import './indexStyle.less';
+import ajax from '../../../tools/POSTF';
+import API from '../../../../API';
+
 import {
   fillCustomerInfo,
   resetCustomerInfo,
@@ -143,6 +147,7 @@ const AddNewCustomer = Form.create()(NewCustomer);
 // customer Slider component
 class CustomerSlider extends Component {
   state = {
+    modalVisible: false,
     visible: '',
     currentId: '',
     activePersonalTabs: 'personalBasicInfo',
@@ -407,12 +412,74 @@ class CustomerSlider extends Component {
     dispatch(resetCustomerInfo());
   }
 
+  // 客户关注
+  customerFocus = (id) => {
+    ajax.Put(API.PUT_CUSTOMERS_ATTENTION, {customerIds: [id]})
+        .then(res => {
+          if(res.data.code === 200) {
+            message.success('客户关注成功');
+            this.props.refreshCustomerLists();
+          } else {
+            message.error(res.data.message);
+          }
+        })
+  }
+
+  // 客户取关
+  customerUnFocus = (id) => {
+    ajax.Put(API.DELETE_CUSTOMER_CANCLE_ATTENTION, {customerIds: [id]})
+        .then(res => {
+          if(res.data.code === 200) {
+            message.success('客户取关成功');
+            this.props.refreshCustomerLists();
+          } else {
+            message.error(res.data.message);
+          }
+        })
+  }
+
+  // 关闭弹窗
+  closeModal = () => {
+    this.setState({
+      modalVisible: false
+    })
+  }
+
+  // 删除客户
+  deleteCustomer = (id) => {
+    this.setState({
+      modalVisible: true
+    })
+  }
+
+  // 确认删除客户
+  confirmDelete = () => {
+    const { id } = this.props.currentCustomerInfo;
+
+    // console.log(id);
+    this.setState({
+      modalVisible: false
+    })
+  }
+
   render() {
     const { step, mode, id, name, beEdited } = this.props.currentCustomerInfo;
-    const { uuid } = this.props;
+    const { uuid, dataSource } = this.props;
+
+    const currentInfo = dataSource.filter(item => item.id === id);
+    const attention = currentInfo[0] && currentInfo[0].attention;
 
     return(
       <div>
+        <Modal
+          title="警告"
+          visible={this.state.modalVisible}
+          onOk={this.confirmDelete}
+          onCancel={this.closeModal}
+          okText="确认删除"
+        >
+          <p>您正在删除该客户的信息，是否删除？</p>
+        </Modal>
         <div className={styles.header}>
           <div>
             <div className={styles.img}>
@@ -443,16 +510,22 @@ class CustomerSlider extends Component {
           </div>
 
           <div className={styles.options}>
-            { id !== -1 &&
-              <span>
+            { id !== -1 && attention === 0 &&
+              <span onClick={this.customerFocus.bind(this, id)}>
                 <Icon type="star-o" />
                 <span>关注</span>
               </span>
             }
+            { id !== -1 && attention === 1 &&
+              <span onClick={this.customerUnFocus.bind(this, id)}>
+                <Icon type="star" />
+                <span>取关</span>
+              </span>
+            }
             { id !== -1 &&
-              <span>
-                <Icon type="bell" />
-                <span>提醒</span>
+              <span onClick={this.deleteCustomer.bind(this, id)}>
+                <Icon type="delete" />
+                <span>删除</span>
               </span>
             }
             { id !== -1 &&

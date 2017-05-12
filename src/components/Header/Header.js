@@ -5,13 +5,14 @@
  * 时间： 17.3.2
  */
 
-import React, { Component } from 'react';
-import './less/headerStyle.less'
-import logo from './images/logo.png'
-import { connect } from 'react-redux';
-import { Link } from 'react-router';
-import { Dropdown, Menu, Icon, Layout } from 'antd';
-const { Header } = Layout;
+import React from "react";
+import "./less/headerStyle.less";
+import logo from "./images/logo.png";
+import {Link} from "react-router";
+import {Dropdown, Icon, Layout, Menu} from "antd";
+import ajax from "../../tools/POSTF.js";
+import API from "../../../API";
+const {Header} = Layout;
 const SubMenu = Menu.SubMenu;
 const Item = Menu.Item;
 const MenuItemGroup = Menu.ItemGroup;
@@ -97,6 +98,7 @@ const userMenu = (
         联系我们
       </a>
     </Menu.Item>
+
     <Menu.Item key="6">
       <Link to='/login'>
         <a target="_blank" rel="noopener noreferrer" href="javascript:void(0)">
@@ -121,77 +123,126 @@ const workMenu = (
     </Menu.Item>
   </Menu>
 );
-const moreMenu = (
-  <Menu className="moreMenu">
 
-    <Menu.Item key="0">
-      <Link to='/product/all'>
-        金融产品管理
-      </Link>
-    </Menu.Item>
-    <Menu.Item key="1">
-      <Link to='/organization/staff'>
-        组织机构管理
-      </Link>
-    </Menu.Item>
-    <Menu.Item key="2">
-      <Link to='/system/users'>
-        系统设置
-      </Link>
-    </Menu.Item>
-    <Menu.Item key="3">
-      <Link to='/customer/my'>
-        应用展示设置
-      </Link>
-    </Menu.Item>
-  </Menu>
-);
 class TopHeader extends React.Component {
   static contextTypes = {
-    router: React.PropTypes.object.isRequired
+    router: React.PropTypes.object.isRequired,
+
   };
 
   state = {
-    current: 'mail'
+    current: 'mail',
+    permissions: {}
+  }
+
+  componentWillMount() {
+    ajax.Get(API.GET_PERMISSION)
+      .then(res => {
+        console.log('get permission ', res);
+        this.setState({
+          permissions: res.data.data
+          // permissions: {
+          //   'customerManage:base:view': true
+          // }
+        })
+      })
   }
 
   handleClick = (e) => {
-    this.setState({ current: e.key });
-  }
+    this.setState({current: e.key});
+  };
 
   render() {
     const pathname = window.location.pathname; // 获取当前路由参数
     const path = pathname.split('/')[1];
+    const permissions = this.state.permissions;
+
+    const moreMenu = (
+      <Menu className="moreMenu">
+        {/*permissions['financeManage:product:view']*/}
+        {
+          1 && (
+            <Menu.Item key="0">
+              <Link to='/product/all'>
+                金融产品管理
+              </Link>
+            </Menu.Item>
+          )
+        }
+        {/*permissions['orgManage:org:view']*/}
+        {
+          1 && (
+            <Menu.Item key="1">
+              <Link to='/organization/staff'>
+                组织机构管理
+              </Link>
+            </Menu.Item>
+          )
+        }
+        <Menu.Item key="2">
+          <Link to='/system/users'>
+            系统设置
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="3">
+          <Link to='/welcome'>
+            应用展示设置
+          </Link>
+        </Menu.Item>
+        <SubMenu mode="vertical" title="切换角色">
+          <Menu.Item>
+            <a target="_blank"  href="http://localhost:8888/system/users#">懂事长</a>
+          </Menu.Item>
+          <Menu.Item>
+            <a target="_self" rel="noopener noreferrer" href="http://localhost:8888/system/users#">行长</a>
+          </Menu.Item>
+          <Menu.Item>
+            <a target="_self" rel="noopener noreferrer" href="http://localhost:8888/system/users#">职员</a>
+          </Menu.Item>
+        </SubMenu>
+      </Menu>
+    );
+
+
     return (
       <Header className="header">
         <div className="header-wrap">
           <div className="logo">
-            <img src={logo} />
+            <img src={logo}/>
             精准营销系统
             <div className="version">v1.0</div>
           </div>
           <Menu className="menu" onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
-            <Menu.Item key="customer">
-              <Link to='/customer/my'>
-                <i className="iconfont icon-customer"></i>客户管理
-              </Link>
-            </Menu.Item>
+            {/*permissions['customerManage:base:view']*/}
+            {
+              1 && (
+                <Menu.Item key="customer">
+                  <Link to='/customer/my'>
+                    <i className="iconfont icon-customer"></i>客户管理
+                  </Link>
+                </Menu.Item>
+              )
+            }
             <Menu.Item key="workplace">
               <Dropdown
                 overlay={workMenu}
                 placement="bottomCenter"
               >
                 <a className="ant-dropdown-link" href="#">
-                  工作台<Icon type="down" />
+                  工作台<Icon type="down"/>
                 </a>
               </Dropdown>
-
             </Menu.Item>
-            <Menu.Item key="roles">
-              <Link to='/system/roles'>
-                用户权限<Icon type="down" />
-              </Link>
-            </Menu.Item>
+            {/*permissions['system:user:view']*/}
+            {
+              1 && (
+                <Menu.Item key="roles">
+                  <Link to='/system/roles'>
+                    用户权限<Icon type="down"/>
+                  </Link>
+                </Menu.Item>
+              )
+            }
             <Menu.Item key="more">
 
               <Dropdown
@@ -199,16 +250,16 @@ class TopHeader extends React.Component {
                 placement="bottomCenter"
               >
                 <a className="ant-dropdown-link" href="#">
-                  更多<Icon type="down" />
+                  更多<Icon type="down"/>
                 </a>
               </Dropdown>
 
             </Menu.Item>
             {/*<Menu.Item key="sound">
-              <Link to='/login'>
-                <Icon type="logout" />登出
-              </Link>
-            </Menu.Item>*/}
+             <Link to='/login'>
+             <Icon type="logout" />登出
+             </Link>
+             </Menu.Item>*/}
           </Menu>
           <div className="right-menu">
 
@@ -217,10 +268,10 @@ class TopHeader extends React.Component {
               placement="bottomRight"
             >
               <a className="ant-dropdown-link" href="#">
-                <Icon type="plus-circle-o" />
+                <Icon type="plus-circle-o"/>
               </a>
             </Dropdown>
-            <Dropdown overlay={msgMenu} trigger={['click']} placement="bottomCenter" >
+            <Dropdown overlay={msgMenu} trigger={['click']} placement="bottomCenter">
               <a
                 className="ant-dropdown-link msgDropdown"
                 href="#"
@@ -235,7 +286,7 @@ class TopHeader extends React.Component {
               placement="bottomLeft"
             >
               <Link className="user-menu">
-                金伟达<Icon type="down" />
+                金伟达<Icon type="down"/>
               </Link>
             </Dropdown>
           </div>

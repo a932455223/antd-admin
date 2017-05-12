@@ -87,37 +87,13 @@ class CustomerFilter extends Component {
 
           {/*新增按钮*/}
           <Button
-            style={{float: 'right'}}
+            style={{float: 'right',marginBottom: this.state.showSearch ? '0' : '20px'}}
             onClick={this.props.newClick}
           >
             新增{this.props.mode === 'role' ? "角色" : '用户' }
           </Button>
         </div>
 
-
-        <div className={style.select}>
-          {Object.keys(selectedTags).map((filterName) => {
-            return (
-              <span key={filterName}>
-                      {selectedTags[filterName].length >= 1 && <span>{filterNames[filterName]}：</span>}
-                {selectedTags[filterName].map(tag => (
-                  <Tag
-                    className={style.selecttag}
-                    key={filterName + tag.id}
-                    closable
-                    afterClose={() => this.handleClose(filterName, tag)}
-                  >
-                    {tag.text}
-                  </Tag>
-                ))}
-
-
-                  </span>
-            )
-          })
-          }
-
-        </div>
       </div>
     )
   }

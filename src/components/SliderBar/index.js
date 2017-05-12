@@ -7,7 +7,7 @@ import axios from "axios";
 //================================================================
 import updateNavPath from "../../redux/actions/navPathAction";
 //-===============================================================
-import API from '../../../API';
+import API from "../../../API";
 import "./less/sliderBarStyle.less";
 
 const {SubMenu} = Menu;
@@ -18,10 +18,10 @@ function info(msg, color = 'red') {
 }
 
 const urls = {
-    customer: API.GET_CUSTOMER_SLIDER_BAR,
-    system: API.GET_SYSTEM_SLIDER_BAR,
-    organization: API.GET_ORGANIZATION_SLIDER_BAR,
-    product: API.GET_PRODUCT_SLIDER_BAR
+  customer: API.GET_CUSTOMER_SLIDER_BAR,
+  system: API.GET_SYSTEM_SLIDER_BAR,
+  organization: API.GET_ORGANIZATION_SLIDER_BAR,
+  product: API.GET_PRODUCT_SLIDER_BAR
 };
 
 
@@ -41,7 +41,7 @@ class SliderBar extends Component {
     currentMenu: '',
     menus: {},
     selectKeys: ['-1'],
-    openKeys:['-1']
+    openKeys: ['-1']
   }
 
   componentWillReceiveProps(pre, next) {
@@ -59,7 +59,7 @@ class SliderBar extends Component {
           ...this.state,
           currentMenu: pathname,
           selectKeys: [navPath[1].id.toString()],
-          openKeys:[navPath[0].id.toString()],
+          openKeys: [navPath[0].id.toString()],
           menus: {
             ...this.state.menus,
             [pathname]: response.data
@@ -75,7 +75,7 @@ class SliderBar extends Component {
         ...this.state,
         currentMenu: pathname,
         selectKeys: [navPath[1].id.toString()],
-        openKeys:[navPath[0].id.toString()]
+        openKeys: [navPath[0].id.toString()]
       })
       updateNavPath([navPath[0].name, navPath[1].name])
     }
@@ -86,9 +86,9 @@ class SliderBar extends Component {
     this.udpateMenu();
   }
 
-    componentDidMount(){
-        this.context.router.listen(this.routerHasChange)
-    }
+  componentDidMount() {
+    this.context.router.listen(this.routerHasChange)
+  }
 
   routerHasChange = () => {
     this.udpateMenu();

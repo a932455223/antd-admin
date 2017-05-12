@@ -2,18 +2,29 @@
  * Created by jufei on 2017/4/25.
  */
 import React, {Component} from "react";
-import {Button, Card, Input, Table} from "antd";
+import {Button, Card, Col, Icon, Input, Modal, Row, Table} from "antd";
 //=====================================================================
-import './less/roleEdit.less';
-import ajax from '../../../../tools/POSTF.js';
-import API from '../../../../../API';
+import "./less/roleEdit.less";
+import ajax from "../../../../tools/POSTF.js";
+import API from "../../../../../API";
 
 export default class RoleEdit extends Component {
   state = {
-    departments: []
+    departments: [],
+    roleInfo: {},
+    changed: false
   };
 
-
+  componentWillMount() {
+    ajax.Get(API.GET_ROLE(this.props.id))
+      .then(res => {
+        console.log(res)
+        this.setState({
+          roleInfo: res.data.data
+        })
+      });
+    console.log('i am come back')
+  }
 
   render() {
     const columns = [{
@@ -45,6 +56,8 @@ export default class RoleEdit extends Component {
       }
     }];
 
+    const roleInfo = this.state.roleInfo;
+
     const dataSource = [{
       id: 1,
       name: 'asd',
@@ -61,40 +74,76 @@ export default class RoleEdit extends Component {
     return (
       <div className="role-edit">
         <div className="role-edit-title">
-          <h3>角色</h3>
+          <h3>{roleInfo.name}</h3>
           <span>
-          <Button onClick={this.props.rolePermission.bind(this,this.props.id)}>分配权限</Button>
-          <Button
-            className="save"
+          <Button onClick={this.props.rolePermission.bind(this, this.props.id)}>分配权限</Button>
+
+          <Icon
+            className="close"
             onClick={() => {
-              alert('保存成功');
-              this.props.close()
+              this.props.close;
+              if (this.state.changed) {
+                Modal.confirm({
+                  content: '页面存在未保存修改，是否推迟',
+                  onOk: () => {
+                    this.props.close()
+                  }
+                })
+              } else {
+                this.props.close()
+              }
             }}
-          >保存</Button>
-          <Button className="close" onClick={this.props.close}>&times;</Button>
+            type="close"
+            style={{cursor: "pointer"}}
+          />
         </span>
         </div>
 
         <Card className="base-info">
-          <p>
-            <span>创建人</span>
-            {this.props.id}XX
-          </p>
+          {/*<p>*/}
+          {/*<span>创建人</span>*/}
+          {/*{this.props.id}XX*/}
+          {/*</p>*/}
           <p>
             <span>创建时间</span>
-            2012-11-12
+            {roleInfo.createTime}
           </p>
           <p>
             <span>备注</span>
-            <Input type="textarea"/>
+            <Input
+              type="textarea"
+              key={roleInfo.remark}
+              onChange={() => {
+                this.setState({
+                  changed: true
+                })
+              }}
+              defaultValue={roleInfo.remark}
+            />
           </p>
+          <Row className="buttonrow">
+            {/*<Col span="3">
+             <Button
+             className="cancel"
+             // disabled={this.state.changed ? true : false}
+             >取消</Button>
+             </Col>  */}
+            <Col span="3"></Col>
+            <Col span="20">
+              <Button
+                className={this.state.changed ? "ablesavebtn" : "disablesavebtn"}
+                disabled={this.state.changed ? false : true}
+              >保存</Button>
+            </Col>
+          </Row>
         </Card>
 
         <Card
+          className="users"
           title={(
             <p>
               <h3>包含用户</h3>
-              <Button onClick={this.props.addUser.bind(this,this.props.id)}>添加</Button>
+              <Button onClick={this.props.addUser.bind(this, this.props.id)} className="addusers">添加</Button>
             </p>
           )}
         >

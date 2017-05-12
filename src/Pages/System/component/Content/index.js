@@ -24,8 +24,8 @@ export default class Content extends Component{
     let card = document.getElementById('wrapper');
     let tableScroll = document.getElementsByClassName('ant-table-body')[0];
 
-    tableScroll.style['max-height'] = card.offsetHeight - 91 -48-43 -32+ 'px';
-    tableScroll.style['height'] = card.offsetHeight - 91 -48-43 -32+ 'px';
+    tableScroll.style['max-height'] = card.offsetHeight - 91 -48 -43+ 'px';
+    tableScroll.style['height'] = card.offsetHeight - 91 -48-43+ 'px';
     tableScroll.style['overflow-y'] = 'auto';
 
   }
