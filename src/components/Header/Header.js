@@ -159,8 +159,9 @@ class TopHeader extends React.Component {
 
     const moreMenu = (
       <Menu className="moreMenu">
+        {/*permissions['financeManage:product:view']*/}
         {
-          permissions['financeManage:product:view'] && (
+          1 && (
             <Menu.Item key="0">
               <Link to='/product/all'>
                 金融产品管理
@@ -168,8 +169,9 @@ class TopHeader extends React.Component {
             </Menu.Item>
           )
         }
+        {/*permissions['orgManage:org:view']*/}
         {
-          permissions['orgManage:org:view'] && (
+          1 && (
             <Menu.Item key="1">
               <Link to='/organization/staff'>
                 组织机构管理
@@ -183,7 +185,7 @@ class TopHeader extends React.Component {
           </Link>
         </Menu.Item>
         <Menu.Item key="3">
-          <Link to='/customer/my'>
+          <Link to='/welcome'>
             应用展示设置
           </Link>
         </Menu.Item>
@@ -211,8 +213,9 @@ class TopHeader extends React.Component {
             <div className="version">v1.0</div>
           </div>
           <Menu className="menu" onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
+            {/*permissions['customerManage:base:view']*/}
             {
-              permissions['customerManage:base:view'] && (
+              1 && (
                 <Menu.Item key="customer">
                   <Link to='/customer/my'>
                     <i className="iconfont icon-customer"></i>客户管理
