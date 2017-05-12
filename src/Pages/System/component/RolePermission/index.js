@@ -2,7 +2,7 @@
  * Created by jufei on 2017/4/25.
  */
 import React,{Component} from 'react';
-import { Card ,Tree,Button,Icon,Select,message} from 'antd'
+import { Card ,Tree,Button,Icon,Select,message,Modal} from 'antd'
 import ajax from '../../../../tools/POSTF'
 import API from '../../../../../API/index'
 import _ from 'lodash'
@@ -30,7 +30,6 @@ const generateSelect = (options,pid) => {
   if(options) {
     selectValue = options.find(item => item.checked)
   }
-  console.log(selectValue)
   return <select defaultValue={selectValue} name={pid}>
     {options.map((item,index) => <option key={item.level.toString()} value={item.level.toString()}>{item.name}</option>)}
   </select>
@@ -173,7 +172,7 @@ export default class  RolePermission extends Component{
     info('will mount.')
     console.log(this.props.id)
     if(this.props.mode === 'edit'){
-      this.getRoleTrees(18)
+      this.getRoleTrees(this.props.id)
     }else if(this.props.mode === 'create'){
       this.getAllPrivilige()
     }
@@ -206,11 +205,8 @@ export default class  RolePermission extends Component{
     }else{
       let leftCheckedKeys = _.cloneDeep(this.state.leftCheckedKeys).sort((pre,next)=>pre.split('-').length - next.split('-').length)
       leftCheckedKeys = removeChildrenKeys(leftCheckedKeys)
-      console.dir(leftCheckedKeys)
       let newLeftPrivilege = deleteTreeNode(_.cloneDeep(this.state.leftPrivilege),leftCheckedKeys)
-
       let newRightPrivilege = copyTreeNode(_.cloneDeep(this.state.leftOriginPrivilege),_.cloneDeep(this.state.rightPrivilege),leftCheckedKeys)
-
       this.setState({
         leftPrivilege:newLeftPrivilege,
         rightPrivilege:newRightPrivilege,
@@ -227,11 +223,8 @@ export default class  RolePermission extends Component{
       }else{
         let rightCheckedKeys = _.cloneDeep(this.state.rightCheckedKeys).sort((pre,next)=>pre.split('-').length - next.split('-').length)
         rightCheckedKeys = removeChildrenKeys(rightCheckedKeys)
-        console.dir(rightCheckedKeys)
         let newRightPrivilege = deleteTreeNode(_.cloneDeep(this.state.rightPrivilege),rightCheckedKeys)
-
         let newLeftPrivilege = copyTreeNode(_.cloneDeep(this.state.rightOriginPrivilege),_.cloneDeep(this.state.leftPrivilege),rightCheckedKeys)
-
         this.setState({
           leftPrivilege:newLeftPrivilege,
           rightPrivilege:newRightPrivilege,
@@ -269,19 +262,34 @@ export default class  RolePermission extends Component{
       let value = $(this).val()
       let ids = name.split('-')
       let id = ids[ids.length - 1]
-      permissions.push({id:id,level:parseInt(value)})
+      permissions.push({id:parseInt(id),level:parseInt(value)})
     })
 
     data.permissions = permissions;
-    data.roleName = this.props.roleName
     if(this.props.mode === 'edit'){
-      ajax.PutJson(API.PUT_ROLE_TREE(18),data).then(function(res){
-        console.log(res)
+      ajax.PutJson(API.PUT_ROLE_TREE(this.props.id),data).then(function(res){
+        if(res.data.code === 200){
+          message.success('角色编辑成功')
+        }else{
+          Modal.error({
+            title:'操作失败',
+            content:res.data.message
+          })
+        }
       })
     }else if(this.props.mode === 'create'){
-      // ajax.PostJson(API.POST_ROLE,data).then(function(res){
-      //   console.log(res)
-      // })
+      data.roleName = this.props.roleName
+
+      ajax.PostJson(API.POST_ROLE,data).then(function(res){
+        if(res.data.code === 200){
+          message.success('角色创建成功')
+        }else{
+          Modal.error({
+            title:'操作失败',
+            content:res.data.message
+          })
+        }
+      })
     }
 
   }

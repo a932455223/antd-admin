@@ -41,8 +41,6 @@ export default class SystemRoles extends Component {
     //   })
 
     this.getRoles();
-
-    this.rolePermission(-1,'create')
   }
 
   getRoles(index = this.state.table.index){
