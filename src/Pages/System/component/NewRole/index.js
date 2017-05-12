@@ -25,11 +25,11 @@ class NewRole extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log(values);
-        this.setState({
-          roleName: values.username,
-          formGroupVisible: true
-        })
+        this.props.rolePermission(values.username)
+        // this.setState({
+        //   roleName: values.username,
+        //   formGroupVisible: true
+        // })
       }
     });
   };

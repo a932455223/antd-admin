@@ -172,10 +172,19 @@ export default class BatchParticipate extends Component {
     const customersArray = selectedCustomers.map(item => item.id);
     const staffsArray = staffs.map(item => item.id);
 
-    // console.log(customersArray);
-    // console.log(staffsArray);
-    message.success('参与者修改成功');
-    this.props.closeDock();
+    if(customersArray.length === 0 ) {
+      message.error('参与客户不能为空');
+    } else if(staffsArray === 0) {
+      message.error('参与员工不能为空');
+    } else {
+      ajax.Put(API.PUT_CUSTOMER_JOIN, {customerIds: customersArray, joinerIds: staffsArray})
+          .then(res => {
+            if(res.data.code === 200) {
+              message.success('参与者修改成功');
+              this.props.closeDock();
+            }
+          })
+    }
   }
 
   cancleParticipant = () => {}

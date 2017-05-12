@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Button} from "antd";
+import {Button,Modal} from "antd";
 //=============================================================
 import RoleEdit from "../component/RoleEdit";
 import Content from "../component/Content";
@@ -25,7 +25,8 @@ export default class SystemRoles extends Component {
       visible: false,
       children: null
     },
-    searchContent: ''
+    searchContent: '',
+    addStaffChange: false
   };
 
   componentWillMount() {
@@ -40,8 +41,6 @@ export default class SystemRoles extends Component {
     //   })
 
     this.getRoles();
-
-    this.rolePermission(-1,'create')
   }
 
   getRoles(index = this.state.table.index){
@@ -96,26 +95,58 @@ export default class SystemRoles extends Component {
     this.setState({
       dock: {
         visible: true,
-        children: <NewRole close={this.close.bind(this)}/>
+        children: <NewRole
+          rolePermission={this.rolePermission.bind(this,-1,'create')}
+          close={this.close.bind(this)}
+        />
       }
     });
   }
 
+  backConfirm(ok){
+    Modal.confirm({
+      content: '该页面存在未保存选项，是否退出',
+      onOk: ok
+    })
+  }
+
+
   // 表格点击事件
   rowClick(rowData) {
+    if(this.state.addStaffChange){
+      this.backConfirm(() => {
+        this.setState({
+          dock: {
+            visible: true,
+            children: this.roleEdit(rowData.id,'edit')
+          }
+        });
+      })
+    }else {
+      this.setState({
+        dock: {
+          visible: true,
+          children: this.roleEdit(rowData.id,'edit')
+        }
+      });
+    }
+  }
+
+
+  selectedStaff(){
+    console.log('==================================')
     this.setState({
-      dock: {
-        visible: true,
-        children: this.roleEdit(rowData.id,'edit')
-      }
-    });
+      addStaffChange: true
+    })
+    console.log(this.state.addStaffChange)
   }
 
   close() {
     this.setState({
       dock: {
         visible: false
-      }
+      },
+      addStaffChange: false
     })
   }
 
@@ -128,6 +159,8 @@ export default class SystemRoles extends Component {
           <SelectStaff
             back={this.addUserBack.bind(this)}
             id={id}
+            addStaffChange={this.state.addStaffChange}
+            onSelectedStaff={this.selectedStaff.bind(this)}
           />
         )
       }
@@ -140,7 +173,8 @@ export default class SystemRoles extends Component {
       dock: {
         visible: true,
         children: this.roleEdit(id,'edit')
-      }
+      },
+      addStaffChange: false
     });
   }
 
@@ -151,7 +185,7 @@ export default class SystemRoles extends Component {
   }
 
   // 权限分配
-  rolePermission(id,mode) {
+  rolePermission(id,mode,roleName) {
     this.setState({
       dock: {
         visible: true,
@@ -161,6 +195,7 @@ export default class SystemRoles extends Component {
             close={this.close.bind(this)}
             backRoleEdit={this.addUserBack.bind(this,id)}
             mode={mode}
+            roleName={roleName}
           />
         )
       }
@@ -168,7 +203,6 @@ export default class SystemRoles extends Component {
   }
 
   render() {
-    console.log(this.state.dataSource)
     const columns = [
       {
         title: '角色名称',

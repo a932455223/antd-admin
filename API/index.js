@@ -1,4 +1,9 @@
 export default {
+  // 批量操作
+  PUT_CUSTOMERS_ATTENTION: '/api/customer/attention',
+  PUT_CUSTOMER_JOIN: '/api/customer/join',
+  DELETE_CUSTOMER_CANCLE_ATTENTION :'/api/customer/cancelAttention',
+
   // 获取权限
   POST_PRIVILEGE_COMMON: '/api/privilege/common',
 
@@ -38,7 +43,7 @@ export default {
   DELETE_CUSTOMERS_FINANCES: financesId => `/api/customer/finance/${financesId}`,
   PUT_CUSTOMERS_FINANCES: financesId => `/api/customer/finance/${financesId}`,
   //获取金融业务信息产品下拉：
-  GET_CUSTOMER_FINANCE_CATEGORY:'/api/customer/finance/category',
+  GET_CUSTOMER_FINANCE_CATEGORY: '/api/customer/finance/category',
   //enterprise:
   GET_CUSTOMER_ENTERPRISE_BASE: customerId => `/api/customer/enterprise/${customerId}/base`,
   PUT_CUSTOMER_ENTERPRISE_BASE: id => `/api/customer/enterprise/${id}/base`,
@@ -160,7 +165,11 @@ export default {
   //登陆
   POST_LOGIN: '/api/login',
   //注销登陆
+<<<<<<< HEAD
   GET_LOGOUT:'/api/logout',
+=======
+  GET_LOGOUT: '/api/logout',
+>>>>>>> 8d0dd3e440c70b39b6598081b23cc0efb2ad9c70
   // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory',
 
   // 添加组织机构
@@ -195,8 +204,16 @@ export default {
   GET_STAFF_BUSSINESS_INFO: id => `/api/staff/${id}/businessInfo`,
 
   //分配时全部的权限数据
-  GET_ALL_RPIVILIGE:'/api/role/tree',
+  GET_ALL_RPIVILIGE: '/api/role/tree',
 
   //新增角色
-  POST_ROLE: '/api/role'
+  POST_ROLE: '/api/role',
+
+  //根据id获取获取role
+  GET_ROLE_TREE: roleId => `/api/role/${roleId}/tree`,
+
+  //编辑角色
+  PUT_ROLE_TREE:roleId => ` /api/role/${roleId}`,
+  // 添加用户
+  POST_USER: '/api/user'
 }

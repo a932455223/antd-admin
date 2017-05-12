@@ -3,7 +3,7 @@
  */
 
 import React, {Component} from "react";
-import {Button, Card, Form, Input, Select, Tabs,Row,Col,Icon} from "antd";
+import {Button, Card, Form, Input, Select, Tabs,Row,Col,Icon,Modal} from "antd";
 //================================================
 import "./less/newUser.less";
 import API from "../../../../../API";
@@ -17,8 +17,28 @@ const TabPane = Tabs.TabPane;
 class NewUser extends Component {
   state = {
     username: null,
-    formGroupVisible: false
+    formGroupVisible: false,
+    rolesDropdown: [],
+    departmentsDropdown: []
   };
+
+  componentWillMount(){
+    ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
+      .then(res => {
+        console.log(res)
+        this.setState({
+          departmentsDropdown: res.data.data
+        })
+      });
+
+    ajax.Get(API.GET_STAFF_ADD_ROLES)
+      .then(res => {
+        this.setState({
+          rolesDropdown: res.data.data
+        })
+      })
+  }
+
 
 
   saveUsername = (e) => {
@@ -32,19 +52,35 @@ class NewUser extends Component {
     }
   };
 
-  save() {
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      console.log(values);
-      if (err) {
-        Modal.error({content: '信息填写有误',});
-        this.props.close();
-      }
-      // else{
-      //   ajax.Post()
-      // }
-    });
 
+  newSuccess(ok){
+    Modal.info({
+      content: '新建成功',
+      onOk(){
+        ok()
+      }
+    })
   }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        values.name = this.state.username;
+        if(values.remark === undefined){
+          delete values.remark
+        }
+        console.log('Received values of form: ', values);
+        ajax.Post(API.POST_USER, values)
+          .then(res => {
+            if (res.data.message === 'OK') {
+              this.props.refresh();
+              this.newSuccess(this.props.close)
+            }
+          })
+      }
+    });
+  };
 
   render() {
     const {getFieldDecorator} = this.props.form;
@@ -57,9 +93,8 @@ class NewUser extends Component {
       }
     };
 
-
     return (
-      <Form>
+      <Form onSubmit={this.handleSubmit.bind(this)}>
         <div className="new-user">
           <div className="new-user-title">
             <h3>{this.state.username}</h3>
@@ -104,27 +139,20 @@ class NewUser extends Component {
                   )}
                 </FormItem>
                 <FormItem
-                  label={<span>登录密码</span>}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator('password', {
-                    rules: [{required: true, message: '登录密码不得为空!'}],
-                    initialValue: '123456'
-                  })(
-                    <Input/>
-                  )}
-                </FormItem>
-                <FormItem
                   label={<span>所属角色</span>}
                   {...formItemLayout}
                 >
-                  {getFieldDecorator('role', {
+                  {getFieldDecorator('roleIds', {
                     rules: [{required: true, message: '所属角色不得为空!'}],
                   })(
-                    <Select>
-                      <Option value="1">行长</Option>
-                      <Option value="2">职员</Option>
-                      <Option value="0">董事长</Option>
+                    <Select
+                      mode="multiple"
+                    >
+                      {
+                        this.state.rolesDropdown.map((item) => {
+                          return <Option value={item.id} key={item.id}>{item.roleName}</Option>
+                        })
+                      }
                     </Select>
                   )}
                 </FormItem>
@@ -132,13 +160,17 @@ class NewUser extends Component {
                   label={<span>所属机构</span>}
                   {...formItemLayout}
                 >
-                  {getFieldDecorator('department', {
+                  {getFieldDecorator('departmentIds', {
                     rules: [{required: true, message: '所属机构不得为空!'}],
                   })(
-                    <Select>
-                      <Option value="1">壶关农商行</Option>
-                      <Option value="2">壶关农商行</Option>
-                      <Option value="3">壶关农商行</Option>
+                    <Select
+                      mode="multiple"
+                    >
+                      {
+                        this.state.departmentsDropdown.map(item => {
+                          return <Option value={item.id} key={item.id.toString()}>{item.name}</Option>
+                        })
+                      }
                     </Select>
                   )}
                 </FormItem>
@@ -154,10 +186,10 @@ class NewUser extends Component {
                 </FormItem>
                 <Row>
                   <Col span={6}>
-                    
+
                   </Col>
                   <Col>
-                    {this.state.formGroupVisible && <Button onClick={this.save.bind(this)} >保存</Button>}
+                    {this.state.formGroupVisible && <Button htmlType="submit">保存</Button>}
                   </Col>
                 </Row>
               </Card>
@@ -165,7 +197,7 @@ class NewUser extends Component {
             )
           }
         </div>
-        
+
       </Form>
 
     )
