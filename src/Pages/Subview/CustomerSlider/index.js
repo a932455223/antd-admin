@@ -456,7 +456,7 @@ class CustomerSlider extends Component {
   confirmDelete = () => {
     const { id } = this.props.currentCustomerInfo;
 
-    console.log(id);
+    // console.log(id);
     this.setState({
       modalVisible: false
     })
