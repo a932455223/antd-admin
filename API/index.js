@@ -217,5 +217,8 @@ export default {
   POST_USER: '/api/user',
 
   // 获取用户权限
-  GET_PERMISSION: '/api/privilege/myPermissions'
+  GET_PERMISSION: '/api/privilege/myPermissions',
+
+  // 获取角色详情信息
+  GET_ROLE: id => `/api/role/${id}`
 }
