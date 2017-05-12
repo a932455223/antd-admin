@@ -61,6 +61,7 @@ class EnterpriseBasicInfo extends Component {
     originAccountsArr: ['row-0'],
     originAccounts: {},
 
+    companyInfo: {},
     eachCompanyInfo: {
       department: {
         value: ''
@@ -212,6 +213,7 @@ class EnterpriseBasicInfo extends Component {
             joiners: {$set: res.data.data.joiners},
             staffs: {$set: newJoiners},
 
+            companyInfo: {$set: res.data.data},
             eachCompanyInfo: {
               department: {
                 $set: {
@@ -390,7 +392,7 @@ class EnterpriseBasicInfo extends Component {
   }
 
   // 新建/编辑客户
-  addNewCustomer = (briefInfo) => {
+  addNewCustomer = (briefInfo, address) => {
     const { id, name } = this.props.currentCustomerInfo;
     const { accountsArr } = this.state;
     const dateFormat = 'YYYY-MM-DD'; // 日期格式
@@ -407,7 +409,6 @@ class EnterpriseBasicInfo extends Component {
     })
 
     const {
-      address,
       avgSalary,
       department,
       grid,
@@ -446,23 +447,23 @@ class EnterpriseBasicInfo extends Component {
     // 如果 id不存在，则调用创建用户接口
     if(id === -1) {
       ajax.PostJson(API.POST_CUSTOMER_ENTERPRISE_BASE, json).then((res) => {
-        if(res.code === 200) {
+        if(res.data.code === 200) {
           message.success('创建用户成功');
           this.props.createCustomerSuccess(res.data);
           this.props.decreaseBeEditArray('enterpriseBasicInfo');
           this.props.refreshCustomerLists(); // 实时刷新
         } else {
-          message.error(res.message);
+          message.error(res.data.message);
         }
       });
     } else {
       ajax.PutJson(API.PUT_CUSTOMER_ENTERPRISE_BASE(id), json).then((res)=>{
-        if(res.code === 200) {
+        if(res.data.code === 200) {
           message.success('编辑用户成功');
           this.props.decreaseBeEditArray('enterpriseBasicInfo');
           this.props.refreshCustomerLists(); // 实时刷新
         } else {
-          message.error(res.message);
+          message.error(res.data.message);
         }
       })
     }
@@ -474,6 +475,7 @@ class EnterpriseBasicInfo extends Component {
     const {
       id,
       modalVisible,
+      companyInfo,
       eachCompanyInfo,
 
       staffs,
@@ -503,6 +505,7 @@ class EnterpriseBasicInfo extends Component {
       beEditedArray: beEditedArray,
       increaseBeEditArray: increaseBeEditArray,
       decreaseBeEditArray: decreaseBeEditArray,
+      companyInfo: companyInfo,
       eachCompanyInfo: eachCompanyInfo,
       addNewCustomer: this.addNewCustomer,
 

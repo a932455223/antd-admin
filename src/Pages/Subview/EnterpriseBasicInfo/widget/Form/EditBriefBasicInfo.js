@@ -40,12 +40,63 @@ class CompanyBasicInfo extends Component{
 
     departmentOptions: [],
     managerOptions: [],
-    gridOptions: []
+    gridOptions: [],
+
+    provinceOptions: [],
+    cityOptions: [],
+    areaOptions: []
+  }
+
+  // 一次性获取所有下拉列表
+  getAlloptions = (departmentId, managerId, province, city) => {
+    if(province == undefined || province == '') {
+      ajax.all([
+        ajax.Get(API.GET_CUSTOMER_DEPARTMENT), // 所属机构下拉菜单
+        ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)), // 所属客户经理下拉菜单
+        ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId)), // 重置网格
+        ajax.Get(API.GET_AREA_SELECT(1))
+      ]).then((res) => {
+        let newState = update(this.state, {
+          departmentOptions: {$set: res[0].data.data},
+          managerOptions:{$set:res[1].data.data},
+          gridOptions:{$set:res[2].data.data},
+          provinceOptions: {$set: res[3].data.data}
+        });
+        this.setState(newState);
+      })
+    } else {
+      ajax.all([
+        ajax.Get(API.GET_CUSTOMER_DEPARTMENT), // 所属机构下拉菜单
+        ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)), // 所属客户经理下拉菜单
+        ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId)), // 重置网格
+        ajax.Get(API.GET_AREA_SELECT(1)),
+        ajax.Get(API.GET_AREA_SELECT(province)),
+        ajax.Get(API.GET_AREA_SELECT(city))
+      ]).then((res) => {
+        let newState = update(this.state, {
+          departmentOptions: {$set: res[0].data.data},
+          managerOptions:{$set:res[1].data.data},
+          gridOptions:{$set:res[2].data.data},
+          provinceOptions: {$set: res[3].data.data},
+          cityOptions: {$set: res[4].data.data},
+          areaOptions: {$set: res[5].data.data},
+        });
+        this.setState(newState);
+      })
+    }
   }
 
   componentWillMount() {
     // console.log('CompanyBasicInfo will mount');
-    this.getDepartments(1, 1);
+    const { companyInfo } = this.props;
+
+    let originProvince = companyInfo && companyInfo.addressCode && companyInfo.addressCode.split(' ')[0];
+    let originCity = companyInfo && companyInfo.addressCode && companyInfo.addressCode.split(' ')[1];
+
+    let province = originProvince != null || originProvince != '' ? originProvince : undefined;
+    let city = originCity != null || originCity != '' ? originCity : undefined;
+
+    this.getAlloptions(1, 1, province, city);
   }
 
   componentWillReceiveProps(next) {
@@ -68,25 +119,72 @@ class CompanyBasicInfo extends Component{
       })
       this.setState(newState)
     }
+  }
 
-    // 更新 accountsArr
-    this.setState({
-      accountsArr: next.accountsArr
+  // 选择省份，获取城市选项, 清空city 和area的值
+  provinceSelect = (province) => {
+    if(!this.state.basicInfoBeEdit) {
+      this.props.increaseBeEditArray('enterpriseBasicInfo'); // 修改 store树上的 beEditedArray
+      let newState = update(this.state, {
+        basicInfoBeEdit: {$set: true}
+      })
+      this.setState(newState)
+    }
+
+    const { setFieldsValue } = this.props.form;
+
+    ajax.Get(API.GET_AREA_SELECT(province))
+        .then(res => {
+          let provinceState = update(this.state, {
+            cityOptions: {$set: res.data.data},
+            areaOptions: {$set: []}
+          });
+
+          this.setState(provinceState);
+        });
+
+
+    setFieldsValue({
+      'city': undefined,
+      'area': undefined
+    })
+  }
+
+  // 选择城市，获取区域选项，清空区域选项
+  citySelect = (cityId) => {
+    if(!this.state.basicInfoBeEdit) {
+      this.props.increaseBeEditArray('enterpriseBasicInfo'); // 修改 store树上的 beEditedArray
+      let newState = update(this.state, {
+        basicInfoBeEdit: {$set: true}
+      })
+      this.setState(newState)
+    }
+
+    const { setFieldsValue } = this.props.form;
+    ajax.Get(API.GET_AREA_SELECT(cityId))
+        .then(res => {
+          let newState = update(this.state, {
+            areaOptions: {$set: res.data.data}
+          });
+
+          this.setState(newState);
+        });
+    setFieldsValue({
+      'area': undefined
     })
   }
 
   // 获取 department，
-  getDepartments = (departmentId, managerId) => {
-    // 所属机构下拉菜单
+  getDepartments = (departmentId) => {
     ajax.all([
-      ajax.Get(API.GET_CUSTOMER_DEPARTMENT),
-      ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)),
-      ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId))
-    ]).then((res)=>{
+      ajax.Get(API.GET_CUSTOMER_DEPARTMENT), // 所属机构下拉菜单
+      ajax.Get(API.GET_DEPARTMENT_STAFFS(departmentId)), // 所属客户经理下拉菜单
+      ajax.Get(API.GET_DEPARTMENT_AREAS(departmentId)), // 重置网格
+    ]).then((res) => {
       let newState = update(this.state, {
         departmentOptions: {$set: res[0].data.data},
-        managerOptions:{$set:res[1].data.data},
-        gridOptions:{$set:res[2].data.data}
+        managerOptions:{$set: res[1].data.data},
+        gridOptions:{$set: res[2].data.data}
       });
       this.setState(newState);
     })
@@ -103,12 +201,10 @@ class CompanyBasicInfo extends Component{
     }
 
     const { getFieldValue, setFieldsValue } = this.props.form;
-    // 三级联动，更新 manager和 grid
-    let departmentId = getFieldValue('department') ? getFieldValue('department') - 0 : '';
-    let managerId = getFieldValue('manager') ? getFieldValue('manager') - 0 : '';
 
+    // 三级联动，更新 manager和 grid
     if(departmentId > 0) {
-      this.getDepartments(departmentId, managerId);
+      this.getDepartments(departmentId);
     }
 
     setFieldsValue({
@@ -196,28 +292,56 @@ class CompanyBasicInfo extends Component{
 
   // 更新信息
   updateInfo = (briefInfo) => {
-    const { validateFields, getFieldsError } = this.props.form;
+    const { validateFields, getFieldValue, getFieldsError } = this.props.form;
     const { addNewCustomer } = this.props;
+    const { provinceOptions, cityOptions, areaOptions } = this.state;
+
+    let province = provinceOptions.filter(item => item.id == getFieldValue('province'));
+    let city = cityOptions.filter(item => item.id == getFieldValue('city'));
+    let area = areaOptions.filter(item => item.id == getFieldValue('area'));
+    let detailStreet = getFieldValue('address');
+
     validateFields();
+
     if(hasErrors(getFieldsError())) {
       message.error('表单填写有误，请仔细检查表单');
     } else {
-      addNewCustomer(briefInfo);
+      let address;
+      if(province.length !== 0 && city.length !== 0 && area.length !== 0 && detailStreet !== '') {
+        address = `${province[0].name} ${city[0].name} ${area[0].name} ${detailStreet}`;
+        addNewCustomer(briefInfo, address);
+      } else if(province.length !== 0 && (city.length === 0 || area.length !== 0 || detailStreet !== '')) {
+        message.error('表单填写有误，请仔细检查表单');
+      } else if(detailStreet !== '' && (province.length === 0 || city.length === 0 || area.length === 0)){
+        message.error('表单填写有误，请仔细检查表单');
+      } else {
+        address = '';
+        addNewCustomer(briefInfo, address);
+      }
     }
   }
 
   render() {
     const {
       eachCompanyInfo,
+      companyInfo,
       id,
+      mode,
       createCustomerSuccess,
       staffs,
       accountsArr,
       accounts
     } = this.props;
     const { getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
-    const { departmentOptions, managerOptions, gridOptions, basicInfoBeEdit } = this.state;
-    // console.log(accountsArr);
+    const {
+      departmentOptions,
+      managerOptions,
+      gridOptions,
+      basicInfoBeEdit,
+      provinceOptions,
+      cityOptions,
+      areaOptions
+    } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -289,7 +413,7 @@ class CompanyBasicInfo extends Component{
 
     return (
         <Form id="editMyBase" className="basicInfolist">
-          <Row className={id === -1 ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
+          <Row className={mode === 'create' ? "briefInfoCreate" : "briefInfoEdit"} type="flex" justify="space-between">
             <Col span={7}>
               <FormItem labelCol={{span: 11}}
                         wrapperCol={{span: 13}}
@@ -376,7 +500,7 @@ class CompanyBasicInfo extends Component{
             </Row>
 
             <Row>
-              <Col span={12} className={id === -1 ? "phonecreate" : "phoneedit"}>
+              <Col span={12} className={mode === 'create' ? "phonecreate" : "phoneedit"}>
                 <FormItem labelCol={{span: 8}}
                           wrapperCol={{span: 15}}
                           label="注册时间">
@@ -396,7 +520,7 @@ class CompanyBasicInfo extends Component{
                 </FormItem>
               </Col>
 
-              <Col span={12} className={id === -1 ? "wechatcreate" : "wechatedit"}>
+              <Col span={12} className={mode === 'create' ? "wechatcreate" : "wechatedit"}>
                 <FormItem labelCol={{span: 8,offset:1}}
                           wrapperCol={{span: 15}}
                           label="所属行业">
@@ -414,7 +538,7 @@ class CompanyBasicInfo extends Component{
               </Col>
             </Row>
             <Row>
-              <Col span={12} className={id === -1 ? "phoneCreate" : "phoneEdit"}>
+              <Col span={12} className={mode === 'create' ? "phoneCreate" : "phoneEdit"}>
                 <FormItem labelCol={{span: 8}}
                           wrapperCol={{span: 15}}
                           label="主营业务">
@@ -431,7 +555,7 @@ class CompanyBasicInfo extends Component{
                 </FormItem>
               </Col>
 
-              <Col span={12} className={id === -1 ? "wechatCreate" : "wechatEdit"}>
+              <Col span={12} className={mode === 'create' ? "wechatCreate" : "wechatEdit"}>
                 <FormItem labelCol={{span: 8,offset:1}}
                           wrapperCol={{span: 15}}
                           label="年营业额">
@@ -452,7 +576,7 @@ class CompanyBasicInfo extends Component{
               </Col>
             </Row>
             <Row>
-              <Col span={12} className={id === -1 ? "phoneCreate" : "phoneEdit"}>
+              <Col span={12} className={mode === 'create' ? "phoneCreate" : "phoneEdit"}>
                 <FormItem labelCol={{span: 8}}
                           wrapperCol={{span: 15}}
                           label="法人法名">
@@ -469,7 +593,7 @@ class CompanyBasicInfo extends Component{
                 </FormItem>
               </Col>
 
-              <Col span={12} className={id === -1 ? "wechatCreate" : "wechatEdit"}>
+              <Col span={12} className={mode === 'create' ? "wechatCreate" : "wechatEdit"}>
                 <FormItem labelCol={{span: 8,offset:1}}
                           wrapperCol={{span: 15}}
                           label="企业电话">
@@ -487,7 +611,7 @@ class CompanyBasicInfo extends Component{
               </Col>
             </Row>
             <Row>
-              <Col span={12} className={id === -1 ? "phoneCreate" : "phoneEdit"}>
+              <Col span={12} className={mode === 'create' ? "phoneCreate" : "phoneEdit"}>
                 <FormItem labelCol={{span: 8}}
                           wrapperCol={{span: 15}}
                           label="员工人数">
@@ -507,7 +631,7 @@ class CompanyBasicInfo extends Component{
                 </FormItem>
               </Col>
 
-              <Col span={12} className={id === -1 ? "wechatCreate" : "wechatEdit"}>
+              <Col span={12} className={mode === 'create' ? "wechatCreate" : "wechatEdit"}>
                 <FormItem labelCol={{span: 8,offset:1}}
                           wrapperCol={{span: 15}}
                           label="平均工资">
@@ -529,32 +653,102 @@ class CompanyBasicInfo extends Component{
             </Row>
 
             <Row>
-              <Col span={12} className={id === -1 ? "phoneCreate" : "phoneEdit"}>
-                <FormItem labelCol={{span: 8}}
-                          wrapperCol={{span: 15}}
-                          label="企业住址">
-                  {getFieldDecorator('addressCode', {
-                    initialValue: eachCompanyInfo.addressCode && eachCompanyInfo.addressCode.value,
-                    onChange: this.inputBasicInfoChange,
-                    rules: [{
-                      required: true,
-                      message: '请填写企业住址'
-                    }]
-                  })(
-                    <Input />
-                  )}
-                </FormItem>
-              </Col>
+                <Col span={8} className={mode === 'create' ? "addressCreate" : "addressEdit"}>
+                  <FormItem labelCol={{span: 12}}
+                            wrapperCol={{span: 12}}
+                            label="企业住址"
+                            className="province">
+                    {getFieldDecorator('province', {
+                      initialValue: companyInfo && companyInfo.addressCode && companyInfo.addressCode.split(' ')[0] != null
+                                    ?
+                                    companyInfo.addressCode.split(' ')[0]
+                                    :
+                                    undefined,
+                      onChange: this.provinceSelect
+                    })(
+                      <Select
+                        showSearch
+                        placeholder="选择省份"
+                        optionFilterProp="children"
+                        filterOption={(input, option) => option.props.value.toLowerCase().includes(input.toLowerCase())}
+                        getPopupContainer={() => document.getElementById('editMyBase')}
+                      >
+                        {provinceOptions && provinceOptions.map(provinceItem =>
+                          <Option key={provinceItem.id} value={provinceItem.id + ''}>{provinceItem.name}</Option>
+                        )}
+                      </Select>
+                    )}
+                  </FormItem>
+                </Col>
 
-              <Col span={12} className={id === -1 ? "wechatCreate" : "wechatEdit"}>
+                <Col span={6}>
+                  <FormItem wrapperCol={{span: 16, offset: 4}}>
+                    {getFieldDecorator('city', {
+                      initialValue: companyInfo && companyInfo.addressCode && companyInfo.addressCode.split(' ')[1] != null
+                                    ?
+                                    companyInfo.addressCode.split(' ')[1]
+                                    :
+                                    undefined,
+                      onChange: this.citySelect
+                    })(
+                      <Select
+                        showSearch
+                        placeholder="选择城市"
+                        optionFilterProp="children"
+                        filterOption={(input, option) => option.props.value.toLowerCase().includes(input.toLowerCase())}
+                        getPopupContainer={() => document.getElementById('editMyBase')}
+                      >
+                        {cityOptions && cityOptions.map(cityItem =>
+                          <Option key={cityItem.id} value={cityItem.id + ''}>{cityItem.name}</Option>
+                        )}
+                      </Select>
+                    )}
+                  </FormItem>
+                </Col>
+
+                <Col span={4}>
+                  <FormItem wrapperCol={{span: 24}}>
+                    {getFieldDecorator('area', {
+                      initialValue: companyInfo && companyInfo.addressCode && companyInfo.addressCode.split(' ')[2] != null
+                                    ?
+                                    companyInfo.addressCode.split(' ')[2]
+                                    :
+                                    undefined,
+                      onChange: this.selectBasicInfoChange
+                    })(
+                      <Select
+                        showSearch
+                        placeholder="选择区域"
+                        optionFilterProp="children"
+                        filterOption={(input, option) => option.props.value.toLowerCase().includes(input.toLowerCase())}
+                        getPopupContainer={() => document.getElementById('editMyBase')}
+                      >
+                        {areaOptions && areaOptions.map(areaItem =>
+                          <Option key={areaItem.id} value={areaItem.id + ''}>{areaItem.name}</Option>
+                        )}
+                      </Select>
+                    )}
+                  </FormItem>
+                </Col>
+            </Row>
+
+            <Row>
+              <Col span={24} className={mode === 'create' ? "addressCreate" : "addressEdit"}>
                 <FormItem
-                          wrapperCol={{span: 24}}
-                          >
+                  labelCol={{span: 4}}
+                  wrapperCol={{span: 19}}
+                  label="详细住址："
+                  className="address"
+                >
                   {getFieldDecorator('address', {
-                    initialValue: eachCompanyInfo.address && eachCompanyInfo.address.value,
+                    initialValue: companyInfo.address && companyInfo.address.split(' ')[3] != null
+                                  ?
+                                  companyInfo.address.split(' ')[3]
+                                  :
+                                  undefined,
                     onChange: this.inputBasicInfoChange
                   })(
-                    <Input />
+                    <Input placeholder="请输入详细住址"/>
                   )}
                 </FormItem>
               </Col>
