@@ -8,7 +8,7 @@ const {Content} = Layout;
 export default class Welcome extends Component{
   render(){
     return <Layout >
-      <Header />
+      {/*<Header />*/}
       <Layout>
         <Layout>
           <Content style={{display: 'flex'}}>
