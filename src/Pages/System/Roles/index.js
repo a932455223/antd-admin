@@ -44,6 +44,7 @@ export default class SystemRoles extends Component {
   }
 
   getRoles(index = this.state.table.index){
+    console.log('getRoles')
     ajax.Get(API.GET_SYSTEM_ROLES_LIST,{
       index: index,
       searchContent: this.state.searchContent,
