@@ -24,14 +24,13 @@ export default {
   // 维护记录
   POST_CUSTOMER_MAINTENANCE_COUNT: id => `/api/customer/${id}/maintenance`,
 
-
   //工作信息：查看、修改
   GET_JOBINFO_BASE: customerId => `/api/customer/individual/${customerId}/job`,
   PUT_JOBINFO_BASE: customerId => `/api/customer/individual/${customerId}/job`,
   //风险测试：
-  GET_CUSTOMER_PRE_RISKQUESTIONS: customerId => `/api/customer/individual/${customerId}/riskQuestions`,//获取之前做过的题目
-  PUT_CUSTOMER_RISKQUESTION: customerId => `/api/customer/individual/${customerId}/riskQuestion`,//提交测试
-  GET_CUSTOMER_RISKQUESTIONS: customerId => `/api/customer/individual/${customerId}/riskQuestions`,//获取题目
+  GET_CUSTOMER_PRE_RISKQUESTIONS:customerId=>`/api/customer/individual/${customerId}/riskQuestions`,//获取之前做过的题目
+  GET_CUSTOMER_RISKQUESTIONS:customerId=>`/api/customer/individual/riskQuestions`,//获取题目
+  PUT_CUSTOMER_RISKQUESTION:customerId=>`/api/customer/individual/${customerId}/riskQuestion`,//提交测试
   //企业客户：
   //关键人信息查看、增加、删除、修改
   GET_CUSTOMETS_KEYPERSONS: customerId => `/api/customer/enterprise/${customerId}/keyPersons`,
@@ -46,7 +45,6 @@ export default {
   PUT_CUSTOMERS_FINANCES: financesId => `/api/customer/finance/${financesId}`,
   //获取金融业务信息产品下拉：
   GET_CUSTOMER_FINANCE_CATEGORY: '/api/customer/finance/category',
-
   //enterprise:
   GET_CUSTOMER_ENTERPRISE_BASE: customerId => `/api/customer/enterprise/${customerId}/base`,
   PUT_CUSTOMER_ENTERPRISE_BASE: id => `/api/customer/enterprise/${id}/base`,
@@ -217,5 +215,8 @@ export default {
   POST_USER: '/api/user',
 
   // 获取用户权限
-  GET_PERMISSION: '/api/privilege/myPermissions'
+  GET_PERMISSION: '/api/privilege/myPermissions',
+
+  // 获取角色详情信息
+  GET_ROLE: id => `/api/role/${id}`
 }

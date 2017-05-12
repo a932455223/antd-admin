@@ -2,7 +2,7 @@
  * Created by jufei on 2017/4/25.
  */
 import React, {Component} from "react";
-import {Button, Card, Form, Input, Model, Select, Tabs, Timeline,Modal} from "antd";
+import {Button, Card, Form, Input, Model, Select, Tabs, Timeline,Modal,Row,Col} from "antd";
 import $ from 'jquery'
 //================================================
 import "./less/userEdit.less";
@@ -52,7 +52,6 @@ class UserEdit extends Component {
           cantDeleteRoles += `<li class="ant-select-selection__choice" title=${item.name} style="user-select: none;"><div class="ant-select-selection__choice__content">${item.name}</div></li>`
         });
         $("#roleIds ul").append(cantDeleteRoles);
-        console.log('==============================================',cantDeleteRoles);
         if (info.departments) {
           info.departments.map(item => {
             if(item.canDelete){
@@ -65,7 +64,7 @@ class UserEdit extends Component {
         let cantDeleteDepartments = '';
         initDepartmentCantDelete.map( item => {
           cantDeleteDepartments += `<li class="ant-select-selection__choice" title=${item.name} style="user-select: none;"><div class="ant-select-selection__choice__content">${item.name}</div></li>`
-        })
+        });
 
         $("#departmentIds ul").append(cantDeleteDepartments);
 
@@ -79,7 +78,6 @@ class UserEdit extends Component {
 
     ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
       .then(res => {
-        console.log(res)
         this.setState({
           departmentDropdown: res.data.data
         })
@@ -115,6 +113,7 @@ class UserEdit extends Component {
   }
 
   hasChange() {
+    this.props.onChange(true);
     this.setState({
       hasChange: true
     })
@@ -137,7 +136,10 @@ class UserEdit extends Component {
           .then(res => {
             if (res.data.message === 'OK') {
               this.props.refresh();
-              this.saveSuccess(this.props.close.bind(this))
+              this.setState({
+                hasChange: false
+              })
+              // this.saveSuccess(this.props.close.bind(this))
             }
           })
       }
@@ -169,6 +171,18 @@ class UserEdit extends Component {
     })
   }
 
+  close(){
+    if(this.state.hasChange){
+      Modal.confirm({
+        // title: '',
+        content: '页面存在未保存修改，是否离开',
+        onOk: this.props.close,
+      })
+    }else {
+      this.props.close()
+    }
+  }
+
   render() {
     const info = this.state.userInfo;
 
@@ -180,7 +194,7 @@ class UserEdit extends Component {
 
     const formItemLayout = {
       labelCol: {
-        span: 6
+        span: 5
       },
       wrapperCol: {
         span: 14
@@ -197,7 +211,7 @@ class UserEdit extends Component {
             <Button onClick={this.resetpsd}>重置密码</Button>
             <Button
               className="close"
-              onClick={this.props.close}
+              onClick={this.close.bind(this)}
             >&times;</Button>
           </span>
         </div>
@@ -290,7 +304,12 @@ class UserEdit extends Component {
                 <Input type="textarea"/>
               )}
             </FormItem>
-            <Button disabled={this.state.hasChange ? false : true} htmlType='submit'>保存</Button>
+            <Row>
+              <Col span={5}></Col>
+              <Col span={14}>
+                <Button disabled={this.state.hasChange ? false : true} htmlType='submit'>保存</Button>
+              </Col>
+            </Row>
           </Form>
         </Card>
 
