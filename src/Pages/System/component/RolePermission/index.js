@@ -14,6 +14,8 @@ import './rolePermission.less'
 
 
 
+let rightSelectValues = {};
+
 function info(msg,color='red'){
   console.log('%c'+msg,'color:'+color)
 }
@@ -26,9 +28,18 @@ function info(msg,color='red'){
 // }
 
 const generateSelect = (options,pid) => {
-  let selectValue;
+  console.log(rightSelectValues)
+  if(options === null){
+    return ''
+  }
+  let selected;
   if(options) {
-    selectValue = options.find(item => item.checked)
+    selected = options.find(item => item.checked)
+  }
+  let selectValue = selected && selected.level.toString()
+  let changedKeys = Object.keys(rightSelectValues)
+  if(changedKeys.length > 0){
+    selectValue = rightSelectValues[pid] || selectValue
   }
   return <select defaultValue={selectValue} name={pid}>
     {options.map((item,index) => <option key={item.level.toString()} value={item.level.toString()}>{item.name}</option>)}
@@ -45,7 +56,9 @@ const generateTree = (nodes,parentId,showOptions) => nodes.map((item) =>{
       </TreeNode>
     )
   }
-  return <TreeNode key={pid} title={<span>{item.name} &nbsp;{showOptions ? generateSelect(item.options,pid):'['+item.options[0].name+']'}</span>} />
+
+  let title = item.options === null ? '':'['+item.options[0].name+']'
+  return <TreeNode key={pid} title={<span>{item.name} &nbsp;{showOptions ? generateSelect(item.options,pid):title}</span>} />
   // console.log(item)
   // return <TreeNode key={pid} title={<span>{<Select><Option key="1">111</Option></Select>}</span>} />
 
@@ -168,11 +181,54 @@ export default class  RolePermission extends Component{
     rightKey:0
   }
 
+  componentWillUpdate(){
+    info('component did update.')
+    $('.transfer-right').find('select').each(function(){
+      let name = $(this).attr('name')
+      let value = $(this).val()
+      console.log(name)
+      console.log(value)
+    })
+  }
+  getRightSelectValues(){
+    let obj = {}
+    $('.transfer-right').find('select').each(function () {
+      let name = $(this).attr('name')
+      let value = $(this).val()
+      obj[name] = value
+    })
+
+    return obj
+  }
+
+  componentDidMount(){
+    let self = this
+    rightSelectValues = {}
+    $('.transfer-right').on('change',function(){
+      rightSelectValues = self.getRightSelectValues()
+      console.log(rightSelectValues)
+    })
+
+    //初次
+    rightSelectValues = self.getRightSelectValues()
+  }
+
   componentWillMount(){
     info('will mount.')
     console.log(this.props.id)
     if(this.props.mode === 'edit'){
-      this.getRoleTrees(this.props.id)
+      // this.getRoleTrees(this.props.id)
+      let getAllPrivilige = ajax.Get(API.GET_ALL_RPIVILIGE)
+      let getRoleTrees = ajax.Get(API.GET_ROLE_TREE(this.props.id))
+
+      ajax.all([getAllPrivilige,getRoleTrees]).then((res)=>{
+        this.setState({
+          leftOriginPrivilege:_.cloneDeep(res[0].data.data),
+          rightOriginPrivilege:_.cloneDeep(res[0].data.data),
+          leftPrivilege:_.cloneDeep(res[1].data.data.leftTree),
+          rightPrivilege:_.cloneDeep(res[1].data.data.rightTree)
+        })
+      })
     }else if(this.props.mode === 'create'){
       this.getAllPrivilige()
     }
@@ -199,6 +255,7 @@ export default class  RolePermission extends Component{
       })
     })
   }
+
   toRight = () =>{
     if(this.state.leftCheckedKeys.length === 0){
       message.info("没有选中任何节点")
@@ -253,6 +310,9 @@ export default class  RolePermission extends Component{
 
   }
 
+
+
+
   handleSubmit = (e) =>{
     let data = {}
     let permissions = []
@@ -297,8 +357,6 @@ export default class  RolePermission extends Component{
     const leftTree = this.state.leftPrivilege.id !==undefined ? <Tree
       key={this.state.leftKey.toString()}
       checkable
-      defaultExpandAll={true}
-      onExpand={this.onExpand}
       autoExpandParent={true}
       onCheck={this.onLeftCheck}
       checkedKeys={this.state.leftCheckedKeys}
@@ -310,7 +368,6 @@ export default class  RolePermission extends Component{
       key={this.state.rightKey.toString()}
       checkable
       defaultExpandAll={true}
-      onExpand={this.onExpand}
       autoExpandParent={true}
       onCheck={this.onRightCheck} checkedKeys={this.state.rightCheckedKeys}
     >
