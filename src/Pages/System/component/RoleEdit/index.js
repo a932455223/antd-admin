@@ -2,7 +2,7 @@
  * Created by jufei on 2017/4/25.
  */
 import React, {Component} from "react";
-import {Button, Card, Input, Table,Icon} from "antd";
+import {Button, Card, Input, Table,Icon,Row,Col} from "antd";
 //=====================================================================
 import './less/roleEdit.less';
 import ajax from '../../../../tools/POSTF.js';
@@ -87,13 +87,25 @@ export default class RoleEdit extends Component {
             <span>备注</span>
             <Input type="textarea"/>
           </p>
-          <Button
-            className="save"
-            onClick={() => {
-              alert('保存成功');
-              this.props.close()
-            }}
-          >保存</Button>
+          <Row className="buttonrow">
+          {/*<Col span="3">
+              <Button
+                className="cancel"
+                // disabled={this.state.changed ? true : false}
+              >取消</Button>
+            </Col>  */}
+            <Col span="3"></Col>
+            <Col span="20">
+              <Button
+                className={this.state.changed ? "ablesavebtn" : "disablesavebtn"}
+                disabled={this.state.changed ? false : true}
+                htmlType="submit"
+                onClick={this.onHandleSubmit}
+                loading={this.state.loading}
+
+              >保存</Button>
+            </Col>
+        </Row>
         </Card>
 
         <Card
