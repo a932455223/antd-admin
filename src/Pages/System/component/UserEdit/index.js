@@ -20,8 +20,6 @@ class UserEdit extends Component {
     departmentDropdown: [],
     rolesDropDown: [],
     hasChange: false,
-    initRolesCantDelete: [],
-    initDepartmentCantDelete: [],
     initRoles: [],
     initDepartment: []
   };
@@ -54,7 +52,7 @@ class UserEdit extends Component {
           cantDeleteRoles += `<li class="ant-select-selection__choice" title=${item.name} style="user-select: none;"><div class="ant-select-selection__choice__content">${item.name}</div></li>`
         });
         $("#roleIds ul").append(cantDeleteRoles);
-        console.log('==============================================',cantDeleteRoles)
+        console.log('==============================================',cantDeleteRoles);
         if (info.departments) {
           info.departments.map(item => {
             if(item.canDelete){
@@ -66,8 +64,6 @@ class UserEdit extends Component {
         }
 
         this.setState({
-          initRolesCantDelete: initRolesCantDelete,
-          initDepartmentCantDelete: initDepartmentCantDelete,
           initRoles: initRoles,
           initDepartment: initDepartment
         })
@@ -167,22 +163,9 @@ class UserEdit extends Component {
 
   render() {
     const info = this.state.userInfo;
-    console.log(info);
-    let initRoles = [];
-    let initDepartment = [];
-    if (info.roles) {
-      info.roles.map(item => {
-        initRoles.push(item.id)
-      });
-    }
-    if (info.departments) {
-      info.departments.map(item => {
-        initDepartment.push(item.id)
-      })
-    }
 
-    initRoles = this.state.initRoles;
-    initDepartment = this.state.initDepartment;
+    let initRoles = this.state.initRoles;
+    let initDepartment = this.state.initDepartment;
 
 
     const {getFieldDecorator} = this.props.form;
@@ -242,28 +225,27 @@ class UserEdit extends Component {
               id="roleIds"
               // key={Math.random()}
             >
-            <FormItem
+              <FormItem
                 label={<span>所属角色</span>}
                 {...formItemLayout}
               >
-              {getFieldDecorator('roleIds', {
-                rules: [{required: true, message: '所属角色!'}],
-                initialValue: initRoles,
-                onChange: this.hasChange.bind(this)
-              })(
-                <Select
-                  mode="multiple"
-                  getPopupContainer={ () => document.getElementById('userEd')}
-                >
-                  {
-                    this.state.rolesDropDown.map((item) => {
-                      return <Option value={item.id.toString()} key={item.id.toString()}>{item.roleName}</Option>
-                    })
-                  }
-                </Select>
-              )}
-            </FormItem>
-              
+                {getFieldDecorator('roleIds', {
+                  rules: [{required: true, message: '所属角色!'}],
+                  initialValue: initRoles,
+                  onChange: this.hasChange.bind(this),
+                })(
+                  <Select
+                    mode="multiple"
+                    getPopupContainer={ () => document.getElementById('userEd')}
+                  >
+                    {
+                      this.state.rolesDropDown.map((item) => {
+                        return <Option value={item.id} key={item.id}>{item.roleName}</Option>
+                      })
+                    }
+                  </Select>
+                )}
+              </FormItem>
             </div>
             <FormItem
               label={<span>所属机构</span>}
@@ -281,7 +263,7 @@ class UserEdit extends Component {
                 >
                   {
                     this.state.departmentDropdown.map((item) => {
-                      return <Option value={item.id.toString()} key={item.id.toString()}>{item.name}</Option>
+                      return <Option value={item.id} key={item.id.toString()}>{item.name}</Option>
                     })
                   }
                 </Select>
