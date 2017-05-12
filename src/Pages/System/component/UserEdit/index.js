@@ -2,7 +2,8 @@
  * Created by jufei on 2017/4/25.
  */
 import React, {Component} from "react";
-import {Button, Card, Form, Input, Select, Tabs, Timeline} from "antd";
+import {Button, Card, Form, Input, Model, Select, Tabs, Timeline,Modal} from "antd";
+import $ from 'jquery'
 //================================================
 import "./less/userEdit.less";
 import ajax from "../../../../tools/POSTF.js";
@@ -18,7 +19,11 @@ class UserEdit extends Component {
     userInfo: {},
     departmentDropdown: [],
     rolesDropDown: [],
-    hasChange: false
+    hasChange: false,
+    initRolesCantDelete: [],
+    initDepartmentCantDelete: [],
+    initRoles: [],
+    initDepartment: []
   };
 
   componentWillMount() {
@@ -26,8 +31,47 @@ class UserEdit extends Component {
       .then(res => {
         this.setState({
           userInfo: res.data.data
+        });
+
+        let info = res.data.data,
+          initRoles = [],
+          initRolesCantDelete = [],
+          initDepartment = [],
+          initDepartmentCantDelete = [];
+
+        if (info.roles) {
+          info.roles.map(item => {
+            if(item.canDelete){
+              initRoles.push(item.id)
+            }else {
+              initRolesCantDelete.push(item)
+            }
+          });
+        }
+
+        let cantDeleteRoles = '';
+        initRolesCantDelete.map( item => {
+          cantDeleteRoles += `<li class="ant-select-selection__choice" title=${item.name} style="user-select: none;"><div class="ant-select-selection__choice__content">${item.name}</div></li>`
+        });
+        $("#roleIds ul").append(cantDeleteRoles);
+        console.log('==============================================',cantDeleteRoles)
+        if (info.departments) {
+          info.departments.map(item => {
+            if(item.canDelete){
+              initDepartment.push(item.id)
+            }else {
+              initDepartmentCantDelete.push(item)
+            }
+          })
+        }
+
+        this.setState({
+          initRolesCantDelete: initRolesCantDelete,
+          initDepartmentCantDelete: initDepartmentCantDelete,
+          initRoles: initRoles,
+          initDepartment: initDepartment
         })
-      })
+      });
 
     ajax.Get(API.GET_CUSTOMER_DEPARTMENT)
       .then(res => {
@@ -35,6 +79,8 @@ class UserEdit extends Component {
         this.setState({
           departmentDropdown: res.data.data
         })
+
+
       })
 
     ajax.Get(API.GET_STAFF_ADD_ROLES)
@@ -42,7 +88,11 @@ class UserEdit extends Component {
         this.setState({
           rolesDropDown: res.data.data
         })
-      })
+      });
+
+  }
+
+  componentWillUpdate(){
   }
 
   componentDidMount() {
@@ -50,12 +100,14 @@ class UserEdit extends Component {
   }
 
   componentWillReceiveProps(next) {
-    ajax.Get(API.GET_USER_BASE(next.id))
-      .then(res => {
-        this.setState({
-          userInfo: res.data.data
+    if(this.props.id !== next.id){
+      ajax.Get(API.GET_USER_BASE(next.id))
+        .then(res => {
+          this.setState({
+            userInfo: res.data.data
+          })
         })
-      })
+    }
   }
 
   hasChange() {
@@ -79,14 +131,39 @@ class UserEdit extends Component {
         console.log('Received values of form: ', values);
         ajax.Put(API.PUT_USER(this.props.id), values)
           .then(res => {
-            alert(res.data.message);
             if (res.data.message === 'OK') {
-              this.props.refresh()
+              this.props.refresh();
+              this.saveSuccess(this.props.close.bind(this))
             }
           })
       }
     });
   };
+
+  resetpsd(){
+    Modal.info({
+      // title: '重置成功',
+      content: (
+        <div>
+          <p>重置成功</p>
+        </div>
+      )
+    });
+  }
+
+  saveSuccess(ok){
+    Modal.confirm({
+      // title: '',
+      content: '保存成功，是否返回',
+      onOk() {
+        console.log(ok)
+        ok();
+      },
+      onCancel() {
+        // console.log('Cancel');
+      },
+    })
+  }
 
   render() {
     const info = this.state.userInfo;
@@ -103,6 +180,9 @@ class UserEdit extends Component {
         initDepartment.push(item.id)
       })
     }
+
+    initRoles = this.state.initRoles;
+    initDepartment = this.state.initDepartment;
 
 
     const {getFieldDecorator} = this.props.form;
@@ -123,9 +203,7 @@ class UserEdit extends Component {
         <div className="user-edit-title">
           <h3>{info.name}</h3>
           <span>
-            <Button onClick={() => {
-              alert('重置成功')
-            }}>重置密码</Button>
+            <Button onClick={this.resetpsd}>重置密码</Button>
             <Button
               className="close"
               onClick={this.props.close}
@@ -160,11 +238,14 @@ class UserEdit extends Component {
                 <Input/>
               )}
             </FormItem>
-            <FormItem
-              label={<span>所属角色</span>}
-              {...formItemLayout}
-              id="rolele"
+            <div
+              id="roleIds"
+              // key={Math.random()}
             >
+            <FormItem
+                label={<span>所属角色</span>}
+                {...formItemLayout}
+              >
               {getFieldDecorator('roleIds', {
                 rules: [{required: true, message: '所属角色!'}],
                 initialValue: initRoles,
@@ -182,6 +263,8 @@ class UserEdit extends Component {
                 </Select>
               )}
             </FormItem>
+              
+            </div>
             <FormItem
               label={<span>所属机构</span>}
               {...formItemLayout}

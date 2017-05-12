@@ -2,7 +2,7 @@
  * Created by jufei on 2017/4/22.
  */
 import React, {Component} from "react";
-import {Button, Card, Icon, Table, Tabs, Tag, Tree} from "antd";
+import {Button, Card, Icon, Table, Tabs, Tag, Tree,Modal} from "antd";
 import ajax from "../../tools/POSTF";
 //=============================================+
 import "./less/selectStaff.less";
@@ -21,10 +21,12 @@ export default class SelectStaff extends Component {
     },
     loading: true,
     selectedStaff: [],
-    selectedRowKeys: [19]
+    selectedRowKeys: [19],
+    addStaffChange: false
   };
 
   componentWillMount() {
+
     ajax.Get(API.GET_DEPARTMENT_HIERARCHY)
       .then(res => {
         this.setState({
@@ -33,6 +35,10 @@ export default class SelectStaff extends Component {
       });
     this.getStaff();
 
+  }
+
+  componentWillReceiveProps(next){
+    console.log(next)
   }
 
   componentDidMount() {
@@ -82,15 +88,14 @@ export default class SelectStaff extends Component {
   rowSelection = {
     // selectedRowKeys: this.state.selectedRowKeys,
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log('state',this.state.selectedRowKeys)
-      console.log(`selectedRowKeys:`,selectedRowKeys, 'selectedRows: ', selectedRows);
+      this.props.onSelectedStaff()
       this.setState({
+        addStaffChange: true,
         selectedRowKeys: selectedRowKeys,
         selectedStaff: selectedRows
       })
     },
     onSelect: (record, selected, selectedRows) => {
-      console.log('onSelect',record, selected, selectedRows);
     },
     onSelectAll: (selected, selectedRows, changeRows) => {
       console.log(selected, selectedRows, changeRows);
@@ -112,6 +117,13 @@ export default class SelectStaff extends Component {
     tableScroll.style['max-height'] = container.offsetHeight - 83 - 130 + 'px';
     tableScroll.style['height'] = container.offsetHeight - 83 - 130 + 'px';
     tableScroll.style['overflow-y'] = 'auto';
+  }
+
+  backConfirm(ok){
+    Modal.confirm({
+      content: '该页面存在未保存选项，是否退出',
+      onOk: ok
+    })
   }
 
 
@@ -151,7 +163,13 @@ export default class SelectStaff extends Component {
               <h3>选择人员</h3>
               <Icon
                 type="close"
-                onClick={this.props.back.bind(this, this.props.id)}
+                onClick={() => {
+                  if(this.state.addStaffChange){
+                    this.backConfirm(this.props.back.bind(this,this.props.id))
+                  }else {
+                    this.props.back(this.props.id)
+                  }
+                }}
                 className="back"
               />
             </div>

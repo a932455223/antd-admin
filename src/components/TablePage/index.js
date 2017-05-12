@@ -103,7 +103,7 @@ class TablePage extends Component {
         dockContent: {$set: this.state.CustomerSlider},
         temporary: {$set: info},
         dockVisible: {$set: true},
-        uuid: {$set: this.state.uuid + 1}
+        // uuid: {$set: this.state.uuid + 1}
       })
       this.setState(newState);
       dispatch(saveCurrentCustomerInfo(info, mode))
@@ -121,6 +121,7 @@ class TablePage extends Component {
         onlyCloseModal: {$set: false},
         dockVisible: {$set: true},
         currentCustomer: {$set: info},
+        // uuid: {$set: this.state.uuid + 1}
       })
 
       this.setState(newState);
@@ -133,7 +134,7 @@ class TablePage extends Component {
         onlyCloseModal: {$set: false},
         dockVisible: {$set: true},
         currentCustomer: {$set: info},
-        uuid: {$set: this.state.uuid + 1}
+        // uuid: {$set: this.state.uuid + 1}
       })
 
       this.setState(newState);
@@ -156,7 +157,7 @@ class TablePage extends Component {
       newState = update(this.state, {
         modalVisible: {$set: false},
         dockVisible: {$set: false},
-        uuid: {$set: this.state.uuid + 1}
+        // uuid: {$set: this.state.uuid + 1}
       })
       dispatch(resetBeEditArray());
 
@@ -164,7 +165,7 @@ class TablePage extends Component {
       newState = update(this.state, {
         currentCustomer: {$set: this.state.temporary},
         modalVisible: {$set: false},
-        uuid: {$set: this.state.uuid + 1}
+        // uuid: {$set: this.state.uuid + 1}
       })
 
       dispatch(saveCurrentCustomerInfo(this.state.temporary, mode))
@@ -294,16 +295,40 @@ class TablePage extends Component {
   }
 
   // 批量关注
-  batchFocus = () => {
-    message.success('关注成功');
+  batchFocus = (customerIds) => {
+    if(customerIds.length === 0) {
+      message.error('客户不能为空');
+    } else {
+      ajax.Put(API.PUT_CUSTOMERS_ATTENTION, {customerIds: customerIds})
+          .then(res => {
+            if(res.data.code === 200) {
+              message.success('批量关注成功');
+              this.props.refreshCustomerLists();
+            } else {
+              message.error(res.data.message);
+            }
+          })
+    }
   }
 
-  // 批量关注
-  batchUnfocus = () => {
-    message.success('取关成功');
+  // 批量取关
+  batchUnfocus = (customerIds) => {
+    if(customerIds.length === 0) {
+      message.error('客户不能为空');
+    } else {
+      ajax.Put(API.DELETE_CUSTOMER_CANCLE_ATTENTION, {customerIds: customerIds})
+          .then(res => {
+            if(res.data.code === 200) {
+              message.success('批量取关成功');
+              this.props.refreshCustomerLists();
+            } else {
+              message.error(res.data.message);
+            }
+          })
+    }
   }
 
-  // 批量关注
+  // 批量转移
   batchTrans = () => {
     message.success('转移成功');
   }
@@ -422,7 +447,7 @@ class TablePage extends Component {
               <span className="counter">{selectedCustomers.length}</span>
               <span>位客户</span>
             </p>
-            <li onClick={this.batchFocus}>
+            <li onClick={this.batchFocus.bind(this, selectedRowKeys)}>
               <Icon type=""/>
               <span>批量关注</span>
             </li>
@@ -430,7 +455,7 @@ class TablePage extends Component {
               <Icon type=""/>
               <span>批量参与</span>
             </li>
-            <li onClick={this.batchUnfocus}>
+            <li onClick={this.batchUnfocus.bind(this, selectedRowKeys)}>
               <Icon type=""/>
               <span>取消关注</span>
             </li>
