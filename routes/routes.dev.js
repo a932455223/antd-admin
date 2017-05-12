@@ -9,7 +9,7 @@ module.exports = (app, mfs, file) => {
   }
 
   app.get([
-    '/', '/login', '/customer/*', '/system/*','/organization/*','/product/*','/grids/*','/demos/*'], function (req, res, next) {
+    '/', '/login','/welcome', '/customer/*', '/system/*','/organization/*','/product/*','/grids/*','/demos/*'], function (req, res, next) {
     devMiddleWare.waitUntilValid(function () {
       var html = mfs.readFileSync(file);
       res.end(html)

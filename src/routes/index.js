@@ -117,9 +117,14 @@ const route = (
     }}>
     </Route>
     <Route path='login' getComponent={(location, cb) => {
+    require.ensure([], () => {
+      cb(null, require('../Pages/Login/login').default)
+    }, 'login')
+  }}/>
+    <Route path='welcome' getComponent={(location, cb) => {
       require.ensure([], () => {
-        cb(null, require('../Pages/Login/login').default)
-      }, 'login')
+        cb(null, require('../Pages/Welcome').default)
+      }, 'Welcome')
     }}/>
   </Route>
 );
