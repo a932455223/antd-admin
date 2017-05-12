@@ -165,11 +165,7 @@ export default {
   //登陆
   POST_LOGIN: '/api/login',
   //注销登陆
-<<<<<<< HEAD
-  GET_LOGOUT:'/api/logout',
-=======
   GET_LOGOUT: '/api/logout',
->>>>>>> 8d0dd3e440c70b39b6598081b23cc0efb2ad9c70
   // GET_DROPDOWN_JOB:'/asd/common/dropdown/list/jobCategory',
 
   // 添加组织机构
