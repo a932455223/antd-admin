@@ -62,6 +62,14 @@ class UserEdit extends Component {
             }
           })
         }
+        let cantDeleteDepartments = '';
+        initDepartmentCantDelete.map( item => {
+          cantDeleteDepartments += `<li class="ant-select-selection__choice" title=${item.name} style="user-select: none;"><div class="ant-select-selection__choice__content">${item.name}</div></li>`
+        })
+
+        $("#departmentIds ul").append(cantDeleteDepartments);
+
+
 
         this.setState({
           initRoles: initRoles,
@@ -230,7 +238,7 @@ class UserEdit extends Component {
                 {...formItemLayout}
               >
                 {getFieldDecorator('roleIds', {
-                  rules: [{required: true, message: '所属角色!'}],
+                  rules: [{required: false, message: '所属角色!'}],
                   initialValue: initRoles,
                   onChange: this.hasChange.bind(this),
                 })(
@@ -247,28 +255,30 @@ class UserEdit extends Component {
                 )}
               </FormItem>
             </div>
-            <FormItem
-              label={<span>所属机构</span>}
-              {...formItemLayout}
-            >
-              {getFieldDecorator('departmentIds', {
-                rules: [{required: true, message: '所属机构!'}],
-                initialValue: initDepartment,
-                onChange: this.hasChange.bind(this)
-              })(
-                <Select
-                  mode="multiple"
-                  getPopupContainer={ () => document.getElementById('userEd')}
+            <div id="departmentIds">
+              <FormItem
+                label={<span>所属机构</span>}
+                {...formItemLayout}
+              >
+                {getFieldDecorator('departmentIds', {
+                  rules: [{required: true, message: '所属机构!'}],
+                  initialValue: initDepartment,
+                  onChange: this.hasChange.bind(this)
+                })(
+                  <Select
+                    mode="multiple"
+                    getPopupContainer={ () => document.getElementById('userEd')}
 
-                >
-                  {
-                    this.state.departmentDropdown.map((item) => {
-                      return <Option value={item.id} key={item.id.toString()}>{item.name}</Option>
-                    })
-                  }
-                </Select>
-              )}
-            </FormItem>
+                  >
+                    {
+                      this.state.departmentDropdown.map((item) => {
+                        return <Option value={item.id} key={item.id.toString()}>{item.name}</Option>
+                      })
+                    }
+                  </Select>
+                )}
+              </FormItem>
+            </div>
             <FormItem
               label={<span>备注</span>}
               {...formItemLayout}
