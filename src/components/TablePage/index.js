@@ -26,6 +26,8 @@ class TablePage extends Component {
   state = {
     uuid: 1000,
 
+    batchComfirmButton: '',
+
     selectedRowKeys: [], // 被选中的 row
     selectedCustomers: [],
 
@@ -290,7 +292,8 @@ class TablePage extends Component {
 
     this.setState({
       dockContent: this.state.BatchParticipate,
-      dockVisible: true
+      dockVisible: true,
+      batchComfirmButton: 'participate'
     })
   }
 
@@ -330,7 +333,26 @@ class TablePage extends Component {
 
   // 批量转移
   batchTrans = () => {
-    message.success('转移成功');
+    const { dispatch } = this.props;
+    dispatch(resetCustomerInfo());
+
+    this.setState({
+      dockContent: this.state.BatchParticipate,
+      dockVisible: true,
+      batchComfirmButton: 'trans'
+    })
+  }
+
+  // 批量分配
+  batchDistribute = () => {
+    const { dispatch } = this.props;
+    dispatch(resetCustomerInfo());
+
+    this.setState({
+      dockContent: this.state.BatchParticipate,
+      dockVisible: true,
+      batchComfirmButton: 'distribute'
+    })
   }
 
   // Import Customers
@@ -348,7 +370,7 @@ class TablePage extends Component {
 
   render(){
     const { columns, dataSource, loading, pagination, refreshCustomerLists } = this.props;
-    const { selectedCustomers } = this.state;
+    const { selectedCustomers, batchComfirmButton } = this.state;
     const selectedRowKeys = selectedCustomers.map(item => item.id);
 
     // table props lists
@@ -418,7 +440,8 @@ class TablePage extends Component {
     const batchProps = {
       changeCustomersLists: this.changeCustomersLists,
       selectedCustomers: this.state.selectedCustomers,
-      closeDock: this.closeDock
+      closeDock: this.closeDock,
+      batchComfirmButton: batchComfirmButton
     }
 
     const importCustomersProps = {
@@ -462,6 +485,10 @@ class TablePage extends Component {
             <li  onClick={this.batchTrans}>
               <Icon type=""/>
               <span>批量转移</span>
+            </li>
+            <li  onClick={this.batchDistribute}>
+              <Icon type=""/>
+              <span>批量分配</span>
             </li>
           </ul>
         }
