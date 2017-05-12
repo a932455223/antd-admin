@@ -2,7 +2,7 @@
  * Created by jufei on 2017/4/25.
  */
 import React, {Component} from "react";
-import {Button, Card, Form, Input, Model, Select, Tabs, Timeline,Modal} from "antd";
+import {Button, Card, Form, Input, Model, Select, Tabs, Timeline,Modal,Row,Col} from "antd";
 import $ from 'jquery'
 //================================================
 import "./less/userEdit.less";
@@ -181,7 +181,7 @@ class UserEdit extends Component {
 
     const formItemLayout = {
       labelCol: {
-        span: 6
+        span: 5
       },
       wrapperCol: {
         span: 14
@@ -302,7 +302,12 @@ class UserEdit extends Component {
                 <Input type="textarea"/>
               )}
             </FormItem>
-            <Button disabled={this.state.hasChange ? false : true} htmlType='submit'>保存</Button>
+            <Row>
+              <Col span={5}></Col>
+              <Col span={14}>
+                <Button disabled={this.state.hasChange ? false : true} htmlType='submit'>保存</Button>
+              </Col>
+            </Row>
           </Form>
         </Card>
 
