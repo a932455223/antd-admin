@@ -1,4 +1,9 @@
 export default {
+  // 批量操作
+  PUT_CUSTOMERS_ATTENTION: '/api/customer/attention',
+  PUT_CUSTOMER_JOIN: '/api/customer/join',
+  DELETE_CUSTOMER_CANCLE_ATTENTION :'/api/customer/cancelAttention',
+
   // 获取权限
   POST_PRIVILEGE_COMMON: '/api/privilege/common',
 
