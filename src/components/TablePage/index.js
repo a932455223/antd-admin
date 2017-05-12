@@ -411,6 +411,7 @@ class TablePage extends Component {
 
     // sliderProps
     const sliderProps = {
+      dataSource: dataSource,
       showModal: this.showModal,
       closeDock: this.closeDock,
       onlyModalClose: this.onlyModalClose,
